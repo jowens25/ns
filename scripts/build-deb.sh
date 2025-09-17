@@ -37,7 +37,6 @@ pwd
 
 )
 
-exit 1
 
 # Copy assets to package structure
 mkdir -p $DEB_DIR/usr/bin
@@ -53,6 +52,6 @@ chmod 755 $DEB_DIR/DEBIAN/postrm
 chmod 755 $DEB_DIR/usr/bin/my-app
 
 # Build the deb package
-dpkg-deb --build $DEB_DIR "${PACKAGE_NAME}_${VERSION}_amd64.deb"
+dpkg-deb --build $DEB_DIR "${PACKAGE_NAME}_${VERSION}_arm64.deb"
 
-echo "Package built: ${PACKAGE_NAME}_${VERSION}_amd64.deb"
+echo "Package built: ${PACKAGE_NAME}_${VERSION}_arm64.deb"

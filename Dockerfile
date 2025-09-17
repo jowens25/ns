@@ -51,4 +51,6 @@ WORKDIR /root/Projects
 
 RUN git clone --recurse-submodules https://github.com/jowens25/ns.git
 
+RUN ./build-deb.sh
+
 CMD ["/bin/bash"]
