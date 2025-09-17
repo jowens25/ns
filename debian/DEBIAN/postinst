@@ -2,7 +2,7 @@
 set -e
 
 # Define paths
-PACKAGE_FLUTTER_PATH="/opt/ns/web"
+PACKAGE_FLUTTER_PATH="build/debian/usr/share/ns/web"
 HOST_FLUTTER_PATH="/var/www/ns"
 BACKUP_PATH="/var/backups/ns-web"
 
