@@ -27,6 +27,9 @@ RUN apt-get install -y \
     libc6-dev:arm64 \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update
+RUN apt-get install nano
+
 # Install Go
 ENV GO_VERSION=1.24.4
 RUN wget https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz && \

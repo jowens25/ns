@@ -1,6 +1,5 @@
 #!/bin/bash
 set -e
-git clone --recurse-submodules https://github.com/jowens25/ns.git
 
 VERSION=${1:-1.0.0}
 PACKAGE_NAME="ns"
