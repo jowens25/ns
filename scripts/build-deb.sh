@@ -31,8 +31,6 @@ pwd
   GOOS=linux \
   GOARCH=arm64 \
   CC=aarch64-linux-gnu-gcc \
-  CGO_CFLAGS="-I$(pwd)/../cross/usr/include" \
-  CGO_LDFLAGS="-L$(pwd)/../cross/usr/lib/aarch64-linux-gnu -Wl,-rpath-link,$(pwd)/../cross/usr/lib/aarch64-linux-gnu" \
   go build -o "../$BUILD_DIR/ns" ./cli
 
 )
