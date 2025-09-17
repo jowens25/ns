@@ -27,6 +27,8 @@ echo "Building Flutter web..."
 
 cd ns-cli
 
+go mod download
+
 echo "Starting go build ..."
 (
   CGO_ENABLED=1 \
