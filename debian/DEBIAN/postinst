@@ -1,9 +1,46 @@
 #!/bin/bash
 set -e
 
-# Enable and start the service
+# Define paths
+PACKAGE_FLUTTER_PATH="/opt/ns/web"
+HOST_FLUTTER_PATH="/var/www/ns"
+BACKUP_PATH="/var/backups/ns-web"
+
+echo "Installing NS web files..."
+
+# Create backup of existing files if they exist
+if [ -d "$HOST_FLUTTER_PATH" ]; then
+    echo "Backing up existing web files to $BACKUP_PATH"
+    mkdir -p "$(dirname "$BACKUP_PATH")"
+    cp -r "$HOST_FLUTTER_PATH" "$BACKUP_PATH.$(date +%Y%m%d_%H%M%S)"
+fi
+
+# Create target directory if it doesn't exist
+mkdir -p "$HOST_FLUTTER_PATH"
+
+# Copy Flutter files from package to target location
+echo "Copying web files to $HOST_FLUTTER_PATH"
+cp -r "$PACKAGE_FLUTTER_PATH"/* "$HOST_FLUTTER_PATH"/
+
+# Set appropriate permissions
+chown -R www-data:www-data "$HOST_FLUTTER_PATH"
+chmod -R 755 "$HOST_FLUTTER_PATH"
+
+# Reload systemd and enable/start services
 systemctl daemon-reload
-systemctl enable ns.service
-systemctl start ns.service
+
+# If you have a service file, enable and start it
+if [ -f "/etc/systemd/system/ns.service" ]; then
+    systemctl enable ns.service
+    systemctl start ns.service
+fi
+
+# Restart nginx if it's running (optional)
+if systemctl is-active --quiet nginx; then
+    echo "Restarting nginx..."
+    systemctl restart nginx
+fi
+
+echo "NS installation completed successfully"
 
 exit 0

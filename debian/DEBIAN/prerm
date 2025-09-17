@@ -1,0 +1,15 @@
+#!/bin/bash
+set -e
+
+# Stop services before removal
+if systemctl is-active --quiet ns.service; then
+    echo "Stopping NS service..."
+    systemctl stop ns.service
+fi
+
+if systemctl is-enabled --quiet ns.service; then
+    echo "Disabling NS service..."
+    systemctl disable ns.service
+fi
+
+exit 0

@@ -1,0 +1,18 @@
+#!/bin/bash
+set -e
+
+case "$1" in
+    remove)
+        echo "NS package removed, web files preserved at /var/www/ns"
+        ;;
+    purge)
+        echo "Purging NS web files..."
+        rm -rf /var/www/ns
+        echo "NS completely removed"
+        ;;
+esac
+
+# Reload systemd
+systemctl daemon-reload
+
+exit 0
