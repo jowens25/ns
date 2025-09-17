@@ -1,0 +1,14 @@
+[Unit]
+Description=Novus
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/usr/share/ns
+ExecStart=/usr/bin/ns
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
