@@ -41,16 +41,16 @@ echo "Starting go build ..."
 
 # Copy assets to package structure
 mkdir -p $DEB_DIR/usr/bin
-mkdir -p $DEB_DIR/usr/share/my-app/web
+mkdir -p $DEB_DIR/usr/share/ns/web
 
-cp $BUILD_DIR/my-app $DEB_DIR/usr/bin/
-cp -r flutter-app/build/web/* $DEB_DIR/usr/share/my-app/web/
+cp $BUILD_DIR/ns $DEB_DIR/usr/bin/
+cp -r flutter-app/build/web/* $DEB_DIR/usr/share/ns/web/
 
 # Set permissions
 chmod 755 $DEB_DIR/DEBIAN/postinst
 chmod 755 $DEB_DIR/DEBIAN/prerm
 chmod 755 $DEB_DIR/DEBIAN/postrm
-chmod 755 $DEB_DIR/usr/bin/my-app
+chmod 755 $DEB_DIR/usr/bin/ns
 
 # Build the deb package
 dpkg-deb --build $DEB_DIR "${PACKAGE_NAME}_${VERSION}_arm64.deb"

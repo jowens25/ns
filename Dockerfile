@@ -49,6 +49,10 @@ ENV PATH=$PATH:${FLUTTER_HOME}/bin
 
 WORKDIR /root/Projects
 
+
+ARG CACHEBUST=1
+
+
 RUN git clone --recurse-submodules https://github.com/jowens25/ns.git
 
 WORKDIR /root/Projects/ns
