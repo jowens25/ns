@@ -22,11 +22,12 @@ sed -i "s/Version: .*/Version: $VERSION/" $DEB_DIR/DEBIAN/control
 echo "Building Flutter web..."
 (
   cd ns-ui
-  #flutter build web --release
+  flutter build web --release
 )
 
 cd ns-cli
 
+echo "Starting go build ..."
 (
   CGO_ENABLED=1 \
   GOOS=linux \
