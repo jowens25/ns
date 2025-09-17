@@ -24,15 +24,15 @@ echo "Building Flutter web..."
   cd ns-ui
   #flutter build web --release
 )
-pwd
+
+cd ns-cli
+
 (
-  cd ns-cli
   CGO_ENABLED=1 \
   GOOS=linux \
   GOARCH=arm64 \
   CC=aarch64-linux-gnu-gcc \
   go build -o "../$BUILD_DIR/ns" ./cli
-
 )
 
 
