@@ -6,6 +6,7 @@ Wants=network.target
 [Service]
 Type=simple
 User=root
+Group=root
 WorkingDirectory=/usr/share/ns
 ExecStart=/usr/bin/ns service enable app
 Restart=always
@@ -13,11 +14,14 @@ RestartSec=10
 StandardOutput=journal
 StandardError=journal
 
-# Security settings
-NoNewPrivileges=yes
-ProtectSystem=strict
-ProtectHome=yes
-ReadWritePaths=/var/log /tmp /var/www/ns
+NoNewPrivileges=no
+ProtectSystem=no
+ProtectHome=no
+PrivateTmp=no
+PrivateDevices=no
+ProtectKernelTunables=no
+ProtectKernelModules=no
+ProtectControlGroups=no
 
 [Install]
 WantedBy=multi-user.target
