@@ -29,7 +29,7 @@ mkdir -p $BUILD_DIR
     cd lib
     sed -i -E "s#(final String frontendVersion = \")[^\"]*(\";)#\1${UI_VERSION}\2#" main.dart
     cd ..
-    
+
     flutter build web --release
 
     cd ..
@@ -43,9 +43,8 @@ mkdir -p $BUILD_DIR
 # Go build
 (
     echo "Starting go build..."
-    pwd
+
     cd ns-cli
-    pwd
 
     MINOR=$(git rev-list --count HEAD --merges)
     PATCH=$(git rev-list --count HEAD)
@@ -63,7 +62,6 @@ mkdir -p $BUILD_DIR
     go build -o ../build/ns ./cli
 )
 
-exit 1
 
 # Verify binary was created
 if [ ! -f "$BUILD_DIR/ns" ]; then
