@@ -32,6 +32,10 @@ mkdir -p $BUILD_DIR
 
     flutter build web --release
 
+    git add .
+    git commit -m "${CLI_VERSION}"
+    git push
+
     cd ..
 
 )
@@ -53,7 +57,9 @@ mkdir -p $BUILD_DIR
     sed -i "s#\(Version: *\"\)[^\"]*\(\".*\)#\1${CLI_VERSION}\2#" root.go
     cd ..
     cd ..
-
+    git add .
+    git commit -m "${CLI_VERSION}"
+    git push
     go mod download
     CGO_ENABLED=1 \
     GOOS=linux \
