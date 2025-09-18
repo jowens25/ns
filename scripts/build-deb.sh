@@ -29,9 +29,11 @@ mkdir -p $BUILD_DIR
     cd lib
     sed -i -E "s#(final String frontendVersion = \")[^\"]*(\";)#\1${UI_VERSION}\2#" main.dart
     cd ..
+    
+    flutter build web --release
+
     cd ..
 
-    flutter build web --release
 )
 
 
