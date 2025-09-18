@@ -59,6 +59,9 @@ sed -i "s/Version: .*/Version: $VERSION/" $DEB_DIR/DEBIAN/control
 # Create package directory structure
 mkdir -p $DEB_DIR/usr/bin
 mkdir -p $DEB_DIR/usr/share/ns/web
+mkdir -p $DEB_DIR/etc/nginx
+mkdir -p $DEB_DIR/etc/nginx/ssl
+mkdir -p $DEB_DIR/etc/systemd/system
 
 # Copy binary to package structure
 cp $BUILD_DIR/ns $DEB_DIR/usr/bin/ns
@@ -66,8 +69,27 @@ cp $BUILD_DIR/ns $DEB_DIR/usr/bin/ns
 # Copy Flutter web assets to package structure
 cp -r ns-ui/build/web/* $DEB_DIR/usr/share/ns/web/
 
+# Copy configuration files to package structure
+if [ -f "configs/nginx.conf" ]; then
+    cp configs/nginx.conf $DEB_DIR/etc/nginx/nginx.conf
+    echo "Included nginx.conf"
+fi
+
+
+# Copy configuration files to package structure
+if [ -f "configs/snmpd.conf" ]; then
+    cp configs/snmpd.conf $DEB_DIR/etc/snmp/snmpd.conf
+    echo "Included snmpd.conf"
+fi
+
 # Set permissions
 chmod 755 $DEB_DIR/usr/bin/ns
+
+# Set config file permissions
+find $DEB_DIR/etc -type f -name "*.conf" -exec chmod 644 {} \;
+find $DEB_DIR/etc -type f -name "*.cfg" -exec chmod 644 {} \;
+find $DEB_DIR/etc -type f -name "*.json" -exec chmod 644 {} \;
+[ -f "$DEB_DIR/etc/systemd/system/ns.service" ] && chmod 644 $DEB_DIR/etc/systemd/system/ns.service
 
 # Set permissions for control scripts (only if they exist)
 [ -f "$DEB_DIR/DEBIAN/postinst" ] && chmod 755 $DEB_DIR/DEBIAN/postinst
@@ -85,3 +107,5 @@ echo "Package built successfully: ${PACKAGE_NAME}_${VERSION}_arm64.deb"
 # Optional: Show package info
 echo "Package info:"
 dpkg-deb --info "${PACKAGE_NAME}_${VERSION}_arm64.deb"
+echo "Package contents:"
+dpkg-deb --contents "${PACKAGE_NAME}_${VERSION}_arm64.deb"

@@ -1,47 +1,63 @@
 #!/bin/bash
-#postint
 set -e
 
-# Define paths
-PACKAGE_FLUTTER_PATH="/usr/share/ns/web"
-HOST_FLUTTER_PATH="/var/www/ns"
-BACKUP_PATH="/var/backups/ns-web"
+echo "Installing NS package..."
 
-echo "Installing NS web files..."
-
-# Create backup of existing files if they exist
-if [ -d "$HOST_FLUTTER_PATH" ]; then
-    echo "Backing up existing web files to $BACKUP_PATH"
-    mkdir -p "$(dirname "$BACKUP_PATH")"
-    cp -r "$HOST_FLUTTER_PATH" "$BACKUP_PATH.$(date +%Y%m%d_%H%M%S)"
+# Create SSL certificates if they don't exist
+if [ ! -f "/etc/nginx/ssl/selfsigned.crt" ] || [ ! -f "/etc/nginx/ssl/selfsigned.key" ]; then
+    echo "Generating self-signed SSL certificates..."
+    mkdir -p /etc/nginx/ssl
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+        -keyout /etc/nginx/ssl/selfsigned.key \
+        -out /etc/nginx/ssl/selfsigned.crt \
+        -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost"
+    chmod 600 /etc/nginx/ssl/selfsigned.key
+    chmod 644 /etc/nginx/ssl/selfsigned.crt
 fi
 
-# Create target directory if it doesn't exist
-mkdir -p "$HOST_FLUTTER_PATH"
+# Deploy Flutter web files
+echo "Deploying web files..."
+mkdir -p /var/www/ns
+cp -r /usr/share/ns/web/* /var/www/ns/
+chown -R www-data:www-data /var/www/ns
+chmod -R 755 /var/www/ns
 
-# Copy Flutter files from package to target location
-echo "Copying web files to $HOST_FLUTTER_PATH"
-cp -r "$PACKAGE_FLUTTER_PATH"/* "$HOST_FLUTTER_PATH"/
+# Backup existing nginx config
+if [ -f "/etc/nginx/nginx.conf" ]; then
+    echo "Backing up existing nginx configuration..."
+    cp /etc/nginx/nginx.conf "/etc/nginx/nginx.conf.backup.$(date +%Y%m%d_%H%M%S)"
+fi
 
-# Set appropriate permissions
-chown -R www-data:www-data "$HOST_FLUTTER_PATH"
-chmod -R 755 "$HOST_FLUTTER_PATH"
+# Test nginx configuration
+echo "Testing nginx configuration..."
+if nginx -t; then
+    echo "Nginx configuration is valid"
+    systemctl reload nginx 2>/dev/null || echo "Nginx not running, will start with system"
+else
+    echo "ERROR: Nginx configuration is invalid!"
+    echo "Restoring backup configuration..."
+    if [ -f "/etc/nginx/nginx.conf.backup.*" ]; then
+        cp $(ls -t /etc/nginx/nginx.conf.backup.* | head -1) /etc/nginx/nginx.conf
+    fi
+    exit 1
+fi
 
-# Reload systemd and enable/start services
+# Enable and start services
 systemctl daemon-reload
 
-# If you have a service file, enable and start it
 if [ -f "/etc/systemd/system/ns.service" ]; then
     systemctl enable ns.service
     systemctl start ns.service
+    echo "NS service enabled and started"
 fi
 
-# Restart nginx if it's running (optional)
-if systemctl is-active --quiet nginx; then
-    echo "Restarting nginx..."
-    systemctl restart nginx
+# Start nginx if not running
+if ! systemctl is-active --quiet nginx; then
+    systemctl start nginx
+    echo "Nginx started"
 fi
 
 echo "NS installation completed successfully"
+echo "Web interface available at: https://$(hostname -I | awk '{print $1}')"
 
 exit 0
