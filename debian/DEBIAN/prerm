@@ -1,4 +1,5 @@
 #!/bin/bash
+#prerm
 set -e
 
 # Stop services before removal

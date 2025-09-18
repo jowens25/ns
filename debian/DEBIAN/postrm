@@ -1,4 +1,5 @@
 #!/bin/bash
+#postrm
 set -e
 
 case "$1" in
