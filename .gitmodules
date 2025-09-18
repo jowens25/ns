@@ -1,6 +1,8 @@
 [submodule "ns-cli"]
 	path = ns-cli
 	url = https://github.com/jowens25/ns-cli.git
+	branch = main
 [submodule "ns-ui"]
 	path = ns-ui
 	url = https://github.com/jowens25/ns-ui.git
+	branch = main
