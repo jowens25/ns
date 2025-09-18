@@ -1,7 +1,13 @@
 #!/bin/bash
 set -e
 
-VERSION=${1:-1.0.2}
+
+MAJOR="1"
+MINOR=$(git rev-list --count HEAD --merges)
+PATCH=$(git rev-list --count HEAD)
+
+VERSION="${MAJOR}.${MINOR}.${PATCH}"
+
 PACKAGE_NAME="ns"
 BUILD_DIR="build"
 DEB_DIR="$BUILD_DIR/debian"
@@ -16,13 +22,37 @@ mkdir -p $BUILD_DIR
 (
     echo "Building Flutter web..."
     cd ns-ui
+
+    MINOR=$(git rev-list --count HEAD --merges)
+    PATCH=$(git rev-list --count HEAD)
+    UI_VERSION="${MAJOR}.${MINOR}.${PATCH}"
+    cd lib
+    sed -i -E "s#(final String frontendVersion = \")[^\"]*(\";)#\1${UI_VERSION}\2#" main.dart
+    cd ..
+    cd ..
+
     flutter build web --release
 )
+
+
+
+
 
 # Go build
 (
     echo "Starting go build..."
+    pwd
     cd ns-cli
+    pwd
+
+    MINOR=$(git rev-list --count HEAD --merges)
+    PATCH=$(git rev-list --count HEAD)
+    CLI_VERSION="${MAJOR}.${MINOR}.${PATCH}"
+    cd cli/cmd
+    sed -i "s#\(Version: *\"\)[^\"]*\(\".*\)#\1${CLI_VERSION}\2#" root.go
+    cd ..
+    cd ..
+
     go mod download
     CGO_ENABLED=1 \
     GOOS=linux \
@@ -30,6 +60,8 @@ mkdir -p $BUILD_DIR
     CC=aarch64-linux-gnu-gcc \
     go build -o ../build/ns ./cli
 )
+
+exit 1
 
 # Verify binary was created
 if [ ! -f "$BUILD_DIR/ns" ]; then
