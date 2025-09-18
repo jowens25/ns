@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-VERSION=${1:-1.0.1}
+VERSION=${1:-1.0.2}
 PACKAGE_NAME="ns"
 BUILD_DIR="build"
 DEB_DIR="$BUILD_DIR/debian"
