@@ -60,6 +60,7 @@ sed -i "s/Version: .*/Version: $VERSION/" $DEB_DIR/DEBIAN/control
 mkdir -p $DEB_DIR/usr/bin
 mkdir -p $DEB_DIR/usr/share/ns/web
 mkdir -p $DEB_DIR/etc/nginx
+mkdir -p $DEB_DIR/etc/snmp
 mkdir -p $DEB_DIR/etc/nginx/ssl
 mkdir -p $DEB_DIR/etc/systemd/system
 
