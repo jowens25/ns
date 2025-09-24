@@ -1,0 +1,17 @@
+# Begin /etc/xinetd.d/telnet
+
+service telnet
+{
+    disable = no
+    flags = IPv6
+    socket_type = stream
+    user = root
+    wait = no
+    server = /usr/sbin/in.telnetd
+    # server_args = -i
+    log_on_success += DURATION
+    log_on_failure += USERID
+    instances = 9
+}
+
+# End /etc/xinetd.d/telnet

@@ -54,10 +54,10 @@ mkdir -p $BUILD_DIR
     cd ..
     cd ..
     go mod download
-    CGO_ENABLED=1 \
-    GOOS=linux \
-    GOARCH=arm64 \
-    CC=aarch64-linux-gnu-gcc \
+    #CGO_ENABLED=1 \
+    #GOOS=linux \
+    #GOARCH=arm64 \
+    #CC=aarch64-linux-gnu-gcc \
     go build -o ../build/ns ./cli
 )
 
@@ -90,8 +90,11 @@ sed -i "s/Version: .*/Version: $VERSION/" $DEB_DIR/DEBIAN/control
 # Create package directory structure
 mkdir -p $DEB_DIR/usr/bin
 mkdir -p $DEB_DIR/usr/share/ns/web
+mkdir -p $DEB_DIR/usr/share/ns/configs
 mkdir -p $DEB_DIR/etc/nginx
 mkdir -p $DEB_DIR/etc/snmp
+mkdir -p $DEB_DIR/etc/xinetd.d
+mkdir -p $DEB_DIR/etc/security
 mkdir -p $DEB_DIR/etc/nginx/ssl
 mkdir -p $DEB_DIR/etc/systemd/system
 
@@ -101,18 +104,45 @@ cp $BUILD_DIR/ns $DEB_DIR/usr/bin/ns
 # Copy Flutter web assets to package structure
 cp -r ns-ui/build/web/* $DEB_DIR/usr/share/ns/web/
 
+# Copy all the configs for reset
+cp -r configs/* $DEB_DIR/usr/share/ns/configs/
+
 # Copy configuration files to package structure
 if [ -f "configs/nginx.conf" ]; then
     cp configs/nginx.conf $DEB_DIR/etc/nginx/nginx.conf
     echo "Included nginx.conf"
 fi
 
-
-# Copy configuration files to package structure
 if [ -f "configs/snmpd.conf" ]; then
     cp configs/snmpd.conf $DEB_DIR/etc/snmp/snmpd.conf
     echo "Included snmpd.conf"
 fi
+
+if [ -f "configs/ftp" ]; then
+    cp configs/ftp $DEB_DIR/etc/xinetd.d/ftp
+    echo "Included ftp"
+fi
+
+if [ -f "configs/ssh" ]; then
+    cp configs/ssh $DEB_DIR/etc/xinetd.d/ssh
+    echo "Included ssh"
+fi
+
+if [ -f "configs/telnet" ]; then
+    cp configs/telnet $DEB_DIR/etc/xinetd.d/telnet
+    echo "Included telnet"
+fi
+
+if [ -f "configs/pwquality.conf" ]; then
+    cp configs/pwquality.conf $DEB_DIR/etc/security/pwquality.conf
+    echo "Included pwquality.conf"
+fi
+
+if [ -f "configs/login.defs" ]; then
+    cp configs/login.defs $DEB_DIR/etc/login.defs
+    echo "Included login.defs"
+fi
+
 
 # Set permissions
 chmod 755 $DEB_DIR/usr/bin/ns

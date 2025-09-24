@@ -22,6 +22,9 @@ cp -r /usr/share/ns/web/* /var/www/ns/
 chown -R www-data:www-data /var/www/ns
 chmod -R 755 /var/www/ns
 
+
+
+
 # Backup existing nginx config
 if [ -f "/etc/nginx/nginx.conf" ]; then
     echo "Backing up existing nginx configuration..."
