@@ -1,0 +1,19 @@
+# Begin /etc/xinetd.d/ssh
+
+service ssh
+{
+    disable = no
+    socket_type = stream
+    wait = no
+    user = root
+    server = /usr/sbin/sshd
+    server_args = -i
+    groups = yes
+    flags = REUSE IPv6
+    protocol = tcp
+    log_on_success += DURATION
+    log_on_failure += USERID
+    instances = 9
+}
+
+# End /etc/xinetd.d/ssh
