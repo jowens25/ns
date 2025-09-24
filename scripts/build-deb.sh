@@ -54,10 +54,10 @@ mkdir -p $BUILD_DIR
     cd ..
     cd ..
     go mod download
-    #CGO_ENABLED=1 \
-    #GOOS=linux \
-    #GOARCH=arm64 \
-    #CC=aarch64-linux-gnu-gcc \
+    CGO_ENABLED=1 \
+    GOOS=linux \
+    GOARCH=arm64 \
+    CC=aarch64-linux-gnu-gcc \
     go build -o ../build/ns ./cli
 )
 
