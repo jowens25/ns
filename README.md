@@ -25,3 +25,15 @@ Old Debian build to new Debian build
 21. had to run dpkg -r ns to remove ns and then install ngnix and stuff
 22. okay, found that on init was unable to open database file
 23. also unable to create bash completeation scripts
+
+
+reflashed.... 
+
+1. changed /network/interfaces/
+2. reboot
+3. copied over .deb
+4. apt update, upgrade
+5. installed the pre-depends....
+6. still hung on login.defs overwrite...
+7. had some trouble with init network config....
+8. making a user and login into it, new users are not in the suderos files
