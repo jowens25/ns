@@ -91,12 +91,14 @@ sed -i "s/Version: .*/Version: $VERSION/" $DEB_DIR/DEBIAN/control
 mkdir -p $DEB_DIR/usr/bin
 mkdir -p $DEB_DIR/usr/share/ns/web
 mkdir -p $DEB_DIR/usr/share/ns/configs
+mkdir -p $DEB_DIR/etc/ns
 mkdir -p $DEB_DIR/etc/nginx
 mkdir -p $DEB_DIR/etc/snmp
 mkdir -p $DEB_DIR/etc/xinetd.d
 mkdir -p $DEB_DIR/etc/security
 mkdir -p $DEB_DIR/etc/nginx/ssl
 mkdir -p $DEB_DIR/etc/systemd/system
+mkdir -p $DEB_DIR/etc/bash_completion.d/ns.bash
 
 # Copy binary to package structure
 cp $BUILD_DIR/ns $DEB_DIR/usr/bin/ns
