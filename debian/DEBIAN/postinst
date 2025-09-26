@@ -3,6 +3,12 @@ set -e
 
 echo "Installing NS package..."
 
+dpkg-divert --add --rename --divert /etc/nginx/nginx.conf.ns /etc/nginx/nginx.conf
+
+dpkg-divert --add --rename --divert /etc/login.defs.ns /etc/login.defs
+
+
+
 # Create SSL certificates if they don't exist
 if [ ! -f "/etc/nginx/ssl/selfsigned.crt" ] || [ ! -f "/etc/nginx/ssl/selfsigned.key" ]; then
     echo "Generating self-signed SSL certificates..."
