@@ -3,11 +3,10 @@ set -e
 
 echo "Installing NS package..."
 
+
+
 dpkg-divert --add --rename --divert /etc/nginx/nginx.conf.ns /etc/nginx/nginx.conf
-
 dpkg-divert --add --rename --divert /etc/login.defs.ns /etc/login.defs
-
-
 
 # Create SSL certificates if they don't exist
 if [ ! -f "/etc/nginx/ssl/selfsigned.crt" ] || [ ! -f "/etc/nginx/ssl/selfsigned.key" ]; then
@@ -28,8 +27,45 @@ cp -r /usr/share/ns/web/* /var/www/ns/
 chown -R www-data:www-data /var/www/ns
 chmod -R 755 /var/www/ns
 
+# Set proper permissions for xinetd config files
+# Admins can write, all users can read
+echo "Setting permissions for xinetd configurations..."
+chown root:novusadmin /etc/xinetd.d/ssh
+chmod 664 /etc/xinetd.d/ssh
 
+chown root:novusadmin /etc/xinetd.d/ftp
+chmod 664 /etc/xinetd.d/ftp
 
+chown root:novusadmin /etc/xinetd.d/telnet
+chmod 664 /etc/xinetd.d/telnet
+
+# Set proper permissions for nginx config
+# Admins can write, all users can read
+chown root:novusadmin /etc/nginx/nginx.conf
+chmod 664 /etc/nginx/nginx.conf
+
+# Create NS config directory with proper permissions
+echo "Setting up NS configuration directory..."
+mkdir -p /etc/ns
+chown root:novusadmin /etc/ns
+chmod 750 /etc/ns  # rwxr-x--- (root can do all, admins can read/execute)
+
+# If you have a permissions config file, set it up
+if [ -f "/usr/share/ns/permissions.yaml" ]; then
+    cp /usr/share/ns/permissions.yaml /etc/ns/permissions.yaml
+    chown root:root /etc/ns/permissions.yaml
+    chmod 644 /etc/ns/permissions.yaml  # Everyone can read
+fi
+
+# Create NS data directory
+mkdir -p /var/lib/ns
+chown root:novusadmin /var/lib/ns
+chmod 770 /var/lib/ns  # rwxrwx--- (root and admins can write)
+
+# Create log directory
+mkdir -p /var/log/ns
+chown root:novusadmin /var/log/ns
+chmod 770 /var/log/ns  # rwxrwx--- (root and admins can write)
 
 # Backup existing nginx config
 if [ -f "/etc/nginx/nginx.conf" ]; then
@@ -45,7 +81,7 @@ if nginx -t; then
 else
     echo "ERROR: Nginx configuration is invalid!"
     echo "Restoring backup configuration..."
-    if [ -f "/etc/nginx/nginx.conf.backup.*" ]; then
+    if [ -f "/etc/nginx/nginx.conf.backup."* ]; then
         cp $(ls -t /etc/nginx/nginx.conf.backup.* | head -1) /etc/nginx/nginx.conf
     fi
     exit 1
@@ -66,7 +102,19 @@ if ! systemctl is-active --quiet nginx; then
     echo "Nginx started"
 fi
 
+# Set permissions on the NS binary
+if [ -f "/usr/bin/ns" ]; then
+    chown root:root /usr/bin/ns
+    chmod 755 /usr/bin/ns  # Everyone can execute, only root can write
+fi
+
+echo ""
+echo "========================================"
 echo "NS installation completed successfully"
+echo "========================================"
+echo ""
 echo "Web interface available at: https://$(hostname -I | awk '{print $1}')"
+echo ""
+
 
 exit 0
