@@ -39,3 +39,15 @@ reflashed....
 8. making a user and login into it, new users are not in the suderos files
 9. still having some trouble with sudo, permissions, configs overwriting, nmcli con non default, httptoggle still not working
 10. bash completion does not work
+
+
+///// round 3
+
+outstanding issues.
+1. UFW rules.... HTTP toggle doesnt work on debian
+2. Sudoers file / restrictions 
+3. Messages / feedback in the UI
+4. obviously we might need a real jwt token at some pointAwesome
+
+5. Probably the biggest thing not covered is commenting out all the /etc/network/interfaces which will probably get reset by the mcu.....
+6. need to set ownership of different config files for anyone that runs ns
