@@ -48,24 +48,12 @@ chmod 664 /etc/nginx/nginx.conf
 echo "Setting up NS configuration directory..."
 mkdir -p /etc/ns
 chown root:novusadmin /etc/ns
-chmod 750 /etc/ns  # rwxr-x--- (root can do all, admins can read/execute)
+chmod 777 /etc/ns  # rwxr-x--- (root can do all, admins can read/execute)
 
-# If you have a permissions config file, set it up
-if [ -f "/usr/share/ns/permissions.yaml" ]; then
-    cp /usr/share/ns/permissions.yaml /etc/ns/permissions.yaml
-    chown root:root /etc/ns/permissions.yaml
-    chmod 644 /etc/ns/permissions.yaml  # Everyone can read
-fi
 
-# Create NS data directory
-mkdir -p /var/lib/ns
-chown root:novusadmin /var/lib/ns
-chmod 770 /var/lib/ns  # rwxrwx--- (root and admins can write)
 
-# Create log directory
-mkdir -p /var/log/ns
-chown root:novusadmin /var/log/ns
-chmod 770 /var/log/ns  # rwxrwx--- (root and admins can write)
+chown root:novusadmin /var/log/ns.log
+chmod 777 /var/log/ns.log  # rwxrwx--- (root and admins can write)
 
 # Backup existing nginx config
 if [ -f "/etc/nginx/nginx.conf" ]; then
