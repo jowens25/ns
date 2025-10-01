@@ -13,4 +13,4 @@ if [ -z "$LATEST_DEB" ]; then
 fi
 
 echo "Deploying package: $LATEST_DEB"
-scp "$LATEST_DEB" jowens@10.1.10.205:~/
+scp "$LATEST_DEB" root@10.1.10.220:~/
