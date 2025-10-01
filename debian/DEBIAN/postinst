@@ -44,6 +44,11 @@ chmod 664 /etc/xinetd.d/telnet
 chown root:novusadmin /etc/nginx/nginx.conf
 chmod 664 /etc/nginx/nginx.conf
 
+chown root:novusadmin /etc/snmp/snmpd.conf
+chmod 660 /etc/snmp/snmpd.conf
+
+
+
 # Create NS config directory with proper permissions
 echo "Setting up NS configuration directory..."
 mkdir -p /etc/ns
