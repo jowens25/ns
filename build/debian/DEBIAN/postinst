@@ -1,0 +1,113 @@
+#!/bin/bash
+set -e
+
+echo "Installing NS package..."
+
+
+
+dpkg-divert --add --rename --divert /etc/nginx/nginx.conf.ns /etc/nginx/nginx.conf
+dpkg-divert --add --rename --divert /etc/login.defs.ns /etc/login.defs
+
+# Create SSL certificates if they don't exist
+if [ ! -f "/etc/nginx/ssl/selfsigned.crt" ] || [ ! -f "/etc/nginx/ssl/selfsigned.key" ]; then
+    echo "Generating self-signed SSL certificates..."
+    mkdir -p /etc/nginx/ssl
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+        -keyout /etc/nginx/ssl/selfsigned.key \
+        -out /etc/nginx/ssl/selfsigned.crt \
+        -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost"
+    chmod 600 /etc/nginx/ssl/selfsigned.key
+    chmod 644 /etc/nginx/ssl/selfsigned.crt
+fi
+
+# Deploy Flutter web files
+echo "Deploying web files..."
+mkdir -p /var/www/ns
+cp -r /usr/share/ns/web/* /var/www/ns/
+chown -R www-data:www-data /var/www/ns
+chmod -R 755 /var/www/ns
+
+# Set proper permissions for xinetd config files
+# Admins can write, all users can read
+echo "Setting permissions for xinetd configurations..."
+chown root:novusadmin /etc/xinetd.d/ssh
+chmod 664 /etc/xinetd.d/ssh
+
+chown root:novusadmin /etc/xinetd.d/ftp
+chmod 664 /etc/xinetd.d/ftp
+
+chown root:novusadmin /etc/xinetd.d/telnet
+chmod 664 /etc/xinetd.d/telnet
+
+# Set proper permissions for nginx config
+# Admins can write, all users can read
+chown root:novusadmin /etc/nginx/nginx.conf
+chmod 664 /etc/nginx/nginx.conf
+
+chown root:novusadmin /etc/snmp/snmpd.conf
+chmod 660 /etc/snmp/snmpd.conf
+
+
+
+# Create NS config directory with proper permissions
+echo "Setting up NS configuration directory..."
+mkdir -p /etc/ns
+chown root:novusadmin /etc/ns
+chmod 777 /etc/ns  # rwxr-x--- (root can do all, admins can read/execute)
+
+
+
+chown root:novusadmin /var/log/ns.log
+chmod 777 /var/log/ns.log  # rwxrwx--- (root and admins can write)
+
+# Backup existing nginx config
+if [ -f "/etc/nginx/nginx.conf" ]; then
+    echo "Backing up existing nginx configuration..."
+    cp /etc/nginx/nginx.conf "/etc/nginx/nginx.conf.backup.$(date +%Y%m%d_%H%M%S)"
+fi
+
+# Test nginx configuration
+echo "Testing nginx configuration..."
+if nginx -t; then
+    echo "Nginx configuration is valid"
+    systemctl reload nginx 2>/dev/null || echo "Nginx not running, will start with system"
+else
+    echo "ERROR: Nginx configuration is invalid!"
+    echo "Restoring backup configuration..."
+    if [ -f "/etc/nginx/nginx.conf.backup."* ]; then
+        cp $(ls -t /etc/nginx/nginx.conf.backup.* | head -1) /etc/nginx/nginx.conf
+    fi
+    exit 1
+fi
+
+# Enable and start services
+systemctl daemon-reload
+
+if [ -f "/etc/systemd/system/ns.service" ]; then
+    systemctl enable ns.service
+    systemctl start ns.service
+    echo "NS service enabled and started"
+fi
+
+# Start nginx if not running
+if ! systemctl is-active --quiet nginx; then
+    systemctl start nginx
+    echo "Nginx started"
+fi
+
+# Set permissions on the NS binary
+if [ -f "/usr/bin/ns" ]; then
+    chown root:root /usr/bin/ns
+    chmod 755 /usr/bin/ns  # Everyone can execute, only root can write
+fi
+
+echo ""
+echo "========================================"
+echo "NS installation completed successfully"
+echo "========================================"
+echo ""
+echo "Web interface available at: https://$(hostname -I | awk '{print $1}')"
+echo ""
+
+
+exit 0

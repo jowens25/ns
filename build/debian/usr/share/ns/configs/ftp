@@ -1,0 +1,17 @@
+# Begin /etc/xinetd.d/ftp
+
+service ftp
+{
+    disable = no
+    flags = NAMEINARGS IPv6
+    socket_type = stream
+    user = root
+    wait = no
+    server = /usr/sbin/pure-ftpd
+    server_args = -E
+    log_on_success += DURATION
+    log_on_failure += USERID
+    instances = 20
+}
+
+# End /etc/xinetd.d/ftp<Paste>
