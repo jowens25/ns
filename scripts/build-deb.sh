@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
 
+git config --global user.email "jowens@novuspower.com"
+git config --global user.name "jowens25"
+
+git submodule update --init --recursive
+
 
 MAJOR="1"
 MINOR=$(git rev-list --count HEAD --merges)
