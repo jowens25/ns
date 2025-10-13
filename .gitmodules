@@ -6,3 +6,6 @@
 	path = ns-ui
 	url = https://github.com/jowens25/ns-ui.git
 	branch = main
+[submodule "ns-package"]
+    path = ns-package
+    url = https://github.com/jowens25/ns-package.git
