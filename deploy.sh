@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-git pull --recurse-submodules
+git submodule update --init --recursive
+
 ./scripts/build-deb.sh
 
 # Find the most recent ns_*.deb file
@@ -13,4 +14,7 @@ if [ -z "$LATEST_DEB" ]; then
 fi
 
 echo "Deploying package: $LATEST_DEB"
-scp "$LATEST_DEB" root@10.1.10.220:~/
+
+git add $LATEST_DEB
+git commit -m "$LATEST_DEB"
+git push
