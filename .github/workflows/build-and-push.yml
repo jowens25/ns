@@ -30,7 +30,7 @@ jobs:
           -v ${{ github.workspace }}:/root/Projects \
           -w /root/Projects \
           ns-builder:latest \
-          bash -c './build-deb.sh'
+          bash -c './scripts/build-deb.sh'
     
     # Step 4: Find the built deb file
     - name: Find deb package
