@@ -20,8 +20,10 @@ echo "Deploying package: $LATEST_DEB"
 
 git clone git@github.com:jowens25/ns-package.git
 
+cp $LATEST_DEB ../ns-package/$LATEST_DEB
+
 cd ../ns-package
 
-git add ../ns/$LATEST_DEB
+git add $LATEST_DEB
 git commit -m "$LATEST_DEB"
 git push
