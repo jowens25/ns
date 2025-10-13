@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+git config --global user.email "jowens@novuspower.com"
+git config --global user.name "jowens25"
+
 git submodule update --init --recursive
 
 ./scripts/build-deb.sh
@@ -15,6 +18,10 @@ fi
 
 echo "Deploying package: $LATEST_DEB"
 
-git add $LATEST_DEB
+git clone git@github.com:jowens25/ns-package.git
+
+cd ../ns-package
+
+git add ../ns/$LATEST_DEB
 git commit -m "$LATEST_DEB"
 git push
