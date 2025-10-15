@@ -182,3 +182,29 @@ echo "Package info:"
 dpkg-deb --info "${PACKAGE_NAME}_${VERSION}_arm64.deb"
 echo "Package contents:"
 dpkg-deb --contents "${PACKAGE_NAME}_${VERSION}_arm64.deb"
+
+
+
+cp "${PACKAGE_NAME}_${VERSION}_arm64.deb" ns-package/pool/main/n/ns/
+
+
+cd ns-package
+
+# Generate Packages file
+apt-ftparchive packages pool/ > dists/focal/main/binary-arm64/Packages
+
+# Generate compressed Packages file
+gzip -k dists/focal/main/binary-arm64/Packages
+
+# Generate Release file
+apt-ftparchive release dists/focal/ > dists/focal/Release
+
+echo "Repository metadata updated"
+echo "=== Packages file ===" 
+head -30 dists/focal/main/binary-arm64/Packages
+
+
+git status
+git add .
+git commit -m "Add ns package ${PACKAGE_NAME}_${VERSION}_arm64.deb"
+git push

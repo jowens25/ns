@@ -15,7 +15,8 @@ RUN apt-get install -y \
     crossbuild-essential-arm64 \
     pkg-config \
     dpkg-dev \
-    debhelper
+    debhelper \
+    apt-utils
 
 RUN apt-get install -y \
     libpam0g-dev \
