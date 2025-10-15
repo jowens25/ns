@@ -198,7 +198,7 @@ apt-ftparchive packages pool/ > dists/bullseye/main/binary-arm64/Packages
 gzip -k dists/bullseye/main/binary-arm64/Packages
 
 # Generate Release file
-apt-ftparchive release dists/bullseye/ > dists/bullseye/Release
+apt-ftparchive -c=apt-ftparchive.conf release dists/bullseye/ > dists/bullseye/Release
 
 echo "Repository metadata updated"
 echo "=== Packages file ===" 
