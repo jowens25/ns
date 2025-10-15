@@ -47,7 +47,7 @@ ENV PATH=$PATH:${FLUTTER_HOME}/bin
 # Clone the project
 WORKDIR /root/Projects
 
-# build script ///
+RUN git clone https://github.com/jowens25/ns.git
 
 # Set default command
 CMD ["/bin/bash"]
