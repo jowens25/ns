@@ -208,4 +208,4 @@ head -30 dists/bullseye/main/binary-arm64/Packages
 git status
 git add .
 git commit -m "Add ns package ${PACKAGE_NAME}_${VERSION}_arm64.deb"
-git push
+git push origin HEAD:main
