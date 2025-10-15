@@ -190,6 +190,8 @@ cp "${PACKAGE_NAME}_${VERSION}_arm64.deb" ns-package/pool/main/n/ns/
 
 cd ns-package
 
+ls 
+
 # Generate Packages file
 apt-ftparchive packages pool/ > dists/focal/main/binary-arm64/Packages
 
