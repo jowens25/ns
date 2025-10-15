@@ -4,7 +4,11 @@ set -e
 git config --global user.email "jowens@novuspower.com"
 git config --global user.name "jowens25"
 
-git submodule update --init --recursive
+git clone --recurse-submodules git@github.com:jowens25/ns.git
+
+#git submodule update --init --recursive
+
+cd ns
 
 
 MAJOR="1"
