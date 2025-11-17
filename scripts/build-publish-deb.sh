@@ -10,6 +10,9 @@ git clone --recurse-submodules git@github.com:jowens25/ns.git
 
 cd ns
 
+git checkout main
+git pull origin main
+
 
 MAJOR="1"
 MINOR=$(git rev-list --count HEAD --merges)
