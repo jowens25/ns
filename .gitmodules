@@ -9,3 +9,6 @@
 [submodule "ns-package"]
     path = ns-package
     url = git@github.com:jowens25/ns-package.git
+[submodule "ntl_uart"]
+	path = ntl_uart
+	url = git@github.com:jowens25/ntl_uart.git
