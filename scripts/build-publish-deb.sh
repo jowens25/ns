@@ -10,9 +10,6 @@ git clone --recurse-submodules git@github.com:jowens25/ns.git
 
 cd ns
 
-git checkout main
-git pull origin main
-
 
 MAJOR="1"
 MINOR=$(git rev-list --count HEAD --merges)
@@ -191,8 +188,7 @@ dpkg-deb --contents "${PACKAGE_NAME}_${VERSION}_arm64.deb"
 cp "${PACKAGE_NAME}_${VERSION}_arm64.deb" ns-package/pool/main/n/ns/
 
 cd ns-package
-git checkout main
-git pull origin main
+
 ls 
 
 # Generate Packages file
@@ -212,4 +208,4 @@ head -30 dists/bullseye/main/binary-arm64/Packages
 git status
 git add .
 git commit -m "Add ns package ${PACKAGE_NAME}_${VERSION}_arm64.deb"
-git push origin main
+git push origin HEAD:main
