@@ -191,7 +191,8 @@ dpkg-deb --contents "${PACKAGE_NAME}_${VERSION}_arm64.deb"
 cp "${PACKAGE_NAME}_${VERSION}_arm64.deb" ns-package/pool/main/n/ns/
 
 cd ns-package
-
+git checkout main
+git pull origin main
 ls 
 
 # Generate Packages file
