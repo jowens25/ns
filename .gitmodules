@@ -9,6 +9,15 @@
 [submodule "ns-package"]
     path = ns-package
     url = git@github.com:jowens25/ns-package.git
+	branch = main
 [submodule "ntl_uart"]
 	path = ntl_uart
 	url = git@github.com:jowens25/ntl_uart.git
+	branch = main
+[submodule "ns-agent"]
+	path = ns-agent
+	url = git@github.com:jowens25/ns-agent.git
+	branch = main
+[submodule "ns-socket"]
+	path = ns-socket
+	url = git@github.com:jowens25/ns-socket.git

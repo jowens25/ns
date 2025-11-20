@@ -25,6 +25,14 @@
         "array": "c",
         "string_view": "c",
         "initializer_list": "c",
-        "span": "c"
+        "span": "c",
+        "stdlib.h": "c",
+        "socket_serial.h": "c",
+        "main.h": "c",
+        "socket.h": "c",
+        "io_context": "c",
+        "stdbool.h": "c",
+        "buffer": "c",
+        "in.h": "c"
     }
 }
