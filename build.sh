@@ -13,7 +13,7 @@ deactivate 2>/dev/null || true
 # Use fpm to convert wheel to deb
 fpm -s python -t deb \
     --name ns \
-    --version 0.1.0 \
+    --version 0.1.2 \
     --architecture all \
     --description "Network/System configuration tool" \
     --maintainer "Jacob" \
@@ -28,9 +28,9 @@ fpm -s python -t deb \
     --python-pip /usr/bin/pip3 \
     --python-install-lib /usr/lib/python3/dist-packages \
     --python-install-bin /usr/local/bin \
-    --no-python-dependencies \
     --deb-priority optional \
     --category admin \
-    dist/ns-0.1.0-py3-none-any.whl
+    --python-obey-requirements-txt \
+    dist/ns-0.1.2-py3-none-any.whl
 
-echo "Package built: ns_0.1.0_all.deb"
+echo "Package built: ns_0.1.2_all.deb"

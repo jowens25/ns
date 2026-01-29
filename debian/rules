@@ -2,15 +2,3 @@
 
 %:
 	dh $@ --with python-virtualenv --python /usr/bin/python3
-
-override_dh_virtualenv_install:
-	dh_virtualenv --python /usr/bin/python3 \
-	              --preinstall setuptools \
-	              --preinstall pip \
-	              --preinstall wheel
-
-override_dh_installsystemd:
-	# Skip if you don't have systemd service
-
-override_dh_strip:
-	# Don't strip binaries in virtualenv
