@@ -1,0 +1,13 @@
+[Unit]
+Description = Running a test of NiceGUI.
+After = network.target
+
+[Service]
+User = jowens
+Group = www-data
+WorkingDirectory = /home/jowens/Projects/ns/ns-ui
+Environment="PATH=/home/jowens/Projects/ns/ns-ui/.venv/bin"
+ExecStart=/home/jowens/Projects/ns/ns-ui/.venv/bin/python main.py
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,17 @@
+
+
+the backend services only check if the user is authorized.
+
+the user is authorized once they request and pass authorization
+
+1. app starts.
+2. login screen.
+
+login calls pam service returns true or false (allow them in or not)
+
+once they are in, they try to change something, like the ip address.
+
+Since they have not yet authorized, it will fail
+
+they request authorization. click a button, call auth, store auth, pass / fail
+

@@ -1,0 +1,113 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node name="/com/novus/ns">
+  <interface name="org.freedesktop.DBus.Introspectable">
+      <method name="Introspect">
+          <arg name="data" direction="out" type="s" />
+        </method>
+    </interface>
+    <interface name="org.freedesktop.DBus.Peer">
+      <method name="GetMachineId">
+          <arg name="machine_uuid" direction="out" type="s" />
+        </method>
+        <method name="Ping" />
+    </interface>
+    <interface name="org.freedesktop.DBus.Properties">
+      <method name="Get">
+          <arg name="interface_name" direction="in" type="s" />
+            <arg name="property_name" direction="in" type="s" />
+            <arg name="value" direction="out" type="v" />
+        </method>
+        <method name="Set">
+          <arg name="interface_name" direction="in" type="s" />
+            <arg name="property_name" direction="in" type="s" />
+            <arg name="value" direction="in" type="v" />
+        </method>
+        <method name="GetAll">
+          <arg name="interface_name" direction="in" type="s" />
+            <arg name="props" direction="out" type="a{sv}" />
+        </method>
+        <signal name="PropertiesChanged">
+          <arg name="interface_name" direction="out" type="s" />
+            <arg name="changed_properties" direction="out" type="a{sv}" />
+            <arg name="invalidated_properties" direction="out" type="as" />
+        </signal>
+    </interface>
+    <interface name="org.freedesktop.DBus.ObjectManager">
+      <method name="GetManagedObjects">
+          <arg name="objpath_interfaces_and_properties" direction="out" type="a{oa{sa{sv}}}" />
+        </method>
+        <signal name="InterfacesAdded">
+          <arg name="object_path" direction="out" type="o" />
+            <arg name="interfaces_and_properties" direction="out" type="a{sa{sv}}" />
+        </signal>
+        <signal name="InterfacesRemoved">
+          <arg name="object_path" direction="out" type="o" />
+            <arg name="interfaces" direction="out" type="as" />
+        </signal>
+    </interface>
+    <interface name="com.novus.ns.snmp">
+      <method name="CreateV2User">
+          <arg name="v2User" direction="in" type="a{ss}" />
+        </method>
+        <method name="CreateV3User">
+          <arg name="v3User" direction="in" type="a{ss}" />
+        </method>
+        <method name="GetV2UserByCommunity">
+          <arg name="community" direction="in" type="s" />
+            <arg direction="out" type="a{ss}" />
+        </method>
+        <method name="GetV2Users">
+          <arg direction="out" type="aa{ss}" />
+        </method>
+        <method name="GetV3UserByUsername">
+          <arg name="username" direction="in" type="s" />
+            <arg direction="out" type="a{ss}" />
+        </method>
+        <method name="GetV3Users">
+          <arg direction="out" type="aa{ss}" />
+        </method>
+        <method name="IsActive">
+          <arg direction="out" type="b" />
+        </method>
+        <method name="ModifyV2User">
+          <arg name="editUser" direction="in" type="a{ss}" />
+        </method>
+        <method name="ModifyV3User">
+          <arg name="initUser" direction="in" type="a{ss}" />
+            <arg name="finalUser" direction="in" type="a{ss}" />
+        </method>
+        <method name="RemoveV2User">
+          <arg name="v2User" direction="in" type="a{ss}" />
+        </method>
+        <method name="RemoveV3User">
+          <arg name="v3User" direction="in" type="a{ss}" />
+        </method>
+        <method name="Reset" />
+        <method name="Restart">
+          <arg direction="out" type="b" />
+        </method>
+        <method name="Start">
+          <arg direction="out" type="b" />
+        </method>
+        <method name="Stop">
+          <arg direction="out" type="b" />
+        </method>
+    </interface>
+    <interface name="com.novus.ns.pam">
+      <method name="Authenticate">
+          <arg name="username" direction="in" type="s" />
+            <arg name="password" direction="in" type="s" />
+            <arg direction="out" type="b" />
+        </method>
+    </interface>
+    <interface name="com.novus.ns.socket">
+      <method name="WriteReadCommand">
+          <arg name="cmd" direction="in" type="s" />
+            <arg direction="out" type="s" />
+        </method>
+        <signal name="Rx">
+          <arg direction="out" type="s" />
+        </signal>
+    </interface>
+</node>

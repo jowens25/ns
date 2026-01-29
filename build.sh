@@ -1,0 +1,1 @@
+python -m PyInstaller --onefile --clean main.py --hidden-import dasbus --hidden-import gi --collect-all gi --collect-all dasbus
