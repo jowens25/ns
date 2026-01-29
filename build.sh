@@ -1,3 +1,12 @@
+#!/bin/bash
+
+# Clean previous builds
+rm -rf dist/ build/ *.egg-info ns_*.deb
+
+# Build Python wheel (platform independent)
+python -m build --wheel
+
+# Use fpm to convert wheel to deb
 fpm -s python -t deb \
     --name ns \
     --version 0.1.0 \
@@ -15,4 +24,6 @@ fpm -s python -t deb \
     --python-pip pip3 \
     --deb-priority optional \
     --category admin \
-    pyproject.toml
+    dist/ns-0.1.0-py3-none-any.whl
+
+echo "Package built: ns_0.1.0_all.deb"
