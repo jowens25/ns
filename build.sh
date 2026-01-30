@@ -1,36 +1,31 @@
 #!/bin/bash
-deactivate
+# build-deb.sh
+
+set -e  # Exit on error
+
 # Clean previous builds
-rm -rf dist/ build/ *.egg-info ns_*.deb
+rm -rf dist/ ns_*.deb
 
-# Deactivate venv if active
-deactivate 2>/dev/null || true
+echo "Building wheel with Poetry..."
+poetry build
 
-# Build Python wheel (platform independent) 
-# Use system Python, not venv
-/usr/bin/python3 -m build --wheel
-
-# Use fpm to convert wheel to deb
+echo "Converting wheel to .deb with fpm..."
 fpm -s python -t deb \
     --name ns \
-    --version 0.1.2 \
+    --version 0.2.3 \
     --architecture all \
-    --description "Network/System configuration tool" \
-    --maintainer "Jacob" \
+    --description "Novus power products server configuration tool" \
+    --maintainer "Jacob Owens <jaowens14@protonmail.com>" \
     --url "https://github.com/jowens25/ns" \
     --license MIT \
     --depends "python3 (>= 3.11)" \
     --depends python3-pip \
     --depends firewalld \
     --depends network-manager \
-    --python-package-name-prefix python3 \
     --python-bin /usr/bin/python3 \
-    --python-pip /usr/bin/pip3 \
     --python-install-lib /usr/lib/python3/dist-packages \
     --python-install-bin /usr/local/bin \
-    --deb-priority optional \
-    --category admin \
-    --python-obey-requirements-txt \
-    dist/ns-0.1.2-py3-none-any.whl
+    dist/ns-0.2.3-py3-none-any.whl
 
-echo "Package built: ns_0.1.2_all.deb"
+echo "✅ Package built: ns_0.2.3_all.deb"
+ls -lh ns_0.2.3_all.deb
