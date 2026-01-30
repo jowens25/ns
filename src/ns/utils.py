@@ -1,5 +1,5 @@
-from pathlib import Path
-# Works in dev, packaging, systemd, deb install
-BASE_DIR = Path(__file__).parent.parent.parent  # src/ns/ui → project root
-ASSETS_DIR = BASE_DIR / "assets"
-INTROSPECTION_DIR = BASE_DIR / "introspection"
+from importlib.resources import files
+
+# Access assets relative to your package
+ASSETS_DIR = files('ns').joinpath('assets')
+INTROSPECTION_DIR = files('ns').joinpath('introspection')
