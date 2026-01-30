@@ -43,8 +43,8 @@ def login_page():
         ui.button("Close", on_click=support_dialog.close).classes("bg-secondary")
 
     with ui.column(align_items="center").classes("absolute-center gap-16"):
-        print(os.getcwd())
-        ui.image(ASSETS_DIR / "NOVUS_LOGO.svg").classes("w-128 max-w-128")
+        print(str(ASSETS_DIR / "NOVUS_LOGO.svg"))
+        ui.image(str(ASSETS_DIR / "NOVUS_LOGO.svg")).classes("w-128 max-w-128")
 
         with ui.card():
             username = ui.input("Username")

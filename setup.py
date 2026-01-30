@@ -16,6 +16,14 @@ setup(
             'ns=ns.ui.main:main',  # Adjust 'main' to your actual function
         ],
     },
+
+    package_data={
+        'ns': [
+            'assets/**/*',
+            'introspection/**/*',
+        ],
+    },
+
     install_requires=[
         "aiofiles", "aiohappyeyeballs", "aiohttp", "aiosignal", "annotated-doc",
         "annotated-types", "anyio", "attrs", "beautifulsoup4", "bidict", "bs4",

@@ -72,7 +72,7 @@ async def GetFirewalldConfigZone(bus: MessageBus, path : str):
 
 #def GetDevice(bus: MessageBus, path : str):
 #    file_name = 'org.freedesktop.NetworkManager.Device.xml'
-#    with open(INTROSPECTION_DIR /file_name, "r") as f:
+#    with open(str(INTROSPECTION_DIR /file_name), "r") as f:
 #        introspection = f.read()
 #    obj = bus.get_proxy_object('org.freedesktop.NetworkManager', path, introspection)
 #    return obj.get_interface('org.freedesktop.NetworkManager.Device')

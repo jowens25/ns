@@ -15,14 +15,14 @@ from ns.utils import INTROSPECTION_DIR
 
 def GetNetworkManager(bus: MessageBus):
     file_name = 'org.freedesktop.NetworkManager.xml'
-    with open(INTROSPECTION_DIR /file_name, "r") as f:
+    with open(str(INTROSPECTION_DIR /file_name), "r") as f:
         introspection = f.read()
     obj = bus.get_proxy_object('org.freedesktop.NetworkManager', '/org/freedesktop/NetworkManager', introspection)
     return obj.get_interface('org.freedesktop.NetworkManager')
 
 def GetDevice(bus: MessageBus, path : str):
     file_name = 'org.freedesktop.NetworkManager.Device.xml'
-    with open(INTROSPECTION_DIR /file_name, "r") as f:
+    with open(str(INTROSPECTION_DIR /file_name), "r") as f:
         introspection = f.read()
     obj = bus.get_proxy_object('org.freedesktop.NetworkManager', path, introspection)
     return obj.get_interface('org.freedesktop.NetworkManager.Device')
@@ -30,7 +30,7 @@ def GetDevice(bus: MessageBus, path : str):
 
 def GetActiveConnection(bus: MessageBus, path : str):
     file_name = 'org.freedesktop.NetworkManager.Connection.Active.xml'
-    with open(INTROSPECTION_DIR /file_name, "r") as f:
+    with open(str(INTROSPECTION_DIR /file_name), "r") as f:
         introspection = f.read()
     obj = bus.get_proxy_object('org.freedesktop.NetworkManager', path, introspection)
     return obj.get_interface('org.freedesktop.NetworkManager.Connection.Active')
@@ -38,14 +38,14 @@ def GetActiveConnection(bus: MessageBus, path : str):
 
 def GetIp4Config(bus: MessageBus, path : str):
     file_name = 'org.freedesktop.NetworkManager.IP4Config.xml'
-    with open(INTROSPECTION_DIR /file_name, "r") as f:
+    with open(str(INTROSPECTION_DIR /file_name), "r") as f:
         introspection = f.read()
     obj = bus.get_proxy_object('org.freedesktop.NetworkManager', path, introspection)
     return obj.get_interface('org.freedesktop.NetworkManager.IP4Config')
 
 def GetIp6Config(bus: MessageBus, path : str):
     file_name = 'org.freedesktop.NetworkManager.IP6Config.xml'
-    with open(INTROSPECTION_DIR /file_name, "r") as f:
+    with open(str(INTROSPECTION_DIR /file_name), "r") as f:
         introspection = f.read()
     obj = bus.get_proxy_object('org.freedesktop.NetworkManager', path, introspection)
     return obj.get_interface('org.freedesktop.NetworkManager.IP6Config')
@@ -53,14 +53,14 @@ def GetIp6Config(bus: MessageBus, path : str):
 
 def GetSettingsManager(bus: MessageBus):
     file_name = 'org.freedesktop.NetworkManager.Settings.xml'
-    with open(INTROSPECTION_DIR /file_name, "r") as f:
+    with open(str(INTROSPECTION_DIR /file_name), "r") as f:
         introspection = f.read()
     obj = bus.get_proxy_object('org.freedesktop.NetworkManager', "/org/freedesktop/NetworkManager/Settings", introspection)
     return obj.get_interface('org.freedesktop.NetworkManager.Settings')
 
 def GetConnection(bus: MessageBus, path : str):
     file_name = 'org.freedesktop.NetworkManager.Settings.Connection.xml'
-    with open(INTROSPECTION_DIR /file_name, "r") as f:
+    with open(str(INTROSPECTION_DIR /file_name), "r") as f:
         introspection = f.read()
     obj = bus.get_proxy_object('org.freedesktop.NetworkManager', path, introspection)
     return obj.get_interface('org.freedesktop.NetworkManager.Settings.Connection')
@@ -114,7 +114,7 @@ def load_introspection():
     for file_name in os.listdir("introspection"):
         if file_name.endswith(".xml"):
             print(file_name)
-            with open(INTROSPECTION_DIR /file_name, "r") as f:
+            with open(str(INTROSPECTION_DIR /file_name), "r") as f:
                 introspections[file_name] = f.read()
 
     return introspections

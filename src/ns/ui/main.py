@@ -59,7 +59,7 @@ def main():
             ui.button(on_click=lambda: left_drawer.toggle(), icon="menu").props(
                 "flat color=white"
             )
-            ui.image(ASSETS_DIR / "NOVUS_LOGO.svg").classes("w-48")
+            ui.image(str(ASSETS_DIR / "NOVUS_LOGO.svg")).classes("w-48")
             ui.label(f'Welcome {app.storage.user["username"]}!')
             #ui.button("Request Admin").classes("bg-secondary").props("flat color=accent")
 
@@ -179,7 +179,7 @@ def main():
        reload=False,
        storage_secret="your-secret-key",
        title="Novus Configuration Tool",
-       favicon=ASSETS_DIR / "favicon.png"
+       #favicon=str(ASSETS_DIR / "favicon.png")
        )
        
 

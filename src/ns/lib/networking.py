@@ -99,7 +99,7 @@ class InterfaceData:
 # ====================================================================
 def GetNetworkManager(bus: MessageBus) -> ProxyInterface:
     file_name = 'org.freedesktop.NetworkManager.xml'
-    with open(INTROSPECTION_DIR /file_name, "r") as f:
+    with open(str(INTROSPECTION_DIR /file_name), "r") as f:
         introspection = f.read()
     obj = bus.get_proxy_object('org.freedesktop.NetworkManager', '/org/freedesktop/NetworkManager', introspection)
     return obj.get_interface('org.freedesktop.NetworkManager')
@@ -107,7 +107,7 @@ def GetNetworkManager(bus: MessageBus) -> ProxyInterface:
 
 def GetDevice(bus: MessageBus, path :str) -> ProxyInterface:
     file_name = 'org.freedesktop.NetworkManager.Device.xml'
-    with open(INTROSPECTION_DIR /file_name, "r") as f:
+    with open(str(INTROSPECTION_DIR /file_name), "r") as f:
         introspection = f.read()
     obj = bus.get_proxy_object('org.freedesktop.NetworkManager', path, introspection)
     return obj.get_interface('org.freedesktop.NetworkManager.Device')
@@ -115,7 +115,7 @@ def GetDevice(bus: MessageBus, path :str) -> ProxyInterface:
 
 def GetActiveConnection(bus: MessageBus, path :str) -> ProxyInterface:
     file_name = 'org.freedesktop.NetworkManager.Connection.Active.xml'
-    with open(INTROSPECTION_DIR /file_name, "r") as f:
+    with open(str(INTROSPECTION_DIR /file_name), "r") as f:
         introspection = f.read()
     obj = bus.get_proxy_object('org.freedesktop.NetworkManager', path, introspection)
     return obj.get_interface('org.freedesktop.NetworkManager.Connection.Active')
@@ -123,14 +123,14 @@ def GetActiveConnection(bus: MessageBus, path :str) -> ProxyInterface:
 
 def GetIp4Config(bus: MessageBus, path :str) -> ProxyInterface:
     file_name = 'org.freedesktop.NetworkManager.IP4Config.xml'
-    with open(INTROSPECTION_DIR /file_name, "r") as f:
+    with open(str(INTROSPECTION_DIR /file_name), "r") as f:
         introspection = f.read()
     obj = bus.get_proxy_object('org.freedesktop.NetworkManager', path, introspection)
     return obj.get_interface('org.freedesktop.NetworkManager.IP4Config')
 
 def GetIp6Config(bus: MessageBus, path :str) -> ProxyInterface:
     file_name = 'org.freedesktop.NetworkManager.IP6Config.xml'
-    with open(INTROSPECTION_DIR /file_name, "r") as f:
+    with open(str(INTROSPECTION_DIR /file_name), "r") as f:
         introspection = f.read()
     obj = bus.get_proxy_object('org.freedesktop.NetworkManager', path, introspection)
     return obj.get_interface('org.freedesktop.NetworkManager.IP6Config')
@@ -138,14 +138,14 @@ def GetIp6Config(bus: MessageBus, path :str) -> ProxyInterface:
 
 def GetSettingsManager(bus: MessageBus, path :str) -> ProxyInterface:
     file_name = 'org.freedesktop.NetworkManager.Settings.xml'
-    with open(INTROSPECTION_DIR /file_name, "r") as f:
+    with open(str(INTROSPECTION_DIR /file_name), "r") as f:
         introspection = f.read()
     obj = bus.get_proxy_object('org.freedesktop.NetworkManager', path, introspection)
     return obj.get_interface('org.freedesktop.NetworkManager.Settings')
 
 def GetConnection(bus: MessageBus, path : str)-> ProxyInterface:
     file_name = 'org.freedesktop.NetworkManager.Settings.Connection.xml'
-    with open(INTROSPECTION_DIR /file_name, "r") as f:
+    with open(str(INTROSPECTION_DIR /file_name), "r") as f:
         introspection = f.read()
     obj = bus.get_proxy_object('org.freedesktop.NetworkManager', path, introspection)
     return obj.get_interface('org.freedesktop.NetworkManager.Settings.Connection')

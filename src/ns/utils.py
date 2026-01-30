@@ -1,5 +1,5 @@
 from importlib.resources import files
 
-# Access assets relative to your package
-ASSETS_DIR = files('ns').joinpath('assets')
-INTROSPECTION_DIR = files('ns').joinpath('introspection')
+# These return Traversable objects that work like Path objects
+ASSETS_DIR = files('ns').joinpath('ui').joinpath('assets')
+INTROSPECTION_DIR = files('ns').joinpath('lib').joinpath('introspection')

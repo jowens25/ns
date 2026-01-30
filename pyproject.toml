@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ns"
-version = "0.2.4"
+version = "0.2.5"
 description = "Novus power products configuration tool"
 authors = [
     {name = "jaowens14", email = "jaowens14@protonmail.com"}
@@ -82,3 +82,6 @@ ns = "ns.ui.main:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+ns = ["assets/**/*", "introspection/**/*"]
