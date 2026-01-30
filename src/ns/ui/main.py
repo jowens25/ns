@@ -179,7 +179,7 @@ def main():
        reload=False,
        storage_secret="your-secret-key",
        title="Novus Configuration Tool",
-       #favicon=str(ASSETS_DIR / "favicon.png")
+       favicon=str(ASSETS_DIR / "favicon.png")
        )
        
 
