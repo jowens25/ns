@@ -84,4 +84,10 @@ ns = "ns.ui.main:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-ns = ["assets/**/*", "introspection/**/*"]
+ns = [
+    "ui/assets/**/*",
+    "lib/introspection/**/*"
+]
+
+[tool.setuptools]
+include-package-data = true
