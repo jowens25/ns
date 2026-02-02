@@ -4,12 +4,12 @@ import os
 from pprint import pprint
 import time
 from typing import Any, Optional, Type, TypeVar
-from dbus import dbus
 
 
 from dbus_next import BusType
 from dbus_next.signature import Variant, SignatureTree, SignatureType
 from dbus_next.aio import MessageBus
+
 from ns.utils import INTROSPECTION_DIR
 
 

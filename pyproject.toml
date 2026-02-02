@@ -1,16 +1,13 @@
-[build-system]
-requires = ["setuptools>=45", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "ns"
 version = "0.2.6"
-description = "Novus power products configuration tool"
+description = "Novus Power Products server configuration tool"
 authors = [
-    {name = "jaowens14", email = "jaowens14@protonmail.com"}
+    {name = "jowens25",email = "jowens@novuspower.com"}
 ]
 license = {text = "MIT"}
-requires-python = ">=3.11, <3.13"
+requires-python = ">=3.10,<4.0"
+
 dependencies = [
     "aiofiles",
     "aiohappyeyeballs",
@@ -76,6 +73,14 @@ dependencies = [
     "wsproto",
     "yarl",
 ]
+
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+
 
 [project.scripts]
 ns = "ns.ui.main:main"
