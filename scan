@@ -1,0 +1,224 @@
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-02-03 15:12 CST
+Nmap scan report for _gateway (10.1.10.1)
+Host is up (0.0086s latency).
+
+PORT   STATE    SERVICE
+22/tcp filtered ssh
+
+Nmap scan report for 10.1.10.14
+Host is up (0.00076s latency).
+
+PORT   STATE SERVICE
+22/tcp open  ssh
+
+Nmap scan report for 10.1.10.16
+Host is up (0.012s latency).
+
+PORT   STATE  SERVICE
+22/tcp closed ssh
+
+Nmap scan report for 10.1.10.17
+Host is up (0.087s latency).
+
+PORT   STATE  SERVICE
+22/tcp closed ssh
+
+Nmap scan report for 10.1.10.18
+Host is up (0.088s latency).
+
+PORT   STATE SERVICE
+22/tcp open  ssh
+
+Nmap scan report for 10.1.10.29
+Host is up (0.00075s latency).
+
+PORT   STATE  SERVICE
+22/tcp closed ssh
+
+Nmap scan report for 10.1.10.36
+Host is up (0.0099s latency).
+
+PORT   STATE    SERVICE
+22/tcp filtered ssh
+
+Nmap scan report for 10.1.10.43
+Host is up (0.00060s latency).
+
+PORT   STATE SERVICE
+22/tcp open  ssh
+
+Nmap scan report for 10.1.10.53
+Host is up (0.00036s latency).
+
+PORT   STATE  SERVICE
+22/tcp closed ssh
+
+Nmap scan report for 10.1.10.60
+Host is up (0.00058s latency).
+
+PORT   STATE SERVICE
+22/tcp open  ssh
+
+Nmap scan report for 10.1.10.77
+Host is up (0.00028s latency).
+
+PORT   STATE  SERVICE
+22/tcp closed ssh
+
+Nmap scan report for 10.1.10.81
+Host is up (0.027s latency).
+
+PORT   STATE SERVICE
+22/tcp open  ssh
+
+Nmap scan report for 10.1.10.94
+Host is up (0.00058s latency).
+
+PORT   STATE SERVICE
+22/tcp open  ssh
+
+Nmap scan report for 10.1.10.115
+Host is up (0.00068s latency).
+
+PORT   STATE SERVICE
+22/tcp open  ssh
+
+Nmap scan report for 10.1.10.121
+Host is up (0.00060s latency).
+
+PORT   STATE  SERVICE
+22/tcp closed ssh
+
+Nmap scan report for 10.1.10.123
+Host is up (0.00070s latency).
+
+PORT   STATE SERVICE
+22/tcp open  ssh
+
+Nmap scan report for 10.1.10.137
+Host is up (0.00033s latency).
+
+PORT   STATE  SERVICE
+22/tcp closed ssh
+
+Nmap scan report for 10.1.10.145
+Host is up (0.0050s latency).
+
+PORT   STATE    SERVICE
+22/tcp filtered ssh
+
+Nmap scan report for 10.1.10.164
+Host is up (0.0028s latency).
+
+PORT   STATE  SERVICE
+22/tcp closed ssh
+
+Nmap scan report for 10.1.10.165
+Host is up (0.00037s latency).
+
+PORT   STATE  SERVICE
+22/tcp closed ssh
+
+Nmap scan report for 10.1.10.176
+Host is up (0.00077s latency).
+
+PORT   STATE SERVICE
+22/tcp open  ssh
+
+Nmap scan report for 10.1.10.180
+Host is up (0.00036s latency).
+
+PORT   STATE  SERVICE
+22/tcp closed ssh
+
+Nmap scan report for 10.1.10.192
+Host is up (0.00066s latency).
+
+PORT   STATE SERVICE
+22/tcp open  ssh
+
+Nmap scan report for 10.1.10.193
+Host is up (0.045s latency).
+
+PORT   STATE    SERVICE
+22/tcp filtered ssh
+
+Nmap scan report for 10.1.10.194
+Host is up (0.0023s latency).
+
+PORT   STATE SERVICE
+22/tcp open  ssh
+
+Nmap scan report for jowens (10.1.10.205)
+Host is up (0.000093s latency).
+
+PORT   STATE SERVICE
+22/tcp open  ssh
+
+Nmap scan report for jowens (10.1.10.206)
+Host is up (0.000070s latency).
+
+PORT   STATE SERVICE
+22/tcp open  ssh
+
+Nmap scan report for 10.1.10.208
+Host is up (0.00043s latency).
+
+PORT   STATE SERVICE
+22/tcp open  ssh
+
+Nmap scan report for 10.1.10.209
+Host is up (0.00059s latency).
+
+PORT   STATE SERVICE
+22/tcp open  ssh
+
+Nmap scan report for 10.1.10.212
+Host is up (0.023s latency).
+
+PORT   STATE    SERVICE
+22/tcp filtered ssh
+
+Nmap scan report for 10.1.10.222
+Host is up (0.0032s latency).
+
+PORT   STATE  SERVICE
+22/tcp closed ssh
+
+Nmap scan report for 10.1.10.234
+Host is up (0.00022s latency).
+
+PORT   STATE  SERVICE
+22/tcp closed ssh
+
+Nmap scan report for 10.1.10.235
+Host is up (0.00058s latency).
+
+PORT   STATE SERVICE
+22/tcp open  ssh
+
+Nmap scan report for 10.1.10.241
+Host is up (0.016s latency).
+
+PORT   STATE  SERVICE
+22/tcp closed ssh
+
+Nmap scan report for 10.1.10.242
+Host is up (0.0056s latency).
+
+PORT   STATE  SERVICE
+22/tcp closed ssh
+
+Nmap scan report for 10.1.10.249
+Host is up (0.032s latency).
+
+PORT   STATE  SERVICE
+22/tcp closed ssh
+
+Nmap scan report for 10.1.10.254
+Host is up (0.00036s latency).
+
+PORT   STATE  SERVICE
+22/tcp closed ssh
+
+Nmap done: 256 IP addresses (37 hosts up) scanned in 2.64 seconds

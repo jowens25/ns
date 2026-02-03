@@ -83,7 +83,7 @@ build-backend = "poetry.core.masonry.api"
 
 
 [project.scripts]
-ns = "ns.ui.main:main"
+ns = "main:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

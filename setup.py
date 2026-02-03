@@ -77,7 +77,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "ns = ns.ui.main:main",
+            "ns = main:main",
         ],
     },
     include_package_data=True,
