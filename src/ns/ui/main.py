@@ -5,7 +5,7 @@ from nicegui import ui, app
 from multiprocessing import freeze_support
 
 from ns.lib.accounts import accounts_page, accounts_user_page
-from ns.lib.socket import socket_stream
+from ns.lib.ns_socket import socket_stream
 
 from ns.ui.networking_page import network_page, interface_page
 from ns.ui.terminal import terminal_page
@@ -22,11 +22,10 @@ from ns.utils import ASSETS_DIR
 #
 production = False
 
-version = '0.0.1'
 
 sock_task = None
 
-def main():
+def start_ui():
     freeze_support()
     
     @ui.page('/networking')
@@ -134,7 +133,7 @@ def main():
 
         # Footer
         with ui.footer().classes("bg-dark"):
-            ui.label(version)
+            ui.label("nothing")
 
 
         ui.sub_pages({
@@ -174,9 +173,10 @@ def main():
     if not sys.argv[1]:
         sys.exit()
 
+
     ui.run(
        port=int(sys.argv[1]),
-       reload=False,
+       reload=True,
        storage_secret="your-secret-key",
        title="Novus Configuration Tool",
        favicon=str(ASSETS_DIR / "favicon.png")
@@ -184,10 +184,6 @@ def main():
        
 
 
-
-if __name__ in {"__main__", "__mp_main__"}:
-    main()
-    
    
 
 #TODO Clean up and test ipv4 stuff, expand to dns and ipv6

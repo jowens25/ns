@@ -8,10 +8,7 @@ from ns.dbus import dbus
 
 from ns.lib.systemd import *
 
-async def interface_list(checks: dict):
-    for i in await GetInterfaces(dbus.AppBus):
-        checks[i] = False
-        ui.checkbox(i).props("flat color=accent align=left").bind_value(checks, i)
+
 
 async def service_list(services: dict):
     for s in await getServices(dbus.AppBus):
@@ -121,8 +118,10 @@ async def addZoneDialog():
             ui.label("Interfaces").classes("text-h6")
 
             with ui.row():
-                checks = {}
-                await interface_list(checks)
+                interfaces = {}
+                for i in await GetInterfaces(dbus.AppBus):
+                    interfaces[i] = False
+                    ui.checkbox(i).props("flat color=accent align=left").bind_value(interfaces, i)
 
             #selectedServices = ui.input_chips('Allowed services', new_value_mode='add-unique', clearable=True).props('disable-input')
             with ui.scroll_area():
@@ -189,7 +188,7 @@ async def addZoneDialog():
             serviceFilter = ui.input('Search for services').bind_value(services_table, "filter")
 
             def on_save_cb():
-                for c,v in checks.items():
+                for c,v in interfaces.items():
                     print(c, v)
 
                 # Get selected services when saving

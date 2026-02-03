@@ -1,4 +1,4 @@
-from ns.lib.socket import *
+from ns.lib.ns_socket import *
 from nicegui import ui, events
 
 import plotly.graph_objects as go

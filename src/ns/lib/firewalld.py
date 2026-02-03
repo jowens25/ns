@@ -11,6 +11,7 @@ from dbus_next.signature import Variant
 from dbus_next.errors import DBusError
 from dbus_next.aio.proxy_object import ProxyInterface
 from dbus_next.aio import MessageBus
+from dbus_next import Message
 from ns.dbus import dbus
 from ns.utils import INTROSPECTION_DIR
 
@@ -104,9 +105,25 @@ async def getServices(bus: MessageBus):
     '''all not just runtime'''
 
     fire = await GetFirewalld(bus)
+#
+    #conf = await GetFirewalldConfig(bus)
+    
+    #serviceNames = await conf.call_get_service_names()
 
-    conf = await GetFirewalldConfig(bus)
-    serviceNames = await conf.call_get_service_names()
+    rsp = await bus.call(
+        Message(
+            destination='org.fedoraproject.FirewallD1',
+            path='/org/fedoraproject/FirewallD1/config',
+            interface='org.fedoraproject.FirewallD1.config',
+            member='getServiceNames',
+            signature='',
+            body=""
+        )
+    )
+    
+    serviceNames = rsp.body[0]
+    
+
     services = {}
     for name in serviceNames:
         s = ServiceSetting()
@@ -128,6 +145,41 @@ async def getServices(bus: MessageBus):
 
 
     return services
+
+
+
+#async def addZone2(bus: MessageBus, interface: str, services: list[str]):
+#    
+#    conf = await GetFirewalldConfig(bus)
+#    _settings = {
+#        "version":"0"
+#        
+#        
+#        "version": ""
+#        "name"  (s): see
+#        "description"  (s): see
+#        "target"  (s): see
+#        "services"  (as): services
+#        "ports"  (a(ss)):
+#        "icmp_blocks"  (as): array
+#        "masquerade"  (b): see
+#        "forward_ports"  (a(ssss)):
+#        "interfaces"  (as): array
+#        "sources"  (as): []
+#        "rules_str"  (as): []
+#        "protocols"  (as): []
+#        "source_ports" : []
+#        "icmp_block_inversion" : False
+#        "forward" : False
+#        
+#    }
+#    
+#    
+#
+#    
+#    
+#    newZonePath = await conf.call_add_zone_2()
+#    
 
 
 

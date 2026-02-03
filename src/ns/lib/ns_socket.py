@@ -1,4 +1,3 @@
-import socket
 from dataclasses import dataclass, asdict
 import asyncio
 from nicegui import Event, app

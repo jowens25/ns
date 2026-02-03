@@ -1,21 +1,4 @@
 
-
-'''import asyncio
-#sock = Socket()
-async def test():
-    await sock.setup()
-
-    print(await sock.writeRead("$BAUDNV"))
-
-
-
-#asyncio.run(test())
-
-#sock.cleanup()
-'''
-
-
-
 from pprint import pprint
 from dbus_next.aio import MessageBus
 
@@ -23,7 +6,7 @@ import asyncio
 import time
 from dbus_next.constants import BusType
 
-from src.ns.lib.socket import *
+from ns.lib.ns_socket import sendCommands
 
 from ntl import NtpServerProperties
 
