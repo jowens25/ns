@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NS Tools Repository</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 { color: #333; }
+        h2 { color: #666; margin-top: 30px; }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .package-list {
+            list-style: none;
+            padding: 0;
+        }
+        .package-list li {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f9f9f9;
+            border-left: 3px solid #007bff;
+        }
+        .package-list a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .package-list a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>NS Tools APT Repository</h1>
+    <p>Debian packages for NS Serial Tools suite</p>
+
+    <h2>Quick Setup</h2>
+    <pre><code># Add the repository
+echo "deb [trusted=yes] https://yourcompany.github.io/ns-tools stable main" | \
+    sudo tee /etc/apt/sources.list.d/ns-tools.list
+
+# Update and install
+sudo apt update
+sudo apt install ns-serial-mux ns-agent ns-ui</code></pre>
+
+    <h2>Available Packages</h2>
+    <ul class="package-list">
+        <li>
+            <strong>ns-serial-mux</strong> - Serial port multiplexer
+            <br><a href="pool/main/ns-serial-mux_1.0.0_amd64.deb">Download v1.0.0</a>
+        </li>
+        <li>
+            <strong>ns-agent</strong> - SNMP agent for NS tools
+            <br><a href="pool/main/ns-agent_1.0.0_amd64.deb">Download v1.0.0</a>
+        </li>
+        <li>
+            <strong>ns-ui</strong> - Web UI for NS tools
+            <br><a href="pool/main/ns-ui_1.0.0_all.deb">Download v1.0.0</a>
+        </li>
+    </ul>
+
+    <h2>Manual Installation</h2>
+    <p>Download individual .deb files and install with:</p>
+    <pre><code>sudo apt install ./package-name.deb</code></pre>
+
+    <h2>Repository Structure</h2>
+    <ul>
+        <li><a href="pool/main/">pool/main/</a> - Package files</li>
+        <li><a href="dists/stable/">dists/stable/</a> - Repository metadata</li>
+    </ul>
+</body>
+</html>
