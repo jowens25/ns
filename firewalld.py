@@ -41,13 +41,13 @@ class ZoneInfo:
     
     
 @binding.bindable_dataclass
-class Firewall:
+class FirewallInfo:
     Enable:            Optional[bool] = False
     Status:            Optional[str] = ''
     ActiveZones:       Optional[dict[dict]] = field(default_factory=dict)
     AllowedAddresses:  Optional[list[str]] = field(default_factory=list)
     Services:          Optional[dict[dict]] = field(default_factory=dict)
-    Zones:             Optional[dict[ZoneInfo]] = field(default_factory=dict)
+    ZoneInfos:             Optional[dict[ZoneInfo]] = field(default_factory=dict)
 
 
 
@@ -65,14 +65,41 @@ async def GetZones(bus: MessageBus) -> list[ZoneInfo]:
             body=[]
         )
     )
-    activeZones = rsp.body[0]
     
-    
-    
-    
+    return rsp.body[0]
 
 
-async def GetServiceSettings2(bus: MessageBus, name: str)-> dict:
+async def GetZoneInfo(bus: MessageBus, zoneName: str) -> ZoneInfo:
+    
+    rsp = await bus.call(
+        Message(
+            destination='org.fedoraproject.FirewallD1',
+            path='/org/fedoraproject/FirewallD1',
+            interface='org.fedoraproject.FirewallD1.zone',
+            member='getZoneSettings2',
+            signature='s',
+            body=[zoneName]
+        )
+    )
+    
+    
+    
+    zoneInfo = ZoneInfo()  
+    zoneInfo.Description = rsp.body[0].get('description', Variant('s', 'description not available')).value
+    zoneInfo.Interfaces = rsp.body[0].get('interfaces', Variant('as', [])).value
+    zoneInfo.Services = rsp.body[0].get('services', Variant('as', [])).value
+    zoneInfo.Short = rsp.body[0].get('short', Variant('s', 'short not available')).value
+    zoneInfo.Sources = rsp.body[0].get('sources', Variant('as', [])).value
+    
+    return zoneInfo
+
+
+
+
+async def GetServiceSettings2(bus: MessageBus, name: str)-> ServiceSetting:
+    
+    
+    serviceSettings = ServiceSetting()
     
     rsp = await bus.call(
         Message(
@@ -84,7 +111,15 @@ async def GetServiceSettings2(bus: MessageBus, name: str)-> dict:
             body=[name]
         )
     )
-    return rsp.body[0]
+    
+    serviceSettings.Name = rsp.body[0].get('short', Variant('s', 'name not available')).value
+    serviceSettings.Ports.extend(rsp.body[0].get('ports', Variant('a(ss)', [['port not available', 'protocol not available']])).value)
+    serviceSettings.Description = rsp.body[0].get('description', Variant('s', 'Description not available')).value
+    serviceSettings.Includes = rsp.body[0].get('includes', Variant('b', False)).value
+    return serviceSettings
+
+
+
     
 
 async def GetFirewalldConfig(bus: MessageBus):
@@ -108,12 +143,12 @@ async def GetFirewalldConfigZone(bus: MessageBus, path : str):
 #    obj = bus.get_proxy_object('org.freedesktop.NetworkManager', path, introspection)
 #    return obj.get_interface('org.freedesktop.NetworkManager.Device')
 
-async def GetFirewalldZone(bus: MessageBus):
-    file_name = 'org.fedoraproject.FirewallD1.zone.xml'
-    introspection = await bus.introspect('org.fedoraproject.FirewallD1', '/org/fedoraproject/FirewallD1')
-    #pprint(introspection.tostring())
-    obj = bus.get_proxy_object('org.fedoraproject.FirewallD1', '/org/fedoraproject/FirewallD1', introspection)
-    return obj.get_interface('org.fedoraproject.FirewallD1.zone')
+#async def GetFirewalldZone(bus: MessageBus):
+#    file_name = 'org.fedoraproject.FirewallD1.zone.xml'
+#    introspection = await bus.introspect('org.fedoraproject.FirewallD1', '/org/fedoraproject/FirewallD1')
+#    #pprint(introspection.tostring())
+#    obj = bus.get_proxy_object('org.fedoraproject.FirewallD1', '/org/fedoraproject/FirewallD1', introspection)
+#    return obj.get_interface('org.fedoraproject.FirewallD1.zone')
 
 
 
@@ -131,7 +166,7 @@ def getZoneInfo(name :str, zone :dict) -> dict:
     return {'name':name, 'interfaces':interfaces, 'sources':sources}
 
 
-async def getServices(bus: MessageBus):
+async def getServicesInfo(bus: MessageBus):
     '''all not just runtime'''
 
     rsp = await bus.call(
@@ -145,30 +180,14 @@ async def getServices(bus: MessageBus):
         )
     )
     
-    serviceNames = rsp.body[0]
-    
-
     services = {}
-    for name in serviceNames:
-        s = ServiceSetting()
-        s.Name = name
-        serviceSettings = await GetServiceSettings2(bus, s.Name)
-                                
-        includes = serviceSettings.get('includes', False)
-        if includes:
-            for i in includes.value:
-                #ser_set = await fire.call_get_service_settings2(i)
-                ser_set = await GetServiceSettings2(bus, i)
-                s.Ports.extend(ser_set.get('ports', Variant('a(ss)', [['port not available', 'protocol not available']])).value)
-
-                            
-        s.Name = serviceSettings.get('short', Variant('s', 'name not available')).value
-        s.Ports.extend(serviceSettings.get('ports', Variant('a(ss)', [['port not available', 'protocol not available']])).value)
-        s.Description = serviceSettings.get('description', Variant('s', 'Description not available')).value
-
-        services[name] = s
-
-
+    for name in rsp.body[0]:
+        serviceSetting = await GetServiceSettings2(bus, name)               
+        if serviceSetting.Includes:
+            for i in serviceSetting.Includes:
+                subServiceSettings = await GetServiceSettings2(bus, i)
+                serviceSetting.Ports.extend(subServiceSettings.Ports)
+        services[name] = serviceSetting
     return services
 
 

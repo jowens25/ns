@@ -1,7 +1,0 @@
-Origin: YourCompany
-Label: YourCompany NS Tools
-Suite: stable
-Codename: stable
-Architectures: amd64 all
-Components: main
-Description: NS Serial Tools Repository
