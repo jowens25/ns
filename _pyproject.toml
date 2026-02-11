@@ -1,0 +1,102 @@
+[project]
+name = "ns2"
+version = "0.2.9"
+description = "Novus Power Products server configuration tool"
+authors = [
+    {name = "jowens25",email = "jowens@novuspower.com"}
+]
+license = {text = "MIT"}
+requires-python = ">=3.11,<4.0"
+
+dependencies = [
+    "aiofiles",
+    "aiohappyeyeballs",
+    "aiohttp",
+    "aiosignal",
+    "annotated-doc",
+    "annotated-types",
+    "anyio",
+    "attrs",
+    "beautifulsoup4",
+    "bidict",
+    "bs4",
+    "certifi",
+    "charset-normalizer",
+    "click",
+    "dbus-next",
+    "docutils",
+    "fastapi",
+    "frozenlist",
+    "h11",
+    "httpcore",
+    "httptools",
+    "httpx",
+    "idna",
+    "ifaddr",
+    "itsdangerous",
+    "jinja2",
+    "markdown2",
+    "markupsafe",
+    "multidict",
+    "narwhals",
+    "nicegui",
+    "numpy",
+    "orjson",
+    "packaging",
+    "pam",
+    "pandas",
+    "plotly",
+    "propcache",
+    "pydantic",
+    "pydantic-core",
+    "pygments",
+    "python-dateutil",
+    "python-dotenv",
+    "python-engineio",
+    "python-multipart",
+    "python-pam",
+    "python-socketio",
+    "pyinstaller",
+    "pyyaml",
+    "requests",
+    "simple-websocket",
+    "six",
+    "soupsieve",
+    "typing-inspection",
+    "typing-extensions",
+    "urllib3",
+    "uvicorn",
+    "uvloop",
+    "watchfiles",
+    "websockets",
+    "wheel2deb",
+    "wsproto",
+    "yarl",
+]
+
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+
+
+[project.scripts]
+ns2 = "ns2:service."
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+ns = [
+    "assets/**/*",
+    "introspection/**/*"
+]
+
+[tool.setuptools]
+include-package-data = true
+
+
+[project.gui-scripts]
+ns2 = 'ns2.service:run'

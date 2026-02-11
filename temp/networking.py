@@ -10,7 +10,7 @@ from dbus_next.aio import MessageBus
 from dbus_next import Message
 
 from firewalld import formatListToString
-from utils import INTROSPECTION_DIR
+from ns2.utils import INTROSPECTION_DIR
 
 # ====================================================================
 # data classes

@@ -10,7 +10,7 @@ from dbus_next import BusType
 from dbus_next.signature import Variant, SignatureTree, SignatureType
 from dbus_next.aio import MessageBus
 
-from utils import INTROSPECTION_DIR
+from ns2.utils import INTROSPECTION_DIR
 
 
 def GetNetworkManager(bus: MessageBus):

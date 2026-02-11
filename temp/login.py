@@ -6,7 +6,7 @@ import time
 
 import pam
 import os
-from utils import ASSETS_DIR
+from ns2.utils import ASSETS_DIR
 p = pam.pam()
 
 

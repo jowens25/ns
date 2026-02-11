@@ -13,7 +13,7 @@ from dbus_next.aio.proxy_object import ProxyInterface
 from dbus_next.aio import MessageBus
 from dbus_next import Message
 import dbus
-from utils import INTROSPECTION_DIR
+from ns2.utils import INTROSPECTION_DIR
 
 
 @binding.bindable_dataclass

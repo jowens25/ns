@@ -1,77 +1,16 @@
 [project]
-name = "ns"
-version = "0.2.6"
+name = "ns2"
+version = "0.2.14"
 description = "Novus Power Products server configuration tool"
 authors = [
     {name = "jowens25",email = "jowens@novuspower.com"}
 ]
-license = {text = "MIT"}
-requires-python = ">=3.10,<4.0"
+#license = {text = "MIT"}
+requires-python = ">=3.10,<3.14"
+
 
 dependencies = [
-    "aiofiles",
-    "aiohappyeyeballs",
-    "aiohttp",
-    "aiosignal",
-    "annotated-doc",
-    "annotated-types",
-    "anyio",
-    "attrs",
-    "beautifulsoup4",
-    "bidict",
-    "bs4",
-    "certifi",
-    "charset-normalizer",
-    "click",
-    "dbus-next",
-    "docutils",
-    "fastapi",
-    "frozenlist",
-    "h11",
-    "httpcore",
-    "httptools",
-    "httpx",
-    "idna",
-    "ifaddr",
-    "itsdangerous",
-    "jinja2",
-    "markdown2",
-    "markupsafe",
-    "multidict",
-    "narwhals",
     "nicegui",
-    "numpy",
-    "orjson",
-    "packaging",
-    "pam",
-    "pandas",
-    "plotly",
-    "propcache",
-    "pydantic",
-    "pydantic-core",
-    "pygments",
-    "python-dateutil",
-    "python-dotenv",
-    "python-engineio",
-    "python-multipart",
-    "python-pam",
-    "python-socketio",
-    "pyinstaller",
-    "pyyaml",
-    "requests",
-    "simple-websocket",
-    "six",
-    "soupsieve",
-    "typing-inspection",
-    "typing-extensions",
-    "urllib3",
-    "uvicorn",
-    "uvloop",
-    "watchfiles",
-    "websockets",
-    "wheel2deb",
-    "wsproto",
-    "yarl",
 ]
 
 
@@ -80,19 +19,24 @@ dependencies = [
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
+#[project.gui-scripts]
+#ns = 'ns2.service:run'
 
 
-[project.scripts]
-ns = "main:main"
+[tool.poetry.scripts]
+ns = "ns2.main:main"
 
-[tool.setuptools.packages.find]
-where = ["src"]
+#[project.gui-scripts]
+#ns = 'ns2.main:main'
 
-[tool.setuptools.package-data]
-ns = [
-    "ui/assets/**/*",
-    "lib/introspection/**/*"
-]
+#[tool.poetry]
+#include = ["assets/**/*", "introspection/**/*"]
 
-[tool.setuptools]
-include-package-data = true
+
+[tool.poetry.dependencies]
+dbus-next = "^0.2.3"
+python-pam = "^2.0.2"
+nicegui = "^3.7.1"
+six = "^1.17.0"
+plotly = "^6.5.2"
+pandas = "^3.0.0"
