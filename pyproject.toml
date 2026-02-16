@@ -29,8 +29,7 @@ build-backend = "hatchling.build"
 
 
 [project.scripts]
-ns-ui = 'ns2.main:main'
-ns-dbus-service = 'ns2.service:main'
+ns2 = 'ns2.main:main'
 
 
 [tool.uv.pip]
