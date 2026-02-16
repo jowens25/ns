@@ -52,6 +52,9 @@ def main():
     async def root():
         
         #await setup_dbus(AppBus)
+        
+        
+        #login_page()
 
         init_colors()
         if not app.storage.user.get("authenticated", False):
@@ -163,9 +166,8 @@ def main():
         favicon=str(ASSETS_DIR / "favicon.png")
        )
     
-#if __name__ in {"__main__", "__mp_main__"}:
-
-#main()
+if __name__ in {"__main__", "__mp_main__"}:
+    main()
 
 #async def run():
 #    print("RUN")

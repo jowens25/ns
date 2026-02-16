@@ -1,42 +1,37 @@
 [project]
 name = "ns2"
-version = "0.2.14"
+version = "0.3.7"
 description = "Novus Power Products server configuration tool"
 authors = [
     {name = "jowens25",email = "jowens@novuspower.com"}
 ]
 #license = {text = "MIT"}
-requires-python = ">=3.10,<3.14"
+requires-python = "==3.9.2"
 
 
 dependencies = [
     "nicegui",
+    "dbus-next>=0.2.3",
+    "python-pam",
+    "nicegui",
+    "six",
+    "plotly",
+    "pandas>=2.0.0,<2.3.0",
+    "numpy>=1.26.0,<2.0.0",
+    "pyinstaller>=6.19.0",
 ]
 
 
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
-
-#[project.gui-scripts]
-#ns = 'ns2.service:run'
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 
-[tool.poetry.scripts]
-ns = "ns2.main:main"
-
-#[project.gui-scripts]
-#ns = 'ns2.main:main'
-
-#[tool.poetry]
-#include = ["assets/**/*", "introspection/**/*"]
+[project.scripts]
+ns-ui = 'ns2.main:main'
+ns-dbus-service = 'ns2.service:main'
 
 
-[tool.poetry.dependencies]
-dbus-next = "^0.2.3"
-python-pam = "^2.0.2"
-nicegui = "^3.7.1"
-six = "^1.17.0"
-plotly = "^6.5.2"
-pandas = "^3.0.0"
+[tool.uv.pip]
+system = true

@@ -3,14 +3,13 @@ from ns2.systemd import *
 from nicegui import ui, app
 from dataclasses import dataclass, asdict
 
-from ns2.commands import runCmd
+from ns2.dbus import get_dbus
 
 from typing import Optional
 
-import ns2.dbus
-from ns2.snmp import GetSnmp, snmp_call,V3User, V2User, snmp_config_file, default_persistent_dir_path
+from ns2.snmp import snmp_call, V3User, V2User, snmp_config_file, default_persistent_dir_path
 
-
+from ns2.snmp import *
 
 sourceValidation = {"Please enter a valid ip address, network or default": lambda value: len(value) > 0}
 passphraseValidation = {"Passphrase must be at least 8 characters": lambda value: len(value) >= 8,  
@@ -23,7 +22,7 @@ def validate_group(group: list):
     
 
 async def create_v3_user_dialog():
-
+    AppBus = await get_dbus()
     with ui.dialog() as createV3Dialog:
         v3 = V3User()
         with ui.card().classes("w-full"):
@@ -42,8 +41,9 @@ async def create_v3_user_dialog():
                         if all(validate_group([version, username, permissions, auth_type, auth_pass, priv_type, priv_pass])):
                             print(asdict(v3))
                             
-                            snmp = await GetSnmp(dbus.AppBus)
-                            rsp = await snmp.call_create_v3_user(asdict(v3))
+                            #snmp = await GetSnmp(AppBus)
+                            #rsp = await snmp.call_create_v3_user(asdict(v3))
+                            rsp = await AddV3User(AppBus, asdict(v3))
                             print(rsp)
                             await v3table.refresh()
                             createV3Dialog.close()
@@ -61,9 +61,12 @@ async def create_v3_user_dialog():
 
 @ui.refreshable
 async def v3table():
-    snmp = await GetSnmp(dbus.AppBus)
-    v3Users = await snmp.call_get_v3_users()
-    print(v3Users)
+    AppBus = await get_dbus()
+
+    #snmp = await GetSnmp(AppBus)
+    #v3Users = await snmp.call_get_v3_users()
+    v3Users = await ReadV3Users()
+    #print(v3Users)
     createV3Dialog = await create_v3_user_dialog()
     
     table = ui.table(
@@ -91,8 +94,10 @@ async def v3table():
 
 @ui.refreshable
 async def v2table():
-    snmp = await GetSnmp(dbus.AppBus)
-    v2Users = await snmp.call_get_v2_users()
+    AppBus = await get_dbus()
+    snmp = await GetSnmp(AppBus)
+    #v2Users = await snmp.call_get_v2_users()
+    v2Users = await ReadV2Users()
     
     with ui.dialog() as createV2Dialog:
         v2 = V2User()
@@ -111,7 +116,8 @@ async def v2table():
 
                     async def on_save_cb():
                         if all(validate_group([version, permissions, community, source])):
-                            await snmp.call_create_v2_user(asdict(v2))
+                            #await snmp.call_create_v2_user(asdict(v2))
+                            await AddV2User(AppBus, asdict(v2))
                             await v2table.refresh()
                             createV2Dialog.close()
                         else:
@@ -146,6 +152,8 @@ async def v2table():
 
     
 async def snmp_status():
+    AppBus = await get_dbus()
+
     with ui.column() as status:
         ui.label("SNMP").classes("text-h5")
         
@@ -158,17 +166,17 @@ async def snmp_status():
                     ui.button(f'{action}', on_click=lambda: dialog.submit(action)).props("flat color=accent align=left")
         
             result = await dialog
-            active = await isActive(dbus.AppBus, 'snmpd.service')
+            active = await isActive(AppBus, 'snmpd.service')
             
             
             if result == "enable" and not active:
-                await systemd_start(dbus.AppBus, 'snmpd.service')
+                await systemd_start(AppBus, 'snmpd.service')
             
             if result == "disable" and active:
-                await systemd_stop(dbus.AppBus, 'snmpd.service')
+                await systemd_stop(AppBus, 'snmpd.service')
 
 
-            e.sender.value = await isActive(dbus.AppBus, 'snmpd.service')
+            e.sender.value = await isActive(AppBus, 'snmpd.service')
 
         async def snmp_reset_cb(e):
             with ui.dialog() as dialog, ui.card():
@@ -178,15 +186,16 @@ async def snmp_status():
                     ui.button('Reset', on_click=lambda: dialog.submit("reset")).props("flat color=accent align=left")    
             if await dialog == "reset":
                 
-                snmp = await GetSnmp(dbus.AppBus)
-                await snmp.call_reset()
+                #snmp = await GetSnmp(AppBus)
+                #await snmp.call_reset()
+                await ResetSnmpd()
                 v2table.refresh()
                 v3table.refresh()
             
         
         with ui.card().classes("w-full"):
             snmp_service_switch = ui.switch("SNMPD Status").on('click', lambda e: snmp_switch_cb(e)).props("flat color=accent align=left dense")
-            snmp_service_switch.value = await isActive(dbus.AppBus, 'snmpd.service')
+            snmp_service_switch.value = await isActive(AppBus, 'snmpd.service')
             ui.button("Reset SNMPD Config", on_click=snmp_reset_cb).props("flat color=accent align=left dense")
     
     return status
@@ -234,8 +243,11 @@ def disable_group(fields):
 
 
 async def edit_delete_v2_user_card(community):
-    snmp = await GetSnmp(dbus.Bus)
-    user = await snmp.call_get_v2_user_by_community(community)
+    AppBus = await get_dbus()
+
+    snmp = await GetSnmp(AppBus)
+    #user = await snmp.call_get_v2_user_by_community(community)
+    user = await ReadV2UserByCommunity(community)
     v2User = V2User(**user)
     with ui.card().classes("w-full"):
         with ui.column().classes("w-full"):
@@ -249,7 +261,8 @@ async def edit_delete_v2_user_card(community):
                     disable_group(group)
                     save_button.enabled = False
                     edit_button.enabled = True
-                    await snmp.call_modify_v2_user(asdict(v2User))
+                    #await snmp.call_modify_v2_user(asdict(v2User))
+                    await EditV2User(AppBus, asdict(v2User))
                     await v2table.refresh()
                     ui.navigate.back()
 
@@ -266,7 +279,8 @@ async def edit_delete_v2_user_card(community):
                             ui.button('No', on_click=lambda: dialog.submit(False)).props("flat color=accent align=left")
                     result = await dialog
                     if result:
-                        await snmp.call_remove_v2_user(asdict(v2User))
+                        #await snmp.call_remove_v2_user(asdict(v2User))
+                        await DeleteV2User(AppBus, asdict(v2User))
                         v2table.refresh()
                         ui.navigate.back()
                         ui.notify(f'User {v2User.Community} deleted...')
@@ -289,8 +303,11 @@ async def edit_delete_v2_user_card(community):
 
     
 async def edit_delete_v3_user_card(username):
-    snmp = await GetSnmp(dbus.Bus)
-    userData = await snmp.call_get_v3_user_by_username(username)
+    AppBus = await get_dbus()
+
+    snmp = await GetSnmp(AppBus)
+    #userData = await snmp.call_get_v3_user_by_username(username)
+    userData = await ReadV3UserByUsername(username)
     initUser = V3User(**userData)
     finalUser = V3User(**userData)
 
@@ -313,8 +330,8 @@ async def edit_delete_v3_user_card(username):
                         save_button.enabled = False
                         edit_button.enabled = True
                         if all(validate_group([version, username, permissions, auth_type, auth_pass, priv_type, priv_pass])):
-                            await snmp.call_modify_v3_user(asdict(initUser), asdict(finalUser))
-                            #EditV3User(inituser, finaluser)
+                            #await snmp.call_modify_v3_user(asdict(initUser), asdict(finalUser))
+                            await EditV3User(asdict(initUser), asdict(finalUser))
                             ui.navigate.back()
                         else:
                             ui.notify("Please correct the errors", type='negative')
@@ -334,7 +351,8 @@ async def edit_delete_v3_user_card(username):
                             ui.button('No', on_click=lambda: dialog.submit(False)).props("flat color=accent align=left")
                     result = await dialog
                     if result:
-                        await snmp.call_remove_v3_user(asdict(initUser))
+                        #await snmp.call_remove_v3_user(asdict(initUser))
+                        await DeleteV3User(AppBus, asdict(initUser))
                         ui.navigate.back()
                         ui.notify(f'User {initUser.UserName} deleted...')
                     else:
