@@ -95,7 +95,7 @@ async def v3table():
 @ui.refreshable
 async def v2table():
     AppBus = await get_dbus()
-    snmp = await GetSnmp(AppBus)
+    #snmp = await GetSnmp(AppBus)
     #v2Users = await snmp.call_get_v2_users()
     v2Users = await ReadV2Users()
     
@@ -245,7 +245,7 @@ def disable_group(fields):
 async def edit_delete_v2_user_card(community):
     AppBus = await get_dbus()
 
-    snmp = await GetSnmp(AppBus)
+    #snmp = await GetSnmp(AppBus)
     #user = await snmp.call_get_v2_user_by_community(community)
     user = await ReadV2UserByCommunity(community)
     v2User = V2User(**user)
@@ -305,7 +305,7 @@ async def edit_delete_v2_user_card(community):
 async def edit_delete_v3_user_card(username):
     AppBus = await get_dbus()
 
-    snmp = await GetSnmp(AppBus)
+    #snmp = await GetSnmp(AppBus)
     #userData = await snmp.call_get_v3_user_by_username(username)
     userData = await ReadV3UserByUsername(username)
     initUser = V3User(**userData)
