@@ -1,0 +1,8 @@
+README.md
+pyproject.toml
+src/main.py
+src/service.py
+src/ns2_lib.egg-info/PKG-INFO
+src/ns2_lib.egg-info/SOURCES.txt
+src/ns2_lib.egg-info/dependency_links.txt
+src/ns2_lib.egg-info/top_level.txt

@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
 import asyncio
-from ns2.dbus import setup_dbus, cleanup_dbus, AppBus
-from dbus_next.aio import MessageBus
-from dbus_next import BusType
+from ns2.dbus import setup_dbus, cleanup_dbus, service
+
 
 from datetime import datetime
 import sys
-from nicegui import ui, app
+from nicegui import ui, app, background_tasks
 from multiprocessing import freeze_support
 
 from ns2.accounts import accounts_page, accounts_user_page
@@ -35,6 +34,7 @@ def main():
     
     freeze_support()
     print("MAIN")
+    
     
     @ui.page('/networking')
     @ui.page('/networking/firewall')
@@ -159,7 +159,7 @@ def main():
         sock_task.cancel()
 
     ui.run(
-        port=int(sys.argv[1]),
+        port=8000,
         reload=False,
         storage_secret="your-secret-key",
         title="Novus Configuration Tool",
