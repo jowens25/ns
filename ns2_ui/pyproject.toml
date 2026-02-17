@@ -13,3 +13,13 @@ dependencies = [
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.build]
+include = [
+    "ns2_ui/assets",
+]
+
+
+[tool.hatch.build.targets.wheel]
+packages = ["ns2_ui/ns2_ui"]
+sources = { assets = "assets/" }

@@ -647,7 +647,7 @@ wheels = [
 
 [[package]]
 name = "ns2"
-version = "0.3.9"
+version = "0.4.1"
 source = { editable = "." }
 dependencies = [
     { name = "aiofiles" },

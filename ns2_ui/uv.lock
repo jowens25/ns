@@ -668,7 +668,7 @@ wheels = [
 
 [[package]]
 name = "ns2"
-version = "0.4.0"
+version = "0.4.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiofiles" },
@@ -680,9 +680,9 @@ dependencies = [
     { name = "plotly" },
     { name = "six" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/3b/e8/51bbf71e2ae442b170bd970bbd6bec92f174969a420dfb4a5137736f6345/ns2-0.4.0.tar.gz", hash = "sha256:c5fad2cbee2a6029ee2e7420a452ff1401e1e8cf61effbee47c83928eba266ce", size = 288432, upload-time = "2026-02-17T20:38:24.121Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/77/3c/549df06108579fd51018014348e13d4cc2e91ae89e0c9ac1145a5d618bd2/ns2-0.4.1.tar.gz", hash = "sha256:59c2f36798c1f1f1419bca9b9fbb6f42f8569a075b488cc0139cb93b813a7e85", size = 278846, upload-time = "2026-02-17T21:18:40.079Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e7/43/eea97d4aedacc1ba08e4b52520cf6f76dff7ade19a98e4427ef3be300249/ns2-0.4.0-py3-none-any.whl", hash = "sha256:069e35412e95261d72b9f91dd551b89674604544ed72faaf42e6277387942742", size = 167686, upload-time = "2026-02-17T20:38:22.655Z" },
+    { url = "https://files.pythonhosted.org/packages/30/9a/cb05aa30b22f6a6d8ebcc3cab0e1b066c7b04f946587b69e5ea6f41fa35d/ns2-0.4.1-py3-none-any.whl", hash = "sha256:7518d73e22001629b274b0f5066af7b95cd33ed39e2f37c94616289f32994dfd", size = 226234, upload-time = "2026-02-17T21:18:41.647Z" },
 ]
 
 [[package]]
