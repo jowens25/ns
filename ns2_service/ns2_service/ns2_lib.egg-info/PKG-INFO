@@ -1,0 +1,9 @@
+Metadata-Version: 2.4
+Name: ns2-lib
+Version: 0.1.1
+Summary: Novus Power Products configuration tool library
+Requires-Python: >=3.12
+Description-Content-Type: text/markdown
+Requires-Dist: ns2-lib
+
+This lib contains the functions needed for the ui and the services

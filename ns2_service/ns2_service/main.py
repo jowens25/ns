@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 
 import asyncio
 from dbus_next import BusType

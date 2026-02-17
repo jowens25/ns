@@ -1,8 +1,10 @@
 README.md
 pyproject.toml
+src/__init__.py
 src/main.py
-src/service.py
 src/ns2_lib.egg-info/PKG-INFO
 src/ns2_lib.egg-info/SOURCES.txt
 src/ns2_lib.egg-info/dependency_links.txt
+src/ns2_lib.egg-info/entry_points.txt
+src/ns2_lib.egg-info/requires.txt
 src/ns2_lib.egg-info/top_level.txt

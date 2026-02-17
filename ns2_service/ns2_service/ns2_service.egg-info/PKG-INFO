@@ -1,6 +1,9 @@
 Metadata-Version: 2.4
 Name: ns2-service
-Version: 0.1.0
+Version: 0.1.3
 Summary: Add your description here
 Requires-Python: >=3.12
 Description-Content-Type: text/markdown
+Requires-Dist: ns2-lib
+
+This lib contains the functions needed for the ui and the services

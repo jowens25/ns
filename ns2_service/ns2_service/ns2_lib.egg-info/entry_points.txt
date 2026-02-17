@@ -1,0 +1,2 @@
+[console_scripts]
+ns2 = ns2.main:main
