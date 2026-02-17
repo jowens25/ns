@@ -1,0 +1,20 @@
+[project]
+name = "ns2"
+version = "0.4.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiofiles>=25.1.0",
+    "dbus-next>=0.2.3",
+    "nicegui>=3.7.1",
+    "numpy>=2.4.2",
+    "pam>=0.2.0",
+    "pandas>=3.0.0",
+    "plotly>=6.5.2",
+    "six>=1.17.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

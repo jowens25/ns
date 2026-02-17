@@ -1,0 +1,15 @@
+[project]
+name = "ns2-ui"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "nicegui>=3.7.1",
+    "ns2>=0.4.0",
+    "pyinstaller>=6.19.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
