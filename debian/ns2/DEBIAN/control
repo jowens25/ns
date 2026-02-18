@@ -1,8 +1,8 @@
 Package: ns2
-Version: 0.0.2
+Version: 0.0.3
 Architecture: arm64
 Maintainer: Jacob Owens <jowens@novuspower.com>
-Installed-Size: 109726
+Installed-Size: 109727
 Depends: libc6 (>= 2.17), zlib1g (>= 1:1.1.4)
 Section: utils
 Priority: optional
