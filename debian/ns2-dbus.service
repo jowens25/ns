@@ -1,0 +1,16 @@
+[Unit]
+Description=Dbus api for ns2
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/ns-dbus
+Restart=always         # Automatically restart on exit
+RestartSec=5s          # Wait 5 seconds before restarting
+StartLimitIntervalSec=30 # Limit restarts within this window (e.g., 30s)
+StartLimitBurst=2      # Allow 2 restarts within that window before stopping
+User=root
+
+
+[Install]
+WantedBy=multi-user.target

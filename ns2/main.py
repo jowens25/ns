@@ -6,6 +6,7 @@ from dbus_next.aio import MessageBus
 from dbus_next import BusType
 
 from datetime import datetime
+import zoneinfo
 import sys
 from nicegui import ui, app
 from multiprocessing import freeze_support
@@ -47,6 +48,7 @@ def main():
     @ui.page('/accounts/{user}')
     #@ui.page('/fpga')
     #@ui.page('/tests')
+    #@ui.page('/login')
     @ui.page('/')
     @ui.page('/root')
     async def root():
@@ -54,12 +56,13 @@ def main():
         #await setup_dbus(AppBus)
         
         
-        #login_page()
+
 
         init_colors()
         if not app.storage.user.get("authenticated", False):
             ui.navigate.to("/login")
             return
+        
         with ui.header().classes("items-center justify-between").classes("bg-dark"):
             ui.button(on_click=lambda: left_drawer.toggle(), icon="menu").props(
                 "flat color=white"
@@ -67,11 +70,16 @@ def main():
             ui.image(str(ASSETS_DIR / "NOVUS_LOGO.svg")).classes("w-48")
             ui.label(f'Welcome {app.storage.user["username"]}!')
             #ui.button("Request Admin").classes("bg-secondary").props("flat color=accent")
-            label = ui.label()
-            def update_date():
-                label.set_text(datetime.now().astimezone().strftime('%m-%d-%Y %H:%M:%SZ'))
+            with ui.row():
+                label = ui.label()        
+                def update_date():
+                    label.set_text(datetime.now().astimezone().strftime('%m-%d-%Y %H:%M:%SZ'))
+            
             ui.timer(1.0, update_date)
+                
         async def nav(path :str):
+            if path == '/login':
+                app.storage.user.clear()
             ui.navigate.to(path)
             width = await ui.run_javascript('window.innerWidth')
             if width < 1024:  # Adjust this breakpoint as needed
@@ -114,7 +122,7 @@ def main():
             ui.separator()
             ui.button(
                 "Logout",
-                on_click=lambda: (app.storage.user.clear(), nav("/login")),
+                on_click=lambda: nav("/login"),
                 icon="logout",
             ).props("flat color=negative align=left").classes("full-width")
         # Footer
@@ -150,7 +158,6 @@ def main():
  
 
 
-
     @app.on_shutdown
     async def shutdown():
         global sock_task
@@ -159,8 +166,8 @@ def main():
         sock_task.cancel()
 
     ui.run(
-        port=int(sys.argv[1]),
-        reload=False,
+        port=8000,
+        reload=True,
         storage_secret="your-secret-key",
         title="Novus Configuration Tool",
         favicon=str(ASSETS_DIR / "favicon.png")

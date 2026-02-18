@@ -1,0 +1,9 @@
+Package: ns2
+Version: 0.0.2
+Architecture: amd64
+Maintainer: Jacob Owens <jowens@novuspower.com>
+Installed-Size: 110528
+Depends: libc6 (>= 2.14), zlib1g (>= 1:1.1.4)
+Section: utils
+Priority: optional
+Description: Configuration tool

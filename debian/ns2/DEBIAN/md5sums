@@ -1,0 +1,5 @@
+c779552848de30705f14b31c03c7f1c3  lib/systemd/system/ns2-dbus.service
+7436efd9eacc39136795bb60c3ca698e  lib/systemd/system/ns2-ui.service
+b6cd9d3285481b713f18c0804543a9ee  usr/bin/ns-dbus
+f0550103bf3d9ab37c0c3f19c814fd8a  usr/bin/ns-ui
+09f95c812a68d872380ece1765b2cf38  usr/share/doc/ns2/changelog.gz

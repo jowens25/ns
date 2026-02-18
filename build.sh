@@ -1,5 +1,8 @@
-uv run nicegui-pack --onefile \
-                    --name "ns2bin" \
-                    --add-data "ns2/assets:ns2/assets" \
-                    --add-data "ns2/introspection:ns2/introspection" ns2/main.py
+#!/bin/bash
+dpkg-buildpackage -us -uc -b
 
+mv ../*.ddeb ../*.deb ../*.buildinfo ../*.changes dist/
+
+
+
+#debsign -k ABF8C9E8DF6D4AFD02BA58DCBA050865951ED7DD
