@@ -1,3 +1,6 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
 Format: 1.8
 Date: Wed, 18 Feb 2026 09:23:04 -0600
 Source: ns2
@@ -16,11 +19,23 @@ Changes:
    * Initial release. (Closes: #XXXXXX)
    * port 8000
 Checksums-Sha1:
- 1303586f0370fa1b820c325f2bb04e6985267669 4982 ns2_0.0.2_arm64.buildinfo
+ 27c8948e6ea498ba4b4c1c0092acad1f9652f992 5520 ns2_0.0.2_arm64.buildinfo
  931a4fb67f8b32c0998e32896c9e0c559b7be18e 109907368 ns2_0.0.2_arm64.deb
 Checksums-Sha256:
- 5b79c96068671170613c9f7b014f2e6eef164145f3bb5aacd3d9b917d5bd1f24 4982 ns2_0.0.2_arm64.buildinfo
+ 57c562fd76bd4e59e825cd830acd7e51fd2704171bb62bce5d7c1dbfacdec2d8 5520 ns2_0.0.2_arm64.buildinfo
  af2d6939a5d96de7e58fb2dcadbfff8133a9ef67ae2fec986ffb5a5988e4f7a4 109907368 ns2_0.0.2_arm64.deb
 Files:
- fa48f3dc69234a9c07ba78952758858d 4982 utils optional ns2_0.0.2_arm64.buildinfo
+ 8b9a6988e35b19cb0ecc0a84dac6eaf8 5520 utils optional ns2_0.0.2_arm64.buildinfo
  2b4eb2d9392ad0071e965ac4df6d2607 109907368 utils optional ns2_0.0.2_arm64.deb
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEq/jJ6N9tSv0CuljcugUIZZUe190FAmmV8y4ACgkQugUIZZUe
+193iQQgAqSppLZx4A7V9KjMhSqy4d3cVdD1vN710XfOAFOqJeL7zc0ajSBrgceUq
+fg3f42AqRTvqqs9gFvfMEzwzZFReDa8VEiAop1yqZMW7qK7TxBQeMg8d4sCz85DE
+8/hJhN9uidkLyHHgvFXwjePlLt1KpKjDdeDyXPHhqqIekWLZjORzYDEjmMRuzuab
+C0SN3Y1NrXuv2VjKoyRhCBYavOmdlGbyCC1MqDufHZQ7o90f9D4QVQqhekqUzcVz
+07jYMR6yJKvuJCXZj02l0EkyCbqQmhVlsNjidatehF/y7Eg4kOkxqN4z5ETQ/rR3
+VY0kyGF97x4gTh62LPWB4CbziEMu7A==
+=Nl5a
+-----END PGP SIGNATURE-----
