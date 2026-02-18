@@ -1,5 +1,6 @@
 c779552848de30705f14b31c03c7f1c3  lib/systemd/system/ns2-dbus.service
 7436efd9eacc39136795bb60c3ca698e  lib/systemd/system/ns2-ui.service
-b6cd9d3285481b713f18c0804543a9ee  usr/bin/ns-dbus
-f0550103bf3d9ab37c0c3f19c814fd8a  usr/bin/ns-ui
+d28f14eb944669a259911b1418b0e83a  usr/bin/ns-dbus
+cee038495aadacb796c4328e03bbaf6c  usr/bin/ns-ui
+717fcb93aba1931e9d460d3e05ced8f4  usr/share/dbus-1/system.d/com.novus.ns.conf
 09f95c812a68d872380ece1765b2cf38  usr/share/doc/ns2/changelog.gz

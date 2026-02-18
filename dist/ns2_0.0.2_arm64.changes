@@ -1,0 +1,26 @@
+Format: 1.8
+Date: Wed, 18 Feb 2026 09:23:04 -0600
+Source: ns2
+Binary: ns2
+Architecture: arm64
+Version: 0.0.2
+Distribution: UNRELEASED
+Urgency: medium
+Maintainer: Jacob Owens <jowens@novuspower.com>
+Changed-By: jowens <jowens@jowens>
+Description:
+ ns2        - Configuration tool
+Changes:
+ ns2 (0.0.2) UNRELEASED; urgency=medium
+ .
+   * Initial release. (Closes: #XXXXXX)
+   * port 8000
+Checksums-Sha1:
+ 1303586f0370fa1b820c325f2bb04e6985267669 4982 ns2_0.0.2_arm64.buildinfo
+ 931a4fb67f8b32c0998e32896c9e0c559b7be18e 109907368 ns2_0.0.2_arm64.deb
+Checksums-Sha256:
+ 5b79c96068671170613c9f7b014f2e6eef164145f3bb5aacd3d9b917d5bd1f24 4982 ns2_0.0.2_arm64.buildinfo
+ af2d6939a5d96de7e58fb2dcadbfff8133a9ef67ae2fec986ffb5a5988e4f7a4 109907368 ns2_0.0.2_arm64.deb
+Files:
+ fa48f3dc69234a9c07ba78952758858d 4982 utils optional ns2_0.0.2_arm64.buildinfo
+ 2b4eb2d9392ad0071e965ac4df6d2607 109907368 utils optional ns2_0.0.2_arm64.deb
