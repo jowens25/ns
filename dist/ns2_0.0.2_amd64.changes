@@ -1,0 +1,27 @@
+Format: 1.8
+Date: Wed, 18 Feb 2026 09:23:04 -0600
+Source: ns2
+Binary: ns2
+Built-For-Profiles: noudeb
+Architecture: amd64
+Version: 0.0.2
+Distribution: UNRELEASED
+Urgency: medium
+Maintainer: Jacob Owens <jowens@novuspower.com>
+Changed-By: jowens <jowens@jowens>
+Description:
+ ns2        - Configuration tool
+Changes:
+ ns2 (0.0.2) UNRELEASED; urgency=medium
+ .
+   * Initial release. (Closes: #XXXXXX)
+   * port 8000
+Checksums-Sha1:
+ da372dda25f20d8402634ab9bc85c1fb29163cc1 5977 ns2_0.0.2_amd64.buildinfo
+ e25010ec54dec84824e9c8881ef40d2a07dd5936 110957580 ns2_0.0.2_amd64.deb
+Checksums-Sha256:
+ 10ee0ef859f57bf0901fc7c4a28c8fa3a2963b8c98ec2f3e59040972bda799b1 5977 ns2_0.0.2_amd64.buildinfo
+ 7200e5f60f21fb076ebb6d032b68aa404db6e96153119601d124c8ca09d49636 110957580 ns2_0.0.2_amd64.deb
+Files:
+ 66c464d2efb11558ba58f0ead7bd0f59 5977 utils optional ns2_0.0.2_amd64.buildinfo
+ 0e611b68c4b63177203791628bba69e8 110957580 utils optional ns2_0.0.2_amd64.deb
