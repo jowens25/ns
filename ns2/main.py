@@ -139,6 +139,7 @@ def main():
             '/accounts': accounts_page, 
             '/accounts/{user}': accounts_user_page,
             '/terminal': terminal_page,
+            '/root': root_page,
             #'/fpga': fpga_page,
             #'/tests': tests_page
             }).classes("w-full")

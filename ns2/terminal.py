@@ -17,7 +17,6 @@ isOpen = False
 
 # if terminal is open, dont do anything
 # if terminal is closed, open it
-
 def terminal_page():
     global pty_fd, pty_pid, isOpen
 
@@ -45,8 +44,10 @@ def terminal_page():
             except OSError:
                 print('Stopping reading from pty')  # error reading the pty; probably bash was exited
                 core.loop.remove_reader(pty_fd)
+                
             else:
                 terminal.write(data)
+                
         @terminal.on_data
         def terminal_to_pty(event: events.XtermDataEventArguments):
             try:
