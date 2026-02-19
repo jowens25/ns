@@ -1,0 +1,28 @@
+Format: 1.8
+Date: Thu, 19 Feb 2026 15:43:54 -0600
+Source: ns2
+Binary: ns2 ns2-dbgsym
+Architecture: arm64
+Version: 2.0.1
+Distribution: UNRELEASED
+Urgency: medium
+Maintainer: Jacob Owens <jowens@novuspower.com>
+Changed-By: jowens <jowens@jowens>
+Description:
+ ns2        - Configuration tool
+Changes:
+ ns2 (2.0.1) UNRELEASED; urgency=medium
+ .
+   * updated snmpd confs to use dir
+Checksums-Sha1:
+ 5263b3b301490f6da9822fffeb122d0cbbb47548 31908 ns2-dbgsym_2.0.1_arm64.deb
+ cccd647909716ce28d5dc6cf90871dd700714f92 5231 ns2_2.0.1_arm64.buildinfo
+ 49acd3f50981ba654e7b6918e8612770e8af6e58 45737264 ns2_2.0.1_arm64.deb
+Checksums-Sha256:
+ ec0d610fd48acd2c8fe6173d63999d6f97ff5dd0f3c86066915fa83fda353826 31908 ns2-dbgsym_2.0.1_arm64.deb
+ c3ce8e62c292feda5410ed8c7eb882ef5a1f99d5cfd06c5d32127ba38fea6592 5231 ns2_2.0.1_arm64.buildinfo
+ 8c1d34aea709fb78632dfa1a2e6ccaf56b84eb17e8abd3317080679e956b6d32 45737264 ns2_2.0.1_arm64.deb
+Files:
+ 3f5bfa89538165b97bedd3712f0c094f 31908 debug optional ns2-dbgsym_2.0.1_arm64.deb
+ 6953fb5110e6a386a36d973179732b7b 5231 utils optional ns2_2.0.1_arm64.buildinfo
+ 71d9176fe9f89f42fac2cbb89ae12769 45737264 utils optional ns2_2.0.1_arm64.deb
