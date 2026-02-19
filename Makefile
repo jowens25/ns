@@ -2,34 +2,35 @@
 
 .DEFAULT_GOAL := build
 
-PYINSTALLER = uv run pyinstaller
 NICEGUI_PACK = uv run nicegui-pack
 
-# Define output targets
-DBUS_TARGET = dist/ns-dbus
-UI_TARGET = dist/ns-ui
+# Define output target
+APP_TARGET = dist/ns2
 
 PREFIX ?= /usr
 DESTDIR ?=
 
-build-dbus:
-	$(PYINSTALLER) --onefile --name ns-dbus ns2/dbus.py
-
-build-ui:
-	$(NICEGUI_PACK) --onefile --name ns-ui \
+build:
+	$(NICEGUI_PACK) --onedir --name ns2 \
 		--add-data "ns2/assets:ns2/assets" \
 		--add-data "ns2/introspection:ns2/introspection" \
 		ns2/main.py
 
-build: build-dbus build-ui
-
-.PHONY: build-dbus build-ui build
+.PHONY: build
 
 install: build
-	install -D -m 755 $(DBUS_TARGET) $(DESTDIR)$(PREFIX)/bin/ns-dbus
-	install -D -m 755 $(UI_TARGET) $(DESTDIR)$(PREFIX)/bin/ns-ui
-	install -D -m 755 configs/com.novus.ns.conf $(DESTDIR)$(PREFIX)/share/dbus-1/system.d/com.novus.ns.conf 
-	install -D -m 755 configs/ns2.xml $(DESTDIR)$(PREFIX)/lib/firewalld/services/ns2.xml
+	# Install the entire onedir build to /usr/lib/ns2
+	install -d $(DESTDIR)$(PREFIX)/lib/ns2
+	cp -r dist/ns2/* $(DESTDIR)$(PREFIX)/lib/ns2/
+	
+	# Symlink the executable to /usr/bin
+	install -d $(DESTDIR)$(PREFIX)/bin
+	ln -sf $(PREFIX)/lib/ns2/ns2 $(DESTDIR)$(PREFIX)/bin/ns2
+	
+	# Install config files
+	install -D -m 644 configs/com.novus.ns.conf $(DESTDIR)$(PREFIX)/share/dbus-1/system.d/com.novus.ns.conf 
+	install -D -m 644 configs/ns2.xml $(DESTDIR)$(PREFIX)/lib/firewalld/services/ns2.xml
+
 clean:
 	rm -rf build dist *.spec
 	rm -f *.pyc

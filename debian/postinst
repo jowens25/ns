@@ -4,6 +4,7 @@ set -e
 case "$1" in
     configure)
 
+        firewall-cmd --reload
         firewall-cmd --permanent --zone=public --add-service=ns2
         firewall-cmd --permanent --zone=public --add-service=ssh
         firewall-cmd --permanent --zone=public --add-service=http

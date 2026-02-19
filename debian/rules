@@ -2,3 +2,11 @@
 
 %:
 	dh $@
+
+override_dh_strip:
+	# Skip stripping debug symbols - PyInstaller binaries don't handle it well
+	dh_strip --exclude=_internal
+
+override_dh_shlibdeps:
+	# Skip shared library dependencies - PyInstaller bundles everything
+	dh_shlibdeps --exclude=_internal

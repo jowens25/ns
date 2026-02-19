@@ -1,9 +1,9 @@
 Package: ns2
-Version: 0.0.3
-Architecture: arm64
+Version: 2.0.0
+Architecture: amd64
 Maintainer: Jacob Owens <jowens@novuspower.com>
-Installed-Size: 109727
-Depends: libc6 (>= 2.17), zlib1g (>= 1:1.1.4)
+Installed-Size: 244316
+Depends: libc6 (>= 2.14), zlib1g (>= 1:1.1.4), firewalld, network-manager
 Section: utils
 Priority: optional
 Description: Configuration tool

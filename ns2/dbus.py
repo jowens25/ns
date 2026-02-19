@@ -36,12 +36,12 @@ async def dbus_service():
     bus.disconnect()
 
 
-def main():
+def dbus_main():
     asyncio.run(dbus_service())
     
     
 if __name__ == "__main__":
-    main()
+    dbus_main()
 
 
 
