@@ -19,7 +19,7 @@ case "$1" in
         ;;
 esac
 
-# Automatically added by dh_installsystemd/13.11.4
+# Automatically added by dh_installsystemd/13.14.1ubuntu5
 if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-deconfigure" ] || [ "$1" = "abort-remove" ] ; then
 	# The following line should be removed in trixie or trixie+1
 	deb-systemd-helper unmask 'ns2-dbus.service' >/dev/null || true
@@ -36,7 +36,7 @@ if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-decon
 	fi
 fi
 # End automatically added section
-# Automatically added by dh_installsystemd/13.11.4
+# Automatically added by dh_installsystemd/13.14.1ubuntu5
 if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-deconfigure" ] || [ "$1" = "abort-remove" ] ; then
 	# The following line should be removed in trixie or trixie+1
 	deb-systemd-helper unmask 'ns2-ui.service' >/dev/null || true
@@ -53,7 +53,7 @@ if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-decon
 	fi
 fi
 # End automatically added section
-# Automatically added by dh_installsystemd/13.11.4
+# Automatically added by dh_installsystemd/13.14.1ubuntu5
 if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-deconfigure" ] || [ "$1" = "abort-remove" ] ; then
 	if [ -d /run/systemd/system ]; then
 		systemctl --system daemon-reload >/dev/null || true

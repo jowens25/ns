@@ -8,7 +8,7 @@ import aiofiles
 
 from ns2.systemd import *
 
-snmp_config_file = "/etc/snmp/snmpd.conf"
+snmp_config_file = "/etc/snmp/snmpd.conf.d/novus-snmpd.conf"
 default_persistent_dir_path = "/var/lib/snmp"
 
 
@@ -269,7 +269,7 @@ async def _deleteV3UserCreateDirective(user: V3User):
         
 
 async def _deleteV3UserFromConfig(user: V3User):
-    '''delete v3 user from /etc/snmp/snmpd.conf'''
+    '''delete v3 user from plain text config in novus-snmpd.conf'''
 
     _props = [user.Permissions, user.Version, user.UserName]
 
@@ -315,7 +315,7 @@ async def _deletePersistentDir():
     await runCmd(['rm', '-rf', persistentDir])
     
 async def _overWriteWithDefaultSnmpConf():
-    await runCmd(['cp', './configs/snmpd.conf', '/etc/snmp/snmpd.conf'])
+    await runCmd(['cp', './configs/snmpd.conf', snmp_config_file])
 
 
 

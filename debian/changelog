@@ -1,3 +1,9 @@
+ns2 (2.0.1) UNRELEASED; urgency=medium
+
+  * updated snmpd confs to use dir
+
+ -- jowens <jowens@jowens>  Thu, 19 Feb 2026 15:43:54 -0600
+
 ns2 (2.0.0) unstable; urgency=medium
 
   [ jowens ]
