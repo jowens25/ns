@@ -29,7 +29,7 @@ install: build
 	install -D -m 755 $(DBUS_TARGET) $(DESTDIR)$(PREFIX)/bin/ns-dbus
 	install -D -m 755 $(UI_TARGET) $(DESTDIR)$(PREFIX)/bin/ns-ui
 	install -D -m 755 configs/com.novus.ns.conf $(DESTDIR)$(PREFIX)/share/dbus-1/system.d/com.novus.ns.conf 
-
+	install -D -m 755 configs/ns2.xml $(DESTDIR)$(PREFIX)/lib/firewalld/services/ns2.xml
 clean:
 	rm -rf build dist *.spec
 	rm -f *.pyc

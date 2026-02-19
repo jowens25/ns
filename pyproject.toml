@@ -1,6 +1,6 @@
 [project]
 name = "ns2"
-version = "0.3.8"
+version = "0.3.10"
 description = "Novus Power Products server configuration tool"
 authors = [
     {name = "jowens25",email = "jowens@novuspower.com"}
@@ -15,9 +15,9 @@ dependencies = [
     "python-pam",
     "nicegui",
     "six",
-    "plotly",
-    "pandas>=2.0.0,<2.3.0",
-    "numpy>=1.26.0,<2.0.0",
+    #"plotly",
+    #"pandas>=2.0.0,<2.3.0",
+    #"numpy>=1.26.0,<2.0.0",
     "pyinstaller>=6.19.0",
 ]
 

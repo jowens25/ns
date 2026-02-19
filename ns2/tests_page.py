@@ -1,4 +1,4 @@
-
+'''
 from nicegui import ui, app, background_tasks, events
 
 import pandas as pd
@@ -114,3 +114,4 @@ async def tests_page():
 
             
 
+'''

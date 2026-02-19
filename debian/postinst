@@ -1,0 +1,23 @@
+#!/bin/bash
+set -e
+
+case "$1" in
+    configure)
+
+        firewall-cmd --permanent --zone=public --add-service=ns2
+        firewall-cmd --permanent --zone=public --add-service=ssh
+        firewall-cmd --permanent --zone=public --add-service=http
+        firewall-cmd --permanent --zone=public --add-service=https
+
+        # Restart snmpd
+        systemctl restart firewalld 2>/dev/null || true
+        ;;
+    
+    abort-upgrade|abort-remove|abort-deconfigure)
+        # Handle failure cases
+        ;;
+esac
+
+#DEBHELPER#
+
+exit 0

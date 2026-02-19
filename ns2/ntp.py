@@ -1,3 +1,4 @@
+'''
 from ns2.ns_socket import *
 from nicegui import ui, events
 
@@ -103,3 +104,4 @@ async def ntp_page():
 
 
 
+'''

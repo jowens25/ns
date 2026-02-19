@@ -20,9 +20,9 @@ from ns2.theme import init_colors
 from ns2.login import login_page
 from ns2.root import root_page
 from ns2.snmp_page import snmp_page, snmp_user_page
-from ns2.ntp import ntp_page
+#from ns2.ntp import ntp_page
 from ns2.fpga_page import fpga_page
-from ns2.tests_page import tests_page
+#from ns2.tests_page import tests_page
 from ns2.firewalld_page import firewall_page
 from ns2.utils import ASSETS_DIR
 
@@ -133,7 +133,7 @@ def main():
             '/networking': network_page, 
             '/networking/firewall': firewall_page,
             '/networking/{interface_name}': interface_page,
-            '/ntp' : ntp_page,
+            #'/ntp' : ntp_page,
             '/snmp': snmp_page, 
             '/snmp/{version}/{user}': snmp_user_page,
             '/accounts': accounts_page, 
