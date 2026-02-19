@@ -1,11 +1,10 @@
 Package: ns2-dbgsym
-Package-Type: ddeb
 Source: ns2
 Version: 2.0.0
 Auto-Built-Package: debug-symbols
-Architecture: amd64
+Architecture: arm64
 Maintainer: Jacob Owens <jowens@novuspower.com>
-Installed-Size: 38
+Installed-Size: 41
 Depends: ns2 (= 2.0.0)
 Section: debug
 Priority: optional
