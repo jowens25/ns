@@ -1,2 +1,0 @@
-recursive-include src/ns/ui/assets *
-recursive-include src/ns/lib/introspection *
