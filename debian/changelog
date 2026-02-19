@@ -1,4 +1,4 @@
-ns2 (0.0.3) UNRELEASED; urgency=medium
+ns2 (2.0.0) unstable; urgency=medium
 
   [ jowens ]
   * Initial release. (Closes: #XXXXXX)
@@ -7,4 +7,7 @@ ns2 (0.0.3) UNRELEASED; urgency=medium
   [ root ]
   * reload settings 
 
- -- root <root@rockpro64>  Wed, 18 Feb 2026 14:01:36 -0600
+  [ jowens ]
+  * more clean up 
+
+ -- jowens <jowens@jowens>  Thu, 19 Feb 2026 12:11:26 -0600
