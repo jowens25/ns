@@ -7,6 +7,7 @@ from dbus_next.aio import MessageBus as MessageBus
 from dbus_next.glib import MessageBus as SyncBus
 from dbus_next import Message, MessageType
 
+import time
 
 async def getSystemdManager(bus: MessageBus) -> ProxyInterface:
     introspection = await bus.introspect('org.freedesktop.systemd1', '/org/freedesktop/systemd1')
@@ -134,8 +135,11 @@ async def getServiceState(bus: MessageBus, service: str) -> str:
 
 
 async def isActive(bus: MessageBus, service: str) -> bool:
+    start = time.perf_counter()
     state = await getServiceState(bus, service)
     print(f'{service} is active: {state}')
+    
+    print("time: ", time.perf_counter()-start)
     if state == 'active':
         return True
     else:

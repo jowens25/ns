@@ -23,6 +23,9 @@ from ns2.systemd import *
 @ui.refreshable
 async def firewall_status(on_network_page: bool):
     AppBus = await get_dbus()
+    
+    zoneDialog = await addZoneDialog()
+
     print("FIREWALL STATUS")
     firewallInfo = FirewallInfo()
     firewallInfo.Enable = await isActive(AppBus, 'firewalld.service')
@@ -61,7 +64,7 @@ async def firewall_status(on_network_page: bool):
                 ui.button("Edit rules and zones", on_click=lambda e: ui.navigate.to('/networking/firewall')).props("flat color=accent align=left dense")
 
             else:
-                zoneDialog = await addZoneDialog()
+                ui.label("LABEL")
                 ui.button("add new zone", on_click=zoneDialog.open).props("color=accent align=left")
         
 
@@ -304,6 +307,9 @@ async def zone_list(firewall):
 
 @ui.refreshable
 async def firewall_table():
+    
+    start = time.perf_counter()
+    
     AppBus = await get_dbus()
 
     firewallInfo = FirewallInfo()
@@ -329,6 +335,8 @@ async def firewall_table():
             firewallInfo.ZoneInfos[az] = zoneInfo
     await zone_list(firewallInfo)
     
+    print(time.perf_counter() - start)
+    
     
     
     
@@ -348,11 +356,14 @@ async def firewall_page():
     
     #fire = await GetFirewall(dbus.AppBus)
     #fire.on_daemon_changed(daemon_cb)
-
+    start = time.perf_counter()
     with ui.card():
         with ui.row():
             ui.link("Networking", "/networking").classes('text-accent')
             ui.label(">")
             ui.label('firewall')
-        await firewall_status(False)
+        print("1 ", time.perf_counter()-start)
+        #await firewall_status(False)
+        print("2 ",time.perf_counter()-start)
         await firewall_table()
+        print("3 ", time.perf_counter()-start)

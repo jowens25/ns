@@ -1,0 +1,29 @@
+Format: 1.8
+Date: Thu, 19 Feb 2026 15:43:54 -0600
+Source: ns2-dev
+Binary: ns2-dev
+Built-For-Profiles: noudeb
+Architecture: amd64
+Version: 2.0.1
+Distribution: unstable
+Urgency: medium
+Maintainer: Jacob Owens <jowens@novuspower.com>
+Changed-By: jowens <jowens@jowens>
+Description:
+ ns2-dev    - Configuration tool
+Changes:
+ ns2-dev (2.0.1) unstable; urgency=medium
+ .
+   * updated snmpd confs to use dir
+Checksums-Sha1:
+ 61819de2f34d68f3ee6f52aa6e2bb05b1026a859 28652 ns2-dev-dbgsym_2.0.1_amd64.ddeb
+ 3e9ea6bff01bb4f4d034858d9dbd1bf5e81648f6 6265 ns2-dev_2.0.1_amd64.buildinfo
+ abaa6db111537b9ffe8fb883d16ed7d78c54a88d 67055278 ns2-dev_2.0.1_amd64.deb
+Checksums-Sha256:
+ eafb06e6e355489cb69dfb34ac03fa9213b2c5d10c840c813d42c092ff73bcce 28652 ns2-dev-dbgsym_2.0.1_amd64.ddeb
+ c1dd5033d912e495d7e7fa11ece2eccec48c9d9c46a9372fa43d20c6a7c1f3b3 6265 ns2-dev_2.0.1_amd64.buildinfo
+ 34c99cbcf3363486829da19770499e644b61ea8c2d05f14f144de54b0db445a9 67055278 ns2-dev_2.0.1_amd64.deb
+Files:
+ 8d6d19f11213ee05d085e0a07363890f 28652 debug optional ns2-dev-dbgsym_2.0.1_amd64.ddeb
+ ce6e70dac430211ad9ffd5680ed668e5 6265 utils optional ns2-dev_2.0.1_amd64.buildinfo
+ 72754808ad468025c689c3eafdba3fe6 67055278 utils optional ns2-dev_2.0.1_amd64.deb
