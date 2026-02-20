@@ -1,11 +1,11 @@
-Source: ns2
+Source: ns2-dev
 Section: utils
 Priority: optional
 Maintainer: Jacob Owens <jowens@novuspower.com>
 Build-Depends: debhelper-compat (=12), gcc, libc6-dev
 Standards-Version: 4.6.0
 
-Package: ns2
+Package: ns2-dev
 Architecture: amd64 arm64
 Depends: ${shlibs:Depends}, ${misc:Depends}, firewalld, network-manager
 Description: Configuration tool

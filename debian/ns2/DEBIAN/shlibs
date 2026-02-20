@@ -1,7 +1,0 @@
-libaudit 1 ns2 (>= 2.0.1)
-libcap-ng 0 ns2 (>= 2.0.1)
-libgcc_s 1 ns2 (>= 2.0.1)
-libpam 0 ns2 (>= 2.0.1)
-libpam_misc 0 ns2 (>= 2.0.1)
-libpython3.12 1.0 ns2 (>= 2.0.1)
-libstdc++ 6 ns2 (>= 2.0.1)

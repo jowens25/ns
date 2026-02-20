@@ -406,7 +406,7 @@ wheels = [
 
 [[package]]
 name = "ns2"
-version = "0.3.10"
+version = "2.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "dbus-next" },
