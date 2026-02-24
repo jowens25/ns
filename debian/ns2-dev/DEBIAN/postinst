@@ -4,6 +4,9 @@ set -e
 case "$1" in
     configure)
 
+        #systemctl disable variscite-bt.service
+        #systemctl disable systemd-networkd
+
         firewall-cmd --reload
         firewall-cmd --permanent --zone=public --add-service=ns2
         firewall-cmd --permanent --zone=public --add-service=ssh

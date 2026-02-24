@@ -5,7 +5,7 @@ a = Analysis(
     ['ns2/main.py'],
     pathex=[],
     binaries=[],
-    datas=[('/home/jowens/Projects/ns2/.venv/lib/python3.12/site-packages/nicegui', 'nicegui'), ('ns2/assets', 'ns2/assets'), ('ns2/introspection', 'ns2/introspection')],
+    datas=[('/home/jacob/Projects/ns/.venv/lib/python3.12/site-packages/nicegui', 'nicegui'), ('ns2/assets', 'ns2/assets'), ('ns2/introspection', 'ns2/introspection')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

@@ -1,0 +1,34 @@
+Format: 1.8
+Date: Thu, 29 Jan 2026 12:29:38 -0600
+Source: ns
+Binary: ns
+Built-For-Profiles: noudeb
+Architecture: source amd64
+Version: 0.2.2-prerelease
+Distribution: UNRELEASED
+Urgency: medium
+Maintainer: Jacob Owens <jowens@novuspower.com>
+Changed-By: Jacob Owens <jacob@lab>
+Description:
+ ns         - A short summary of what this is.
+Changes:
+ ns (0.2.2-prerelease) UNRELEASED; urgency=medium
+ .
+   * Initial release. (Closes: #XXXXXX)
+   *
+   *
+Checksums-Sha1:
+ 05dea7c8f41cb7a9a15ea35c9c4aadbcc8d2be0c 554 ns_0.2.2-prerelease.dsc
+ 1269f6809b1f17a5493d7b7d60b6a0678d8d3314 217787708 ns_0.2.2-prerelease.tar.gz
+ 13891896b4e9dba80226b2e1a060b28e7939f3a6 7663 ns_0.2.2-prerelease_amd64.buildinfo
+ c7468af74c44f10b5d7f0d4022c4825f20e9877e 71889134 ns_0.2.2-prerelease_amd64.deb
+Checksums-Sha256:
+ 75846afa97f5a5a8819d85b32f39ba0eaed7f9f33a41871d6fb5122557ec6eef 554 ns_0.2.2-prerelease.dsc
+ d7028499dc019f5ec9da11e06f98814cda1c7dba46a481a7615a16e6e9bfd9f1 217787708 ns_0.2.2-prerelease.tar.gz
+ 8e566b8cdad1e1da724e01fee1a378725a94396985bc6c011bfb0c957cb39668 7663 ns_0.2.2-prerelease_amd64.buildinfo
+ c7a64c78e06e2feacecc1839f952d504d6f74b28af8f738e9bdf796d91a21014 71889134 ns_0.2.2-prerelease_amd64.deb
+Files:
+ 404ec42109a3a94476728ec64cf41c51 554 python extra ns_0.2.2-prerelease.dsc
+ ba559e78766491ddf1d0b50ab6f2e5d3 217787708 python extra ns_0.2.2-prerelease.tar.gz
+ e45a53d707fbf44492d1f0abb886f2bb 7663 python extra ns_0.2.2-prerelease_amd64.buildinfo
+ 6af4169000743031d00f9c1e94cf8cd5 71889134 python extra ns_0.2.2-prerelease_amd64.deb

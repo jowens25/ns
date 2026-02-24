@@ -1,0 +1,27 @@
+Format: 1.8
+Date: Thu, 29 Jan 2026 12:29:38 -0600
+Source: ns
+Binary: ns
+Built-For-Profiles: noudeb
+Architecture: amd64
+Version: 0.2-1ubuntu1
+Distribution: UNRELEASED
+Urgency: medium
+Maintainer: Jacob Owens <jowens@novuspower.com>
+Changed-By: Jacob Owens <jacob@lab>
+Description:
+ ns         - A short summary of what this is.
+Changes:
+ ns (0.2-1ubuntu1) UNRELEASED; urgency=medium
+ .
+   * Initial release. (Closes: #XXXXXX)
+   *
+Checksums-Sha1:
+ 38d53cf88ea742c20ce10be24e836a6cd14b2616 7414 ns_0.2-1ubuntu1_amd64.buildinfo
+ 7e5fc2d9fb7dd6e66af0492bfa4c94d47603d234 71886314 ns_0.2-1ubuntu1_amd64.deb
+Checksums-Sha256:
+ 1a91a9d1e6af966a17f345b8644a1139aaadfca8ec9a73471d25b4512e2db70d 7414 ns_0.2-1ubuntu1_amd64.buildinfo
+ e93c9a9c46db193184379b400739980423b05879bfd56642b33b85fa54f9f25b 71886314 ns_0.2-1ubuntu1_amd64.deb
+Files:
+ 58e31f82f15af0fe17afdfb3161005f7 7414 python extra ns_0.2-1ubuntu1_amd64.buildinfo
+ 351b202a290621e3ce825c82695f5ac4 71886314 python extra ns_0.2-1ubuntu1_amd64.deb

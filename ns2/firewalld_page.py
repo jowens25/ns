@@ -113,6 +113,95 @@ async def removeServiceFromZone(zoneName: str, serviceName:str):
     print(res)
     return
 
+async def addServiceToZone(zoneName: str, serviceName: str):
+    AppBus = await get_dbus()
+
+    print(f'add {serviceName} to {zoneName}')
+    zone = await GetFirewalldZone(AppBus)
+    
+    res = await zone.call_add_service(zoneName, serviceName, 0)
+    print("res1: ", res)
+
+    conf = await GetFirewalldConfig(AppBus)
+    p = await conf.call_get_zone_by_name(zoneName)
+    
+    print(p)
+    
+    configZone = await GetFirewalldConfigZone(AppBus, p)
+    res = await configZone.call_add_service(serviceName)
+    print(res)
+
+    await get_firewall_info()
+    return
+
+
+
+async def serviceSelectionTable():
+    AppBus = await get_dbus()
+    
+    services = formatServicesInRows(await getServicesInfo(AppBus))
+
+    with ui.scroll_area():
+        services_table = ui.table(
+                rows=services,
+                column_defaults={
+                    "align": "left",
+                    "headerClasses": "uppercase text-primary",
+                },
+                row_key='Service',
+                selection='multiple',
+                #on_select=lambda e: print(f'selected: {e.selection}'),                   
+                  ).props('dense')
+                
+              
+
+        services_table.props(f'visible-columns=["Service","UDP","TCP"]')
+        services_table.add_slot('header', r'''
+            <q-tr :props="props">
+                <q-th auto-width />
+                <q-th auto-width />
+                <q-th v-for="col in props.cols" :key="col.name" :props="props"> {{ col.label }} </q-th>
+            </q-tr>
+        ''')
+
+        services_table.add_slot('body', r'''
+            <q-tr :props="props">
+                <!-- selection checkbox -->
+                    <q-td auto-width>
+                        <q-checkbox 
+                            :model-value="props.selected" 
+                            @update:model-value="props.selected = !props.selected"
+                            color="accent"
+                            dense 
+                        />
+                    </q-td>
+                <!-- expand button -->
+                <q-td auto-width @click.stop="">
+                    <q-btn size="sm" color="accent" round dense 
+                           @click="props.expand = !props.expand" 
+                           :icon="props.expand ? 'remove' : 'add'" />
+                </q-td>
+                <!-- normal columns -->
+                <q-td v-for="col in props.cols" :key="col.name" :props="props" 
+                      style="white-space: normal; word-wrap: break-word; overflow-wrap: break-word; max-width: 200px;">
+                    {{ col.value }}
+                </q-td>                 
+            </q-tr>
+                <!-- expanded description -->
+                    <q-tr v-show="props.expand" :props="props">
+                        <q-td colspan="100%" style="max-width: 0;">
+                            <div class="text-left"
+                                 style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
+                                {{ props.row.Description }}
+                            </div>
+                        </q-td>
+                    </q-tr>
+            ''')
+        
+    serviceFilter = ui.input('Search for services').bind_value(services_table, "filter")
+    return services_table
+
+
 
 
 async def addZoneDialog():
@@ -124,7 +213,7 @@ async def addZoneDialog():
             
             with ui.row() as trust:
                 ui.label("Trust level")
-                with ui.color_inpu
+                
                 ui.label("Sorted from least to most trusted")
                 
             
@@ -137,76 +226,20 @@ async def addZoneDialog():
                     ui.checkbox(i).props("flat color=accent align=left").bind_value(interfaces, i)
 
             #selectedServices = ui.input_chips('Allowed services', new_value_mode='add-unique', clearable=True).props('disable-input')
-            with ui.scroll_area():
-                services = formatServicesInRows(await getServicesInfo(AppBus))
-                services_table = ui.table(
-                        rows=services,
-                        column_defaults={
-                            "align": "left",
-                            "headerClasses": "uppercase text-primary",
-                        },
-                        row_key='Service',
-                        selection='multiple',
-                        #on_select=lambda e: print(f'selected: {e.selection}'),                   
-                          ).props('dense')
-                
-              
+            tab = await serviceSelectionTable()
 
-                services_table.props(f'visible-columns=["Service","UDP","TCP"]')
-#
-                services_table.add_slot('header', r'''
-                    <q-tr :props="props">
-                        <q-th auto-width />
-                        <q-th auto-width />
-
-                        <q-th v-for="col in props.cols" :key="col.name" :props="props"> {{ col.label }} </q-th>
-                    </q-tr>
-                ''')
-#
-                services_table.add_slot('body', r'''
-                    <q-tr :props="props">
-                                <!-- selection checkbox -->
-            <q-td auto-width>
-                <q-checkbox 
-                    :model-value="props.selected" 
-                    @update:model-value="props.selected = !props.selected"
-                    color="accent"
-                    dense 
-                />
-            </q-td>
-
-                        <!-- expand button -->
-                        <q-td auto-width @click.stop="">
-                            <q-btn size="sm" color="accent" round dense 
-                                   @click="props.expand = !props.expand" 
-                                   :icon="props.expand ? 'remove' : 'add'" />
-                        </q-td>
-                        <!-- normal columns -->
-                        <q-td v-for="col in props.cols" :key="col.name" :props="props" 
-                              style="white-space: normal; word-wrap: break-word; overflow-wrap: break-word; max-width: 200px;">
-                            {{ col.value }}
-                        </q-td>                 
-                    </q-tr>
-                    <!-- expanded description -->
-                    <q-tr v-show="props.expand" :props="props">
-                        <q-td colspan="100%" style="max-width: 0;">
-                            <div class="text-left"
-                                 style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
-                                {{ props.row.Description }}
-                            </div>
-                        </q-td>
-                    </q-tr>
-                ''')
-#
-            serviceFilter = ui.input('Search for services').bind_value(services_table, "filter")
 
             def on_save_cb():
                 for c,v in interfaces.items():
                     print(c, v)
+                
+                print(tab.selected)
+
+                #print(selectedServices)
 
                 # Get selected services when saving
-                selected = [row['Service'] for row in services if row.get('Select', False)]
-                print(f"Selected services: {selected}")
+                #selected = [row['Service'] for row in services if row.get('Select', False)]
+                #print(f"Selected services: {selected}")
             
             with ui.row():
                 ui.button('Add zone', on_click=on_save_cb).props("color=accent align=left")
@@ -214,22 +247,96 @@ async def addZoneDialog():
 
     return dialog
 
-async def addServiceDialog():
+async def addServiceDialog(zoneName):
     with ui.dialog() as dialog:
-        with ui.card():
-            ui.label("nothing")
-            ui.button('close', on_click=dialog.close)
-        
+        with ui.card().props('flat').classes("w-full"):
+            ui.label(f"Add services to {zoneName}").classes("text-h5")
+            
+            #selectedServices = ui.input_chips('Allowed services', new_value_mode='add-unique', clearable=True).props('disable-input')
+            tab = await serviceSelectionTable()
+
+
+            async def on_add_cb():                
+                print(tab.selected)
+                for service in tab.selected:
+                    serviceName = service['Service']
+                    await addServiceToZone(zoneName, serviceName)
+            
+            with ui.row():
+                ui.button('Add', on_click=on_add_cb).props("color=accent align=left")
+                ui.button('Cancel', on_click=dialog.close).props("flat color=accent align=left")
+
     return dialog
 
+@ui.refreshable
+async def zoneServiceTable(zoneName):
+    firewallInfo = await get_firewall_info()
+    services = formatServicesInRows(firewallInfo.ZoneInfos[zoneName].ServiceSettings)                
+    service_table = ui.table(
+        rows=services,
+        column_defaults={
+            "align": "left",
+            "headerClasses": "uppercase text-primary",
+        },
+        row_key='Service'
+    ).props("flat")
+    service_table.props(f'visible-columns={"Service,UDP,TCP"}')  # Only show these
+    
+    service_table.add_slot('header', r'''
+        <q-tr :props="props">
+            <q-th auto-width />
+            <q-th v-for="col in props.cols" :key="col.name" :props="props"> {{ col.label }} </q-th>
+            <q-th auto-width />
+        </q-tr>
+    ''')
+    
+    async def handle_remove_service(e, zone=zoneName):
+        await removeServiceFromZone(zone, e.args)
+        await zoneServiceTable.refresh()
+        #services.remove()
+    service_table.on('remove-service', handle_remove_service)
+    
+    service_table.add_slot('body', r'''
+    <q-tr :props="props">
+        <!-- expand button -->
+        <q-td auto-width>
+            <q-btn size="sm" color="accent" round dense @click="props.expand = !props.expand" :icon="props.expand ? 'remove' : 'add'" />
+        </q-td>
+        <!-- normal columns -->
+        <q-td v-for="col in props.cols" :key="col.name" :props="props">
+            {{ col.value }}
+        </q-td>
+        <!-- 3-dot menu -->
+        <q-td auto-width>
+            <q-btn flat round dense icon="more_vert" color="accent">
+                <q-menu auto-close>
+                    <q-list style="min-width: 150px">
+                        <q-item clickable
+                            @click="$parent.$emit('remove-service', props.row.Service)">
+                            <q-item-section class="text-negative">
+                                Delete
+                            </q-item-section>
+                        </q-item>
+                    </q-list>
+                </q-menu>
+            </q-btn>
+        </q-td>
+    </q-tr>
+    <!-- expanded description -->
+    <q-tr v-show="props.expand" :props="props">
+        <q-td colspan="100%" style="max-width: 0;">
+            <div class="text-left"
+                 style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
+                {{ props.row.Description }}
+            </div>
+        </q-td>
+    </q-tr>
+    ''')
+    pass # end of this... 
 
-
-
-
-
-async def zone_list(firewall):
+async def zone_list(firewallInfo):
     with ui.column():
-        for zoneName, zoneSetting in firewall.ZoneInfos.items():
+        for zoneName, zoneSetting in firewallInfo.ZoneInfos.items():
             with ui.card().classes("w-full").props('flat').classes("bg-secondary"):
                 with ui.column():
                     with ui.row().classes("w-full items-baseline justify-between"):
@@ -241,82 +348,18 @@ async def zone_list(firewall):
                             AllowedAddressText(zoneSetting)
                             
                         with ui.row():
-                            addDialog = await addServiceDialog()
-                            ui.button("add services", on_click=lambda: addDialog.open).props("color=accent align=left")
+                            addDialog = await addServiceDialog(zoneName)
+                            ui.button("add services", on_click=addDialog.open).props("color=accent align=left")
                             ui.button(icon="more_vert").props("flat color=accent align=left")
-                    
-                    services = formatServicesInRows(firewall.ZoneInfos[zoneName].ServiceSettings)
-                    
-                    service_table = ui.table(
-                        rows=services,
-                        column_defaults={
-                            "align": "left",
-                            "headerClasses": "uppercase text-primary",
-                        },
-                        row_key='Service'
-                    ).props("flat")
-                    service_table.props(f'visible-columns={"Service,UDP,TCP"}')  # Only show these
-                    
-                    service_table.add_slot('header', r'''
-                        <q-tr :props="props">
-                            <q-th auto-width />
-                            <q-th v-for="col in props.cols" :key="col.name" :props="props"> {{ col.label }} </q-th>
-                            <q-th auto-width />
-                        </q-tr>
-                    ''')
-                    
-                    async def handle_remove_service(e, zone=zoneName):
-                        await removeServiceFromZone(zone, e.args)
-    
-                    service_table.on('remove-service', handle_remove_service)
-                    
-                    service_table.add_slot('body', r'''
-                    <q-tr :props="props">
-                        <!-- expand button -->
-                        <q-td auto-width>
-                            <q-btn size="sm" color="accent" round dense @click="props.expand = !props.expand" :icon="props.expand ? 'remove' : 'add'" />
-                        </q-td>
-                        <!-- normal columns -->
-                        <q-td v-for="col in props.cols" :key="col.name" :props="props">
-                            {{ col.value }}
-                        </q-td>
-                        <!-- 3-dot menu -->
-                        <q-td auto-width>
-                            <q-btn flat round dense icon="more_vert" color="accent">
-                                <q-menu auto-close>
-                                    <q-list style="min-width: 150px">
-                                        <q-item clickable
-                                            @click="$parent.$emit('remove-service', props.row.Service)">
-                                            <q-item-section class="text-negative">
-                                                Delete
-                                            </q-item-section>
-                                        </q-item>
-                                    </q-list>
-                                </q-menu>
-                            </q-btn>
-                        </q-td>
-                    </q-tr>
-                    <!-- expanded description -->
-                    <q-tr v-show="props.expand" :props="props">
-                        <q-td colspan="100%" style="max-width: 0;">
-                            <div class="text-left"
-                                 style="word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
-                                {{ props.row.Description }}
-                            </div>
-                        </q-td>
-                    </q-tr>
-                    ''')
 
-    pass # end of this... 
+                await zoneServiceTable(zoneName)
+                    
+                    
 
 
 
 
-@ui.refreshable
-async def firewall_table():
-    
-    start = time.perf_counter()
-    
+async def get_firewall_info():
     AppBus = await get_dbus()
 
     firewallInfo = FirewallInfo()
@@ -340,6 +383,16 @@ async def firewall_table():
         
                 zoneInfo.ServiceSettings[s] = serviceSettings                
             firewallInfo.ZoneInfos[az] = zoneInfo
+    return firewallInfo
+
+
+@ui.refreshable
+async def firewall_table():
+    
+    start = time.perf_counter()
+    
+    firewallInfo = await get_firewall_info()
+
     await zone_list(firewallInfo)
     
     print(time.perf_counter() - start)
