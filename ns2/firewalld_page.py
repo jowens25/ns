@@ -9,22 +9,9 @@ from ns2.dbus import get_dbus
 from ns2.systemd import *
 
 
-
-#async def service_list(services: dict):
-#    for s in await getServices(AppBus):
-#        with ui.row():
-#            ui.checkbox(s).props("flat color=accent align=left").bind_value(services, s)
-#
-#            with ui.column():
-#                ui.label().bind_text_from(s, "UDP")
-#                ui.label().bind_text_from(s, "TCP")
-
-
 @ui.refreshable
 async def firewall_status(on_network_page: bool):
     AppBus = await get_dbus()
-    
-    zoneDialog = await addZoneDialog()
 
     print("FIREWALL STATUS")
     firewallInfo = FirewallInfo()
@@ -32,7 +19,7 @@ async def firewall_status(on_network_page: bool):
     firewallInfo.Status = (await getServiceState(AppBus, "firewalld.service")).capitalize()
     numActiveZones = 0
     if firewallInfo.Enable:
-        numActiveZones = len(await GetZones(AppBus))
+        numActiveZones = len(await GetActiveZones(AppBus))
         
     
     with ui.column().classes("w-full"):
@@ -64,14 +51,15 @@ async def firewall_status(on_network_page: bool):
                 ui.button("Edit rules and zones", on_click=lambda e: ui.navigate.to('/networking/firewall')).props("flat color=accent align=left dense")
 
             else:
-                #ui.label("LABEL")
-                ui.button("add new zone", on_click=zoneDialog.open).props("color=accent align=left")
+                
+                async def open_dialog():
+                    zoneDialog = await addZoneDialog()
+                    print("dialog created then opened")
+                    zoneDialog.open()
+                ui.button("add new zone", on_click=open_dialog).props("color=accent align=left")
         
 
  
-
-
-    
     
 def InterfaceText(zoneSettings :ZoneInfo):
     interfaces = zoneSettings.Interfaces
@@ -111,37 +99,40 @@ async def removeServiceFromZone(zoneName: str, serviceName:str):
     configZone = await GetFirewalldConfigZone(AppBus, p)
     res = await configZone.call_remove_service(serviceName)
     print(res)
-    return
+    return f'removed {serviceName} from {zoneName}'
 
 async def addServiceToZone(zoneName: str, serviceName: str):
     AppBus = await get_dbus()
+    try: 
+        print(f'add {serviceName} to {zoneName}')
+        zone = await GetFirewalldZone(AppBus)
 
-    print(f'add {serviceName} to {zoneName}')
-    zone = await GetFirewalldZone(AppBus)
-    
-    res = await zone.call_add_service(zoneName, serviceName, 0)
-    print("res1: ", res)
+        res = await zone.call_add_service(zoneName, serviceName, 0)
+        print("res1: ", res)
 
-    conf = await GetFirewalldConfig(AppBus)
-    p = await conf.call_get_zone_by_name(zoneName)
-    
-    print(p)
-    
-    configZone = await GetFirewalldConfigZone(AppBus, p)
-    res = await configZone.call_add_service(serviceName)
-    print(res)
+        conf = await GetFirewalldConfig(AppBus)
+        p = await conf.call_get_zone_by_name(zoneName)
 
-    await get_firewall_info()
-    return
+        print(p)
 
+        configZone = await GetFirewalldConfigZone(AppBus, p)
+        res = await configZone.call_add_service(serviceName)
+        print(res)
+
+        #await get_firewall_info()
+        
+    except DBusError as e:
+        return e
+        
+    return f'added {serviceName} to {zoneName}'
 
 
 async def serviceSelectionTable():
     AppBus = await get_dbus()
-    
+
     services = formatServicesInRows(await getServicesInfo(AppBus))
 
-    with ui.scroll_area():
+    with ui.scroll_area().classes("w-full"):
         services_table = ui.table(
                 rows=services,
                 column_defaults={
@@ -205,6 +196,7 @@ async def serviceSelectionTable():
 
 
 async def addZoneDialog():
+
     AppBus = await get_dbus()
 
     with ui.dialog() as dialog:
@@ -213,33 +205,67 @@ async def addZoneDialog():
             
             with ui.row() as trust:
                 ui.label("Trust level")
+                zone_description = ui.label()
                 
-                ui.label("Sorted from least to most trusted")
+            with ui.column():
+                zoneSelection = ui.radio(await GetSelectableZones(AppBus)).props("dense")
+                zone_description.bind_text_from(zoneSelection, 'value', backward=lambda e: zoneDescriptionMap[e])
                 
             
             ui.label("Interfaces").classes("text-h6")
 
             with ui.row():
                 interfaces = {}
-                for i in await GetInterfaces(AppBus):
+                selected_interfaces = []
+                for i in await GetAvailableInterfaces(AppBus):
                     interfaces[i] = False
-                    ui.checkbox(i).props("flat color=accent align=left").bind_value(interfaces, i)
+                    ui.checkbox(i).props("flat color=accent align=left dense").bind_value(interfaces, i)
 
             #selectedServices = ui.input_chips('Allowed services', new_value_mode='add-unique', clearable=True).props('disable-input')
-            tab = await serviceSelectionTable()
+            serviceTable = await serviceSelectionTable()
+            
+            services = [serviceDict['Service'] for serviceDict in serviceTable.selected]
+            
+            
+            with ui.row():
+                addresses = ''
+                ui.label("Allowed Addresses").classes("text-h6")
+                addressSelection = ui.radio(["Entire subnet", "Range"]).props("dense, inline")
+                ui.label("IP address with routing prefix.\
+                         Separate multiple values with a comma. \
+                        Example: 192.0.2.0/24, 2001:db8::/32").bind_visibility_from(addressSelection, 'value', backward=lambda e: e == "Range").props("dense").classes("w-full")
+                addr = ui.input("allowed addresses").bind_visibility_from(addressSelection, 'value', backward=lambda e: e == "Range").props("dense").classes("w-full")
 
 
-            def on_save_cb():
-                for c,v in interfaces.items():
-                    print(c, v)
+            async def on_save_cb():
                 
-                print(tab.selected)
+                
+                
+                print("zone to use: ")
+                print(zoneSelection.value)
+                
+                print("on interfaces:")
+                for c,v in interfaces.items():
+                    if v:
+                        selected_interfaces.append(c)
+                
+                print("services to include: ", services)
+                
+                
+                print("For these addresses: ")
+                if addressSelection == "Range":
+                    addresses = addr.value
+                else:
+                    addresses = "0.0.0.0"
+                print(addressSelection.value)
+                
+                print(await AddNewZone(AppBus, 
+                           zoneSelection.value,
+                           selected_interfaces,
+                           services,
+                           addresses))
 
-                #print(selectedServices)
 
-                # Get selected services when saving
-                #selected = [row['Service'] for row in services if row.get('Select', False)]
-                #print(f"Selected services: {selected}")
             
             with ui.row():
                 ui.button('Add zone', on_click=on_save_cb).props("color=accent align=left")
@@ -260,7 +286,11 @@ async def addServiceDialog(zoneName):
                 print(tab.selected)
                 for service in tab.selected:
                     serviceName = service['Service']
-                    await addServiceToZone(zoneName, serviceName)
+                    rsp = await addServiceToZone(zoneName, serviceName)
+                    await zoneServicesTable.refresh()
+                dialog.close()
+                
+                ui.notify(rsp)
             
             with ui.row():
                 ui.button('Add', on_click=on_add_cb).props("color=accent align=left")
@@ -269,9 +299,13 @@ async def addServiceDialog(zoneName):
     return dialog
 
 @ui.refreshable
-async def zoneServiceTable(zoneName):
-    firewallInfo = await get_firewall_info()
-    services = formatServicesInRows(firewallInfo.ZoneInfos[zoneName].ServiceSettings)                
+async def zoneServicesTable(zoneName: str):
+    AppBus = await get_dbus()
+    
+    zoneInfo = await GetZoneInfo(AppBus, zoneName) 
+    
+    services = formatServicesInRows(await getAllServices(zoneInfo))
+                     
     service_table = ui.table(
         rows=services,
         column_defaults={
@@ -290,10 +324,11 @@ async def zoneServiceTable(zoneName):
         </q-tr>
     ''')
     
-    async def handle_remove_service(e, zone=zoneName):
-        await removeServiceFromZone(zone, e.args)
-        await zoneServiceTable.refresh()
-        #services.remove()
+    async def handle_remove_service(e, zone=zoneInfo.Name):
+        rsp = await removeServiceFromZone(zone, e.args)
+        await zoneServicesTable.refresh()
+        ui.notify(rsp)
+
     service_table.on('remove-service', handle_remove_service)
     
     service_table.add_slot('body', r'''
@@ -334,96 +369,56 @@ async def zoneServiceTable(zoneName):
     ''')
     pass # end of this... 
 
-async def zone_list(firewallInfo):
+
+async def zone_list():
+    #firewallInfo = await get_firewall_info()
+    AppBus = await get_dbus()
     with ui.column():
-        for zoneName, zoneSetting in firewallInfo.ZoneInfos.items():
+        for zoneName in (await GetActiveZones(AppBus)):
+            zoneInfo = await GetZoneInfo(AppBus, zoneName) 
+
             with ui.card().classes("w-full").props('flat').classes("bg-secondary"):
                 with ui.column():
                     with ui.row().classes("w-full items-baseline justify-between"):
                         with ui.row().classes("items-baseline"):
                             ui.label(f'{zoneName.capitalize()} zone')
-                            InterfaceText(zoneSetting)
+                            InterfaceText(zoneInfo)
                             
                         with ui.row():
-                            AllowedAddressText(zoneSetting)
+                            AllowedAddressText(zoneInfo)
                             
                         with ui.row():
-                            addDialog = await addServiceDialog(zoneName)
-                            ui.button("add services", on_click=addDialog.open).props("color=accent align=left")
+                            async def open_service_dialog():
+                                addDialog = await addServiceDialog(zoneName)
+                                addDialog.open()
+                            ui.button("add services", on_click=open_service_dialog).props("color=accent align=left")
                             ui.button(icon="more_vert").props("flat color=accent align=left")
 
-                await zoneServiceTable(zoneName)
+                await zoneServicesTable(zoneName)
                     
                     
 
 
 
 
-async def get_firewall_info():
+async def getAllServices(zoneInfo: ZoneInfo):
+    services = {}
     AppBus = await get_dbus()
-
-    firewallInfo = FirewallInfo()
-    
-    firewallInfo.Enable = await isActive(AppBus, "firewalld.service")
-    firewallInfo.Status = (await getServiceState(AppBus, "firewalld.service")).capitalize()
-    
-    if firewallInfo.Enable:
-        firewallInfo.ActiveZones = await GetZones(AppBus)
-        
-        for az in firewallInfo.ActiveZones:
-            
-            zoneInfo = await GetZoneInfo(AppBus, az) 
-            
-            for s in zoneInfo.Services:
-                serviceSettings = await GetServiceSettings2(AppBus, s)          
-                if serviceSettings.Includes:
-                    for i in serviceSettings.Includes:
-                        ser_set = await GetServiceSettings2(AppBus, i)
-                        serviceSettings.Ports.extend(ser_set.Ports)
-        
-                zoneInfo.ServiceSettings[s] = serviceSettings                
-            firewallInfo.ZoneInfos[az] = zoneInfo
-    return firewallInfo
-
-
-@ui.refreshable
-async def firewall_table():
-    
-    start = time.perf_counter()
-    
-    firewallInfo = await get_firewall_info()
-
-    await zone_list(firewallInfo)
-    
-    print(time.perf_counter() - start)
-    
-    
-    
-    
-    
-    
-
-
-
-
-
-#def daemon_cb(mystr):
-#    print(mystr)
-#    firewall_table.refresh()
+    for s in zoneInfo.Services:
+        serviceSettings = await GetServiceSettings2(AppBus, s)          
+        if serviceSettings.Includes:
+            for i in serviceSettings.Includes:
+                ser_set = await GetServiceSettings2(AppBus, i)
+                serviceSettings.Ports.extend(ser_set.Ports)
+        services[s] = serviceSettings
+    return services
+  
 
 async def firewall_page():
-    
-    
-    #fire = await GetFirewall(dbus.AppBus)
-    #fire.on_daemon_changed(daemon_cb)
-    start = time.perf_counter()
     with ui.card():
         with ui.row():
             ui.link("Networking", "/networking").classes('text-accent')
             ui.label(">")
             ui.label('firewall')
-        print("1 ", time.perf_counter()-start)
         await firewall_status(False)
-        print("2 ",time.perf_counter()-start)
-        await firewall_table()
-        print("3 ", time.perf_counter()-start)
+        await zone_list()

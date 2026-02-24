@@ -5,7 +5,9 @@ from typing import List, Optional
 from nicegui import ui, app, binding
 from ns2.commands import runCmd
 from ns2.theme import init_colors
+from ns2.networking import GetInterfaces
 
+from ns2.common import formatListToString
 
 from dbus_next.signature import Variant
 from dbus_next.errors import DBusError
@@ -36,6 +38,7 @@ class ZoneInfo:
     Interfaces:        Optional[list[str]] = field(default_factory=list)
     Services:          Optional[list[str]] = field(default_factory=list)
     Short:             Optional[str] = ''
+    Name:              Optional[str] = ''
     ServiceSettings:   Optional[dict[ServiceSetting]] = field(default_factory=dict)
     Sources:           Optional[list[str]] = field(default_factory=list)
     
@@ -83,7 +86,7 @@ async def zoneConfigRemoveService(bus: MessageBus, zonePath: str, serviceName:st
 
 
 
-async def GetZones(bus: MessageBus) -> list[ZoneInfo]:
+async def GetActiveZones(bus: MessageBus) -> list[ZoneInfo]:
     rsp = await bus.call(
         Message(
             destination='org.fedoraproject.FirewallD1',
@@ -97,6 +100,46 @@ async def GetZones(bus: MessageBus) -> list[ZoneInfo]:
     
     return rsp.body[0]
 
+
+async def GetZones(bus: MessageBus) -> list[ZoneInfo]:
+    rsp = await bus.call(
+        Message(
+            destination='org.fedoraproject.FirewallD1',
+            path='/org/fedoraproject/FirewallD1',
+            interface='org.fedoraproject.FirewallD1.zone',
+            member='getZones',
+            signature='',
+            body=[]
+        )
+    )
+
+    return rsp.body[0]
+
+#Sorted from least to most trusted
+#
+#external
+#dmz
+#work
+#home
+#internal
+
+async def GetSelectableZones(bus: MessageBus):
+    default_zones = [
+        "public",
+        "external",
+        "dmz",
+        "work",
+        "home",
+        "internal"]
+    available_zones = []
+    allzones = await GetZones(bus)
+    actzones = await GetActiveZones(bus)
+    for z in allzones:
+        print(z)
+        if (z in default_zones) and (z not in actzones):
+            available_zones.append(z)
+            
+    return available_zones
 
 async def GetZoneInfo(bus: MessageBus, zoneName: str) -> ZoneInfo:
     
@@ -112,8 +155,8 @@ async def GetZoneInfo(bus: MessageBus, zoneName: str) -> ZoneInfo:
     )
     
     
-    
-    zoneInfo = ZoneInfo()  
+    zoneInfo = ZoneInfo() 
+    zoneInfo.Name = zoneName 
     zoneInfo.Description = rsp.body[0].get('description', Variant('s', 'description not available')).value
     zoneInfo.Interfaces = rsp.body[0].get('interfaces', Variant('as', [])).value
     zoneInfo.Services = rsp.body[0].get('services', Variant('as', [])).value
@@ -122,7 +165,14 @@ async def GetZoneInfo(bus: MessageBus, zoneName: str) -> ZoneInfo:
     
     return zoneInfo
 
-
+zoneDescriptionMap = {
+    None: "No description available",
+    "external":"For use on external networks. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.",
+    "dmz":"For computers in your demilitarized zone that are publicly-accessible with limited access to your internal network. Only selected incoming connections are accepted.",
+    "work":"For use in work areas. You mostly trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.",
+    "home":"For use in home areas. You mostly trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.",
+    "internal":"For use on internal networks. You mostly trust the other computers on the networks to not harm your computer. Only selected incoming connections are accepted.",
+}
 
 
 async def GetServiceSettings2(bus: MessageBus, name: str)-> ServiceSetting:
@@ -145,10 +195,55 @@ async def GetServiceSettings2(bus: MessageBus, name: str)-> ServiceSetting:
     serviceSettings.Ports.extend(rsp.body[0].get('ports', Variant('a(ss)', [['port not available', 'protocol not available']])).value)
     serviceSettings.Description = rsp.body[0].get('description', Variant('s', 'Description not available')).value
     serviceSettings.Includes = rsp.body[0].get('includes', Variant('b', False)).value
+    
+    
     return serviceSettings
 
 
 
+async def GetAvailableInterfaces(bus: MessageBus):
+    
+    nm_interfaces = await GetInterfaces(bus)
+    used_interfaces = []
+    az = await GetActiveZones(bus)
+    for z in az:    
+        zi = await GetZoneInfo(bus, z)
+        used_interfaces.extend(zi.Interfaces)
+                
+    for i in nm_interfaces:
+        if i in used_interfaces:
+            nm_interfaces.remove(i)
+
+    return nm_interfaces
+    
+    
+    
+    
+async def AddNewZone(bus: MessageBus, zone :str, interfaces :list[str], services :list[str], addresses :str):
+    
+    
+    props = {
+        "interfaces": interfaces,
+        "services": services,
+        "source": addresses,
+        
+    }
+    
+    rsp = await bus.call(
+    Message(
+        destination='org.fedoraproject.FirewallD1',
+        path='/org/fedoraproject/FirewallD1',
+        interface='org.fedoraproject.FirewallD1',
+        member='addZone2',
+        signature='sa{sv}',
+        body=[zone, props]
+        )
+    )
+    
+    return rsp.body[0]
+    
+    
+    
     
 
 async def GetFirewalldConfig(bus: MessageBus):
@@ -182,10 +277,6 @@ async def GetFirewalldZone(bus: MessageBus):
 
 
 
-def formatListToString(elements: list[str]) -> str:
-    if len(elements) == 0:
-        return None
-    return ', '.join(elements) if elements else ''
 
 def getZoneInfo(name :str, zone :dict) -> dict:
 
@@ -276,7 +367,6 @@ def getTcpPorts(ports) -> list:
 
 def formatServicesInRows(serviceSettings :dict):
     
-
     rows = []
     for n, s in serviceSettings.items():
         rows.append({ 
