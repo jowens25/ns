@@ -53,6 +53,35 @@ class FirewallInfo:
 
 
 
+async def zoneRemoveService(bus: MessageBus, zoneName: str, serviceName:str):
+    rsp = await bus.call(
+    Message(
+        destination='org.fedoraproject.FirewallD1',
+        path='/org/fedoraproject/FirewallD1',
+        interface='org.fedoraproject.FirewallD1.zone',
+        member='removeService',
+        signature='ss',
+        body=[zoneName, serviceName]
+        )
+    )
+    
+    return rsp.body[0]
+
+async def zoneConfigRemoveService(bus: MessageBus, zonePath: str, serviceName:str):
+    rsp = await bus.call(
+    Message(
+        destination='org.fedoraproject.FirewallD1',
+        path=zonePath,
+        interface='org.fedoraproject.FirewallD1.config.zone',
+        member='removeService',
+        signature='s',
+        body=[serviceName]
+        )
+    )
+    
+    return rsp.body[0]
+
+
 
 async def GetZones(bus: MessageBus) -> list[ZoneInfo]:
     rsp = await bus.call(
@@ -143,12 +172,12 @@ async def GetFirewalldConfigZone(bus: MessageBus, path : str):
 #    obj = bus.get_proxy_object('org.freedesktop.NetworkManager', path, introspection)
 #    return obj.get_interface('org.freedesktop.NetworkManager.Device')
 
-#async def GetFirewalldZone(bus: MessageBus):
-#    file_name = 'org.fedoraproject.FirewallD1.zone.xml'
-#    introspection = await bus.introspect('org.fedoraproject.FirewallD1', '/org/fedoraproject/FirewallD1')
-#    #pprint(introspection.tostring())
-#    obj = bus.get_proxy_object('org.fedoraproject.FirewallD1', '/org/fedoraproject/FirewallD1', introspection)
-#    return obj.get_interface('org.fedoraproject.FirewallD1.zone')
+async def GetFirewalldZone(bus: MessageBus):
+    file_name = 'org.fedoraproject.FirewallD1.zone.xml'
+    introspection = await bus.introspect('org.fedoraproject.FirewallD1', '/org/fedoraproject/FirewallD1')
+    #pprint(introspection.tostring())
+    obj = bus.get_proxy_object('org.fedoraproject.FirewallD1', '/org/fedoraproject/FirewallD1', introspection)
+    return obj.get_interface('org.fedoraproject.FirewallD1.zone')
 
 
 

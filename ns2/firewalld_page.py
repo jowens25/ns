@@ -64,7 +64,7 @@ async def firewall_status(on_network_page: bool):
                 ui.button("Edit rules and zones", on_click=lambda e: ui.navigate.to('/networking/firewall')).props("flat color=accent align=left dense")
 
             else:
-                ui.label("LABEL")
+                #ui.label("LABEL")
                 ui.button("add new zone", on_click=zoneDialog.open).props("color=accent align=left")
         
 
@@ -121,6 +121,13 @@ async def addZoneDialog():
     with ui.dialog() as dialog:
         with ui.card().props('flat'):
             ui.label("Add zone").classes("text-h5")
+            
+            with ui.row() as trust:
+                ui.label("Trust level")
+                with ui.color_inpu
+                ui.label("Sorted from least to most trusted")
+                
+            
             ui.label("Interfaces").classes("text-h6")
 
             with ui.row():
@@ -235,7 +242,7 @@ async def zone_list(firewall):
                             
                         with ui.row():
                             addDialog = await addServiceDialog()
-                            ui.button("add services", on_click=addDialog.open).props("color=accent align=left")
+                            ui.button("add services", on_click=lambda: addDialog.open).props("color=accent align=left")
                             ui.button(icon="more_vert").props("flat color=accent align=left")
                     
                     services = formatServicesInRows(firewall.ZoneInfos[zoneName].ServiceSettings)
@@ -363,7 +370,7 @@ async def firewall_page():
             ui.label(">")
             ui.label('firewall')
         print("1 ", time.perf_counter()-start)
-        #await firewall_status(False)
+        await firewall_status(False)
         print("2 ",time.perf_counter()-start)
         await firewall_table()
         print("3 ", time.perf_counter()-start)
