@@ -43,6 +43,7 @@ async def firewall_status(on_network_page: bool):
                     if result == "disable" and active:
                         await systemd_stop(AppBus, "firewalld.service")
                     await firewall_status.refresh()
+                    await zone_list.refresh()
 
                 ui.switch(f"Status: {firewallInfo.Status}").on('click', lambda e: fire_switch_cb(e)
                         ).props("flat color=accent align=left dense").bind_value(firewallInfo, "Enable").bind_text
@@ -369,32 +370,49 @@ async def zoneServicesTable(zoneName: str):
     ''')
     pass # end of this... 
 
-
+@ui.refreshable
 async def zone_list():
     #firewallInfo = await get_firewall_info()
     AppBus = await get_dbus()
+    await GetAllZones(AppBus)
     with ui.column():
-        for zoneName in (await GetActiveZones(AppBus)):
-            zoneInfo = await GetZoneInfo(AppBus, zoneName) 
+        if await isActive(AppBus, "firewalld.service"):
+            for zoneName in (await GetActiveZones(AppBus)):
+                zoneInfo = await GetZoneInfo(AppBus, zoneName) 
 
-            with ui.card().classes("w-full").props('flat').classes("bg-secondary"):
-                with ui.column():
-                    with ui.row().classes("w-full items-baseline justify-between"):
-                        with ui.row().classes("items-baseline"):
-                            ui.label(f'{zoneName.capitalize()} zone')
-                            InterfaceText(zoneInfo)
-                            
-                        with ui.row():
-                            AllowedAddressText(zoneInfo)
-                            
-                        with ui.row():
-                            async def open_service_dialog():
-                                addDialog = await addServiceDialog(zoneName)
-                                addDialog.open()
-                            ui.button("add services", on_click=open_service_dialog).props("color=accent align=left")
-                            ui.button(icon="more_vert").props("flat color=accent align=left")
+                with ui.card().classes("w-full").props('flat').classes("bg-secondary"):
+                    with ui.column():
+                        with ui.row().classes("w-full items-baseline justify-between"):
+                            with ui.row().classes("items-baseline"):
+                                ui.label(f'{zoneName.capitalize()} zone')
+                                InterfaceText(zoneInfo)
 
-                await zoneServicesTable(zoneName)
+                            with ui.row():
+                                AllowedAddressText(zoneInfo)
+
+                            with ui.row():
+                                async def open_service_dialog():
+                                    addDialog = await addServiceDialog(zoneName)
+                                    addDialog.open()
+                                ui.button("add services", on_click=open_service_dialog).props("color=accent align=left")
+
+                                async def delete_zone_cb(e):
+                                    with ui.dialog() as dialog, ui.card():
+                                        ui.label(f'Are you sure you want to delete the {zoneName} zone?')
+                                        with ui.row():
+                                            ui.button('Cancel', on_click=lambda: dialog.submit("Cancel")).props("flat color=accent align=left")
+                                            ui.button('Delete', on_click=lambda: dialog.submit("Delete")).props("flat color=accent align=left")
+                                    result = await dialog
+                                    if result == "Delete":
+                                        print("delete zone")
+                                        deleteZone(AppBus, zoneInfo)
+                                    await firewall_status.refresh()
+                                    await zone_list.refresh()
+                                with ui.dropdown_button(icon="more_vert").props("flat color=accent align=left"):
+                                    ui.item('delete', on_click=delete_zone_cb)
+
+
+                    await zoneServicesTable(zoneName)
                     
                     
 

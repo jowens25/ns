@@ -85,6 +85,23 @@ async def zoneConfigRemoveService(bus: MessageBus, zonePath: str, serviceName:st
     return rsp.body[0]
 
 
+async def deleteZone(bus: MessageBus, zoneInfo: ZoneInfo):
+    await zoneConfigRemoveInterface(bus, )
+
+async def zoneConfigRemoveInterface(bus: MessageBus, zonePath: str, interfaceName:str):
+    rsp = await bus.call(
+    Message(
+        destination='org.fedoraproject.FirewallD1',
+        path=zonePath,
+        interface='org.fedoraproject.FirewallD1.config.zone',
+        member='removeInterface',
+        signature='s',
+        body=[interfaceName]
+        )
+    )
+    return rsp.body[0]
+
+
 
 async def GetActiveZones(bus: MessageBus) -> list[ZoneInfo]:
     rsp = await bus.call(
@@ -99,6 +116,51 @@ async def GetActiveZones(bus: MessageBus) -> list[ZoneInfo]:
     )
     
     return rsp.body[0]
+
+async def GetAllZones(bus: MessageBus):
+    rsp = await bus.call(
+        Message(
+            destination='org.fedoraproject.FirewallD1',
+            path='/org/fedoraproject/FirewallD1',
+            interface='org.fedoraproject.FirewallD1.zone',
+            member='getActiveZones',
+            signature='',
+            body=[]
+        )
+    )
+    
+    activeZones = rsp.body[0]
+
+
+    rsp = await bus.call(
+        Message(
+            destination='org.fedoraproject.FirewallD1',
+            path='/org/fedoraproject/FirewallD1',
+            interface='org.fedoraproject.FirewallD1.zone',
+            member='getZones',
+            signature='',
+            body=[]
+        )
+    )
+    
+    runtimeZones = rsp.body[0]
+
+    rsp = await bus.call(
+        Message(
+            destination='org.fedoraproject.FirewallD1',
+            path='/org/fedoraproject/FirewallD1/config',
+            interface='org.fedoraproject.FirewallD1.config',
+            member='listZones',
+            signature='',
+            body=[]
+        )
+    )
+    
+    peranentZones = rsp.body[0]
+
+    print(peranentZones)
+
+
 
 
 async def GetZones(bus: MessageBus) -> list[ZoneInfo]:

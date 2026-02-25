@@ -463,6 +463,10 @@ async def GetInterfaces(bus: MessageBus) -> list:
 
     for p in devices_paths:
         dev = GetDevice(bus, p)
+        deviceType = await dev.get_device_type()
+        #print(f"device type: {deviceType}")
+        if deviceType not in [1,2,30]:
+            continue
         interfaces.append(await dev.get_interface())
     
     return interfaces
@@ -481,6 +485,10 @@ async def GetInterfacesAndAddresses(bus: MessageBus) -> list:
         interface = await device.get_interface()
         hwaddr = await device.get_hw_address()
         state = await device.get_state()
+        deviceType = await device.get_device_type()
+        print(f"device type: {deviceType}")
+        if deviceType not in [1,2,30]:
+            continue
         processDeviceState
         ip4_config_path = await device.get_ip4_config()
         ip6_config_path = await device.get_ip6_config()
