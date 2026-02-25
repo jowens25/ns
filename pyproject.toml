@@ -1,7 +1,24 @@
 [project]
-name = "ns"
-version = "0.1.0"
-description = "Add your description here"
+name = "ns2"
+version = "2.0.1"
+description = "Novus Studio: web-based configuration suite Novus Studio provides a modern web interface for system configuration and management. Includes reverse proxy setup with nginx. Networking with Network Manager. Firewall with firewalld."
 readme = "README.md"
 requires-python = ">=3.12.3"
-dependencies = []
+dependencies = [
+    "dbus-next>=0.2.3",
+    "nicegui>=3.8.0",
+    "numpy>=2.4.2",
+    "pam>=0.2.0",
+    "plotly>=6.5.2",
+    "pyinstaller>=6.19.0",
+    "setuptools>=82.0.0",
+    "six>=1.17.0",
+]
+
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+license = {text = "MIT"}  # ADD THIS
+authors = [{name = "Jacob Owens", email = "jowens@novuspower.com"}]  # ADD THIS

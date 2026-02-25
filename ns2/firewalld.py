@@ -56,6 +56,8 @@ class FirewallInfo:
 
 
 
+
+
 async def zoneRemoveService(bus: MessageBus, zoneName: str, serviceName:str):
     rsp = await bus.call(
     Message(
@@ -85,23 +87,75 @@ async def zoneConfigRemoveService(bus: MessageBus, zonePath: str, serviceName:st
     return rsp.body[0]
 
 
-async def deleteZone(bus: MessageBus, zoneInfo: ZoneInfo):
-    await zoneConfigRemoveInterface(bus, )
 
-async def zoneConfigRemoveInterface(bus: MessageBus, zonePath: str, interfaceName:str):
+
+async def AddSource(bus: MessageBus, zoneName: str, source:str):
     rsp = await bus.call(
-    Message(
-        destination='org.fedoraproject.FirewallD1',
-        path=zonePath,
-        interface='org.fedoraproject.FirewallD1.config.zone',
-        member='removeInterface',
-        signature='s',
-        body=[interfaceName]
+        Message(
+             destination='org.fedoraproject.FirewallD1',
+            path='/org/fedoraproject/FirewallD1',
+            interface='org.fedoraproject.FirewallD1.zone',
+            member='addSource',
+            signature='ss',
+            body=[zoneName, source]
+        )
+    )
+    return rsp.body[0]
+
+async def RemoveSource(bus: MessageBus, zoneName: str, source:str):
+    rsp = await bus.call(
+        Message(
+             destination='org.fedoraproject.FirewallD1',
+            path='/org/fedoraproject/FirewallD1',
+            interface='org.fedoraproject.FirewallD1.zone',
+            member='removeSource',
+            signature='ss',
+            body=[zoneName, source]
+        )
+    )
+    return rsp.body[0]
+
+async def AddInterface(bus: MessageBus, zoneName: str, interfaceName:str):
+    rsp = await bus.call(
+        Message(
+             destination='org.fedoraproject.FirewallD1',
+            path='/org/fedoraproject/FirewallD1',
+            interface='org.fedoraproject.FirewallD1.zone',
+            member='addInterface',
+            signature='ss',
+            body=[zoneName, interfaceName]
+        )
+    )
+    return rsp.body[0]
+
+async def RemoveInterface(bus: MessageBus, zoneName: str, interfaceName:str):
+    rsp = await bus.call(
+        Message(
+             destination='org.fedoraproject.FirewallD1',
+            path='/org/fedoraproject/FirewallD1',
+            interface='org.fedoraproject.FirewallD1.zone',
+            member='removeInterface',
+            signature='ss',
+            body=[zoneName, interfaceName]
         )
     )
     return rsp.body[0]
 
 
+async def ListZones(bus: MessageBus):
+    rsp = await bus.call(
+        Message(
+            destination='org.fedoraproject.FirewallD1',
+            path='/org/fedoraproject/FirewallD1/config',
+            interface='org.fedoraproject.FirewallD1.config',
+            member='listZones',
+            signature='',
+            body=[]
+        )
+    )
+    
+    
+    return rsp.body[0]
 
 async def GetActiveZones(bus: MessageBus) -> list[ZoneInfo]:
     rsp = await bus.call(
@@ -145,20 +199,10 @@ async def GetAllZones(bus: MessageBus):
     
     runtimeZones = rsp.body[0]
 
-    rsp = await bus.call(
-        Message(
-            destination='org.fedoraproject.FirewallD1',
-            path='/org/fedoraproject/FirewallD1/config',
-            interface='org.fedoraproject.FirewallD1.config',
-            member='listZones',
-            signature='',
-            body=[]
-        )
-    )
-    
+
     peranentZones = rsp.body[0]
 
-    print(peranentZones)
+    #print(peranentZones)
 
 
 
@@ -203,8 +247,33 @@ async def GetSelectableZones(bus: MessageBus):
             
     return available_zones
 
-async def GetZoneInfo(bus: MessageBus, zoneName: str) -> ZoneInfo:
+def MakeZoneInfo(settings: dict):
+    zoneInfo = ZoneInfo() 
+    zoneInfo.Description = settings.get('description', Variant('s', 'description not available')).value
+    zoneInfo.Interfaces = settings.get('interfaces', Variant('as', [])).value
+    zoneInfo.Services = settings.get('services', Variant('as', [])).value
+    zoneInfo.Short = settings.get('short', Variant('s', 'short not available')).value
+    zoneInfo.Sources = settings.get('sources', Variant('as', [])).value
     
+    return zoneInfo
+
+async def GetSettings2(bus: MessageBus, zonePath: str) -> ZoneInfo:
+    '''permanent settings of zone (path)'''
+    rsp = await bus.call(
+        Message(
+            destination='org.fedoraproject.FirewallD1',
+            path=zonePath,
+            interface='org.fedoraproject.FirewallD1.config.zone',
+            member='getSettings2',
+            signature='',
+            body=[]
+        )
+    )
+    
+    return rsp.body[0]
+
+async def GetZoneSettings2(bus: MessageBus, zoneName: str) -> ZoneInfo:
+    '''runtime settings of zone'''
     rsp = await bus.call(
         Message(
             destination='org.fedoraproject.FirewallD1',
@@ -216,16 +285,7 @@ async def GetZoneInfo(bus: MessageBus, zoneName: str) -> ZoneInfo:
         )
     )
     
-    
-    zoneInfo = ZoneInfo() 
-    zoneInfo.Name = zoneName 
-    zoneInfo.Description = rsp.body[0].get('description', Variant('s', 'description not available')).value
-    zoneInfo.Interfaces = rsp.body[0].get('interfaces', Variant('as', [])).value
-    zoneInfo.Services = rsp.body[0].get('services', Variant('as', [])).value
-    zoneInfo.Short = rsp.body[0].get('short', Variant('s', 'short not available')).value
-    zoneInfo.Sources = rsp.body[0].get('sources', Variant('as', [])).value
-    
-    return zoneInfo
+    return rsp.body[0]
 
 zoneDescriptionMap = {
     None: "No description available",
@@ -268,8 +328,8 @@ async def GetAvailableInterfaces(bus: MessageBus):
     nm_interfaces = await GetInterfaces(bus)
     used_interfaces = []
     az = await GetActiveZones(bus)
-    for z in az:    
-        zi = await GetZoneInfo(bus, z)
+    for z in az:   
+        zi = MakeZoneInfo(await GetZoneSettings2(bus, z))
         used_interfaces.extend(zi.Interfaces)
                 
     for i in nm_interfaces:
@@ -281,29 +341,10 @@ async def GetAvailableInterfaces(bus: MessageBus):
     
     
     
-async def AddNewZone(bus: MessageBus, zone :str, interfaces :list[str], services :list[str], addresses :str):
     
+
     
-    props = {
-        "interfaces": interfaces,
-        "services": services,
-        "source": addresses,
-        
-    }
-    
-    rsp = await bus.call(
-    Message(
-        destination='org.fedoraproject.FirewallD1',
-        path='/org/fedoraproject/FirewallD1',
-        interface='org.fedoraproject.FirewallD1',
-        member='addZone2',
-        signature='sa{sv}',
-        body=[zone, props]
-        )
-    )
-    
-    return rsp.body[0]
-    
+
     
     
     
@@ -316,18 +357,11 @@ async def GetFirewalldConfig(bus: MessageBus):
     return obj.get_interface('org.fedoraproject.FirewallD1.config')
 
 
-
 async def GetFirewalldConfigZone(bus: MessageBus, path : str):
     introspection = await bus.introspect('org.fedoraproject.FirewallD1', path)
     obj = bus.get_proxy_object('org.fedoraproject.FirewallD1', path, introspection)
     return obj.get_interface('org.fedoraproject.FirewallD1.config.zone')
 
-#def GetDevice(bus: MessageBus, path : str):
-#    file_name = 'org.freedesktop.NetworkManager.Device.xml'
-#    with open(str(INTROSPECTION_DIR /file_name), "r") as f:
-#        introspection = f.read()
-#    obj = bus.get_proxy_object('org.freedesktop.NetworkManager', path, introspection)
-#    return obj.get_interface('org.freedesktop.NetworkManager.Device')
 
 async def GetFirewalldZone(bus: MessageBus):
     file_name = 'org.fedoraproject.FirewallD1.zone.xml'
@@ -338,6 +372,38 @@ async def GetFirewalldZone(bus: MessageBus):
 
 
 
+async def GetZoneByName(bus: MessageBus, name):
+    '''get zone path from perm conf'''
+    rsp = await bus.call(
+        Message(
+            destination='org.fedoraproject.FirewallD1',
+            path='/org/fedoraproject/FirewallD1/config',
+            interface='org.fedoraproject.FirewallD1.config',
+            member='getZoneByName',
+            signature='s',
+            body=[name],
+        )
+    )
+    
+    return rsp.body[0]
+
+
+
+
+async def Update2(bus: MessageBus, zonePath: str, settings: dict):
+
+    rsp = await bus.call(
+    Message(
+        destination='org.fedoraproject.FirewallD1',
+        path=zonePath,
+        interface='org.fedoraproject.FirewallD1.config.zone',
+        member='update2',
+        signature='a{sv}',
+        body=[settings]
+        )
+    )
+    
+    #return rsp.body[0]
 
 
 def getZoneInfo(name :str, zone :dict) -> dict:
@@ -347,6 +413,65 @@ def getZoneInfo(name :str, zone :dict) -> dict:
 
     return {'name':name, 'interfaces':interfaces, 'sources':sources}
 
+
+
+
+
+async def AddZone(bus: MessageBus, zoneName: str, interfaces: list[str], sources: list[str]):
+    zp = await GetZoneByName(bus, zoneName)
+    
+    for interface in interfaces:
+        print(await AddInterface(bus, zoneName, interface))
+    
+    for source in sources:
+        print(await AddSource(bus, zoneName, source))
+        
+    settings = {
+        'interfaces': Variant('as', interfaces),
+        'sources': Variant('as', sources)
+    }
+    
+    print(f'add zone settings: {settings}')
+    
+    await Update2(bus, zp, settings)
+            
+async def RemoveZone(bus: MessageBus, zoneName: str):
+    
+    print("trying to remove:: ", zoneName)
+    zp = await GetZoneByName(bus, zoneName)
+    
+    settings = await GetZoneSettings2(bus, zoneName)
+    
+    print(f'get zone settings: {settings}')
+    
+    print()
+    
+    zoneInfo = MakeZoneInfo(settings)
+    
+    print(zoneInfo)
+    print()
+
+    print(f'get settings 2: {await GetSettings2(bus, zp)}')
+    print()
+
+    #zoneInfo = MakeZoneInfo(settings)
+    #
+    #print(zoneInfo)
+    #
+    for interface in zoneInfo.Interfaces:
+        print(await RemoveInterface(bus, zoneName, interface))
+    #
+    #for source in zoneInfo.Sources:
+    #    print(await RemoveSource(bus, zoneName, source))
+    
+    #print(settings)
+    del settings['interfaces']
+    #settings = settings.pop('sources')    
+#
+    await Update2(bus, zp, settings)
+    
+
+            
 
 async def getServicesInfo(bus: MessageBus):
     '''all not just runtime'''
@@ -374,38 +499,6 @@ async def getServicesInfo(bus: MessageBus):
 
 
 
-#async def addZone2(bus: MessageBus, interface: str, services: list[str]):
-#    
-#    conf = await GetFirewalldConfig(bus)
-#    _settings = {
-#        "version":"0"
-#        
-#        
-#        "version": ""
-#        "name"  (s): see
-#        "description"  (s): see
-#        "target"  (s): see
-#        "services"  (as): services
-#        "ports"  (a(ss)):
-#        "icmp_blocks"  (as): array
-#        "masquerade"  (b): see
-#        "forward_ports"  (a(ssss)):
-#        "interfaces"  (as): array
-#        "sources"  (as): []
-#        "rules_str"  (as): []
-#        "protocols"  (as): []
-#        "source_ports" : []
-#        "icmp_block_inversion" : False
-#        "forward" : False
-#        
-#    }
-#    
-#    
-#
-#    
-#    
-#    newZonePath = await conf.call_add_zone_2()
-#    
 
 
 
@@ -442,3 +535,8 @@ def formatServicesInRows(serviceSettings :dict):
         
     #pprint(rows)
     return rows
+
+
+
+    
+    

@@ -230,7 +230,7 @@ async def edit_ip_connection(version: str, device: ProxyInterface):
                 ui.input(label="Address").props("dense").classes("flex-1").bind_value(
                     addr, "Address"
                 )
-                ui.input(label="Prefix or netmask").props("dense").classes(
+                ui.input(label="Prefix").props("dense").classes(
                     "flex-1"
                 ).bind_value(addr, "Prefix")
                 ui.input(label="Gateway").props("dense").classes("flex-1").bind_value(
@@ -286,7 +286,7 @@ async def edit_ip_connection(version: str, device: ProxyInterface):
     ###
     with ui.dialog() as dialog:
         with ui.card().classes("w-full self-start max-h-[90vh] overflow-y-auto"):
-            ui.label("IPv4 settings").classes("text-h5")
+            ui.label(f"{version.capitalize()} settings").classes("text-h5")
             with ui.column().classes("w-full"):
 
                 ### ADDRESSES

@@ -7,5 +7,6 @@ Standards-Version: 4.6.0
 
 Package: ns2-dev
 Architecture: amd64 arm64
-Depends: ${shlibs:Depends}, ${misc:Depends}, firewalld, network-manager, nginx
+Depends: ${shlibs:Depends}, ${misc:Depends}, 
+Pre-Depends: firewalld, network-manager, nginx
 Description: Configuration tool

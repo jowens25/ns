@@ -19,7 +19,7 @@ from ns2.networking_page import network_page, interface_page
 from ns2.terminal import terminal_page
 from ns2.theme import init_colors
 from ns2.login import login_page
-from ns2.home_page import home_page
+from ns2.home_page import root_page
 from ns2.snmp_page import snmp_page, snmp_user_page
 #from ns2.ntp import ntp_page
 from ns2.fpga_page import fpga_page
@@ -51,7 +51,7 @@ def ui_main():
     #@ui.page('/tests')
     #@ui.page('/login')
     @ui.page('/')
-    @ui.page('/home')
+    @ui.page('/root')
     async def root():
         
         #await setup_dbus(AppBus)
@@ -87,12 +87,6 @@ def ui_main():
                 left_drawer.hide()
         with ui.left_drawer(bordered=True).classes("bg-dark") as left_drawer:
             ui.button(
-                "Home",
-                on_click=lambda:nav('/home'),
-                icon="home",
-            ).props("flat color=white align=left").classes("full-width")
-            
-            ui.button(
                 "Networking",
                 on_click=lambda:nav('/networking'),
                 icon="settings_ethernet",
@@ -116,12 +110,12 @@ def ui_main():
                 on_click=lambda: nav('/snmp'),
                 icon="settings_applications",
             ).props("flat color=white align=left").classes("full-width")
+            ui.button(
+                "Accounts",
+                on_click=lambda: nav('/accounts'),
+                icon="group",
+            ).props("flat color=white align=left").classes("full-width")
             #ui.button(
-            #    "Accounts",
-            #    on_click=lambda: nav('/accounts'),
-            #    icon="group",
-            #).props("flat color=white align=left").classes("full-width")
-            ##ui.button(
             #    "Tests",
             #    on_click=lambda: nav('/tests'),
             #    icon="group",
@@ -134,7 +128,7 @@ def ui_main():
             ).props("flat color=negative align=left").classes("full-width")
         # Footer
         with ui.footer().classes("bg-dark"):
-            ui.label(version('ns2'))
+            ui.label(version('ns2-dev'))
         ui.sub_pages({
             '/': network_page,
             '/networking': network_page, 
@@ -146,7 +140,7 @@ def ui_main():
             #'/accounts': accounts_page, 
             #'/accounts/{user}': accounts_user_page,
             '/terminal': terminal_page,
-            '/home': home_page,
+            '/root': root_page,
             #'/fpga': fpga_page,
             #'/tests': tests_page
             }).classes("w-full")

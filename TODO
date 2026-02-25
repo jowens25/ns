@@ -4,7 +4,7 @@ Network: fix mising interface
 Network: fix ip4 should say ipv6
 Network: maybe fix the loading / refresh stuff????
 nginx: include conf file
-
+login: fix log in failed and support message
 
 High level requirements:
 CLI for system config for that we have firewalld and nmcli

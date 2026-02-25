@@ -76,7 +76,6 @@ class Device:
     Ip4ConfigPath :  Optional[str] = ''
     Ip6ConfigPath :  Optional[str] = ''
 
-
 @binding.bindable_dataclass
 class InterfaceData:
     Name:               Optional[str] = ''
@@ -157,6 +156,84 @@ async def GetConnectionFromDevice(bus: MessageBus, device :ProxyInterface) -> Pr
         activeConnection = GetActiveConnection(bus, active_connection_path)
         connection_path = await activeConnection.get_connection()
         return GetConnection(bus, connection_path)
+    
+    
+
+async def getDevices(bus: MessageBus):
+
+    rsp = await bus.call(
+        Message(
+            destination='org.freedesktop.NetworkManager',
+            path='/org/freedesktop/NetworkManager',
+            interface='org.freedesktop.NetworkManager',
+            member='GetDevices',
+            signature='',
+            body=[]
+        )
+    )
+    return rsp.body[0]
+
+
+
+
+async def set_refresh_rate(bus: MessageBus, device_path: str, rate_ms: int):
+    """Set the refresh rate for statistics (in milliseconds)."""
+        
+    rsp = await bus.call(
+        Message(
+            destination='org.freedesktop.NetworkManager',
+            path=device_path,
+            interface='org.freedesktop.DBus.Properties',
+            member='Set',
+            signature='ssv',
+            body=[
+                'org.freedesktop.NetworkManager.Device.Statistics',
+                'RefreshRateMs',
+                Variant('u', rate_ms)  # 'u' is unsigned int
+            ]
+        )
+    )
+    
+    return True
+    
+    
+    
+async def get_device_statistics(bus: MessageBus, device_path: str):
+    
+    rsp = await bus.call(
+        Message(
+            destination='org.freedesktop.NetworkManager',
+            path=device_path,  # e.g., '/org/freedesktop/NetworkManager/Devices/1'
+            interface='org.freedesktop.DBus.Properties',
+            member='GetAll',
+            signature='s',
+            body=['org.freedesktop.NetworkManager.Device.Statistics']
+        )
+    )
+    
+    props = rsp.body[0]
+    return {
+        'refresh_rate_ms': props.get('RefreshRateMs', 0).value,
+        'tx_bytes': props.get('TxBytes', 0).value,
+        'rx_bytes': props.get('RxBytes', 0).value
+    }
+    
+    
+async def get_device_properties(bus: MessageBus, device_path: str):
+    
+    rsp = await bus.call(
+        Message(
+            destination='org.freedesktop.NetworkManager',
+            path=device_path,  # e.g., '/org/freedesktop/NetworkManager/Devices/1'
+            interface='org.freedesktop.DBus.Properties',
+            member='GetAll',
+            signature='s',
+            body=['org.freedesktop.NetworkManager.Device']
+        )
+    )
+    
+    return rsp.body[0]
+    
     
     
 # ====================================================================
@@ -486,7 +563,7 @@ async def GetInterfacesAndAddresses(bus: MessageBus) -> list:
         hwaddr = await device.get_hw_address()
         state = await device.get_state()
         deviceType = await device.get_device_type()
-        print(f"device type: {deviceType}")
+        #print(f"device type: {deviceType}")
         if deviceType not in [1,2,30]:
             continue
         processDeviceState

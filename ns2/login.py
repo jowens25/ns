@@ -23,7 +23,7 @@ async def try_login(_username: str, _password: str) -> None:
             }
         )
         ui.notify(f"Welcome, {_username}!", color="positive")
-        ui.navigate.to("/root")
+        ui.navigate.to("/home")
     else:
         ui.notify("Invalid username or password", color="negative")
 

@@ -1,0 +1,19 @@
+ns2-dev (2.0.1) unstable; urgency=medium
+
+  * updated snmpd confs to use dir
+
+ -- jowens <jowens@jowens>  Thu, 19 Feb 2026 15:43:54 -0600
+
+ns2 (2.0.0) unstable; urgency=medium
+
+  [ jowens ]
+  * Initial release. (Closes: #XXXXXX)
+  * port 8000 
+
+  [ root ]
+  * reload settings 
+
+  [ jowens ]
+  * more clean up 
+
+ -- jowens <jowens@jowens>  Thu, 19 Feb 2026 12:11:26 -0600

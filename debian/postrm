@@ -1,0 +1,4 @@
+#!/bin/bash
+set -e
+
+rm /etc/nginx/sites-enabled/ns2-ui.conf

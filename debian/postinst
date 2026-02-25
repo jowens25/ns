@@ -5,16 +5,37 @@ case "$1" in
     configure)
 
         #systemctl disable variscite-bt.service
+        #systemctl mask variscite-bt.service
         #systemctl disable systemd-networkd
+        #systemctl mask systemd-networkd
 
         firewall-cmd --reload
         firewall-cmd --permanent --zone=public --add-service=ns2
         firewall-cmd --permanent --zone=public --add-service=ssh
         firewall-cmd --permanent --zone=public --add-service=http
         firewall-cmd --permanent --zone=public --add-service=https
+        firewall-cmd --permanent --zone=public --add-service=snmp
 
         # Restart snmpd
         systemctl restart firewalld 2>/dev/null || true
+
+
+        mkdir -p /etc/nginx/ssl
+
+        openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+          -keyout /etc/nginx/ssl/selfsigned.key \
+          -out /etc/nginx/ssl/selfsigned.crt \
+          -subj "/C=US/ST=Missouri/L=Independence/O=ns2/CN=$(hostname)" \
+          >/dev/null 2>&1
+
+        #chmod 600 /etc/nginx/ssl/selfsigned.*
+
+        rm -f /etc/nginx/sites-enabled/default
+
+        ln -sf /etc/nginx/sites-available/ns2-ui.conf /etc/nginx/sites-enabled/
+
+        systemctl reload nginx
+
         ;;
     
     abort-upgrade|abort-remove|abort-deconfigure)

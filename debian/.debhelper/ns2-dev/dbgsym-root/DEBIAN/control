@@ -1,0 +1,12 @@
+Package: ns2-dev-dbgsym
+Package-Type: ddeb
+Source: ns2-dev
+Version: 2.0.1
+Auto-Built-Package: debug-symbols
+Architecture: amd64
+Maintainer: Jacob Owens <jowens@novuspower.com>
+Installed-Size: 38
+Depends: ns2-dev (= 2.0.1)
+Section: debug
+Priority: optional
+Description: debug symbols for ns2-dev

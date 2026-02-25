@@ -7,7 +7,7 @@ from dbus_next.aio.proxy_object import ProxyInterface
 from ns2.dbus import get_dbus
 
 from ns2.systemd import *
-
+from ns2.common import formatStringToList
 
 @ui.refreshable
 async def firewall_status(on_network_page: bool):
@@ -62,8 +62,8 @@ async def firewall_status(on_network_page: bool):
 
  
     
-def InterfaceText(zoneSettings :ZoneInfo):
-    interfaces = zoneSettings.Interfaces
+def InterfaceText(interfaces):
+    print(interfaces)
     if len(interfaces) == 1:
         l1 = ui.label("Interface:").classes("font-bold")
     else:
@@ -71,8 +71,7 @@ def InterfaceText(zoneSettings :ZoneInfo):
     l2 = ui.label(formatListToString(interfaces))
     return (l1, l2)
 
-def AllowedAddressText(zoneSettings :ZoneInfo):
-    sources = zoneSettings.Sources
+def AllowedAddressText(sources):
     l1 = ui.label("Allowed Addresses:").classes("font-bold")
     if len(sources) == 0:
         l2 = ui.label("Entire subnet")
@@ -194,7 +193,9 @@ async def serviceSelectionTable():
     return services_table
 
 
-
+            
+def validate_group(group: list):
+    return [x.validate() for x in group]
 
 async def addZoneDialog():
 
@@ -219,19 +220,19 @@ async def addZoneDialog():
                 interfaces = {}
                 selected_interfaces = []
                 for i in await GetAvailableInterfaces(AppBus):
-                    interfaces[i] = False
+                    #interfaces[i] = False
                     ui.checkbox(i).props("flat color=accent align=left dense").bind_value(interfaces, i)
 
             #selectedServices = ui.input_chips('Allowed services', new_value_mode='add-unique', clearable=True).props('disable-input')
-            serviceTable = await serviceSelectionTable()
+            #serviceTable = await serviceSelectionTable()
             
-            services = [serviceDict['Service'] for serviceDict in serviceTable.selected]
-            
+            #services = [serviceDict['Service'] for serviceDict in serviceTable.selected]
+
             
             with ui.row():
-                addresses = ''
+                addresses = []
                 ui.label("Allowed Addresses").classes("text-h6")
-                addressSelection = ui.radio(["Entire subnet", "Range"]).props("dense, inline")
+                addressSelection = ui.radio(["Entire subnet", "Range"], value="Entire subnet").props("dense, inline")
                 ui.label("IP address with routing prefix.\
                          Separate multiple values with a comma. \
                         Example: 192.0.2.0/24, 2001:db8::/32").bind_visibility_from(addressSelection, 'value', backward=lambda e: e == "Range").props("dense").classes("w-full")
@@ -239,35 +240,22 @@ async def addZoneDialog():
 
 
             async def on_save_cb():
-                
-                
-                
-                print("zone to use: ")
-                print(zoneSelection.value)
-                
-                print("on interfaces:")
+                addresses = []
                 for c,v in interfaces.items():
                     if v:
                         selected_interfaces.append(c)
-                
-                print("services to include: ", services)
-                
-                
-                print("For these addresses: ")
                 if addressSelection == "Range":
-                    addresses = addr.value
-                else:
-                    addresses = "0.0.0.0"
-                print(addressSelection.value)
-                
-                print(await AddNewZone(AppBus, 
+                    addresses = formatStringToList(addr.value)
+    
+                print("add zone....")
+                rsp = await AddZone(AppBus, 
                            zoneSelection.value,
                            selected_interfaces,
-                           services,
-                           addresses))
-
-
-            
+                           addresses)
+                
+                dialog.close()
+                zone_list.refresh()
+                
             with ui.row():
                 ui.button('Add zone', on_click=on_save_cb).props("color=accent align=left")
                 ui.button('Cancel', on_click=dialog.close).props("flat color=accent align=left")
@@ -300,10 +288,11 @@ async def addServiceDialog(zoneName):
     return dialog
 
 @ui.refreshable
-async def zoneServicesTable(zoneName: str):
+async def zoneServicesTable(zonePath: str):
     AppBus = await get_dbus()
+    #zonePath = 
     
-    zoneInfo = await GetZoneInfo(AppBus, zoneName) 
+    zoneInfo = MakeZoneInfo(await GetSettings2(AppBus, zonePath)) 
     
     services = formatServicesInRows(await getAllServices(zoneInfo))
                      
@@ -374,45 +363,54 @@ async def zoneServicesTable(zoneName: str):
 async def zone_list():
     #firewallInfo = await get_firewall_info()
     AppBus = await get_dbus()
-    await GetAllZones(AppBus)
+    #await GetAllZones(AppBus)
     with ui.column():
         if await isActive(AppBus, "firewalld.service"):
             for zoneName in (await GetActiveZones(AppBus)):
-                zoneInfo = await GetZoneInfo(AppBus, zoneName) 
-
+                
+                zonePath = await GetZoneByName(AppBus, zoneName)
+                settings = await GetSettings2(AppBus, zonePath)
+                
+                print(settings)
+                
+                settings = await GetZoneSettings2(AppBus, zoneName)
+                #print("other ", other_settings)
+                
+                interfaces = settings.get('interfaces', Variant('as', [])).value
+                sources = settings.get('sources', Variant('as', [])).value
+                
                 with ui.card().classes("w-full").props('flat').classes("bg-secondary"):
                     with ui.column():
                         with ui.row().classes("w-full items-baseline justify-between"):
                             with ui.row().classes("items-baseline"):
                                 ui.label(f'{zoneName.capitalize()} zone')
-                                InterfaceText(zoneInfo)
+                                InterfaceText(interfaces)
 
                             with ui.row():
-                                AllowedAddressText(zoneInfo)
+                                AllowedAddressText(sources)
 
                             with ui.row():
-                                async def open_service_dialog():
-                                    addDialog = await addServiceDialog(zoneName)
+                                async def open_service_dialog(z=zoneName):
+                                    addDialog = await addServiceDialog(z)
                                     addDialog.open()
                                 ui.button("add services", on_click=open_service_dialog).props("color=accent align=left")
 
-                                async def delete_zone_cb(e):
+                                async def delete_zone_cb(e, z=zoneName):
                                     with ui.dialog() as dialog, ui.card():
-                                        ui.label(f'Are you sure you want to delete the {zoneName} zone?')
+                                        ui.label(f'Are you sure you want to delete the {z} zone?')
                                         with ui.row():
                                             ui.button('Cancel', on_click=lambda: dialog.submit("Cancel")).props("flat color=accent align=left")
                                             ui.button('Delete', on_click=lambda: dialog.submit("Delete")).props("flat color=accent align=left")
                                     result = await dialog
                                     if result == "Delete":
-                                        print("delete zone")
-                                        deleteZone(AppBus, zoneInfo)
+                                        await RemoveZone(AppBus, z)
                                     await firewall_status.refresh()
                                     await zone_list.refresh()
                                 with ui.dropdown_button(icon="more_vert").props("flat color=accent align=left"):
                                     ui.item('delete', on_click=delete_zone_cb)
 
 
-                    await zoneServicesTable(zoneName)
+                    await zoneServicesTable(zonePath)
                     
                     
 

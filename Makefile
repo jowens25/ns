@@ -30,6 +30,7 @@ install: build
 	# Install config files
 	install -D -m 644 configs/com.novus.ns.conf $(DESTDIR)$(PREFIX)/share/dbus-1/system.d/com.novus.ns.conf 
 	install -D -m 644 configs/ns2.xml $(DESTDIR)$(PREFIX)/lib/firewalld/services/ns2.xml
+	install -D -m 644 configs/ns2-ui.conf $(DESTDIR)/etc/nginx/sites-available/ns2-ui.conf
 
 clean:
 	rm -rf build dist *.spec
