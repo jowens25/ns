@@ -1,0 +1,16 @@
+Firewall: delete zone
+Firewall: fix add zone
+Network: fix mising interface
+Network: fix ip4 should say ipv6
+Network: maybe fix the loading / refresh stuff????
+nginx: include conf file
+
+
+High level requirements:
+CLI for system config for that we have firewalld and nmcli
+for https we have nginx config
+disable non secure protocols (systemd service manager)
+
+iptables and access control - firewalld
+
+password stuff....
