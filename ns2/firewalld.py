@@ -461,11 +461,12 @@ async def RemoveZone(bus: MessageBus, zoneName: str):
     for interface in zoneInfo.Interfaces:
         print(await RemoveInterface(bus, zoneName, interface))
     #
-    #for source in zoneInfo.Sources:
-    #    print(await RemoveSource(bus, zoneName, source))
+    for source in zoneInfo.Sources:
+        print(await RemoveSource(bus, zoneName, source))
     
     #print(settings)
-    del settings['interfaces']
+    if settings.get('interfaces') != None:
+        del settings['interfaces']
     #settings = settings.pop('sources')    
 #
     await Update2(bus, zp, settings)

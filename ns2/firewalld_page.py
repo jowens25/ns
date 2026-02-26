@@ -244,8 +244,9 @@ async def addZoneDialog():
                 for c,v in interfaces.items():
                     if v:
                         selected_interfaces.append(c)
-                if addressSelection == "Range":
+                if addressSelection.value == "Range":
                     addresses = formatStringToList(addr.value)
+                print("addresses: ", addresses)
     
                 print("add zone....")
                 rsp = await AddZone(AppBus, 
@@ -288,11 +289,11 @@ async def addServiceDialog(zoneName):
     return dialog
 
 @ui.refreshable
-async def zoneServicesTable(zonePath: str):
+async def zoneServicesTable(zoneName: str):
     AppBus = await get_dbus()
     #zonePath = 
     
-    zoneInfo = MakeZoneInfo(await GetSettings2(AppBus, zonePath)) 
+    zoneInfo = MakeZoneInfo(await GetZoneSettings2(AppBus, zoneName)) 
     
     services = formatServicesInRows(await getAllServices(zoneInfo))
                      
@@ -314,7 +315,7 @@ async def zoneServicesTable(zonePath: str):
         </q-tr>
     ''')
     
-    async def handle_remove_service(e, zone=zoneInfo.Name):
+    async def handle_remove_service(e, zone=zoneName):
         rsp = await removeServiceFromZone(zone, e.args)
         await zoneServicesTable.refresh()
         ui.notify(rsp)
@@ -376,7 +377,7 @@ async def zone_list():
                 settings = await GetZoneSettings2(AppBus, zoneName)
                 #print("other ", other_settings)
                 
-                interfaces = settings.get('interfaces', Variant('as', [])).value
+                interfaces = settings.get('interfaces', Variant('as', ['default'])).value
                 sources = settings.get('sources', Variant('as', [])).value
                 
                 with ui.card().classes("w-full").props('flat').classes("bg-secondary"):
@@ -410,7 +411,7 @@ async def zone_list():
                                     ui.item('delete', on_click=delete_zone_cb)
 
 
-                    await zoneServicesTable(zonePath)
+                    await zoneServicesTable(zoneName)
                     
                     
 
