@@ -1,2 +1,2 @@
-# Triggers added by dh_makeshlibs/13.14.1ubuntu5
+# Triggers added by dh_makeshlibs/13.11.4
 activate-noawait ldconfig

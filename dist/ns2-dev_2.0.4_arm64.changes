@@ -1,0 +1,30 @@
+Format: 1.8
+Date: Thu, 26 Feb 2026 09:49:42 -0600
+Source: ns2-dev
+Binary: ns2-dev ns2-dev-dbgsym
+Architecture: arm64
+Version: 2.0.4
+Distribution: UNRELEASED
+Urgency: medium
+Maintainer: Jacob Owens <jowens@novuspower.com>
+Changed-By: jowens <jowens@jowens>
+Description:
+ ns2-dev    - Configuration tool
+Changes:
+ ns2-dev (2.0.4) UNRELEASED; urgency=medium
+ .
+   * added nginx and zones
+   * fixed post
+   * another
+Checksums-Sha1:
+ 78d549f4a7b266319f2b2c2a08261a709e4c8925 31920 ns2-dev-dbgsym_2.0.4_arm64.deb
+ 9d2a9c3bc4d1aada11252d12c333982816d1ac49 5267 ns2-dev_2.0.4_arm64.buildinfo
+ 3ddd4c49efe94edd89f0447331d59a103654c2bc 60495920 ns2-dev_2.0.4_arm64.deb
+Checksums-Sha256:
+ 92af94dd4bf3aeb06be7861d54e5b1572d7d6e9fd8dbd72a8f575e8fa5da7210 31920 ns2-dev-dbgsym_2.0.4_arm64.deb
+ 17ca137625aabe7778846d6f92ab8f851b850e1461f6a5ce4b04fe9b9788a613 5267 ns2-dev_2.0.4_arm64.buildinfo
+ dce65f4749cfeba605abbfa3cb5ccd1c33c08f207a9a8aa7e4eeb6e5ab453808 60495920 ns2-dev_2.0.4_arm64.deb
+Files:
+ 52301950843756b2d112f327656b308f 31920 debug optional ns2-dev-dbgsym_2.0.4_arm64.deb
+ 1c9c446f3c43d1e63110cc95dd56140a 5267 utils optional ns2-dev_2.0.4_arm64.buildinfo
+ a5a42bddecdf812fae6251123ddc9ad0 60495920 utils optional ns2-dev_2.0.4_arm64.deb
