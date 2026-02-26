@@ -2,6 +2,7 @@ from nicegui import ui, app
 
 from ns2.networking import get_device_statistics, getDevices, get_device_properties, set_refresh_rate
 from ns2.dbus import get_dbus
+from ns2.ns_socket import *
 
 
 import plotly.graph_objects as go
@@ -69,10 +70,12 @@ async def home_page():
                     f2.data[0].y = tx_mbs
                     p2.update()
 
-
-
-
     timer = ui.timer(1, callback=update_plots)
+
+    with ui.card():
+        with ui.row():
+            term = ui.xterm({'convertEol': True})
+            socket_receive.subscribe(lambda _data: term.write(_data))
 
 
 

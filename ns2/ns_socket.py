@@ -9,7 +9,7 @@ from dbus_next.aio import MessageBus
 socket_receive = Event()
 async def socket_stream():
     try: 
-        reader, writer = await asyncio.open_unix_connection("/tmp/serial.sock")
+        reader, writer = await asyncio.open_unix_connection("/var/lib/ns/ns-serial-mux.sock")
         print("SOCKET OPENED")
         while True:
             line = (await reader.readline()).decode('utf-8', errors='ignore')

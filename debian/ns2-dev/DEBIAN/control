@@ -1,0 +1,10 @@
+Package: ns2-dev
+Version: 2.0.4
+Architecture: amd64
+Maintainer: Jacob Owens <jowens@novuspower.com>
+Installed-Size: 201516
+Pre-Depends: firewalld, network-manager, nginx
+Depends: libc6 (>= 2.14), zlib1g (>= 1:1.1.4)
+Section: utils
+Priority: optional
+Description: Configuration tool
