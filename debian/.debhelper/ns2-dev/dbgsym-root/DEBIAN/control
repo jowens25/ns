@@ -1,11 +1,11 @@
 Package: ns2-dev-dbgsym
 Source: ns2-dev
-Version: 2.0.5
+Version: 2.0.6
 Auto-Built-Package: debug-symbols
 Architecture: arm64
 Maintainer: Jacob Owens <jowens@novuspower.com>
 Installed-Size: 41
-Depends: ns2-dev (= 2.0.5)
+Depends: ns2-dev (= 2.0.6)
 Section: debug
 Priority: optional
 Description: debug symbols for ns2-dev

@@ -1,0 +1,36 @@
+Format: 1.8
+Date: Thu, 26 Feb 2026 13:18:11 -0600
+Source: ns2-dev
+Binary: ns2-dev ns2-dev-dbgsym
+Architecture: arm64
+Version: 2.0.6
+Distribution: UNRELEASED
+Urgency: medium
+Maintainer: Jacob Owens <jowens@novuspower.com>
+Changed-By: root <root@rockpro64>
+Description:
+ ns2-dev    - Configuration tool
+Changes:
+ ns2-dev (2.0.6) UNRELEASED; urgency=medium
+ .
+   [ jowens ]
+   * added nginx and zones
+   * fixed post
+   * another
+ .
+   [ root ]
+   * firewall updates
+   * removed firewall conf from setup
+   * adjusted some post install
+Checksums-Sha1:
+ 8de98af413b9fe8ddce8a1c1f0c4fed1e6c3ca6e 31924 ns2-dev-dbgsym_2.0.6_arm64.deb
+ 3d493da8592add66cda42ff908c472c70a7d860f 5267 ns2-dev_2.0.6_arm64.buildinfo
+ 6bd6c538ddd6dfafbe1f106afba616943fddeb8c 60494796 ns2-dev_2.0.6_arm64.deb
+Checksums-Sha256:
+ 262a80abbd524e1413a9d5783a8e8497319f1472664156f9be688ed959586ee3 31924 ns2-dev-dbgsym_2.0.6_arm64.deb
+ 75e0c83ce1e0191e62161655a9d043c06a65c1a9d3105a27e8a20e8a3a23d9d7 5267 ns2-dev_2.0.6_arm64.buildinfo
+ 86b0eb5a46a805493638dfb35b3bad15f954700a35b99ed43bad9c844508f0ed 60494796 ns2-dev_2.0.6_arm64.deb
+Files:
+ 21c4a9b597c2d3dbdd48464bac560edd 31924 debug optional ns2-dev-dbgsym_2.0.6_arm64.deb
+ 1e203517fecae0d8a38a9b69a1f70c9c 5267 utils optional ns2-dev_2.0.6_arm64.buildinfo
+ e75f972f3709bcc285852ea2b542d155 60494796 utils optional ns2-dev_2.0.6_arm64.deb
