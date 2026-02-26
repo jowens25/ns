@@ -1,10 +1,14 @@
-ns2-dev (2.0.4) UNRELEASED; urgency=medium
+ns2-dev (2.0.5) UNRELEASED; urgency=medium
 
+  [ jowens ]
   * added nginx and zones 
   * fixed post 
   * another
 
- -- jowens <jowens@jowens>  Thu, 26 Feb 2026 09:49:42 -0600
+  [ root ]
+  * firewall updates 
+
+ -- root <root@rockpro64>  Thu, 26 Feb 2026 11:23:48 -0600
 
 ns2-dev (2.0.1) unstable; urgency=medium
 

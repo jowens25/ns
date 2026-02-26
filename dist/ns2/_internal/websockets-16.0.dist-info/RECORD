@@ -1,9 +1,9 @@
-../../../bin/websockets,sha256=SQWvfGO-RLQSmU5McZXsqKs1KaKX5D4WxW2F3jKGdiI,322
+../../../bin/websockets,sha256=heouL0rEQotlvGSAddwQ5moTTEQsTjjrNmRvJ-VkUDY,305
 websockets-16.0.dist-info/INSTALLER,sha256=5hhM4Q4mYTT9z6QB6PGpUAW81PGNFrYrdXMj4oM_6ak,2
 websockets-16.0.dist-info/METADATA,sha256=JcDvWo8DVSw5uoDAFbk9N8fJXuRJvnrcLXVBFyBjwN8,6799
 websockets-16.0.dist-info/RECORD,,
 websockets-16.0.dist-info/REQUESTED,sha256=47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU,0
-websockets-16.0.dist-info/WHEEL,sha256=mX4U4odf6w47aVjwZUmTYd1MF9BbrhVLKlaWSvZwHEk,186
+websockets-16.0.dist-info/WHEEL,sha256=8dLfIaEdZhvKMcxjctjlRF9OMhsXJ-Ot8dAcG4hIc8U,193
 websockets-16.0.dist-info/entry_points.txt,sha256=Dnhn4dm5EsI4ZMAsHldGF6CwBXZrGXnR7cnK2-XR7zY,51
 websockets-16.0.dist-info/licenses/LICENSE,sha256=PWoMBQ2L7FL6utUC5F-yW9ArytvXDeo01Ee2oP9Obag,1514
 websockets-16.0.dist-info/top_level.txt,sha256=CMpdKklxKsvZgCgyltxUWOHibZXZ1uYIVpca9xsQ8Hk,11
@@ -45,7 +45,7 @@ websockets/proxy.py,sha256=oFrbEYtasYWv-WDcniObD9nBR5Q5qkHpyCVLngx7WMQ,4969
 websockets/py.typed,sha256=47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU,0
 websockets/server.py,sha256=E4SWBA8WZRmAOpsUm-oCqacBGZre9e0iDmDIrfpV21Q,21790
 websockets/speedups.c,sha256=u_dncR4M38EX6He_fzb1TY6D3Hke67ZpoHLLhZZ0hvQ,5920
-websockets/speedups.cpython-312-x86_64-linux-gnu.so,sha256=F8FiVerlQi_Z0YSsuY_ASEHvWcddXkyyRa3ylkV80B0,38048
+websockets/speedups.cpython-312-aarch64-linux-gnu.so,sha256=KPC1P299JKRRT_iyHbkXwnForcAS-HDT49FcDyZ71cM,224096
 websockets/speedups.pyi,sha256=unjvBNg-uW4c7z-9OW4WiSzZk_QH2bLEcjYAMuoSgBI,102
 websockets/streams.py,sha256=pXqga7ttjuF6lChWYiWLSfUlt3FCaQpEX1ae_jvcCeQ,4071
 websockets/sync/__init__.py,sha256=47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU,0
