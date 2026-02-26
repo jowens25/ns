@@ -21,8 +21,12 @@ case "$1" in
         echo "Made self-signed directory"
 
         if [ ! -f /etc/nginx/ssl/selfsigned.key ] || [ ! -f /etc/nginx/ssl/selfsigned.crt ]; then
-            openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/selfsigned.key -out /etc/nginx/ssl/selfsigned.crt -subj "/C=US/ST=Missouri/L=Independence/O=ns2/CN=localhost"
-        fi
+   		 LD_LIBRARY_PATH=/lib/aarch64-linux-gnu:/usr/lib/aarch64-linux-gnu \
+    		openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+        	-keyout /etc/nginx/ssl/selfsigned.key \
+        	-out /etc/nginx/ssl/selfsigned.crt \
+        	-subj "/C=US/ST=Missouri/L=Independence/O=ns2/CN=var"
+	fi
 
         echo "Generated self-signed cert"
 
