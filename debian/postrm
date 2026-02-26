@@ -1,4 +1,22 @@
 #!/bin/bash
 set -e
 
-rm /etc/nginx/sites-enabled/ns2-ui.conf
+case "$1" in
+    remove|upgrade)
+        # On upgrade or remove, just reload nginx to pick up config changes
+        systemctl reload nginx 2>/dev/null || true
+        ;;
+    purge)
+        rm -f /etc/nginx/sites-enabled/ns2-ui.conf
+        rm -f /etc/nginx/ssl/selfsigned.key
+        rm -f /etc/nginx/ssl/selfsigned.crt
+        ;;
+    failed-upgrade|abort-install|abort-remove|disappear)
+        ;;
+    *)
+        ;;
+esac
+
+#DEBHELPER#
+
+exit 0

@@ -1,0 +1,30 @@
+Format: 1.8
+Date: Thu, 26 Feb 2026 09:34:26 -0600
+Source: ns2-dev
+Binary: ns2-dev
+Built-For-Profiles: noudeb
+Architecture: amd64
+Version: 2.0.4
+Distribution: UNRELEASED
+Urgency: medium
+Maintainer: Jacob Owens <jowens@novuspower.com>
+Changed-By: jowens <jowens@jowens>
+Description:
+ ns2-dev    - Configuration tool
+Changes:
+ ns2-dev (2.0.4) UNRELEASED; urgency=medium
+ .
+   * added nginx and zones
+   * fixed post
+Checksums-Sha1:
+ 1dd5a1a05c9f01552b2ecb1d1f6bb30143bb47bb 28654 ns2-dev-dbgsym_2.0.4_amd64.ddeb
+ 6285b7741b7bf61c07e97b32b9cddcb6894126c0 6309 ns2-dev_2.0.4_amd64.buildinfo
+ cc5180f77fa16527df51b3786879059c708535cc 59224136 ns2-dev_2.0.4_amd64.deb
+Checksums-Sha256:
+ 3ef3ac9a0257451476cd607eb17d65c0ab045d68dc2ba1c78342682d8ca66f70 28654 ns2-dev-dbgsym_2.0.4_amd64.ddeb
+ 01bc2992f13694925b4f77abd7d5fa0d95999493e1f85d9eb3fd7720d5e4534f 6309 ns2-dev_2.0.4_amd64.buildinfo
+ 401b2b4697d66af8082f40152ae5e3cd6aa6a8234e1df64f49998c6e7cdd0923 59224136 ns2-dev_2.0.4_amd64.deb
+Files:
+ 29a5d154fc532b861b0c9b3fd6b44bd2 28654 debug optional ns2-dev-dbgsym_2.0.4_amd64.ddeb
+ f15214dcc5891d7a3ccce673f4998a1a 6309 utils optional ns2-dev_2.0.4_amd64.buildinfo
+ 1aed92e0587e44601f36a27495f8643a 59224136 utils optional ns2-dev_2.0.4_amd64.deb

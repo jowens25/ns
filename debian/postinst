@@ -22,11 +22,13 @@ case "$1" in
 
         mkdir -p /etc/nginx/ssl
 
-        openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-          -keyout /etc/nginx/ssl/selfsigned.key \
-          -out /etc/nginx/ssl/selfsigned.crt \
-          -subj "/C=US/ST=Missouri/L=Independence/O=ns2/CN=$(hostname)" \
-          >/dev/null 2>&1
+        if [ ! -f /etc/nginx/ssl/selfsigned.key ] || [ ! -f /etc/nginx/ssl/selfsigned.crt ]; then
+            openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+              -keyout /etc/nginx/ssl/selfsigned.key \
+              -out /etc/nginx/ssl/selfsigned.crt \
+              -subj "/C=US/ST=Missouri/L=Independence/O=ns2/CN=$(hostname)" \
+              >/dev/null 2>&1
+        fi
 
         #chmod 600 /etc/nginx/ssl/selfsigned.*
 

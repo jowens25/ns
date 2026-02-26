@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: ns2
+Version: 2.0.2
+Summary: Novus Studio: web-based configuration suite Novus Studio provides a modern web interface for system configuration and management. Includes reverse proxy setup with nginx. Networking with Network Manager. Firewall with firewalld.
+Requires-Python: >=3.12.3
+Requires-Dist: dbus-next>=0.2.3
+Requires-Dist: nicegui>=3.8.0
+Requires-Dist: numpy>=2.4.2
+Requires-Dist: pam>=0.2.0
+Requires-Dist: plotly>=6.5.2
+Requires-Dist: pyinstaller>=6.19.0
+Requires-Dist: setuptools>=82.0.0
+Requires-Dist: six>=1.17.0
