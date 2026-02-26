@@ -12,18 +12,28 @@ case "$1" in
         firewall-cmd --permanent --zone=public --add-service=snmp 2>/dev/null || true
 
         # Reload to apply changes
-        #firewall-cmd --reload 2>/dev/null || true
+        firewall-cmd --reload 2>/dev/null || true
+
+        echo "Added rules and reloaded firewalld"
 
         mkdir -p /etc/nginx/ssl
 
+        echo "Made self-signed directory"
+
         if [ ! -f /etc/nginx/ssl/selfsigned.key ] || [ ! -f /etc/nginx/ssl/selfsigned.crt ]; then
-            openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/selfsigned.key -out /etc/nginx/ssl/selfsigned.crt -subj "/C=US/ST=Missouri/L=Independence/O=ns2/CN=var"
+            openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/selfsigned.key -out /etc/nginx/ssl/selfsigned.crt -subj "/C=US/ST=Missouri/L=Independence/O=ns2/CN=localhost"
         fi
+
+        echo "Generated self-signed cert"
 
         rm -f /etc/nginx/sites-enabled/default
         ln -sf /etc/nginx/sites-available/ns2-ui.conf /etc/nginx/sites-enabled/
 
+        echo "Copied over reverse proxy config"
+
         systemctl reload nginx 2>/dev/null || true
+
+        echo "Reloaded nginx"
 
         ;;
     
