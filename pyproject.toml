@@ -1,6 +1,6 @@
 [project]
 name = "ns2"
-version = "2.0.4"
+version = "2.0.8"
 description = "Novus Studio: web-based configuration suite Novus Studio provides a modern web interface for system configuration and management. Includes reverse proxy setup with nginx. Networking with Network Manager. Firewall with firewalld."
 readme = "README.md"
 requires-python = ">=3.12.3"

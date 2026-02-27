@@ -1,4 +1,4 @@
-ns2-dev (2.0.7) UNRELEASED; urgency=medium
+ns2-dev (2.0.8) UNRELEASED; urgency=medium
 
   [ jowens ]
   * added nginx and zones 
@@ -11,7 +11,10 @@ ns2-dev (2.0.7) UNRELEASED; urgency=medium
   * adjusted some post install
   * post and numpy.... 
 
- -- root <root@rockpro64>  Thu, 26 Feb 2026 14:19:50 -0600
+  [ jowens ]
+  * init release to saf
+
+ -- jowens <jowens@jowens>  Fri, 27 Feb 2026 09:48:05 -0600
 
 ns2-dev (2.0.1) unstable; urgency=medium
 
