@@ -5,13 +5,13 @@ from ns2.dbus import get_dbus
 from ns2.ns_socket import *
 
 
-import plotly.graph_objects as go
-import plotly.express as px
-
-import plotly.io as pio
-pio.templates.default = "plotly_dark"
-
-
+#import plotly.graph_objects as go
+#import plotly.express as px
+#
+#import plotly.io as pio
+#pio.templates.default = "plotly_dark"
+#
+#
 
 rx = []
 tx = []
