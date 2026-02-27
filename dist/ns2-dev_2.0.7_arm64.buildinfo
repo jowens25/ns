@@ -2,19 +2,19 @@ Format: 1.0
 Source: ns2-dev
 Binary: ns2-dev ns2-dev-dbgsym
 Architecture: arm64
-Version: 2.0.6
+Version: 2.0.7
 Checksums-Md5:
- 21c4a9b597c2d3dbdd48464bac560edd 31924 ns2-dev-dbgsym_2.0.6_arm64.deb
- 22f808c7d36605f5b91fda3d2bd02b8d 60494876 ns2-dev_2.0.6_arm64.deb
+ f0eb5413db062f7bdb14dc440280ab93 31916 ns2-dev-dbgsym_2.0.7_arm64.deb
+ 2f9740869d9ec8440812b944fb3f031b 60496064 ns2-dev_2.0.7_arm64.deb
 Checksums-Sha1:
- 8de98af413b9fe8ddce8a1c1f0c4fed1e6c3ca6e 31924 ns2-dev-dbgsym_2.0.6_arm64.deb
- e4406d6846605203bee9185b312eb37ca9aceb2d 60494876 ns2-dev_2.0.6_arm64.deb
+ 8642430278e79e840bf6e9d30c4e56683d2ce686 31916 ns2-dev-dbgsym_2.0.7_arm64.deb
+ b5721f8a1cedbfd3e599026db072f5eed58a674d 60496064 ns2-dev_2.0.7_arm64.deb
 Checksums-Sha256:
- 262a80abbd524e1413a9d5783a8e8497319f1472664156f9be688ed959586ee3 31924 ns2-dev-dbgsym_2.0.6_arm64.deb
- 0eb735224686ef4f0ba5d19e302c3916abd164e3314fc0c9e8a675ae8686d282 60494876 ns2-dev_2.0.6_arm64.deb
+ f24716dde8149e6296d1d3e00b50670496ba47b155f755b0c6faa258a0fad31a 31916 ns2-dev-dbgsym_2.0.7_arm64.deb
+ 12215984c3b275cb41d89cac0fd7734efb08f4d73b4217c26fa476381b0b28cd 60496064 ns2-dev_2.0.7_arm64.deb
 Build-Origin: Debian
 Build-Architecture: arm64
-Build-Date: Thu, 26 Feb 2026 14:02:28 -0600
+Build-Date: Thu, 26 Feb 2026 14:25:28 -0600
 Build-Tainted-By:
  merged-usr-via-aliased-dirs
 Installed-Build-Depends:
@@ -172,4 +172,4 @@ Installed-Build-Depends:
 Environment:
  DEB_BUILD_OPTIONS="parallel=6"
  LANG="en_US.UTF-8"
- SOURCE_DATE_EPOCH="1772133491"
+ SOURCE_DATE_EPOCH="1772137190"
