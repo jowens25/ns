@@ -660,7 +660,7 @@ wheels = [
 
 [[package]]
 name = "ns-admin"
-version = "2.0.8"
+version = "2.0.10"
 source = { editable = "." }
 dependencies = [
     { name = "dbus-next" },

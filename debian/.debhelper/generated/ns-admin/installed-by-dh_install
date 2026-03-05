@@ -1,3 +1,0 @@
-./debian/ns2-dbus.service
-./debian/ns2-ui.service
-./configs/ns2-ui.conf

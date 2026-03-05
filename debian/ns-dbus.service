@@ -1,5 +1,5 @@
 [Unit]
-Description=Dbus api for ns2
+Description=Dbus api for ns admin
 After=network.target
 
 [Service]

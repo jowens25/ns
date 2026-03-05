@@ -2,7 +2,7 @@ Package: ns-admin
 Version: 2.0.10
 Architecture: amd64
 Maintainer: Jacob Owens <jowens@novuspower.com>
-Installed-Size: 201514
+Installed-Size: 201511
 Pre-Depends: firewalld, network-manager, nginx
 Depends: libc6 (>= 2.14), zlib1g (>= 1:1.1.4), openssl
 Section: utils

@@ -1,5 +1,3 @@
-1563ccdd396cdef15060eb2ae65adb22  lib/systemd/system/ns2-dbus.service
-9c56d215c935d695a238679ff7239e86  lib/systemd/system/ns2-ui.service
 f68554d6a2e27189140730ff9a734247  usr/lib/firewalld/services/ns2.xml
 1546c4e974ab72069145c4fa44797677  usr/lib/ns-admin/_internal/aiohttp/_http_parser.cpython-312-x86_64-linux-gnu.so
 491a009744a9a2649061d52f0259b846  usr/lib/ns-admin/_internal/aiohttp/_http_writer.cpython-312-x86_64-linux-gnu.so
@@ -1123,14 +1121,14 @@ ef3a7167e65a8ed94841402ce4109dcd  usr/lib/ns-admin/_internal/nicegui/ui_run_with
 2043563c91f1e3081df9979d8d4a1c22  usr/lib/ns-admin/_internal/nicegui/vbuild.py
 1976b8960b8a5cf50ce73d944e205fa6  usr/lib/ns-admin/_internal/nicegui/version.py
 36b22f89bd7ddf58c230e49c7c36e9cc  usr/lib/ns-admin/_internal/nicegui/welcome.py
-45210da832f9626829457a65e9e7c4d0  usr/lib/ns-admin/_internal/ns_admin-2.0.8.dist-info/INSTALLER
-18764eb73b5d2152bd0c641b9385ca4a  usr/lib/ns-admin/_internal/ns_admin-2.0.8.dist-info/METADATA
-179f2e45da06993e2710b1f15d532fb5  usr/lib/ns-admin/_internal/ns_admin-2.0.8.dist-info/RECORD
-d41d8cd98f00b204e9800998ecf8427e  usr/lib/ns-admin/_internal/ns_admin-2.0.8.dist-info/REQUESTED
-7412a649a466b9dd567141f836b1e222  usr/lib/ns-admin/_internal/ns_admin-2.0.8.dist-info/WHEEL
-b71d55619df3161f26fc0a3635502378  usr/lib/ns-admin/_internal/ns_admin-2.0.8.dist-info/direct_url.json
-99914b932bd37a50b983c5e7c90ae93b  usr/lib/ns-admin/_internal/ns_admin-2.0.8.dist-info/uv_build.json
-5eafe70de3ceeefc799580a8c9411e7b  usr/lib/ns-admin/_internal/ns_admin-2.0.8.dist-info/uv_cache.json
+45210da832f9626829457a65e9e7c4d0  usr/lib/ns-admin/_internal/ns_admin-2.0.10.dist-info/INSTALLER
+103ef9b0c2f9fe0e8ce59ad6419bc3b9  usr/lib/ns-admin/_internal/ns_admin-2.0.10.dist-info/METADATA
+2488788e35ecdd5543456f0c4e010332  usr/lib/ns-admin/_internal/ns_admin-2.0.10.dist-info/RECORD
+d41d8cd98f00b204e9800998ecf8427e  usr/lib/ns-admin/_internal/ns_admin-2.0.10.dist-info/REQUESTED
+7412a649a466b9dd567141f836b1e222  usr/lib/ns-admin/_internal/ns_admin-2.0.10.dist-info/WHEEL
+b71d55619df3161f26fc0a3635502378  usr/lib/ns-admin/_internal/ns_admin-2.0.10.dist-info/direct_url.json
+99914b932bd37a50b983c5e7c90ae93b  usr/lib/ns-admin/_internal/ns_admin-2.0.10.dist-info/uv_build.json
+2bcbbbcbd289787f388b9e6a29643f92  usr/lib/ns-admin/_internal/ns_admin-2.0.10.dist-info/uv_cache.json
 34180637615a76af20c43316a58dd4ab  usr/lib/ns-admin/_internal/ns_admin/assets/NOVUS_LOGO.svg
 acede492594693e67e7d1916c2f40df1  usr/lib/ns-admin/_internal/ns_admin/assets/favicon.png
 5e74fa075df1315b7163861b567c7afa  usr/lib/ns-admin/_internal/ns_admin/introspection/org.fedoraproject.FirewallD1.config.xml
@@ -1318,5 +1316,6 @@ abe733f3e5dd9b91c9cce9a8f665641b  usr/lib/ns-admin/_internal/websockets/speedups
 3ed399d3b9f173a32527b10b959e20eb  usr/lib/ns-admin/_internal/yaml/_yaml.cpython-312-x86_64-linux-gnu.so
 4ab2ad72b79dc6a5088e6f3facc1ff82  usr/lib/ns-admin/_internal/yarl/_quoting_c.cpython-312-x86_64-linux-gnu.so
 51cbe382ce8dd9e9fccc4ba62e86508a  usr/lib/ns-admin/ns-admin
+9c56d215c935d695a238679ff7239e86  usr/lib/systemd/system/ns-admin.service
 717fcb93aba1931e9d460d3e05ced8f4  usr/share/dbus-1/system.d/com.novus.ns.conf
 54c455fd2a88a5ec6716128c79138cb2  usr/share/doc/ns-admin/changelog.gz
