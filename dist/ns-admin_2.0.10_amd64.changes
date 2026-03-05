@@ -1,0 +1,31 @@
+Format: 1.8
+Date: Thu, 05 Mar 2026 12:05:40 -0600
+Source: ns-admin
+Binary: ns-admin
+Built-For-Profiles: noudeb
+Architecture: amd64
+Version: 2.0.10
+Distribution: UNRELEASED
+Urgency: medium
+Maintainer: Jacob Owens <jowens@novuspower.com>
+Changed-By: jowens <jowens@jowens>
+Description:
+ ns-admin   - Configuration tool
+Changes:
+ ns-admin (2.0.10) UNRELEASED; urgency=medium
+ .
+   [ jowens ]
+   * pkg name
+    *
+Checksums-Sha1:
+ 3d2c59d28bd0c8d889666c1ea21fe00b911f1b69 28658 ns-admin-dbgsym_2.0.10_amd64.ddeb
+ ea338936a0f98d8dfca334111726968c6569e555 6325 ns-admin_2.0.10_amd64.buildinfo
+ 9c0f9ef549e7a716adf274c406db6e95ff2b7ef3 59226368 ns-admin_2.0.10_amd64.deb
+Checksums-Sha256:
+ 99579df858f8a523b4b6183fe5dafdd3d5693cf6a30e89caab3c8787e4e7e785 28658 ns-admin-dbgsym_2.0.10_amd64.ddeb
+ d798968811999932f5078d5786a0ff3cd3c457030804d8630c515aa36dde36e9 6325 ns-admin_2.0.10_amd64.buildinfo
+ 5714448bb0f4cf4aa71e39e1a2408420473db0d0a9ae152635484681786a9a97 59226368 ns-admin_2.0.10_amd64.deb
+Files:
+ 0847b6d8b16a70b2432ad3bb1e3bf40d 28658 debug optional ns-admin-dbgsym_2.0.10_amd64.ddeb
+ 4a24adf3bfa9210117d8e2774e97de64 6325 utils optional ns-admin_2.0.10_amd64.buildinfo
+ cac7046e770af628d8d736510fa854fb 59226368 utils optional ns-admin_2.0.10_amd64.deb

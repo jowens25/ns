@@ -1,0 +1,34 @@
+#!/bin/bash
+set -e
+
+case "$1" in
+    remove|upgrade)
+        # On upgrade or remove, just reload nginx to pick up config changes
+        systemctl reload nginx 2>/dev/null || true
+        ;;
+    purge)
+        rm -f /etc/nginx/sites-enabled/ns2-ui.conf
+        rm -f /etc/nginx/ssl/selfsigned.key
+        rm -f /etc/nginx/ssl/selfsigned.crt
+        ;;
+    failed-upgrade|abort-install|abort-remove|disappear)
+        ;;
+    *)
+        ;;
+esac
+
+# Automatically added by dh_installsystemd/13.14.1ubuntu5
+if [ "$1" = remove ] && [ -d /run/systemd/system ] ; then
+	systemctl --system daemon-reload >/dev/null || true
+fi
+# End automatically added section
+# Automatically added by dh_installsystemd/13.14.1ubuntu5
+if [ "$1" = "purge" ]; then
+	if [ -x "/usr/bin/deb-systemd-helper" ]; then
+		deb-systemd-helper purge 'ns2-dbus.service' 'ns2-ui.service' >/dev/null || true
+	fi
+fi
+# End automatically added section
+
+
+exit 0
