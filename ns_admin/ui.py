@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from importlib.metadata import version, PackageNotFoundError
-
+from zoneinfo import ZoneInfo
 import asyncio
 from ns_admin.dbus import setup_dbus, cleanup_dbus, AppBus
 from dbus_next.aio import MessageBus
@@ -68,11 +68,24 @@ def ui_main():
             ui.label(f'Welcome {app.storage.user["username"]}!')
             # ui.button("Request Admin").classes("bg-secondary").props("flat color=accent")
             with ui.row():
-                label = ui.label()
+
+                # with ui.dialog() as dialog, ui.card():
+                #
+                #    tz = ui.input(label="Time zone", value="UTC")
+                #
+                #    # ui.button("Save", on_click=tzDialog.close).props(
+                #    #    "flat color=accent dense"
+                #    # )
+                #
+                # ui.button("Change Time Zone", on_click=dialog.open).props(
+                #    "flat color=accent dense"
+                # )
+
+                label = ui.label().classes("font-bold")
 
                 def update_date():
                     label.set_text(
-                        datetime.now().astimezone().strftime("%m-%d-%Y %H:%M:%SZ")
+                        datetime.now().astimezone().strftime("%m-%d-%Y %H:%M:%S")
                     )
 
             ui.timer(1.0, update_date)

@@ -1,7 +1,7 @@
 [project]
 name = "ns-admin"
 version = "2.0.10"
-description = "Novus Studio: web-based configuration suite Novus Studio provides a modern web interface for system configuration and management. Includes reverse proxy setup with nginx. Networking with Network Manager. Firewall with firewalld."
+description = "Novus admin panel: web based configuration panel for our linux based products"
 readme = "README.md"
 requires-python = ">=3.12.3"
 dependencies = [

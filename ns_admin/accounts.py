@@ -1,149 +1,6 @@
-from dataclasses import asdict, dataclass
-from typing import Optional
 from nicegui import ui, app
-from pathlib import Path
+
 from ns_admin.accounts_lib import *
-
-
-@dataclass
-class SystemAccount:
-    UserName: Optional[str] = None
-    Password: Optional[str] = None
-    UID: Optional[str] = None
-    GID: Optional[str] = None
-    UserInfo: Optional[str] = None
-    HomeDir: Optional[str] = None
-    Shell: Optional[str] = None
-    Link: Optional[bool] = False
-    Groups: Optional[str] = None
-
-
-@dataclass
-class SystemGroup:
-    GroupName: Optional[str] = None
-    GID: Optional[str] = None
-    NumberOfUsers: Optional[str] = None
-    Accounts: Optional[list[dict]] = None
-    AccountString: Optional[str] = None
-
-
-def ReadPasswdFile() -> dict[SystemAccount]:
-    accounts = {}
-    with open("/etc/passwd", "r") as f:
-        content = f.readlines()
-    for i, line in enumerate(content):
-        if ":" in line:
-            fields = line.split(":")
-            name = fields[0]
-            pwd = fields[1]
-            UID = fields[2]
-            GID = fields[3]
-            userinfo = fields[4]
-            homedir = fields[5]
-            shell = fields[6]
-            if (
-                (int(UID) < 1000 and int(UID) != 0)
-                or "nologin" in shell
-                or "/bin/false" in shell
-            ):
-                link = False
-
-            else:
-                link = True
-                # print(f"name: >{name}")
-                # print(f"shell: >{shell}")
-
-            # a = SystemAccount(name, pwd, UID, GID, userinfo, homedir, shell, link)
-            # accounts.append(a)
-            accounts[name] = SystemAccount(
-                name, pwd, UID, GID, userinfo, homedir, shell, link
-            )
-    pass  # endfor
-
-    return accounts
-
-
-def ReadGroupFile() -> list[SystemGroup]:
-    groups = []
-    with open("/etc/group") as f:
-        content = f.readlines()
-
-    for i, line in enumerate(content):
-        if ":" in line:
-            fields = line.split(":")
-            name = fields[0]
-            GID = fields[2]
-
-            accountsString = fields[3].strip("\n")
-            # num = len(accounts)
-            g = SystemGroup(name, GID, 0, [], accountsString)
-            groups.append(g)
-    pass  # endfor
-
-    return groups
-
-
-def CombineGroupsAndAccounts():
-
-    groups = ReadGroupFile()
-
-    accounts = ReadPasswdFile()
-
-    for g in groups:
-        for oa in g.AccountString.split(","):
-            a = accounts.get(oa)
-            if a:
-                g.NumberOfUsers += 1
-                g.Accounts.append({"name": a.UserName, "link": a.Link})
-
-        for n, a in accounts.items():
-            # for accountName, accountObj in accounts.items():
-            if g.GID == a.GID:
-                g.NumberOfUsers += 1
-                g.Accounts.append({"name": a.UserName, "link": a.Link})
-
-    return groups
-
-
-def CombineAccountsAndGroups():
-
-    groups = ReadGroupFile()
-
-    accounts = ReadPasswdFile()
-
-    account: SystemAccount
-    for name, account in accounts.items():
-        accountGroups = []
-        for g in groups:
-            if name in g.AccountString:
-                accountGroups.append(g.GroupName)
-
-        accountGroups.append(name)
-        account.Groups = ", ".join(accountGroups)
-
-    return accounts
-
-
-def GetCombinedGroupDict():
-    return [asdict(i) for i in CombineGroupsAndAccounts()]
-
-
-def GetGroupDict():
-    return [asdict(i) for i in ReadGroupFile()]
-
-
-def GetAccountsDict():
-    return [asdict(i) for n, i in ReadPasswdFile().items() if i.Link]
-
-
-def GetCombinedAccountDict():
-
-    return [asdict(i) for n, i in CombineAccountsAndGroups().items() if i.Link]
-
-
-async def accounts_user_page(user: str):
-    # ui.label("User Configuration").classes("text-h5")
-    ui.label(user).classes("text-h5")
 
 
 async def accounts_page():
@@ -356,3 +213,116 @@ async def accounts_page():
             </q-tr>
             """,
         )
+
+
+async def accounts_user_page(user: str):
+    # ui.label("User Configuration").classes("text-h5")
+
+    await account_card(user)
+
+
+@ui.refreshable
+async def account_card(user: str):
+
+    with ui.card().props("flat"):
+        with ui.row():
+            ui.link("Networking", "/networking").classes("text-accent")
+            ui.label(">")
+            ui.label(user)
+
+            with ui.row().classes("w-full items-center justify-between"):
+                ui.label(user).classes("font-bold").classes("text-h5")
+                ui.button("Terminate session").props("color=accent align right")
+                ui.button("Delete").props("color=accent align=right")
+            # ui.label().classes("text-h6").bind_text(interface, "Name")
+            # ui.label().classes("text-h6").bind_text(interface, "HardwareAddress")
+            # async def connection_sw_cb(e):
+            #    action = "enable" if e.sender.value else "disable"
+            #    with ui.dialog() as dialog, ui.card():
+            #        ui.label(f"Are you sure you want to {action} this connection?")
+            #        with ui.row():
+            #            ui.button(
+            #                "Cancel", on_click=lambda: dialog.submit("Cancel")
+            #            ).props("flat color=accent align=left")
+            #            ui.button(
+            #                f"{action}", on_click=lambda: dialog.submit(action)
+            #            ).props("flat color=accent align=left")
+            #    result = await dialog
+            #    if result == "enable":
+            #        await nm.call_activate_connection("/", interface._dev_path, "/")
+            #    elif result == "disable":
+            #        await nm.call_deactivate_connection(interface._act_con_path)
+            #    else:
+            #        print('canceled')
+            #
+            #    interface_card.refresh()
+
+        #            ui.switch("Connected").on("click", lambda e: connection_sw_cb(e)).props(
+        #                "flat color=accent"
+        #            ).bind_value_from(interface, "Active")
+        ui.separator()
+        #
+        #    #ui.spinner(size='lg').bind_visibility_from(interface, "Active", backward=lambda e: (not e))
+
+        #
+        with ui.column().classes("flex-1 gap-4"):
+            with ui.row().classes("flex-1 gap-32"):
+                ui.label("Full name").classes("font-bold w-32")
+                # ui.label().bind_text_from(interface, "Status")
+                ui.label("test")
+            with ui.row().classes("flex-1 gap-32"):
+                ui.label("User name").classes("font-bold w-32")
+                # ui.label().bind_text_from(interface, "StateString")
+            with ui.row().classes("flex-1 gap-32"):
+                ui.label("Groups").classes("font-bold w-32")
+
+            with ui.row().classes("flex-1 gap-32"):
+                ui.label("Last login").classes("font-bold w-32")
+
+            with ui.row().classes("flex-1 gap-32"):
+                ui.label("Options").classes("font-bold w-32")
+
+            with ui.row().classes("flex-1 gap-32"):
+                ui.label("Password").classes("font-bold w-32")
+
+            with ui.row().classes("flex-1 gap-32"):
+                ui.label("Home directory").classes("font-bold w-32")
+
+            with ui.row().classes("flex-1 gap-32"):
+                ui.label("Shell").classes("font-bold w-32")
+
+                # ui.label().bind_text_from(interface, "Carrier")
+            # with ui.row().classes("flex-1 gap-16"):
+
+
+#            ui.label("General").classes("font-bold w-8")
+#            async def auto_connect_cb(e):
+#                return
+#                device = GetDevice(dbus.Bus, interface._dev_path)
+#                settings = await GetSettings(device)
+#                settings["connection"]["autoconnect"] = Variant(
+#                    "b", e.value
+#                )
+#                # await connection.call_update2(settings, 0x1, {})
+#                # await device.call_reapply(settings, 0, 0)
+#            ui.checkbox(
+#                "Connect automatically", on_change=auto_connect_cb
+#            ).props("flat color=accent dense").bind_value(
+#                interface, "AutoConnect"
+#            )
+#
+#
+#        with ui.row().classes("flex-1 gap-16"):
+#            ui.label("IPv4").classes("font-bold w-8")
+#            ui.label().bind_text_from(interface, "Ip4")
+#            ui.label("Edit").classes(
+#                "text-accent cursor-pointer hover:underline"
+#            ).on("click", lambda: edit_ip_connection('ipv4', device))
+#
+#
+#        with ui.row().classes("flex-1 gap-16"):
+#            ui.label("IPv6").classes("font-bold w-8")
+#            ui.label().bind_text_from(interface, "Ip6")
+#            ui.label("Edit").classes(
+#                "text-accent cursor-pointer hover:underline"
+#            ).on("click", lambda: edit_ip_connection('ipv6', device))
