@@ -178,5 +178,8 @@ def GetAccountsDict():
 
 
 def GetCombinedAccountDict():
-
     return [asdict(i) for n, i in CombineAccountsAndGroups().items() if i.Link]
+
+
+def GetUserByName(username):
+    return CombineAccountsAndGroups()[username]

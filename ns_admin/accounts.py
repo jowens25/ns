@@ -114,12 +114,16 @@ async def accounts_page():
                 ).props("flat color=accent dense align=center")
 
     with ui.expansion("Accounts", icon="account_box", value=True).classes("w-full"):
-        data = GetCombinedAccountDict()
-        print(data)
+
+        ui.button(
+            "Create new account",
+            on_click=lambda e: ui.navigate.to("accounts/create-new-user"),
+        )
+
         accountsTable = (
             ui.table(
                 title="Accounts",
-                rows=data,
+                rows=GetCombinedAccountDict(),
                 column_defaults={
                     "align": "left",
                     "headerClasses": "uppercase text-primary",
@@ -217,112 +221,80 @@ async def accounts_page():
 
 async def accounts_user_page(user: str):
     # ui.label("User Configuration").classes("text-h5")
-
     await account_card(user)
 
 
 @ui.refreshable
-async def account_card(user: str):
+async def edit_card(username: str):
+    user: SystemAccount
+    user = GetUserByName(username)
 
     with ui.card().props("flat"):
         with ui.row():
-            ui.link("Networking", "/networking").classes("text-accent")
+            ui.link("Accounts", "/accounts").classes("text-accent")
             ui.label(">")
-            ui.label(user)
+            ui.label(user.UserName)
 
-            with ui.row().classes("w-full items-center justify-between"):
-                ui.label(user).classes("font-bold").classes("text-h5")
-                ui.button("Terminate session").props("color=accent align right")
-                ui.button("Delete").props("color=accent align=right")
-            # ui.label().classes("text-h6").bind_text(interface, "Name")
-            # ui.label().classes("text-h6").bind_text(interface, "HardwareAddress")
-            # async def connection_sw_cb(e):
-            #    action = "enable" if e.sender.value else "disable"
-            #    with ui.dialog() as dialog, ui.card():
-            #        ui.label(f"Are you sure you want to {action} this connection?")
-            #        with ui.row():
-            #            ui.button(
-            #                "Cancel", on_click=lambda: dialog.submit("Cancel")
-            #            ).props("flat color=accent align=left")
-            #            ui.button(
-            #                f"{action}", on_click=lambda: dialog.submit(action)
-            #            ).props("flat color=accent align=left")
-            #    result = await dialog
-            #    if result == "enable":
-            #        await nm.call_activate_connection("/", interface._dev_path, "/")
-            #    elif result == "disable":
-            #        await nm.call_deactivate_connection(interface._act_con_path)
-            #    else:
-            #        print('canceled')
-            #
-            #    interface_card.refresh()
+        with ui.row().classes("flex-1 gap-32"):
+            ui.label(user.UserName).classes("font-bold").classes("text-h5")
+            ui.button("Terminate session")
+            ui.button("Delete").props("flat align=left dense")
 
-        #            ui.switch("Connected").on("click", lambda e: connection_sw_cb(e)).props(
-        #                "flat color=accent"
-        #            ).bind_value_from(interface, "Active")
         ui.separator()
-        #
-        #    #ui.spinner(size='lg').bind_visibility_from(interface, "Active", backward=lambda e: (not e))
 
-        #
         with ui.column().classes("flex-1 gap-4"):
-            with ui.row().classes("flex-1 gap-32"):
-                ui.label("Full name").classes("font-bold w-32")
-                # ui.label().bind_text_from(interface, "Status")
-                ui.label("test")
-            with ui.row().classes("flex-1 gap-32"):
-                ui.label("User name").classes("font-bold w-32")
-                # ui.label().bind_text_from(interface, "StateString")
-            with ui.row().classes("flex-1 gap-32"):
-                ui.label("Groups").classes("font-bold w-32")
 
-            with ui.row().classes("flex-1 gap-32"):
+            with ui.row().classes("flex-1"):
+                ui.label("Full name").classes("font-bold w-32")
+                ui.input().bind_value(user, "UserInfo").props("dense")
+
+            with ui.row().classes("flex-1"):
+                ui.label("User name").classes("font-bold w-32")
+                ui.label().bind_text_from(user, "UserName").props("dense")
+
+            with ui.row().classes("flex-1"):
+                ui.label("Groups").classes("font-bold w-32")
+                with ui.row().classes("flex-1 flex-wrap").props("dense"):
+                    for g in user.Groups.split(", "):
+                        ui.chip(g, removable=True).props("dense")
+
+            with ui.row().classes("flex-1"):
                 ui.label("Last login").classes("font-bold w-32")
 
-            with ui.row().classes("flex-1 gap-32"):
+            with ui.row().classes("flex-1"):
                 ui.label("Options").classes("font-bold w-32")
+                ui.link("edit").classes("text-accent")
 
-            with ui.row().classes("flex-1 gap-32"):
+            # with ui.row().classes("flex-1 gap-32"):
+            with ui.row().classes("items-center justify-start w-full"):
                 ui.label("Password").classes("font-bold w-32")
+                ui.button("Set password").props("dense")
+                ui.button("Force change").props("flat dense")
+                ui.label("this should get its value from ")
+                ui.link("edit").classes("text-accent")
 
-            with ui.row().classes("flex-1 gap-32"):
+            with ui.row().classes("flex-1"):
                 ui.label("Home directory").classes("font-bold w-32")
+                ui.label().bind_text_from(user, "HomeDir")
 
-            with ui.row().classes("flex-1 gap-32"):
+            with ui.row().classes("flex-1"):
                 ui.label("Shell").classes("font-bold w-32")
+                ui.label().bind_text_from(user, "Shell")
+                ui.link("change").classes("text-accent")
 
-                # ui.label().bind_text_from(interface, "Carrier")
-            # with ui.row().classes("flex-1 gap-16"):
+
+@ui.refreshable
+async def new_card():
+    user = SystemAccount()
+    user.UserName = "New User"
 
 
-#            ui.label("General").classes("font-bold w-8")
-#            async def auto_connect_cb(e):
-#                return
-#                device = GetDevice(dbus.Bus, interface._dev_path)
-#                settings = await GetSettings(device)
-#                settings["connection"]["autoconnect"] = Variant(
-#                    "b", e.value
-#                )
-#                # await connection.call_update2(settings, 0x1, {})
-#                # await device.call_reapply(settings, 0, 0)
-#            ui.checkbox(
-#                "Connect automatically", on_change=auto_connect_cb
-#            ).props("flat color=accent dense").bind_value(
-#                interface, "AutoConnect"
-#            )
-#
-#
-#        with ui.row().classes("flex-1 gap-16"):
-#            ui.label("IPv4").classes("font-bold w-8")
-#            ui.label().bind_text_from(interface, "Ip4")
-#            ui.label("Edit").classes(
-#                "text-accent cursor-pointer hover:underline"
-#            ).on("click", lambda: edit_ip_connection('ipv4', device))
-#
-#
-#        with ui.row().classes("flex-1 gap-16"):
-#            ui.label("IPv6").classes("font-bold w-8")
-#            ui.label().bind_text_from(interface, "Ip6")
-#            ui.label("Edit").classes(
-#                "text-accent cursor-pointer hover:underline"
-#            ).on("click", lambda: edit_ip_connection('ipv6', device))
+@ui.refreshable
+async def account_card(username: str):
+
+    if username == "create-new-user":
+
+        await new_card()
+    else:
+
+        await edit_card(username)
