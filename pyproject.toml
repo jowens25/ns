@@ -13,6 +13,7 @@ dependencies = [
     "pyinstaller>=6.19.0",
     "setuptools>=82.0.0",
     "six>=1.17.0",
+    "systemd-python>=235",
 ]
 
 

@@ -6,7 +6,7 @@ from dbus_next.errors import DBusError
 from dbus_next.aio.proxy_object import ProxyInterface
 from ns_admin.dbus import get_dbus
 
-from ns_admin.systemd import *
+from ns_admin.systemd1 import *
 from ns_admin.common import formatStringToList
 
 

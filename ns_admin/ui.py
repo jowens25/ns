@@ -103,9 +103,9 @@ def ui_main():
                 left_drawer.hide()
 
         with ui.left_drawer(bordered=True).classes("bg-dark") as left_drawer:
-            ui.button(on_click=lambda: left_drawer.toggle(), icon="menu").props(
-                "flat color=white"
-            )
+            # ui.button(on_click=lambda: left_drawer.toggle(), icon="menu").props(
+            #    "flat color=white"
+            # )
             ui.separator()
 
             ui.button(

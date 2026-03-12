@@ -9,20 +9,19 @@ from ns_admin.dbus import get_dbus
 from ns_admin.firewalld_page import firewall_status
 
 
-
-
 async def network_page():
     AppBus = await get_dbus()
 
     print("NETWORK PAGE")
 
     with ui.column().classes("w-full"):
-            with ui.card().classes("w-full").props('flat'):
-                await firewall_status(True)
-            
-            interfaces = await GetInterfacesAndAddresses(AppBus)
-            
-            interface_table = ui.table(
+        with ui.card().classes("w-full").props("flat"):
+            await firewall_status(True)
+
+        interfaces = await GetInterfacesAndAddresses(AppBus)
+
+        interface_table = (
+            ui.table(
                 title="Interfaces",
                 rows=interfaces,
                 # rows=[{'d':'v'}],
@@ -30,11 +29,14 @@ async def network_page():
                     "align": "left",
                     "headerClasses": "uppercase text-primary",
                 },
-            ).classes("w-full").props('flat')
-            
-            interface_table.add_slot(
-                "body-cell-name",
-                """
+            )
+            .classes("w-full")
+            .props("flat")
+        )
+
+        interface_table.add_slot(
+            "body-cell-name",
+            """
                 <q-td :props="props">
                     <a :href="'/networking/' + props.row.name" 
                        class="text-accent cursor-pointer hover:underline"
@@ -43,27 +45,25 @@ async def network_page():
                     </a>
                 </q-td>
             """,
-            )
-            interface_table.add_slot(
-                "body-cell-addresses",
-                """
+        )
+        interface_table.add_slot(
+            "body-cell-addresses",
+            """
                 <q-td :props="props" class="font-bold text-sm">
                     {{ props.value }}
                 </q-td>
             """,
-            )
+        )
 
-        #with ui.card():
+    # with ui.card():
 
-
-    
 
 @ui.refreshable
-async def interface_card(nm : ProxyInterface, device: ProxyInterface, interface):
+async def interface_card(nm: ProxyInterface, device: ProxyInterface, interface):
 
-    with ui.card().props('flat'):
+    with ui.card().props("flat"):
         with ui.row():
-            ui.link("Networking", "/networking").classes('text-accent')
+            ui.link("Networking", "/networking").classes("text-accent")
             ui.label(">")
             ui.label(interface.Name)
             ui.label(interface.Active)
@@ -71,6 +71,7 @@ async def interface_card(nm : ProxyInterface, device: ProxyInterface, interface)
             with ui.row().classes("w-full items-center justify-between"):
                 ui.label().classes("text-h6").bind_text(interface, "Name")
                 ui.label().classes("text-h6").bind_text(interface, "HardwareAddress")
+
                 async def connection_sw_cb(e):
                     action = "enable" if e.sender.value else "disable"
                     with ui.dialog() as dialog, ui.card():
@@ -88,17 +89,16 @@ async def interface_card(nm : ProxyInterface, device: ProxyInterface, interface)
                     elif result == "disable":
                         await nm.call_deactivate_connection(interface._act_con_path)
                     else:
-                        print('canceled')
-                    
-                    interface_card.refresh()
+                        print("canceled")
 
+                    interface_card.refresh()
 
                 ui.switch("Connected").on("click", lambda e: connection_sw_cb(e)).props(
                     "flat color=accent"
                 ).bind_value_from(interface, "Active")
         ui.separator()
-        
-        #ui.spinner(size='lg').bind_visibility_from(interface, "Active", backward=lambda e: (not e))
+
+        # ui.spinner(size='lg').bind_visibility_from(interface, "Active", backward=lambda e: (not e))
 
         with ui.column().classes("flex-1 gap-4"):
             with ui.row().classes("flex-1 gap-16"):
@@ -112,37 +112,32 @@ async def interface_card(nm : ProxyInterface, device: ProxyInterface, interface)
                 ui.label().bind_text_from(interface, "Carrier")
             with ui.row().classes("flex-1 gap-16"):
                 ui.label("General").classes("font-bold w-8")
+
                 async def auto_connect_cb(e):
                     return
                     device = GetDevice(dbus.Bus, interface._dev_path)
                     settings = await GetSettings(device)
-                    settings["connection"]["autoconnect"] = Variant(
-                        "b", e.value
-                    )
+                    settings["connection"]["autoconnect"] = Variant("b", e.value)
                     # await connection.call_update2(settings, 0x1, {})
                     # await device.call_reapply(settings, 0, 0)
-                ui.checkbox(
-                    "Connect automatically", on_change=auto_connect_cb
-                ).props("flat color=accent dense").bind_value(
-                    interface, "AutoConnect"
-                )
-                
-                
+
+                ui.checkbox("Connect automatically", on_change=auto_connect_cb).props(
+                    "flat color=accent dense"
+                ).bind_value(interface, "AutoConnect")
+
             with ui.row().classes("flex-1 gap-16"):
                 ui.label("IPv4").classes("font-bold w-8")
                 ui.label().bind_text_from(interface, "Ip4")
                 ui.label("Edit").classes(
                     "text-accent cursor-pointer hover:underline"
-                ).on("click", lambda: edit_ip_connection('ipv4', device))
-                
-                
+                ).on("click", lambda: edit_ip_connection("ipv4", device))
+
             with ui.row().classes("flex-1 gap-16"):
                 ui.label("IPv6").classes("font-bold w-8")
                 ui.label().bind_text_from(interface, "Ip6")
                 ui.label("Edit").classes(
                     "text-accent cursor-pointer hover:underline"
-                ).on("click", lambda: edit_ip_connection('ipv6', device))
-
+                ).on("click", lambda: edit_ip_connection("ipv6", device))
 
 
 async def interface_page(interface_name: str):
@@ -157,13 +152,13 @@ async def interface_page(interface_name: str):
     interface = await GetInterfaceData(AppBus, nm, interface_name)
 
     await interface_card(nm, device, interface)
-    
+
     async def state_changed_cb(u1, u2, u3):
-        
+
         print(u1, u2, u3)
         # Re-fetch the interface data to get the new state
         updated_interface = await GetInterfaceData(AppBus, nm, interface_name)
-        
+
         # Update the existing interface object's properties
         # This will trigger the UI bindings to update automatically
         interface.Status = updated_interface.Status
@@ -174,10 +169,8 @@ async def interface_page(interface_name: str):
         interface.Ip4 = updated_interface.Ip4
         interface.Ip6 = updated_interface.Ip6
         # Add any other properties that might change
-    
+
     device.on_state_changed(state_changed_cb)
-
-
 
 
 async def edit_ip_connection(version: str, device: ProxyInterface):
@@ -230,9 +223,9 @@ async def edit_ip_connection(version: str, device: ProxyInterface):
                 ui.input(label="Address").props("dense").classes("flex-1").bind_value(
                     addr, "Address"
                 )
-                ui.input(label="Prefix").props("dense").classes(
-                    "flex-1"
-                ).bind_value(addr, "Prefix")
+                ui.input(label="Prefix").props("dense").classes("flex-1").bind_value(
+                    addr, "Prefix"
+                )
                 ui.input(label="Gateway").props("dense").classes("flex-1").bind_value(
                     ip, "Gateway"
                 )
