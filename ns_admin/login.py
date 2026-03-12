@@ -7,8 +7,8 @@ import time
 import pam
 import os
 from ns_admin.utils import ASSETS_DIR
-p = pam.pam()
 
+p = pam.pam()
 
 
 async def try_login(_username: str, _password: str) -> None:
@@ -18,12 +18,12 @@ async def try_login(_username: str, _password: str) -> None:
             {
                 "username": _username,
                 "authenticated": True,
-                #"token": response["token"],
-                "login_time": time.time()
+                # "token": response["token"],
+                "login_time": time.time(),
             }
         )
         ui.notify(f"Welcome, {_username}!", color="positive")
-        ui.navigate.to("/home")
+        ui.navigate.to("/overview")
     else:
         ui.notify("Invalid username or password", color="negative")
 
@@ -37,13 +37,13 @@ def login_page():
         ui.label("novuspower.com")
         ui.label("(816) 836-7446")
         ui.label("support@novuspower.com")
-        #ui.label(
+        # ui.label(
         #    "You can reset the administrator password using the maintenance port on the front of the unit: ns resetpw"
-        #)
+        # )
         ui.button("Close", on_click=support_dialog.close).classes("bg-secondary")
 
     with ui.column(align_items="center").classes("absolute-center gap-16"):
-        #print(str(ASSETS_DIR / "NOVUS_LOGO.svg"))
+        # print(str(ASSETS_DIR / "NOVUS_LOGO.svg"))
         ui.image(str(ASSETS_DIR / "NOVUS_LOGO.svg")).classes("w-128 max-w-128")
 
         with ui.card():

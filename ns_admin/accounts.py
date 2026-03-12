@@ -1,6 +1,7 @@
 from nicegui import ui, app
 
 from ns_admin.accounts_lib import *
+from ns_admin.dbus import get_dbus
 
 
 async def accounts_page():
@@ -235,10 +236,11 @@ async def edit_card(username: str):
             ui.label(">")
             ui.label(user.UserName)
 
-        with ui.row().classes("flex-1 gap-32"):
+        with ui.row().classes("w-full justify-between"):
             ui.label(user.UserName).classes("font-bold").classes("text-h5")
-            ui.button("Terminate session")
-            ui.button("Delete").props("flat align=left dense")
+            with ui.row():
+                ui.button("Terminate session")
+                ui.button("Delete")
 
         ui.separator()
 
@@ -281,6 +283,14 @@ async def edit_card(username: str):
                 ui.label("Shell").classes("font-bold w-32")
                 ui.label().bind_text_from(user, "Shell")
                 ui.link("change").classes("text-accent")
+
+                ui.label(await GetUsersState(await get_dbus()))
+
+    with ui.card():
+        with ui.row().classes("w-full justify-between"):
+            ui.label("Authorized public SSH keys").classes("text-h5 font-bold")
+            with ui.row():
+                ui.button("Terminate session")
 
 
 @ui.refreshable

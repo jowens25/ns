@@ -12,6 +12,7 @@ import sys
 from nicegui import ui, app
 from multiprocessing import freeze_support
 
+from ns_admin.logs_page import logs_page, log_page
 from ns_admin.accounts import accounts_page, accounts_user_page
 from ns_admin.ns_socket import socket_stream
 from ns_admin.networking_page import network_page, interface_page
@@ -20,6 +21,7 @@ from ns_admin.theme import init_colors
 from ns_admin.login import login_page
 from ns_admin.home_page import home_page
 from ns_admin.snmp_page import snmp_page, snmp_user_page
+from ns_admin.services_page import services_page
 
 # from ns2.ntp import ntp_page
 from ns_admin.fpga_page import fpga_page
@@ -37,20 +39,22 @@ def ui_main():
     freeze_support()
     print("MAIN")
 
+    @ui.page("/")
+    @ui.page("/overview")
     @ui.page("/networking")
     @ui.page("/networking/firewall")
     @ui.page("/networking/{interface_name}")
+    @ui.page("/logs")
+    @ui.page("/logs/{log}")
+    @ui.page("/services")
     @ui.page("/snmp")
     @ui.page("/snmp/{version}/{user}")
     @ui.page("/terminal")
-    # @ui.page('/ntp')
     @ui.page("/accounts")
     @ui.page("/accounts/{user}")
-    # @ui.page('/fpga')
     # @ui.page('/tests')
     # @ui.page('/login')
-    @ui.page("/")
-    @ui.page("/home")
+
     async def root():
 
         # await setup_dbus(AppBus)
@@ -99,10 +103,14 @@ def ui_main():
                 left_drawer.hide()
 
         with ui.left_drawer(bordered=True).classes("bg-dark") as left_drawer:
+            ui.button(on_click=lambda: left_drawer.toggle(), icon="menu").props(
+                "flat color=white"
+            )
+            ui.separator()
+
             ui.button(
-                "Home",
-                on_click=lambda: nav("/home"),
-                icon="home",
+                "Overview",
+                on_click=lambda: nav("/overview"),
             ).props(
                 "flat color=white align=left"
             ).classes("full-width")
@@ -110,41 +118,46 @@ def ui_main():
             ui.button(
                 "Networking",
                 on_click=lambda: nav("/networking"),
-                icon="settings_ethernet",
-            ).props("flat color=white align=left").classes("full-width")
-            # ui.button(
-            #    "NTP",
-            #    on_click=lambda: nav('/ntp'),
-            #    icon="settings_ethernet",
-            # ).props("flat color=white align=left").classes("full-width")
+            ).props(
+                "flat color=white align=left"
+            ).classes("full-width")
+
             ui.button(
-                "Terminal", on_click=lambda: nav("/terminal"), icon="terminal"
-            ).props("flat color=white align=left").classes("full-width")
-            # ui.button(
-            #    "FPGA",
-            #    on_click=lambda: nav('/fpga'),
-            #    icon="settings_ethernet",
-            # ).props("flat color=white align=left").classes("full-width")
+                "Logs",
+                on_click=lambda: nav("/logs"),
+            ).props(
+                "flat color=white align=left"
+            ).classes("full-width")
+            ui.button(
+                "Services",
+                on_click=lambda: nav("/services"),
+            ).props(
+                "flat color=white align=left"
+            ).classes("full-width")
+            ui.button(
+                "Terminal",
+                on_click=lambda: nav("/terminal"),
+            ).props(
+                "flat color=white align=left"
+            ).classes("full-width")
+
             ui.button(
                 "SNMP",
                 on_click=lambda: nav("/snmp"),
-                icon="settings_applications",
-            ).props("flat color=white align=left").classes("full-width")
+            ).props(
+                "flat color=white align=left"
+            ).classes("full-width")
             ui.button(
                 "Accounts",
                 on_click=lambda: nav("/accounts"),
-                icon="group",
-            ).props("flat color=white align=left").classes("full-width")
-            ##ui.button(
-            #    "Tests",
-            #    on_click=lambda: nav('/tests'),
-            #    icon="group",
-            # ).props("flat color=white align=left").classes("full-width")
+            ).props(
+                "flat color=white align=left"
+            ).classes("full-width")
+
             ui.separator()
             ui.button(
                 "Logout",
                 on_click=lambda: nav("/login"),
-                icon="logout",
             ).props(
                 "flat color=negative align=left"
             ).classes("full-width")
@@ -153,18 +166,19 @@ def ui_main():
             ui.label(version("ns_admin"))
         ui.sub_pages(
             {
-                "/": network_page,
+                "/": home_page,
+                "/overview": home_page,
                 "/networking": network_page,
                 "/networking/firewall": firewall_page,
                 "/networking/{interface_name}": interface_page,
-                #'/ntp' : ntp_page,
+                "/logs": logs_page,
+                "/logs/{log}": log_page,
                 "/snmp": snmp_page,
                 "/snmp/{version}/{user}": snmp_user_page,
                 "/accounts": accounts_page,
                 "/accounts/{user}": accounts_user_page,
                 "/terminal": terminal_page,
-                "/home": home_page,
-                #'/fpga': fpga_page,
+                "/services": services_page,
                 #'/tests': tests_page
             }
         ).classes("w-full")

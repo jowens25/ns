@@ -2,6 +2,9 @@ import subprocess
 from typing import Optional
 
 from dataclasses import asdict, dataclass
+from dbus_next.aio import MessageBus
+from dbus_next import Message
+from pprint import pprint
 
 
 def addGroup(groupName, GID):
@@ -183,3 +186,67 @@ def GetCombinedAccountDict():
 
 def GetUserByName(username):
     return CombineAccountsAndGroups()[username]
+
+
+async def ListUsers(bus: MessageBus):
+    rsp = await bus.call(
+        Message(
+            destination="org.freedesktop.login1",
+            path="/org/freedesktop/login1",
+            interface="org.freedesktop.login1.Manager",
+            member="ListUsers",
+            signature="",
+            body=[],
+        )
+    )
+
+    return rsp.body[0]
+
+
+async def GetUserProperties(bus: MessageBus, user_path: str):
+
+    rsp = await bus.call(
+        Message(
+            destination="org.freedesktop.login1",
+            path=user_path,  # e.g., '/org/freedesktop/NetworkManager/Devices/1'
+            interface="org.freedesktop.DBus.Properties",
+            member="GetAll",
+            signature="s",
+            body=["org.freedesktop.login1.User"],
+        )
+    )
+
+    return rsp.body[0]
+
+
+# async def getUnitProperties(bus: MessageBus, unitPath: str) -> dict:
+#
+#    rsp = await bus.call(
+#        Message(
+#            destination="org.freedesktop.systemd1",
+#            path=unitPath,
+#            interface="org.freedesktop.DBus.Properties",
+#            member="GetAll",
+#            signature="s",
+#            body=["org.freedesktop.systemd1.Unit"],
+#        )
+#    )
+#    unitProps = rsp.body[0]
+#    return unitProps
+
+
+async def GetUsersState(bus: MessageBus):
+
+    for userData in await ListUsers(bus):
+        print(userData)
+        props = await GetUserProperties(bus, userData[2])
+
+        # if props.get("State").value == "active":
+        #    return "Logged in"
+        # else:
+        pprint(props)
+
+        return
+
+        # .get("State").value
+        # settings.get('description', Variant('s', 'description not available')).value
