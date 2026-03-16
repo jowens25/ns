@@ -202,7 +202,7 @@ def ui_main():
 
     ui.run(
         port=8000,
-        reload=True,
+        reload=False,
         storage_secret="your-secret-key",
         title="Novus Configuration Tool",
         favicon=str(ASSETS_DIR / "favicon.png"),

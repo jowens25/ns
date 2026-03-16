@@ -97,7 +97,7 @@ def fetch_logs(daterange, level, id) -> list[str]:
 
 async def logs_page():
     global log
-    ui.label("Logs").classes("text-h5")
+    ui.label("System Logs").classes("text-h5")
 
     with ui.card():
         with ui.row():
