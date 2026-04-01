@@ -307,15 +307,6 @@ async def snmp_status():
 
 async def snmp_page():
 
-    # def props_cb(interface_name, changed_properties, invalidated_properties):
-    #    print("props ch cb")
-    #    #print(changed_properties['ActiveState'])
-    #    status.update()
-    #
-    # print("registered")
-    # snmpDaemon = await getUnitInterface(dbus.AppBus, "snmpd.service")
-    # snmpDaemon.on_properties_changed(props_cb)
-
     await snmp_status()
     await v2table()  # Only show these
     await v3table()
