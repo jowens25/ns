@@ -34,6 +34,31 @@ class Group:
     SecName: Optional[str] = None
 
 
+# trapsess -v 2c -c novus udp:10.1.10.205:162
+# trapsess -v 3 -u JACOBOWENS -l authPriv -a SHA -A JACOBOWENS -x AES -X JACOBOWENS udp:10.1.10.205:162
+
+
+@dataclass
+class V2Trap:
+    Community: Optional[str] = ""
+    DestIpVersion: Optional[str] = ""
+    DestIp: Optional[str] = ""
+    Port: Optional[int] = 162
+
+
+@dataclass
+class V3Trap:
+    User: Optional[str] = ""
+    DestIpVersion: Optional[str] = ""
+    DestIp: Optional[str] = ""
+    Port: Optional[int] = 162
+    EngineId: Optional[str] = ""
+    AuthType: Optional[str] = ""
+    AuthPass: Optional[str] = ""
+    PrivType: Optional[str] = ""
+    PrivPass: Optional[str] = ""
+
+
 @dataclass
 class V3User:
     UserName: Optional[str] = ""
@@ -137,6 +162,22 @@ async def _readV3UsersFromFile() -> list[V3User]:
     return v3s
 
 
+# async def _readV3TrapsFromFile() -> list[V3Trap]:
+#    v3s = []
+#    try:
+#        async with aiofiles.open(await _getPersistentConfPath(), "r") as f:
+#            async for line in f:
+#                line = line.strip("\n")
+#                if line.startswith("trapsess"):
+#
+#                    fields = line.split(" ")
+#                    if fields[2] == "3":
+#                        v3 = V3Trap()
+#                        if len(fields) == 18:
+#                        # trapsess -v 3 -e 0x33 -u myuser -l authPriv -a MD5 -A jacobowens -x AES -X jacobowens udp:10.1.10.96:162
+#                        #   0
+
+
 async def _writeV2User(user: V2User):
     """add v2 user to file"""
     print("_writeV2User")
@@ -238,6 +279,9 @@ async def _writeV3UserCreateDirective(user: V3User):
     else:
         content.insert(groupIndex, newGroupLine)
 
+    print("new user line: ", newUserLine)
+    print("new group line: ", newGroupLine)
+
     async with aiofiles.open(snmp_config_file, "w") as f:
         await f.writelines(content)
 
@@ -280,6 +324,7 @@ async def _deleteV3UserCreateDirective(user: V3User):
 
     for i, line in enumerate(content):
         if line.startswith("createUser") and all(p in line for p in _props):
+
             content.remove(line)
 
     async with aiofiles.open(snmp_config_file, "w") as f:

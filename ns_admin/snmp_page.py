@@ -50,7 +50,7 @@ async def create_v3_user_dialog():
                     ui.input(label="Username", validation=usernameValidation)
                     .classes("w-full")
                     .bind_value(v3, "UserName")
-                )
+                ).props("debounce=1000")
                 permissions = (
                     ui.select(
                         label="Permissions", options=["roprivgroup", "rwprivgroup"]
@@ -67,7 +67,7 @@ async def create_v3_user_dialog():
                     ui.input(label="Auth Passphrase", validation=passphraseValidation)
                     .classes("w-full")
                     .bind_value(v3, "AuthPassphrase")
-                )
+                ).props("debounce=1000")
                 priv_type = (
                     ui.select(label="Priv Alg", options=["AES", "DES"])
                     .classes("w-full")
@@ -77,7 +77,7 @@ async def create_v3_user_dialog():
                     ui.input(label="Auth Passphrase", validation=passphraseValidation)
                     .classes("w-full")
                     .bind_value(v3, "PrivPassphrase")
-                )
+                ).props("debounce=1000")
                 with ui.row().classes("items-center justify-between gap-4 w-full"):
 
                     async def on_save_cb():

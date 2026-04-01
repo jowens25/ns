@@ -49,7 +49,9 @@ async def accounts_page():
                 )
                 ui.button("cancel").props("flat color=accent dense align=center")
 
-    with ui.expansion("Groups", icon="groups").classes("w-full"):
+    with ui.expansion("Groups", icon="groups").classes("w-full") as expansion:
+        with expansion.add_slot("body"):
+            ui.button("test")
         groupsTable = (
             ui.table(
                 title="Groups",

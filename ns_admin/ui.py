@@ -34,7 +34,7 @@ production = False
 sock_task = None
 
 
-def ui_main():
+def ui_main(dev):
 
     freeze_support()
     print("MAIN")
@@ -202,7 +202,7 @@ def ui_main():
 
     ui.run(
         port=8000,
-        reload=False,
+        reload=(dev == "debug"),
         storage_secret="your-secret-key",
         title="Novus Configuration Tool",
         favicon=str(ASSETS_DIR / "favicon.png"),

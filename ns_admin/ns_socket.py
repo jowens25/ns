@@ -4,13 +4,33 @@ from nicegui import Event, app
 
 from dbus_next.service import ServiceInterface, method, signal
 from dbus_next.aio import MessageBus
-
+import socket
 
 socket_path = "/var/lib/ns/ns-serial-mux.sock"
 
 socket_receive = Event()
 
 socket_open = False
+
+
+def set_status_string(status, num):
+    return f"$NVS{int(num)}={int(status)}"
+
+
+async def read_write_socket(cmd: str) -> str:
+    reader, writer = await asyncio.open_unix_connection(socket_path)
+    cmd += "\r\n"
+    print("->", cmd.strip("\r\n"))
+
+    writer.write(cmd.encode())
+    await writer.drain()
+
+    line = await reader.readline()
+
+    writer.close()
+    await writer.wait_closed()
+
+    return line
 
 
 async def socket_stream():
