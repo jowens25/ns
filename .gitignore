@@ -1,4 +1,6 @@
 .venv
 
 build
-#dist
+dist
+debian/ns-admin
+debian/.debhelper

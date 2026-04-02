@@ -2,10 +2,10 @@
 
 
 a = Analysis(
-    ['ns_admin/main.py'],
+    ['src/ns_admin/main.py'],
     pathex=[],
     binaries=[],
-    datas=[('/home/jowens/Projects/ns-admin/.venv/lib/python3.12/site-packages/nicegui', 'nicegui'), ('ns_admin/assets', 'ns_admin/assets'), ('ns_admin/introspection', 'ns_admin/introspection')],
+    datas=[('/home/jacob/Projects/ns-admin/.venv/lib/python3.12/site-packages/nicegui', 'nicegui'), ('src/ns_admin/assets', 'ns_admin/assets'), ('src/ns_admin/introspection', 'ns_admin/introspection')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

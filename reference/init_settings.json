@@ -1,0 +1,24 @@
+{'Udi': <dbus_next.signature.Variant ('s', /sys/devices/pci0000: 00/0000: 00: 1c.0/0000: 01: 00.0/net/wlp1s0)>, 
+'Path': <dbus_next.signature.Variant ('s', pci-0000: 01: 00.0)>, 
+'Interface': <dbus_next.signature.Variant ('s', wlp1s0)>, 'IpInterface': <dbus_next.signature.Variant ('s', wlp1s0)>, 'Driver': <dbus_next.signature.Variant ('s', ath10k_pci)>, 'DriverVersion': <dbus_next.signature.Variant ('s',
+    6.8.0-94-generic)>, 'FirmwareVersion': <dbus_next.signature.Variant ('s', WLAN.RM.4.4.1-00309-)>, 'Capabilities': <dbus_next.signature.Variant ('u',
+    1)>, 'Ip4Address': <dbus_next.signature.Variant ('u',
+    0)>, 'State': <dbus_next.signature.Variant ('u',
+    100)>, 'StateReason': <dbus_next.signature.Variant ('(uu)',
+    [
+        100,
+        0
+    ])>, 'ActiveConnection': <dbus_next.signature.Variant ('o', /org/freedesktop/NetworkManager/ActiveConnection/7)>, 'Ip4Config': <dbus_next.signature.Variant ('o', /org/freedesktop/NetworkManager/IP4Config/6)>, 'Dhcp4Config': <dbus_next.signature.Variant ('o', /org/freedesktop/NetworkManager/DHCP4Config/2)>, 'Ip6Config': <dbus_next.signature.Variant ('o', /org/freedesktop/NetworkManager/IP6Config/6)>, 'Dhcp6Config': <dbus_next.signature.Variant ('o', /)>, 'Managed': <dbus_next.signature.Variant ('b', True)>, 'Autoconnect': <dbus_next.signature.Variant ('b', True)>, 'FirmwareMissing': <dbus_next.signature.Variant ('b', False)>, 'NmPluginMissing': <dbus_next.signature.Variant ('b', False)>, 'DeviceType': <dbus_next.signature.Variant ('u',
+    2)>, 'AvailableConnections': <dbus_next.signature.Variant ('ao',
+    ['/org/freedesktop/NetworkManager/Settings/14'
+    ])>, 'PhysicalPortId': <dbus_next.signature.Variant ('s', )>, 'Mtu': <dbus_next.signature.Variant ('u',
+    1500)>, 'Metered': <dbus_next.signature.Variant ('u',
+    4)>, 'LldpNeighbors': <dbus_next.signature.Variant ('aa{sv
+    }',
+    [])>, 'Real': <dbus_next.signature.Variant ('b', True)>, 'Ip4Connectivity': <dbus_next.signature.Variant ('u',
+    4)>, 'Ip6Connectivity': <dbus_next.signature.Variant ('u',
+    3)>, 'InterfaceFlags': <dbus_next.signature.Variant ('u',
+    65539)>, 'HwAddress': <dbus_next.signature.Variant ('s',
+    70:C9:4E: 62:C3: 37)>, 'Ports': <dbus_next.signature.Variant ('ao',
+    [])>
+}

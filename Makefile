@@ -12,9 +12,9 @@ DESTDIR ?=
 
 build:
 	$(NICEGUI_PACK) --onedir --name ns-admin \
-		--add-data "ns_admin/assets:ns_admin/assets" \
-		--add-data "ns_admin/introspection:ns_admin/introspection" \
-		ns_admin/main.py
+		--add-data "src/ns_admin/assets:ns_admin/assets" \
+		--add-data "src/ns_admin/introspection:ns_admin/introspection" \
+		src/ns_admin/main.py
 
 .PHONY: build
 
