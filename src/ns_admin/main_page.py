@@ -13,7 +13,7 @@ from nicegui import ui, app
 from multiprocessing import freeze_support
 
 from ns_admin.logs_page import logs_page, log_page
-from ns_admin.accounts import accounts_page, accounts_user_page
+from ns_admin.ui.accounts import accounts_page, accounts_user_page
 from ns_admin.ns_socket import socket_stream
 from ns_admin.networking_page import network_page, interface_page
 from ns_admin.terminal import terminal_page

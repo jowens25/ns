@@ -1,6 +1,6 @@
 import sys
 
-from ns_admin.ui import ui_main
+from ns_admin.main_page import ui_main
 
 from ns_admin.dbus import dbus_main
 

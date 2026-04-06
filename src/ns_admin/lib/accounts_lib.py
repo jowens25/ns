@@ -94,15 +94,11 @@ def ReadPasswdFile() -> dict[SystemAccount]:
 
             else:
                 link = True
-                # print(f"name: >{name}")
-                # print(f"shell: >{shell}")
 
-            # a = SystemAccount(name, pwd, UID, GID, userinfo, homedir, shell, link)
-            # accounts.append(a)
             accounts[name] = SystemAccount(
                 name, pwd, UID, GID, userinfo, homedir, shell, link
             )
-    pass  # endfor
+    pass 
 
     return accounts
 
@@ -156,14 +152,24 @@ def CombineAccountsAndGroups():
     accounts = ReadPasswdFile()
 
     account: SystemAccount
+    name: str
     for name, account in accounts.items():
         accountGroups = []
         for g in groups:
+            if g.GroupName == "root":
+                continue
             if name in g.AccountString:
+            
                 accountGroups.append(g.GroupName)
 
-        accountGroups.append(name)
         account.Groups = ", ".join(accountGroups)
+
+        if "viewer" in account.Groups:
+            account.Groups = "viewer"
+        elif "admin" in account.Groups:
+            account.Groups = "admin"
+
+    accounts.pop("root")
 
     return accounts
 
