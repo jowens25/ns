@@ -5,9 +5,9 @@ from ns_admin.snmp import *
 
 
 class SnmpInterface(ServiceInterface):
-    def __init__(self, name):
+    def __init__(self, name, bus):
         super().__init__(name)
-        self.bus = None
+        self.bus = bus
 
     @method()
     async def Reset(self):

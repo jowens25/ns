@@ -6,47 +6,10 @@ from dbus_next.aio import MessageBus
 from dbus_next import Message
 from pprint import pprint
 
+from ns_admin.utils import runCmd
 
-def addGroup(groupName, GID):
-    try:
-        subprocess.run(
-            ["sudo", "groupadd", groupName, "-g", GID],
-            check=True,
-            capture_output=True,
-            text=True,
-        )
-        return "added group"
-    except subprocess.CalledProcessError as e:
-        return e.stderr
-
-
-def removeGroup(groupName):
-    try:
-        subprocess.run(
-            ["sudo", "groupdel", groupName], check=True, capture_output=True, text=True
-        )
-
-        return "removed group"
-    except subprocess.CalledProcessError as e:
-        return e.stderr
-
-
-def addUserToGroup(username, groupname):
-    return subprocess.run(
-        ["gpasswd", "-a", username, groupname],
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-
-
-def removeUserFromGroup(username, groupname):
-    return subprocess.run(
-        ["gpasswd", "-d", username, groupname],
-        check=True,
-        capture_output=True,
-        text=True,
-    )
+ADMIN_GROUP = "nsadmin"
+USER_GROUP = "nsuser"
 
 
 @dataclass
@@ -67,15 +30,15 @@ class SystemGroup:
     GroupName: Optional[str] = None
     GID: Optional[str] = None
     NumberOfUsers: Optional[str] = None
-    Accounts: Optional[list[dict]] = None
-    AccountString: Optional[str] = None
+    Accounts: Optional[list[str]] = None
 
 
-def ReadPasswdFile() -> dict[SystemAccount]:
-    accounts = {}
+def _getAccounts() -> list[SystemAccount]:
+    accounts = []
     with open("/etc/passwd", "r") as f:
-        content = f.readlines()
-    for i, line in enumerate(content):
+        passwdFile = f.readlines()
+
+    for i, line in enumerate(passwdFile):
         if ":" in line:
             fields = line.split(":")
             name = fields[0]
@@ -95,103 +58,68 @@ def ReadPasswdFile() -> dict[SystemAccount]:
             else:
                 link = True
 
-            accounts[name] = SystemAccount(
-                name, pwd, UID, GID, userinfo, homedir, shell, link
+            accounts.append(
+                SystemAccount(name, pwd, UID, GID, userinfo, homedir, shell, link)
             )
-    pass 
+    pass
 
     return accounts
 
 
-def ReadGroupFile() -> list[SystemGroup]:
+def _getGroups() -> list[SystemGroup]:
     groups = []
     with open("/etc/group") as f:
         content = f.readlines()
 
     for i, line in enumerate(content):
         if ":" in line:
-            fields = line.split(":")
-            name = fields[0]
-            GID = fields[2]
+            if line.startswith(USER_GROUP) or line.startswith(ADMIN_GROUP):
+                fields = line.split(":")
+                name = fields[0]
+                GID = fields[2]
 
-            accountsString = fields[3].strip("\n")
-            # num = len(accounts)
-            g = SystemGroup(name, GID, 0, [], accountsString)
+                accounts = (fields[3].strip("\n")).split(",")
+                num = len(accounts)
+                g = SystemGroup(name, GID, num, accounts)
             groups.append(g)
     pass  # endfor
 
     return groups
 
 
-def CombineGroupsAndAccounts():
+def GetCombined():
 
-    groups = ReadGroupFile()
+    with open("/etc/group") as f:
+        groupfile = f.readlines()
 
-    accounts = ReadPasswdFile()
+    with open("/etc/passwd") as f:
+        passwdfile = f.readlines()
 
-    for g in groups:
-        for oa in g.AccountString.split(","):
-            a = accounts.get(oa)
-            if a:
-                g.NumberOfUsers += 1
-                g.Accounts.append({"name": a.UserName, "link": a.Link})
+    for line in groupfile:
+        fields = line.split(":")
+        if line.startswith(USER_GROUP):
+            users = (fields[3].strip("\n")).split(",")
 
-        for n, a in accounts.items():
-            # for accountName, accountObj in accounts.items():
-            if g.GID == a.GID:
-                g.NumberOfUsers += 1
-                g.Accounts.append({"name": a.UserName, "link": a.Link})
+            for user in users:
+                print(user)
 
-    return groups
+        if line.startswith(ADMIN_GROUP):
+            admins = (fields[3].strip("\n")).split(",")
 
-
-def CombineAccountsAndGroups():
-
-    groups = ReadGroupFile()
-
-    accounts = ReadPasswdFile()
-
-    account: SystemAccount
-    name: str
-    for name, account in accounts.items():
-        accountGroups = []
-        for g in groups:
-            if g.GroupName == "root":
-                continue
-            if name in g.AccountString:
-            
-                accountGroups.append(g.GroupName)
-
-        account.Groups = ", ".join(accountGroups)
-
-        if "viewer" in account.Groups:
-            account.Groups = "viewer"
-        elif "admin" in account.Groups:
-            account.Groups = "admin"
-
-    accounts.pop("root")
-
-    return accounts
-
-
-def GetCombinedGroupDict():
-    return [asdict(i) for i in CombineGroupsAndAccounts()]
+            for admin in admins:
+                print(admin)
 
 
 def GetGroupDict():
     return [asdict(i) for i in ReadGroupFile()]
 
 
-def GetAccountsDict():
-    return [asdict(i) for n, i in ReadPasswdFile().items() if i.Link]
-
-
-def GetCombinedAccountDict():
-    return [asdict(i) for n, i in CombineAccountsAndGroups().items() if i.Link]
-
-
-def GetUserByName(username):
-    return CombineAccountsAndGroups()[username]
+# def GetCombinedAccountDict():
+#    return [asdict(i) for n, i in CombineAccountsAndGroups().items() if i.Link]
+#
+#
+# def GetUserByName(username):
+#    return CombineAccountsAndGroups()[username]
 
 
 async def ListUsers(bus: MessageBus):
@@ -256,3 +184,58 @@ async def GetUsersState(bus: MessageBus):
 
         # .get("State").value
         # settings.get('description', Variant('s', 'description not available')).value
+
+
+async def UserDel(username: str):
+    await runCmd(["userdel", username])
+
+
+async def UserAdd(group: str, username: str):
+    await runCmd(["useradd", "-g", group, "username", username])
+
+
+async def _addUser(username: str):
+    await runCmd(
+        ["useradd", "-M", "-N", "-g", "user", "-d", f"/home/{username}", username]
+    )
+
+
+async def _addAdmin(username: str):
+    await runCmd(
+        [
+            "useradd",
+            "-M",
+            "-N",
+            "-g",
+            "admin",
+            "-G",
+            "user,admin",
+            "-d",
+            f"/home/{username}",
+            username,
+        ]
+    )
+
+
+async def _setUsername(currentUsername: str, newUsername: str):
+    await runCmd(["usermod", "-l", newUsername, currentUsername])
+
+
+async def _setGroupUser(username: str):
+    await runCmd(["usermod", "-g", "user", "-G", "user", username])
+
+
+async def _setGroupAdmin(username: str):
+    await runCmd(["usermod", "-g", "admin", "-G", "user,admin", username])
+
+
+async def _isAdmin(username: str):
+    accounts = _getAccounts()
+
+    for a in accounts:
+        pprint(a)
+        input()
+
+
+async def _deleteUser(username: str):
+    pass
