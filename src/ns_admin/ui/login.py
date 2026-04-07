@@ -1,7 +1,7 @@
 import datetime
 from nicegui import ui, app
 
-from ns_admin.theme import init_colors
+from ns_admin.ui.theme import init_colors
 import time
 
 import pam

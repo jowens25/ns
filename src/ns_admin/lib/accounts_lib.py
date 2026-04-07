@@ -33,160 +33,51 @@ class SystemGroup:
     Accounts: Optional[list[str]] = None
 
 
-def _getAccounts() -> list[SystemAccount]:
-    accounts = []
-    with open("/etc/passwd", "r") as f:
-        passwdFile = f.readlines()
-
-    for i, line in enumerate(passwdFile):
-        if ":" in line:
-            fields = line.split(":")
-            name = fields[0]
-            pwd = fields[1]
-            UID = fields[2]
-            GID = fields[3]
-            userinfo = fields[4]
-            homedir = fields[5]
-            shell = fields[6]
-            if (
-                (int(UID) < 1000 and int(UID) != 0)
-                or "nologin" in shell
-                or "/bin/false" in shell
-            ):
-                link = False
-
-            else:
-                link = True
-
-            accounts.append(
-                SystemAccount(name, pwd, UID, GID, userinfo, homedir, shell, link)
-            )
-    pass
-
-    return accounts
-
-
-def _getGroups() -> list[SystemGroup]:
-    groups = []
-    with open("/etc/group") as f:
-        content = f.readlines()
-
-    for i, line in enumerate(content):
-        if ":" in line:
-            if line.startswith(USER_GROUP) or line.startswith(ADMIN_GROUP):
-                fields = line.split(":")
-                name = fields[0]
-                GID = fields[2]
-
-                accounts = (fields[3].strip("\n")).split(",")
-                num = len(accounts)
-                g = SystemGroup(name, GID, num, accounts)
-            groups.append(g)
-    pass  # endfor
-
-    return groups
-
-
-def GetCombined():
+def _getAdmins():
 
     with open("/etc/group") as f:
         groupfile = f.readlines()
 
-    with open("/etc/passwd") as f:
-        passwdfile = f.readlines()
+    for line in groupfile:
+        if line.startswith(ADMIN_GROUP):
+            fields = line.split(":")
+            return (fields[3].strip("\n")).split(",")
+
+
+def _getUsers():
+
+    with open("/etc/group") as f:
+        groupfile = f.readlines()
 
     for line in groupfile:
-        fields = line.split(":")
         if line.startswith(USER_GROUP):
-            users = (fields[3].strip("\n")).split(",")
-
-            for user in users:
-                print(user)
-
-        if line.startswith(ADMIN_GROUP):
-            admins = (fields[3].strip("\n")).split(",")
-
-            for admin in admins:
-                print(admin)
+            fields = line.split(":")
+            return (fields[3].strip("\n")).split(",")
 
 
-def GetGroupDict():
-    return [asdict(i) for i in ReadGroupFile()]
+async def _getUsersAndAdmins() -> list[dict]:
+
+    admins = _getAdmins()
+    users = _getUsers()
+
+    allUsers = []
+
+    for a in admins:
+        if a in users:
+            users.remove(a)
+
+    for u in users:
+
+        allUsers.append({"Group": "User", "Username": u})
+
+    for a in admins:
+
+        allUsers.append({"Group": "Admin", "Username": a})
+
+    return allUsers
 
 
-# def GetCombinedAccountDict():
-#    return [asdict(i) for n, i in CombineAccountsAndGroups().items() if i.Link]
-#
-#
-# def GetUserByName(username):
-#    return CombineAccountsAndGroups()[username]
-
-
-async def ListUsers(bus: MessageBus):
-    rsp = await bus.call(
-        Message(
-            destination="org.freedesktop.login1",
-            path="/org/freedesktop/login1",
-            interface="org.freedesktop.login1.Manager",
-            member="ListUsers",
-            signature="",
-            body=[],
-        )
-    )
-
-    return rsp.body[0]
-
-
-async def GetUserProperties(bus: MessageBus, user_path: str):
-
-    rsp = await bus.call(
-        Message(
-            destination="org.freedesktop.login1",
-            path=user_path,  # e.g., '/org/freedesktop/NetworkManager/Devices/1'
-            interface="org.freedesktop.DBus.Properties",
-            member="GetAll",
-            signature="s",
-            body=["org.freedesktop.login1.User"],
-        )
-    )
-
-    return rsp.body[0]
-
-
-# async def getUnitProperties(bus: MessageBus, unitPath: str) -> dict:
-#
-#    rsp = await bus.call(
-#        Message(
-#            destination="org.freedesktop.systemd1",
-#            path=unitPath,
-#            interface="org.freedesktop.DBus.Properties",
-#            member="GetAll",
-#            signature="s",
-#            body=["org.freedesktop.systemd1.Unit"],
-#        )
-#    )
-#    unitProps = rsp.body[0]
-#    return unitProps
-
-
-async def GetUsersState(bus: MessageBus):
-
-    for userData in await ListUsers(bus):
-        print(userData)
-        props = await GetUserProperties(bus, userData[2])
-
-        # if props.get("State").value == "active":
-        #    return "Logged in"
-        # else:
-        pprint(props)
-
-        return
-
-        # .get("State").value
-        # settings.get('description', Variant('s', 'description not available')).value
-
-
-async def UserDel(username: str):
+async def _userDel(username: str):
     await runCmd(["userdel", username])
 
 
@@ -229,13 +120,33 @@ async def _setGroupAdmin(username: str):
     await runCmd(["usermod", "-g", "admin", "-G", "user,admin", username])
 
 
-async def _isAdmin(username: str):
-    accounts = _getAccounts()
+async def _isAdmin(username: str) -> bool:
+    for a in _getAdmins():
+        if a == username:
+            return True
+    return False
 
-    for a in accounts:
-        pprint(a)
-        input()
+
+async def _deleteUser(username: str) -> str:
+
+    admins = _getAdmins()
+
+    users = _getUsers()
+
+    if username in admins:
+        if len(admins) > 1:
+            return _userDel(username)
+        else:
+            return "cannot delete last admin"
+
+    elif username in users:
+        return _userDel(username)
+
+    else:
+        return "delete failed"
 
 
-async def _deleteUser(username: str):
-    pass
+async def getAccountsInterface(bus: MessageBus):
+    introspection = await bus.introspect("com.novus.ns", "/com/novus/ns")
+    obj = bus.get_proxy_object("com.novus.ns", "/com/novus/ns", introspection)
+    return obj.get_interface("com.novus.ns.accounts")

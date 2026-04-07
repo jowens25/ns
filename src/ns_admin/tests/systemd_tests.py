@@ -1,21 +1,18 @@
-from ns_admin.nm import *
-from ns_admin.networking import *
+from ns_admin.lib.systemd1 import systemd_start, systemd_restart, systemd_stop, isActive
 import asyncio
 from dbus_next.signature import Variant
 from dbus_next.aio.proxy_object import ProxyInterface
 from dbus_next.aio import MessageBus
 
 from dbus_next import BusType
-from pprint import pprint
+
 
 async def main():
     bus = await MessageBus(bus_type=BusType.SYSTEM).connect()
 
-    #print(await GetDevices(bus))
+    print(await systemd_stop(bus, "snmpd.service"))
 
-    dev_path = await GetDeviceByIpIface(bus, "wlp1s0")
-
-    pprint(await (GetAllDeviceProperties(bus, dev_path)))
+    print(await isActive(bus, "snmpd.service"))
 
 
 asyncio.run(main())

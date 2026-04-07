@@ -2,7 +2,7 @@
 from importlib.metadata import version, PackageNotFoundError
 from zoneinfo import ZoneInfo
 import asyncio
-from ns_admin.dbus import setup_dbus, cleanup_dbus, AppBus
+from ns_admin.api.main import setup_dbus, cleanup_dbus, AppBus
 from dbus_next.aio import MessageBus
 from dbus_next import BusType
 
@@ -12,22 +12,22 @@ import sys
 from nicegui import ui, app
 from multiprocessing import freeze_support
 
-from ns_admin.logs_page import logs_page, log_page
-from ns_admin.ui.accounts import accounts_page, accounts_user_page
-from ns_admin.ns_socket import socket_stream
-from ns_admin.networking_page import network_page, interface_page
-from ns_admin.terminal import terminal_page
-from ns_admin.theme import init_colors
-from ns_admin.login import login_page
-from ns_admin.home_page import home_page
-from ns_admin.snmp_page import snmp_page, snmp_user_page
-from ns_admin.services_page import services_page
+from ns_admin.ui.logs_page import logs_page, log_page
+from ns_admin.ui.accounts_page import accounts_page, accounts_user_page
+from ns_admin.lib.ns_socket import socket_stream
+from ns_admin.ui.networking_page import network_page, interface_page
+from ns_admin.ui.terminal import terminal_page
+from ns_admin.ui.theme import init_colors
+from ns_admin.ui.login import login_page
+from ns_admin.ui.home_page import home_page
+from ns_admin.ui.snmp_page import snmp_page, snmp_user_page
+from ns_admin.ui.services_page import services_page
 
 # from ns2.ntp import ntp_page
-from ns_admin.fpga_page import fpga_page
+from ns_admin.ui.fpga_page import fpga_page
 
 # from ns2.tests_page import tests_page
-from ns_admin.firewalld_page import firewall_page
+from ns_admin.ui.firewalld_page import firewall_page
 from ns_admin.utils import ASSETS_DIR
 
 production = False

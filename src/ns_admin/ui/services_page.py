@@ -2,8 +2,8 @@ from dataclasses import asdict, dataclass
 from typing import Optional
 from nicegui import ui, app
 
-from ns_admin.systemd1 import *
-from ns_admin.dbus import get_dbus
+from ns_admin.lib.systemd1 import *
+from ns_admin.api.main import get_dbus
 
 
 @dataclass

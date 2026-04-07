@@ -5,10 +5,15 @@ After=network.target
 [Service]
 Type=simple
 ExecStart=/usr/bin/ns-admin ui
-Restart=always         # Automatically restart on exit
-RestartSec=5s          # Wait 5 seconds before restarting
-StartLimitIntervalSec=30 # Limit restarts within this window (e.g., 30s)
-StartLimitBurst=2      # Allow 2 restarts within that window before stopping
+
+Restart=always
+RestartSec=5s      
+StartLimitIntervalSec=30
+StartLimitBurst=2  
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=ns-admin
 
 [Install]
 WantedBy=multi-user.target

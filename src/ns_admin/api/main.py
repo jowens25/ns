@@ -5,8 +5,9 @@ import asyncio
 from dbus_next.aio import MessageBus
 from dbus_next.constants import BusType
 
-from ns_admin.snmp_interface import SnmpInterface
-from ns_admin.pam_interface import PamInterface
+from ns_admin.api.snmp_interface import SnmpInterface
+from ns_admin.api.pam_interface import PamInterface
+from ns_admin.api.accounts_interface import AccountsInterface
 
 
 async def dbus_service():
@@ -18,6 +19,9 @@ async def dbus_service():
 
     pamInterface = PamInterface("com.novus.ns.pam")
     bus.export("/com/novus/ns", pamInterface)
+
+    accountsInterface = AccountsInterface("com.novus.ns.accounts", bus)
+    bus.export("/com/novus/ns", accountsInterface)
 
     # userInterface = Superuser('com.novus.ns.super')
     # bus.export('/com/novus/ns', userInterface)

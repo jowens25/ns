@@ -4,8 +4,8 @@ from pprint import pprint
 from typing import List, Optional
 from nicegui import ui, app, binding
 from ns_admin.utils import runCmd
-from ns_admin.theme import init_colors
-from ns_admin.networking import GetInterfaces
+from ns_admin.ui.theme import init_colors
+from ns_admin.lib.networking import GetInterfaces
 
 from ns_admin.common import formatListToString
 
@@ -14,7 +14,7 @@ from dbus_next.errors import DBusError
 from dbus_next.aio.proxy_object import ProxyInterface
 from dbus_next.aio import MessageBus
 from dbus_next import Message
-import ns_admin.dbus
+import ns_admin.api.main
 from ns_admin.utils import INTROSPECTION_DIR
 
 

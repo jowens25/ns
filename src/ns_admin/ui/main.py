@@ -1,8 +1,8 @@
 import sys
 
-from ns_admin.main_page import ui_main
+from ns_admin.ui.main_page import ui_main
 
-from ns_admin.dbus import dbus_main
+from ns_admin.api.main import dbus_main
 
 if len(sys.argv) > 1:
     if sys.argv[1] == "ui":

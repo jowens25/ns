@@ -1,7 +1,7 @@
 from dataclasses import asdict
 from dbus_next.service import ServiceInterface, method
 
-from ns_admin.snmp import *
+from ns_admin.lib.snmp import *
 
 
 class SnmpInterface(ServiceInterface):

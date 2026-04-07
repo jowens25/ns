@@ -5,7 +5,7 @@ from ns_admin.utils import runCmd
 from typing import Optional
 import aiofiles
 
-from ns_admin.systemd1 import *
+from ns_admin.lib.systemd1 import *
 
 snmp_config_file = "/etc/snmp/snmpd.conf.d/novus-snmpd.conf"
 default_persistent_dir_path = "/var/lib/snmp"

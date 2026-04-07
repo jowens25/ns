@@ -1,13 +1,13 @@
-from ns_admin.systemd1 import *
+from ns_admin.lib.systemd1 import *
 
 from nicegui import ui, app
 from dataclasses import dataclass, asdict
 
-from ns_admin.dbus import get_dbus
+from ns_admin.api.main import get_dbus
 
 from typing import Optional
 
-from ns_admin.snmp import (
+from ns_admin.lib.snmp import (
     snmp_call,
     V3User,
     V2User,
@@ -15,7 +15,7 @@ from ns_admin.snmp import (
     default_persistent_dir_path,
 )
 
-from ns_admin.snmp import *
+from ns_admin.lib.snmp import *
 
 sourceValidation = {
     "Please enter a valid ip address, network or default": lambda value: len(value) > 0

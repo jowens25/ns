@@ -1,12 +1,12 @@
 from nicegui import ui, app, binding
-from ns_admin.networking import *
-from ns_admin.firewalld import *
+from ns_admin.lib.networking import *
+from ns_admin.lib.firewalld import *
 from dbus_next.signature import Variant
 from dbus_next.errors import DBusError
 from dbus_next.aio.proxy_object import ProxyInterface
-from ns_admin.dbus import get_dbus
+from ns_admin.api.main import get_dbus
 
-from ns_admin.firewalld_page import firewall_status
+from ns_admin.ui.firewalld_page import firewall_status
 
 
 async def network_page():

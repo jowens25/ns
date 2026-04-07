@@ -1,13 +1,13 @@
 from nicegui import ui, app
 
-from ns_admin.networking import (
+from ns_admin.lib.networking import (
     get_device_statistics,
     getDevices,
     get_device_properties,
     set_refresh_rate,
 )
-from ns_admin.dbus import get_dbus
-from ns_admin.ns_socket import *
+from ns_admin.api.main import get_dbus
+from ns_admin.lib.ns_socket import *
 
 
 # import plotly.graph_objects as go
