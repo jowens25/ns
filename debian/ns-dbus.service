@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/ns-admin dbus
+ExecStart=/usr/bin/ns dbus
 
 Restart=always
 RestartSec=5s
@@ -14,7 +14,7 @@ StartLimitBurst=2
 
 StandardOutput=journal
 StandardError=journal
-SyslogIdentifier=ns-admin
+SyslogIdentifier=ns-dbus
 
 
 [Install]

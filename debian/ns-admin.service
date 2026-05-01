@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/ns-admin ui
+ExecStart=/usr/bin/ns ui
 
 Restart=always
 RestartSec=5s      
