@@ -1,4 +1,4 @@
-from nicegui import ui, app
+from nicegui import ui
 
 
 def init_colors():

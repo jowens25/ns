@@ -1,5 +1,5 @@
 from nicegui import ui, app
-
+from ns2.lib.authorization import check_authorization
 from ns2.lib.networking import (
     get_device_statistics,
     getDevices,
@@ -7,7 +7,7 @@ from ns2.lib.networking import (
     set_refresh_rate,
 )
 from ns2.api.dbus import get_dbus
-from ns2.lib.ns_socket import *
+from ns2.api.pam_interface import GetPamInterface
 
 # import plotly.graph_objects as go
 # import plotly.express as px
@@ -25,6 +25,20 @@ tx_mbs = []
 
 
 async def home_page():
+
+    bus = await get_dbus()
+    # pam = await GetPamInterface(bus)
+
+    log = ui.log()
+
+    async def test_cb():
+        # result = await pam.call_get_stuff()
+
+        result = await check_authorization("com.novus.ns.snmp.reset")
+
+        log.push(result)
+
+    ui.button("TEST RULES????", on_click=test_cb)
 
     # with ui.card():
     #
@@ -77,16 +91,16 @@ async def home_page():
     #
     # timer = ui.timer(1, callback=update_plots)
 
-    with ui.card():
-        with ui.row():
-            # if socket_open:
-            term = ui.xterm({"convertEol": True})
-            socket_receive.subscribe(lambda _data: term.write(_data))
+    # with ui.card():
+    #    with ui.row():
+    #        # if socket_open:
+    #        term = ui.xterm({"convertEol": True})
+    #        socket_receive.subscribe(lambda _data: term.write(_data))
 
-            # if not socket_open:
-            #    asyncio.create_task(socket_stream())
-        # else:
-        #    ui.label("socket not available")
+    # if not socket_open:
+    #    asyncio.create_task(socket_stream())
+    # else:
+    #    ui.label("socket not available")
 
 
 #

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC
+ "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<policyconfig>
+
+  <vendor>Novus Power</vendor>
+  <vendor_url>https://novuspower.com</vendor_url>
+
+  <!-- SNMP Management Actions -->
+  <action id="com.novus.ns.snmp.reset">
+    <description>Reset SNMP configuration</description>
+    <message>Authentication is required to reset SNMP configuration</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
+  <action id="com.novus.ns.snmp.create-v3-user">
+    <description>Create SNMP v3 user</description>
+    <message>Authentication is required to create SNMP v3 user</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
+  <action id="com.novus.ns.snmp.modify-v3-user">
+    <description>Modify SNMP v3 user</description>
+    <message>Authentication is required to modify SNMP v3 user</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
+  <action id="com.novus.ns.snmp.remove-v3-user">
+    <description>Remove SNMP v3 user</description>
+    <message>Authentication is required to remove SNMP v3 user</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
+  <action id="com.novus.ns.snmp.create-v2-user">
+    <description>Create SNMP v2 user</description>
+    <message>Authentication is required to create SNMP v2 user</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
+  <action id="com.novus.ns.snmp.modify-v2-user">
+    <description>Modify SNMP v2 user</description>
+    <message>Authentication is required to modify SNMP v2 user</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
+  <action id="com.novus.ns.snmp.remove-v2-user">
+    <description>Remove SNMP v2 user</description>
+    <message>Authentication is required to remove SNMP v2 user</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
+  <!-- Account Management Actions -->
+  <action id="com.novus.ns.accounts.delete-user">
+    <description>Delete system user</description>
+    <message>Authentication is required to delete system user</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
+  <!-- PAM Authentication Actions -->
+  <action id="com.novus.ns.pam.authenticate">
+    <description>Authenticate user</description>
+    <message>Authentication is required</message>
+    <defaults>
+      <allow_any>yes</allow_any>
+      <allow_inactive>yes</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+  </action>
+
+</policyconfig>

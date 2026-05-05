@@ -1,7 +1,7 @@
-from ns2.lib.systemd1 import *
+from ns2.lib.systemd1 import isActive, systemd_stop, systemd_start, systemd_restart
 
-from nicegui import ui, app
-from dataclasses import dataclass, asdict
+from nicegui import ui
+from dataclasses import asdict
 
 from ns2.api.dbus import get_dbus
 
@@ -13,6 +13,8 @@ from ns2.lib.snmp import (
     snmp_config_file,
     default_persistent_dir_path,
 )
+
+from ns2.api.snmp_interface import GetSnmpInterface
 
 from ns2.lib.snmp import *
 
@@ -225,7 +227,7 @@ async def v2table():
     ).classes("w-full")
 
     table.add_slot(
-        f"body-cell-Community",
+        "body-cell-Community",
         f"""
             <q-td :props="props">
                 <a :href="'/snmp/v2/'+ props.row.Community" class="text-accent cursor-pointer hover:underline"> {{{{ props.value }}}} </a>
@@ -274,7 +276,7 @@ async def snmp_status():
 
         async def snmp_reset_cb(e):
             with ui.dialog() as dialog, ui.card():
-                ui.label(f"Are you sure you want to reset snmp?")
+                ui.label("Are you sure you want to reset snmp?")
                 with ui.row():
                     ui.button("Cancel", on_click=lambda: dialog.submit("Cancel")).props(
                         "flat color=accent align=left"
@@ -409,7 +411,7 @@ async def edit_delete_v2_user_card(community):
                 save_button = ui.button("save", on_click=on_save_cb).props(
                     "flat color=accent align=left"
                 )
-                delete_button = ui.button(icon="delete", on_click=on_delete_cb).props(
+                ui.button(icon="delete", on_click=on_delete_cb).props(
                     "flat color=accent align=left"
                 )
 
@@ -528,7 +530,7 @@ async def edit_delete_v3_user_card(username):
                 save_button = ui.button("save", on_click=on_save_cb).props(
                     "flat color=accent align=left"
                 )
-                delete_button = ui.button(icon="delete", on_click=on_delete_cb).props(
+                ui.button(icon="delete", on_click=on_delete_cb).props(
                     "flat color=accent align=left"
                 )
 

@@ -1,6 +1,6 @@
 from nicegui import ui, app
 
-from ns2.lib.accounts_lib import _getUsersAndAdmins
+from ns2.lib.accounts_lib import _getUsersAndAdmins, GetUserByName
 from ns2.api.dbus import get_dbus
 from ns2.ui.accountsDialogs import *
 
@@ -110,7 +110,7 @@ async def accounts_user_page(user: str):
 @ui.refreshable
 async def edit_card(username: str):
     user: SystemAccount
-    user = GetUserByName(username)
+    # user = awaitGetUserByName(username)
 
     with ui.card().props("flat"):
         with ui.row():
@@ -187,6 +187,6 @@ async def account_card(username: str):
     if username == "create-new-user":
 
         await new_card()
-    else:
+    # else:
 
-        await edit_card(username)
+    # await edit_card(username)

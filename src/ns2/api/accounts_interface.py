@@ -1,5 +1,6 @@
 from dataclasses import asdict
 from dbus_next.service import ServiceInterface, method
+from dbus_next import Message
 
 from ns2.lib.accounts_lib import _deleteUser
 from ns2.utils import logger
@@ -10,17 +11,19 @@ class AccountsInterface(ServiceInterface):
         super().__init__(name)
         self.bus = bus
 
-    @method()
-    async def DeleteUser(self, username: "s") -> "s":
 
-        logger.info("Delete system user called")
-
-        return await _deleteUser(username)
-
-    # @method()
-    # async def Reset(self):
-    #    await ResetSnmpd(self.bus)
-
+#
+#   @method()
+#   async def DeleteUser(self, username: "s", message: Message = None) -> "s":
+#
+#       logger.info("Delete system user called")
+#
+#       return await _deleteUser(username)
+#
+#   # @method()
+#   # async def Reset(self):
+#   #    await ResetSnmpd(self.bus)
+#
 
 #
 ## ====================================================================

@@ -30,9 +30,11 @@ install: build
 	ln -sf $(PREFIX)/lib/ns/ns $(DESTDIR)$(PREFIX)/bin/ns
 	
 	# Install config files
-	install -D -m 644 configs/com.novus.ns.conf $(DESTDIR)$(PREFIX)/share/dbus-1/system.d/com.novus.ns.conf 
+	install -D -m 644 configs/com.novus.ns.conf $(DESTDIR)$(PREFIX)/share/dbus-1/system.d/com.novus.ns.conf
+	install -D -m 644 configs/com.novus.ns.policy $(DESTDIR)$(PREFIX)/share/polkit-1/actions/com.novus.ns.policy
 	install -D -m 644 configs/ns2.xml $(DESTDIR)$(PREFIX)/lib/firewalld/services/ns2.xml
 	install -D -m 644 configs/ns2-ui.conf $(DESTDIR)/etc/nginx/sites-available/ns2-ui.conf
+	install -D -m 644 configs/ns2.rules $(DESTDIR)/etc/polkit-1/rules.d/ns2.rules
 
 clean:
 	rm -rf build dist *.spec

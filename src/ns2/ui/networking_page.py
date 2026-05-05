@@ -115,7 +115,7 @@ async def interface_card(nm: ProxyInterface, device: ProxyInterface, interface):
 
                 async def auto_connect_cb(e):
                     return
-                    device = GetDevice(dbus.Bus, interface._dev_path)
+                    device = await GetDevice(dbus.Bus, interface._dev_path)
                     settings = await GetSettings(device)
                     settings["connection"]["autoconnect"] = Variant("b", e.value)
                     # await connection.call_update2(settings, 0x1, {})
@@ -143,11 +143,11 @@ async def interface_card(nm: ProxyInterface, device: ProxyInterface, interface):
 async def interface_page(interface_name: str):
     AppBus = await get_dbus()
 
-    nm = GetNetworkManager(AppBus)
+    nm = await GetNetworkManager(AppBus)
 
     dev_path = await nm.call_get_device_by_ip_iface(interface_name)
 
-    device = GetDevice(AppBus, dev_path)
+    device = await GetDevice(AppBus, dev_path)
 
     interface = await GetInterfaceData(AppBus, nm, interface_name)
 

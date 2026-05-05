@@ -140,4 +140,7 @@ async def logs_page():
     logs = {"all": "many lines"}
 
     log = ui.log()
+
+    fetch_logs("Last 1 hour", "Info and above", "any")
+
     return

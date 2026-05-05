@@ -155,7 +155,7 @@ async def isActive(bus: MessageBus, service: str) -> bool:
     state = await getServiceState(bus, service)
     print(f"{service} is active: {state}")
 
-    print("time: ", time.perf_counter() - start)
+    print("is active time: ", time.perf_counter() - start)
     if state == "active":
         return True
     else:

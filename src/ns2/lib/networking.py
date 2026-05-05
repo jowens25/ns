@@ -99,56 +99,45 @@ class InterfaceData:
 # ====================================================================
 # Proxies
 # ====================================================================
-def GetNetworkManager(bus: MessageBus) -> ProxyInterface:
-    file_name = "org.freedesktop.NetworkManager.xml"
-    with open(str(INTROSPECTION_DIR / file_name), "r") as f:
-        introspection = f.read()
+
+INTERFACE = "org.freedesktop.NetworkManager"
+
+
+async def GetInterface(bus: MessageBus, path: str, interface: str) -> ProxyInterface:
+    interfaces = [INTERFACE, interface]
+    introspection = await bus.introspect(INTERFACE, path)
+    obj = bus.get_proxy_object(INTERFACE, path, introspection)
+    return obj.get_interface(".".join(filter(None, interfaces)))
+
+
+async def GetNetworkManager(bus: MessageBus) -> ProxyInterface:
+
+    introspection = await bus.introspect(INTERFACE, "/org/freedesktop/NetworkManager")
+
     obj = bus.get_proxy_object(
-        "org.freedesktop.NetworkManager",
-        "/org/freedesktop/NetworkManager",
-        introspection,
+        INTERFACE, "/org/freedesktop/NetworkManager", introspection
     )
-    return obj.get_interface("org.freedesktop.NetworkManager")
+    return obj.get_interface(INTERFACE)
 
 
-def GetDevice(bus: MessageBus, path: str) -> ProxyInterface:
-    file_name = "org.freedesktop.NetworkManager.Device.xml"
-    with open(str(INTROSPECTION_DIR / file_name), "r") as f:
-        introspection = f.read()
-    obj = bus.get_proxy_object("org.freedesktop.NetworkManager", path, introspection)
-    return obj.get_interface("org.freedesktop.NetworkManager.Device")
+async def GetDevice(bus: MessageBus, path: str) -> ProxyInterface:
+    return await GetInterface(bus, path, "Device")
 
 
-def GetActiveConnection(bus: MessageBus, path: str) -> ProxyInterface:
-    file_name = "org.freedesktop.NetworkManager.Connection.Active.xml"
-    with open(str(INTROSPECTION_DIR / file_name), "r") as f:
-        introspection = f.read()
-    obj = bus.get_proxy_object("org.freedesktop.NetworkManager", path, introspection)
-    return obj.get_interface("org.freedesktop.NetworkManager.Connection.Active")
+async def GetActiveConnection(bus: MessageBus, path: str) -> ProxyInterface:
+    return await GetInterface(bus, path, "Connection.Active")
 
 
-def GetIp4Config(bus: MessageBus, path: str) -> ProxyInterface:
-    file_name = "org.freedesktop.NetworkManager.IP4Config.xml"
-    with open(str(INTROSPECTION_DIR / file_name), "r") as f:
-        introspection = f.read()
-    obj = bus.get_proxy_object("org.freedesktop.NetworkManager", path, introspection)
-    return obj.get_interface("org.freedesktop.NetworkManager.IP4Config")
+async def GetIp4Config(bus: MessageBus, path: str) -> ProxyInterface:
+    return await GetInterface(bus, path, "IP4Config")
 
 
-def GetIp6Config(bus: MessageBus, path: str) -> ProxyInterface:
-    file_name = "org.freedesktop.NetworkManager.IP6Config.xml"
-    with open(str(INTROSPECTION_DIR / file_name), "r") as f:
-        introspection = f.read()
-    obj = bus.get_proxy_object("org.freedesktop.NetworkManager", path, introspection)
-    return obj.get_interface("org.freedesktop.NetworkManager.IP6Config")
+async def GetIp6Config(bus: MessageBus, path: str) -> ProxyInterface:
+    return await GetInterface(bus, path, "IP6Config")
 
 
-def GetConnection(bus: MessageBus, path: str) -> ProxyInterface:
-    file_name = "org.freedesktop.NetworkManager.Settings.Connection.xml"
-    with open(str(INTROSPECTION_DIR / file_name), "r") as f:
-        introspection = f.read()
-    obj = bus.get_proxy_object("org.freedesktop.NetworkManager", path, introspection)
-    return obj.get_interface("org.freedesktop.NetworkManager.Settings.Connection")
+async def GetConnection(bus: MessageBus, path: str) -> ProxyInterface:
+    return await GetInterface(bus, path, "Settings.Connection")
 
 
 async def GetConnectionFromDevice(
@@ -156,7 +145,7 @@ async def GetConnectionFromDevice(
 ) -> ProxyInterface:
     active_connection_path = await device.get_active_connection()
     if len(active_connection_path) > 1:
-        activeConnection = GetActiveConnection(bus, active_connection_path)
+        activeConnection = await GetActiveConnection(bus, active_connection_path)
         connection_path = await activeConnection.get_connection()
         return GetConnection(bus, connection_path)
 
@@ -244,7 +233,7 @@ async def GetInterfaceData(
 ) -> InterfaceData:
     i = InterfaceData()
     i._dev_path = await nm.call_get_device_by_ip_iface(iface)
-    dev = GetDevice(bus, i._dev_path)
+    dev = await GetDevice(bus, i._dev_path)
     i.Name = iface
     i.HardwareAddress = await dev.get_hw_address()
     i.StateNumber = await dev.get_state()
@@ -258,17 +247,17 @@ async def GetInterfaceData(
     i._act_con_path = await dev.get_active_connection()
 
     if len(i._act_con_path) > 1:
-        activeConnection = GetActiveConnection(bus, i._act_con_path)
+        activeConnection = await GetActiveConnection(bus, i._act_con_path)
         connection_path = await activeConnection.get_connection()
-        connection = GetConnection(bus, connection_path)
+        connection = await GetConnection(bus, connection_path)
         settings = await connection.call_get_settings()
         i.AutoConnect = (
             settings["connection"].get("autoconnect", Variant("b", True)).value
         )
 
     if len(ip4_config_path) > 1:
-        ip4Config = GetIp4Config(bus, ip4_config_path)
-        ip6Config = GetIp6Config(bus, ip6_config_path)
+        ip4Config = await GetIp4Config(bus, ip4_config_path)
+        ip6Config = await GetIp6Config(bus, ip6_config_path)
         ip4AddressData = await ip4Config.get_address_data()
         ip6AddressData = await ip6Config.get_address_data()
         i.Ip4 = addressDataToString(ip4AddressData)
@@ -282,11 +271,11 @@ async def GetInterfaceData(
 async def GetSettings(bus: MessageBus, dev: ProxyInterface) -> dict:
     active_connection_path = await dev.get_active_connection()
     if len(active_connection_path) > 1:
-        activeConnection = GetActiveConnection(bus, active_connection_path)
+        activeConnection = await GetActiveConnection(bus, active_connection_path)
         connection_path = await activeConnection.get_connection()
-        connection = GetConnection(bus, connection_path)
+        connection = await GetConnection(bus, connection_path)
         connection_settings = await connection.call_get_settings()
-    return connection_settings
+        return connection_settings
 
 
 def GetIp(version: str, settings: dict) -> Ipv4v6:
@@ -545,9 +534,9 @@ def combineAddresses(ipv4AddressData, ipv6AddressData) -> str:
 
 
 async def GetDeviceFromInterface(bus: MessageBus, iface: str) -> Device:
-    nm = GetNetworkManager(bus)
+    nm = await GetNetworkManager(bus)
     device_path = await nm.call_get_device_by_ip_iface(iface)
-    device = GetDevice(bus, device_path)
+    device = await GetDevice(bus, device_path)
 
     hwaddr = await device.get_hw_address()
     flags = await device.get_interface_flags()
@@ -583,12 +572,12 @@ async def GetInterfaces(bus: MessageBus) -> list:
 
     interfaces = []
 
-    nm = GetNetworkManager(bus)
+    nm = await GetNetworkManager(bus)
 
     devices_paths = await nm.call_get_devices()
 
     for p in devices_paths:
-        dev = GetDevice(bus, p)
+        dev = await GetDevice(bus, p)
         deviceType = await dev.get_device_type()
         # print(f"device type: {deviceType}")
         if deviceType not in [1]:
@@ -602,13 +591,13 @@ async def GetInterfacesAndAddresses(bus: MessageBus) -> list:
 
     rows = []
 
-    nm = GetNetworkManager(bus)
+    nm = await GetNetworkManager(bus)
 
     device_paths = await nm.call_get_devices()
 
     for devicePath in device_paths:
 
-        device = GetDevice(bus, devicePath)
+        device = await GetDevice(bus, devicePath)
         interface = await device.get_interface()
         hwaddr = await device.get_hw_address()
         state = await device.get_state()
@@ -621,8 +610,8 @@ async def GetInterfacesAndAddresses(bus: MessageBus) -> list:
         ip6_config_path = await device.get_ip6_config()
         if len(ip4_config_path) > 1:
 
-            ip4Config = GetIp4Config(bus, ip4_config_path)
-            ip6Config = GetIp6Config(bus, ip6_config_path)
+            ip4Config = await GetIp4Config(bus, ip4_config_path)
+            ip6Config = await GetIp6Config(bus, ip6_config_path)
 
             ip4AddressData = await ip4Config.get_address_data()
             ip6AddressData = await ip6Config.get_address_data()

@@ -55,6 +55,14 @@ def _getUsers():
             return (fields[3].strip("\n")).split(",")
 
 
+async def GetUserByName(name: str):
+    u: SystemAccount
+    for u in await _getUsersAndAdmins():
+        n = u.get("Username")
+        if n == name:
+            return u
+
+
 async def _getUsersAndAdmins() -> list[dict]:
 
     admins = _getAdmins()
@@ -87,7 +95,7 @@ async def UserAdd(group: str, username: str):
 
 async def _addUser(username: str):
     await runCmd(
-        ["useradd", "-M", "-N", "-g", "user", "-d", f"/home/{username}", username]
+        ["useradd", "-M", "-N", "-g", "nsuser", "-d", f"/home/{username}", username]
     )
 
 
@@ -98,9 +106,9 @@ async def _addAdmin(username: str):
             "-M",
             "-N",
             "-g",
-            "admin",
+            "nsadmin",
             "-G",
-            "user,admin",
+            "nsuser,nsadmin",
             "-d",
             f"/home/{username}",
             username,
@@ -113,11 +121,11 @@ async def _setUsername(currentUsername: str, newUsername: str):
 
 
 async def _setGroupUser(username: str):
-    await runCmd(["usermod", "-g", "user", "-G", "user", username])
+    await runCmd(["usermod", "-g", "nsuser", "-G", "user", username])
 
 
 async def _setGroupAdmin(username: str):
-    await runCmd(["usermod", "-g", "admin", "-G", "user,admin", username])
+    await runCmd(["usermod", "-g", "nsadmin", "-G", "nsuser,nsadmin", username])
 
 
 async def _isAdmin(username: str) -> bool:

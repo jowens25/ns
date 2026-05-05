@@ -20,6 +20,11 @@ class PamInterface(ServiceInterface):
 
             return False
 
+    @method()
+    def GetStuff(self) -> "s":
+
+        return "STUFF"
+
 
 async def GetPamInterface(bus: MessageBus) -> ProxyInterface:
     introspection = await bus.introspect("com.novus.ns", "/com/novus/ns")

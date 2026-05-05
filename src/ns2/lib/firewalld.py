@@ -344,7 +344,6 @@ async def GetAvailableInterfaces(bus: MessageBus):
 
 
 async def GetFirewalldConfig(bus: MessageBus):
-    file_name = "org.fedoraproject.FirewallD1.config.xml"
     introspection = await bus.introspect(
         "org.fedoraproject.FirewallD1", "/org/fedoraproject/FirewallD1/config"
     )
@@ -364,7 +363,6 @@ async def GetFirewalldConfigZone(bus: MessageBus, path: str):
 
 
 async def GetFirewalldZone(bus: MessageBus):
-    file_name = "org.fedoraproject.FirewallD1.zone.xml"
     introspection = await bus.introspect(
         "org.fedoraproject.FirewallD1", "/org/fedoraproject/FirewallD1"
     )

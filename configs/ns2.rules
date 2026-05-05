@@ -1,0 +1,30 @@
+polkit.addRule(function(action, subject) {
+    // Allow SNMP management for members of ns-admin group
+    if (action.id.match(/^com\.novus\.ns\.snmp\./)) {
+        if (subject.isInGroup("nsadmin")) {
+            return polkit.Result.YES;
+        }
+        if (subject.isInGroup("wheel")) {
+            return polkit.Result.YES;
+        }
+        return polkit.Result.NO;
+    }
+
+    // Allow account management for members of ns-admin group
+    if (action.id.match(/^com\.novus\.ns\.accounts\./)) {
+        if (subject.isInGroup("nsadmin")) {
+            return polkit.Result.YES;
+        }
+        if (subject.isInGroup("wheel")) {
+            return polkit.Result.YES;
+        }
+        return polkit.Result.NO;
+    }
+
+    // PAM authentication is allowed for all authenticated users
+    if (action.id == "com.novus.ns.pam.authenticate") {
+        if (subject.active) {
+            return polkit.Result.YES;
+        }
+    }
+});
