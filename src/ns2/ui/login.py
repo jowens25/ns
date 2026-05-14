@@ -3,17 +3,16 @@ from nicegui import ui, app
 from ns2.ui.theme import init_colors
 import time
 from ns2.utils import ASSETS_DIR
-from ns2.api.pam_interface import GetPamInterface
-from ns2.api.dbus import get_dbus
+
+from ns2.lib.bridge import PamAuthenticate
 
 
 async def try_login(_username: str, _password: str) -> None:
 
-    bus = await get_dbus()
-    pam = await GetPamInterface(bus)
-
-    if await pam.call_authenticate(_username, _password):
-        app.storage.user.update(
+    auth = PamAuthenticate(_username, _password)
+    print(auth)
+    if auth:
+        app.storage.client.update(
             {
                 "username": _username,
                 "authenticated": True,
@@ -21,6 +20,7 @@ async def try_login(_username: str, _password: str) -> None:
                 "login_time": time.time(),
             }
         )
+
         ui.notify(f"Welcome, {_username}!", color="positive")
         ui.navigate.to("/overview")
     else:

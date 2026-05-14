@@ -10,6 +10,21 @@ from dbus_next.aio import MessageBus
 from ns2.api.dbus import get_dbus
 
 
+async def getPid(sender: str):
+    bus = get_dbus()
+
+    result = await bus.call(
+        Message(
+            destination="org.freedesktop.DBus",
+            path="/org/freedesktop/DBus",
+            interface="org.freedesktop.Dbus",
+            member="GetConnectionUnixProcessID",
+            signature="s",
+            body=[sender],
+        )
+    )
+
+
 def get_process_start_time(pid: int) -> int:
     """Get process start time in microseconds since boot (for PolicyKit)."""
     stat = Path(f"/proc/{pid}/stat").read_text()
@@ -23,7 +38,7 @@ def get_process_start_time(pid: int) -> int:
     return starttime_us
 
 
-async def check_authorization(action_id: str) -> dict:
+async def CheckAuthorization(action_id: str) -> dict:
     """Check if the calling process is authorized for action."""
     bus = await get_dbus()
 
@@ -62,7 +77,7 @@ async def check_authorization(action_id: str) -> dict:
                 path="/org/freedesktop/PolicyKit1/Authority",
                 interface="org.freedesktop.PolicyKit1.Authority",
                 member="CheckAuthorization",
-                signature="(sa{sv})sa{ss}us",
+                signature="(sa{sv}) s a{ss} u s",
                 body=[
                     subject,
                     action_id,
@@ -92,27 +107,3 @@ async def check_authorization(action_id: str) -> dict:
         raise
     # finally:
     # bus.disconnect()
-
-
-async def main():
-    """Run authorization tests."""
-    action_id = "com.novus.ns.snmp.reset"
-
-    print("=" * 60)
-    print("Testing Polkit Authorization")
-    print("=" * 60)
-    print()
-
-    result = await check_authorization(action_id)
-
-    print()
-    print("=" * 60)
-    if result["is_authorized"]:
-        print("✓ AUTHORIZED")
-    else:
-        print("✗ NOT AUTHORIZED")
-    print("=" * 60)
-
-
-if __name__ == "__main__":
-    asyncio.run(main())

@@ -11,6 +11,7 @@ dependencies = [
     "pam>=0.2.0",
     "plotly>=6.5.2",
     "pyinstaller>=6.19.0",
+    "requests>=2.34.0",
     "setuptools>=82.0.0",
     "six>=1.17.0",
     "systemd-python>=235",

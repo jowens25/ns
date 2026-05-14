@@ -287,7 +287,7 @@ async def snmp_status():
             if await dialog == "reset":
 
                 snmp = await GetSnmpInterface(AppBus)
-                await snmp.call_reset()
+                await snmp.call_reset_snmpd()
                 # await ResetSnmpd()
                 v2table.refresh()
                 v3table.refresh()

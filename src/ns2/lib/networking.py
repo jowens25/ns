@@ -183,7 +183,7 @@ async def set_refresh_rate(bus: MessageBus, device_path: str, rate_ms: int):
         )
     )
 
-    return True
+    return rsp
 
 
 async def get_device_statistics(bus: MessageBus, device_path: str):
@@ -637,18 +637,18 @@ async def GetInterfacesAndAddresses(bus: MessageBus) -> list:
     return rows
 
 
-async def nm_call(bus: MessageBus, member: str, signature: str, body):
-
-    rsp = await bus.call(
-        Message(
-            destination="org.freedesktop.NetworkManager",
-            path="/org/freedesktop/NetworkManager",
-            interface="org.freedesktop.NetworkManager",
-            member=member,
-            signature=signature,
-            body=[body],
-        )
-    )
-
-    if rsp.body:
-        return rsp.body[0]
+# async def nm_call(bus: MessageBus, member: str, signature: str, body):
+#
+#    rsp = await bus.call(
+#        Message(
+#            destination="org.freedesktop.NetworkManager",
+#            path="/org/freedesktop/NetworkManager",
+#            interface="org.freedesktop.NetworkManager",
+#            member=member,
+#            signature=signature,
+#            body=[body],
+#        )
+#    )
+#
+#    if rsp.body:
+#        return rsp.body[0]

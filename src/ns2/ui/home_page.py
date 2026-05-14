@@ -1,5 +1,5 @@
 from nicegui import ui, app
-from ns2.lib.authorization import check_authorization
+from ns2.lib.authorization import CheckAuthorization
 from ns2.lib.networking import (
     get_device_statistics,
     getDevices,

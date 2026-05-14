@@ -4,12 +4,20 @@ from dbus_next import Message
 
 from ns2.lib.accounts_lib import _deleteUser
 from ns2.utils import logger
+from dbus_next.aio import MessageBus
 
 
 class AccountsInterface(ServiceInterface):
-    def __init__(self, name, bus):
+    def __init__(self, name, bus: MessageBus):
         super().__init__(name)
         self.bus = bus
+
+    @method()
+    async def AddSystemUser(self, username: "s") -> "s":
+
+        print(self.bus.unique_name)
+
+        return "OHR NER"
 
 
 #

@@ -10,7 +10,7 @@ DESTDIR ?=
 build: clean
 	$(PYINSTALLER) --onedir --name ns \
 		--add-data "src/ns2/assets:ns2/assets" \
-		--add-data "src/ns2/introspection:ns2/introspection" \
+	
 		--collect-all nicegui \
 		--hidden-import=dbus_next \
 		--hidden-import=pam \

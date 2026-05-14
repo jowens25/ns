@@ -2,7 +2,7 @@
 from importlib.metadata import version, PackageNotFoundError
 from zoneinfo import ZoneInfo
 import asyncio
-from ns2.api.dbus import connect_to_dbus, cleanup_dbus
+from ns2.api.dbus import get_dbus, cleanup_dbus, AppBus
 from dbus_next.aio import MessageBus
 from dbus_next import BusType
 
@@ -52,7 +52,7 @@ def init_ui():
     @ui.page("/accounts/{user}")
     async def root():
         init_colors()
-        if not app.storage.user.get("authenticated", False):
+        if not app.storage.client.get("authenticated", False):
             ui.navigate.to("/login")
             return
         with ui.header().classes("items-center justify-between").classes("bg-dark"):
@@ -60,7 +60,7 @@ def init_ui():
                 "flat color=white"
             )
             ui.image(str(ASSETS_DIR / "NOVUS_LOGO.svg")).classes("w-48")
-            ui.label(f'Welcome {app.storage.user["username"]}!')
+            ui.label(f'Welcome {app.storage.client["username"]}!')
             # ui.button("Request Admin").classes("bg-secondary").props("flat color=accent")
             with ui.row():
                 # with ui.dialog() as dialog, ui.card():
@@ -85,7 +85,8 @@ def init_ui():
 
         async def nav(path: str):
             if path == "/login":
-                app.storage.user.clear()
+                app.storage.client.clear()
+                cleanup_dbus()
             ui.navigate.to(path)
             width = await ui.run_javascript("window.innerWidth")
             if width < 1024:  # Adjust this breakpoint as needed
@@ -169,7 +170,8 @@ def init_ui():
 
     @app.on_startup
     async def startup():
-        await connect_to_dbus()
+        print("get to dbus??/")
+        await get_dbus()
 
     @app.on_shutdown
     async def shutdown():
