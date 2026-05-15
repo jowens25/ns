@@ -1,10 +1,8 @@
 from nicegui import ui, app
-
 from ns2.ui.theme import init_colors
-import time
 from ns2.utils import ASSETS_DIR
-
 from ns2.lib.bridge import PamAuthenticate
+from ns2.lib.test_networking import Bridge, CallMakeBridge, GetBridgePid
 
 
 async def try_login(_username: str, _password: str) -> None:
@@ -15,6 +13,11 @@ async def try_login(_username: str, _password: str) -> None:
     if auth:
         uid = app.storage.tab.get("uid")
         app.storage.general.update({"activeUser": uid, "username": _username})
+
+        # if GetBridgePid
+
+        await CallMakeBridge(_username)
+
         ui.navigate.to("/overview")
 
     else:
@@ -46,7 +49,6 @@ def login_page():
 
             with ui.row():
                 ui.button("Log in", on_click=on_login).classes("bg-secondary")
-
                 ui.button(
                     "Support",
                     on_click=support_dialog.open,

@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
-from importlib.metadata import version, PackageNotFoundError
-from zoneinfo import ZoneInfo
-import asyncio
-from ns2.api.dbus import get_dbus, cleanup_dbus, AppBus
-from dbus_next.aio import MessageBus
-from dbus_next import BusType
+from importlib.metadata import version
+
+import uuid
 
 from datetime import datetime
-import zoneinfo
-import sys
+
 from nicegui import ui, app
 from multiprocessing import freeze_support
 
@@ -22,7 +18,6 @@ from ns2.ui.login import login_page
 from ns2.ui.home_page import home_page
 from ns2.ui.snmp_page import snmp_page, snmp_user_page
 from ns2.ui.services_page import services_page
-import random
 
 # from ns2.ntp import ntp_page
 from ns2.ui.fpga_page import fpga_page
@@ -30,10 +25,6 @@ from ns2.ui.fpga_page import fpga_page
 # from ns2.tests_page import tests_page
 from ns2.ui.firewalld_page import firewall_page
 from ns2.utils import ASSETS_DIR
-
-sock_task = None
-
-import uuid
 
 app.storage.general.update({"uids": []})
 
@@ -55,9 +46,9 @@ def init_ui():
     @ui.page("/accounts")
     @ui.page("/accounts/{user}")
     async def root():
-        await ui.context.client.connected()
         init_colors()
 
+        await ui.context.client.connected()
         if not app.storage.tab.get("uid", False):
             initUid = str(uuid.uuid4())
             # print("uuid: ", initUid)
@@ -68,11 +59,9 @@ def init_ui():
 
         async def check_active_user():
             await ui.context.client.connected()
-
             # get the "active" user marked in the auth func
             active_uid = app.storage.general.get("activeUser", None)
             # print("active uid: ", active_uid)
-
             if active_uid != app.storage.tab.get("uid"):
                 ui.navigate.to("/login")
                 return
@@ -86,13 +75,11 @@ def init_ui():
             )
             ui.image(str(ASSETS_DIR / "NOVUS_LOGO.svg")).classes("w-48")
             ui.label(f"Welcome {app.storage.general.get("username","error")}!")
-            # ui.button("Request Admin").classes("bg-secondary").props("flat color=accent")
             with ui.row():
-
-                label = ui.label().classes("font-bold")
+                date = ui.label().classes("font-bold")
 
                 def update_date():
-                    label.set_text(
+                    date.set_text(
                         datetime.now().astimezone().strftime("%m-%d-%Y %H:%M:%S")
                     )
 
@@ -169,17 +156,3 @@ def init_ui():
                 #'/tests': tests_page
             }
         ).classes("w-full")
-
-    # @app.on_disconnect()
-    # def remove_session():
-
-    # @app.on_startup
-    # async def startup():
-    #    print("get to dbus??/")
-    #    await get_dbus()
-
-
-#
-# @app.on_shutdown
-# async def shutdown():
-#    cleanup_dbus()

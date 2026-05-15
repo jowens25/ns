@@ -34,6 +34,7 @@ class Bridge:
 
     async def connect(self):
         self.conn = await connect("ws://localhost:3000/bridge")
+        asyncio.create_task(self.receive())
 
     async def disconnect(self):
         if self.conn:
@@ -41,15 +42,14 @@ class Bridge:
 
     async def send(self, msg: dict):
         await self.conn.send(json.dumps(msg))
-        # return json.loads(await self.conn.recv())
-
-    async def on_message(self, msg):
-        print("process message")
-        print(msg)
 
     async def receive(self):
         async for msg in self.conn:
             await self.on_message(json.loads(msg))
+
+    async def on_message(self, msg):
+        print("process message")
+        print(msg)
 
 
 # i think we are going to just make different types of json packets do what we need:
@@ -79,6 +79,21 @@ async def CallMakeBridge(username: str) -> int:
     return rsp.body[0]
 
 
+async def GetBridgePid():
+    bus = await MessageBus(bus_type=BusType.SYSTEM).connect()
+    rsp = await bus.call(
+        Message(
+            destination="com.novus.ns",
+            path="/com/novus/ns",
+            interface="org.freedesktop.DBus.Properties",
+            member="Get",
+            signature="ss",
+            body=["com.novus.ns.bridge", "pid"],
+        )
+    )
+    return rsp.body[0].value
+
+
 async def CallCloseBridge():
     bus = await MessageBus(bus_type=BusType.SYSTEM).connect()
     rsp = await bus.call(
@@ -100,10 +115,10 @@ async def tryBridge():
 
     await asyncio.sleep(1)
 
+    print(await GetBridgePid())
+
     bridge = Bridge()
     await bridge.connect()
-
-    asyncio.create_task(bridge.receive())
 
     print(await bridge.send({"test1": "hi", "test2": "hi"}))
     print(await bridge.send({"test1": "hi", "test2": "hi"}))
