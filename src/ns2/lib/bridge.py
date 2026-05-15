@@ -1,7 +1,7 @@
 import requests
 
 
-def bridgeCall(destination, path, method, args=None):
+def httpbridgeCall(destination, path, method, args=None):
     try:
         resp = requests.post(
             "http://localhost:8080/call",
@@ -17,13 +17,10 @@ def bridgeCall(destination, path, method, args=None):
     except requests.HTTPError as e:
         print("http exception: ", e)
 
-    finally:
-        return resp.json()
-
 
 def PamAuthenticate(username, password) -> bool:
 
-    res = bridgeCall(
+    res = httpbridgeCall(
         "com.novus.ns",
         "/com/novus/ns",
         "com.novus.ns.pam.Authenticate",

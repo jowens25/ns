@@ -12,13 +12,20 @@ func MakeBridge() *cobra.Command {
 
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			//lib.TestGoPolkit()
+			isWs, _ := cmd.Flags().GetBool("ws")
 
-			lib.InitHttpBridge()
+			if isWs {
+				lib.InitWebSocketBridge()
+			} else {
+				lib.InitHttpBridge()
+			}
 
 			return nil
 		},
 	}
+
+	cmd.Flags().Bool("ws", false, "make ws bridge")
+
 	return cmd
 }
 

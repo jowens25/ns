@@ -22,6 +22,7 @@ from ns2.ui.login import login_page
 from ns2.ui.home_page import home_page
 from ns2.ui.snmp_page import snmp_page, snmp_user_page
 from ns2.ui.services_page import services_page
+import random
 
 # from ns2.ntp import ntp_page
 from ns2.ui.fpga_page import fpga_page
@@ -32,9 +33,12 @@ from ns2.utils import ASSETS_DIR
 
 sock_task = None
 
+import uuid
+
+app.storage.general.update({"uids": []})
+
 
 def init_ui():
-
     freeze_support()
 
     @ui.page("/")
@@ -51,29 +55,40 @@ def init_ui():
     @ui.page("/accounts")
     @ui.page("/accounts/{user}")
     async def root():
+        await ui.context.client.connected()
         init_colors()
-        if not app.storage.client.get("authenticated", False):
-            ui.navigate.to("/login")
-            return
+
+        if not app.storage.tab.get("uid", False):
+            initUid = str(uuid.uuid4())
+            # print("uuid: ", initUid)
+            # when they connect they get an id
+            app.storage.tab.update({"uid": initUid})
+            # we add that id to our list
+            app.storage.general["uids"].append(initUid)
+
+        async def check_active_user():
+            await ui.context.client.connected()
+
+            # get the "active" user marked in the auth func
+            active_uid = app.storage.general.get("activeUser", None)
+            # print("active uid: ", active_uid)
+
+            if active_uid != app.storage.tab.get("uid"):
+                ui.navigate.to("/login")
+                return
+
+        await check_active_user()
+        ui.timer(1.0, lambda: check_active_user)
+
         with ui.header().classes("items-center justify-between").classes("bg-dark"):
             ui.button(on_click=lambda: left_drawer.toggle(), icon="menu").props(
                 "flat color=white"
             )
             ui.image(str(ASSETS_DIR / "NOVUS_LOGO.svg")).classes("w-48")
-            ui.label(f'Welcome {app.storage.client["username"]}!')
+            ui.label(f"Welcome {app.storage.general.get("username","error")}!")
             # ui.button("Request Admin").classes("bg-secondary").props("flat color=accent")
             with ui.row():
-                # with ui.dialog() as dialog, ui.card():
-                #
-                #    tz = ui.input(label="Time zone", value="UTC")
-                #
-                #    # ui.button("Save", on_click=tzDialog.close).props(
-                #    #    "flat color=accent dense"
-                #    # )
-                #
-                # ui.button("Change Time Zone", on_click=dialog.open).props(
-                #    "flat color=accent dense"
-                # )
+
                 label = ui.label().classes("font-bold")
 
                 def update_date():
@@ -83,72 +98,59 @@ def init_ui():
 
             ui.timer(1.0, update_date)
 
-        async def nav(path: str):
-            if path == "/login":
-                app.storage.client.clear()
-                cleanup_dbus()
-            ui.navigate.to(path)
-            width = await ui.run_javascript("window.innerWidth")
-            if width < 1024:  # Adjust this breakpoint as needed
-                left_drawer.hide()
-
         with ui.left_drawer(bordered=True).classes("bg-dark") as left_drawer:
-            # ui.button(on_click=lambda: left_drawer.toggle(), icon="menu").props(
-            #    "flat color=white"
-            # )
             ui.separator()
             ui.button(
                 "Overview",
-                on_click=lambda: nav("/overview"),
+                on_click=lambda: ui.navigate.to("/overview"),
             ).props(
                 "flat color=white align=left"
             ).classes("full-width")
             ui.button(
                 "Networking",
-                on_click=lambda: nav("/networking"),
-            ).props(
-                "flat color=white align=left"
-            ).classes("full-width")
+                on_click=lambda: ui.navigate.to("/networking"),
+            ).props("flat color=white align=left").classes("full-width")
             ui.button(
                 "Logs",
-                on_click=lambda: nav("/logs"),
+                on_click=lambda: ui.navigate.to("/logs"),
             ).props(
                 "flat color=white align=left"
             ).classes("full-width")
             ui.button(
                 "Services",
-                on_click=lambda: nav("/services"),
+                on_click=lambda: ui.navigate.to("/services"),
             ).props(
                 "flat color=white align=left"
             ).classes("full-width")
             ui.button(
                 "Terminal",
-                on_click=lambda: nav("/terminal"),
+                on_click=lambda: ui.navigate.to("/terminal"),
             ).props(
                 "flat color=white align=left"
             ).classes("full-width")
             ui.button(
                 "SNMP",
-                on_click=lambda: nav("/snmp"),
+                on_click=lambda: ui.navigate.to("/snmp"),
             ).props(
                 "flat color=white align=left"
             ).classes("full-width")
             ui.button(
                 "Accounts",
-                on_click=lambda: nav("/accounts"),
+                on_click=lambda: ui.navigate.to("/accounts"),
             ).props(
                 "flat color=white align=left"
             ).classes("full-width")
             ui.separator()
             ui.button(
                 "Logout",
-                on_click=lambda: nav("/login"),
+                on_click=lambda: ui.navigate.to("/login"),
             ).props(
                 "flat color=negative align=left"
             ).classes("full-width")
         # Footer
         with ui.footer().classes("bg-dark"):
             ui.label(version("ns2"))
+
         ui.sub_pages(
             {
                 "/": home_page,
@@ -168,11 +170,16 @@ def init_ui():
             }
         ).classes("w-full")
 
-    @app.on_startup
-    async def startup():
-        print("get to dbus??/")
-        await get_dbus()
+    # @app.on_disconnect()
+    # def remove_session():
 
-    @app.on_shutdown
-    async def shutdown():
-        cleanup_dbus()
+    # @app.on_startup
+    # async def startup():
+    #    print("get to dbus??/")
+    #    await get_dbus()
+
+
+#
+# @app.on_shutdown
+# async def shutdown():
+#    cleanup_dbus()

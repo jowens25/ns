@@ -68,6 +68,23 @@ func SeeActions() *cobra.Command {
 	return cmd
 }
 
+func Test() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "test",
+		Short: "test dbus functions",
+		RunE: func(cmd *cobra.Command, args []string) error {
+
+			conn, _ := dbus.SystemBus()
+
+			//actions, _ := lib.EnumerateActions(dbus.Sender(conn.Names()[0]))
+			lib.GetConnectionCredentials(conn)
+
+			return nil
+		},
+	}
+	return cmd
+}
+
 var Dbus = &cobra.Command{
 	Use:   "dbus",
 	Short: "manage dbus",
@@ -78,4 +95,5 @@ func init() {
 	Dbus.AddCommand(TryClient())
 	Dbus.AddCommand(MakeConn())
 	Dbus.AddCommand(SeeActions())
+	Dbus.AddCommand(Test())
 }

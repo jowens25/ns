@@ -46,6 +46,7 @@ require (
 require (
 	github.com/gin-gonic/gin v1.12.0
 	github.com/godbus/dbus/v5 v5.2.2
+	github.com/gorilla/websocket v1.5.3
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
 )

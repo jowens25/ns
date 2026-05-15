@@ -33,10 +33,18 @@ func StartDbus() {
 		os.Exit(1)
 	}
 
-	bridge := &BridgeInterface{}
+	bridge := NewBridgeInterface()
+	bridge.conn = conn
 	err = conn.Export(bridge, "/com/novus/ns", "com.novus.ns.bridge")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to export bridgeInterface: %v\n", err)
+		os.Exit(1)
+	}
+
+	// Export the Properties interface for bridge
+	err = conn.Export(bridge, "/com/novus/ns", "org.freedesktop.DBus.Properties")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Failed to export Properties interface: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -60,9 +68,15 @@ func StartDbus() {
 		Interfaces: []introspect.Interface{
 			introspect.IntrospectData,
 			{
-				Name:       "com.novus.ns.bridge",
-				Methods:    introspect.Methods(bridge),
-				Properties: nil,
+				Name:    "com.novus.ns.bridge",
+				Methods: introspect.Methods(bridge),
+				Properties: []introspect.Property{
+					{
+						Name:   "pid",
+						Type:   "u",
+						Access: "read",
+					},
+				},
 			},
 			{
 				Name:       "com.novus.ns.snmp",

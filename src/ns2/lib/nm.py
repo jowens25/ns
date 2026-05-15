@@ -49,6 +49,18 @@ async def GetAllIP6ConfigProperties(bus: MessageBus, config_path: str):
     return rsp.body[0]
 
 
+async def GetAllActiveConnectionProperties(bus: MessageBus, active_con_path: str):
+    rsp = await bus.call(
+        Message(
+            destination="org.freedesktop.NetworkManager",
+            path=active_con_path,  # e.g., '/org/freedesktop/NetworkManager/Devices/1'
+            interface="org.freedesktop.DBus.Properties",
+            member="GetAll",
+            signature="s",
+            body=["org.freedesktop.NetworkManager.Connection.Active"],
+        )
+    )
+    return rsp.body[0]
 
 
 async def GetAllActiveConnectionProperties(bus: MessageBus, active_con_path: str):
@@ -65,23 +77,7 @@ async def GetAllActiveConnectionProperties(bus: MessageBus, active_con_path: str
     return rsp.body[0]
 
 
-
-async def GetAllActiveConnectionProperties(bus: MessageBus, active_con_path: str):
-    rsp = await bus.call(
-        Message(
-            destination="org.freedesktop.NetworkManager",
-            path=active_con_path,  # e.g., '/org/freedesktop/NetworkManager/Devices/1'
-            interface="org.freedesktop.DBus.Properties",
-            member="GetAll",
-            signature="s",
-            body=["org.freedesktop.NetworkManager.Connection.Active"],
-        )
-    )
-    return rsp.body[0]
-
-
-
-async def GetConnectionSettings(bus: MessageBus, connection_path:str):
+async def GetConnectionSettings(bus: MessageBus, connection_path: str):
     rsp = await bus.call(
         Message(
             destination="org.freedesktop.NetworkManager",
@@ -95,7 +91,9 @@ async def GetConnectionSettings(bus: MessageBus, connection_path:str):
     return rsp.body[0]
 
 
-async def ConnectionUpdate2(bus: MessageBus, connection_path:str, settings, flags, args):
+async def ConnectionUpdate2(
+    bus: MessageBus, connection_path: str, settings, flags, args
+):
     rsp = await bus.call(
         Message(
             destination="org.freedesktop.NetworkManager",
@@ -108,7 +106,10 @@ async def ConnectionUpdate2(bus: MessageBus, connection_path:str, settings, flag
     )
     return rsp.body[0]
 
-async def ActivateConnection(bus: MessageBus, connection:str, device: str, spec_obj:str):
+
+async def ActivateConnection(
+    bus: MessageBus, connection: str, device: str, spec_obj: str
+):
     rsp = await bus.call(
         Message(
             destination="org.freedesktop.NetworkManager",
@@ -120,6 +121,7 @@ async def ActivateConnection(bus: MessageBus, connection:str, device: str, spec_
         )
     )
     return rsp.body[0]
+
 
 async def DeactivateConnection(bus: MessageBus, activeConnection: str):
     rsp = await bus.call(
@@ -133,7 +135,7 @@ async def DeactivateConnection(bus: MessageBus, activeConnection: str):
         )
     )
     return rsp.body[0]
-    
+
 
 async def GetDeviceByIpIface(bus: MessageBus, interface: str):
     rsp = await bus.call(
@@ -147,7 +149,7 @@ async def GetDeviceByIpIface(bus: MessageBus, interface: str):
         )
     )
     return rsp.body[0]
-    
+
 
 async def GetDevices(bus: MessageBus):
     rsp = await bus.call(

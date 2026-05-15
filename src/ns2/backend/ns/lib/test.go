@@ -2,43 +2,37 @@ package lib
 
 import (
 	"fmt"
-	"os"
+	"log"
+	"os/user"
 
 	"github.com/godbus/dbus/v5"
 )
 
-//
-//	var s any
-//
-//	obj := conn.Object("org.freedesktop.DBus", "/org/freedesktop/DBus")
-//	err = obj.Call("org.freedesktop.DBus.GetConnectionUnixUser", 0, ugh_try_this).Store(&s)
-//	if err != nil {
-//		fmt.Println("Failed to call")
-//		os.Exit(1)
-//	}
-//
-//	fmt.Println(s)
-//
-//	u, _ := user.LookupId(fmt.Sprintf("%d", s))
-//
-//	fmt.Println(u)
-//
-//	return conn
-
-func LookUpUserBasedOnConnection(sender dbus.Sender) {
-
-	var s any
-
-	conn, _ := dbus.SystemBus()
+func GetConnectionCredentials(conn *dbus.Conn) uint32 {
+	var response map[string]dbus.Variant
 
 	obj := conn.Object("org.freedesktop.DBus", "/org/freedesktop/DBus")
-	err := obj.Call("org.freedesktop.DBus.GetConnectionUnixUser", 0, sender).Store(&s)
+	err := obj.Call("org.freedesktop.DBus.GetConnectionCredentials", 0, conn.Names()[0]).Store(&response)
 	if err != nil {
-		fmt.Println("Failed to call")
-		os.Exit(1)
+		log.Fatal("Failed to look up user")
 	}
 
-	fmt.Println(s)
+	return response["UnixUserID"].Value().(uint32)
 
-	fmt.Printf("actions available for: %d\n", s)
+}
+
+func GetUserNameFromUid(uid uint32) string {
+
+	u, err := user.LookupId(fmt.Sprintf("%d", uid))
+	if err != nil {
+		log.Fatalf("Could not find user with UID %s: %v", uid, err)
+	}
+
+	return u.Username
+}
+
+func GetUsernameFromConnection(conn *dbus.Conn) string {
+
+	return GetUserNameFromUid(GetConnectionCredentials(conn))
+
 }

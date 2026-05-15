@@ -110,8 +110,8 @@ async def interface_card(nm: ProxyInterface, device: ProxyInterface, interface):
             with ui.row().classes("flex-1 gap-16"):
                 ui.label("Carrier").classes("font-bold w-8")
                 ui.label().bind_text_from(interface, "Carrier")
-            with ui.row().classes("flex-1 gap-16"):
-                ui.label("General").classes("font-bold w-8")
+                # with ui.row().classes("flex-1 gap-16"):
+                #    ui.label("General").classes("font-bold w-8")
 
                 async def auto_connect_cb(e):
                     return
@@ -121,9 +121,9 @@ async def interface_card(nm: ProxyInterface, device: ProxyInterface, interface):
                     # await connection.call_update2(settings, 0x1, {})
                     # await device.call_reapply(settings, 0, 0)
 
-                ui.checkbox("Connect automatically", on_change=auto_connect_cb).props(
-                    "flat color=accent dense"
-                ).bind_value(interface, "AutoConnect")
+                # ui.checkbox("Connect automatically", on_change=auto_connect_cb).props(
+                #    "flat color=accent dense"
+                # ).bind_value(interface, "AutoConnect")
 
             with ui.row().classes("flex-1 gap-16"):
                 ui.label("IPv4").classes("font-bold w-8")

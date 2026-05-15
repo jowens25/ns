@@ -8,21 +8,15 @@ from ns2.lib.bridge import PamAuthenticate
 
 
 async def try_login(_username: str, _password: str) -> None:
+    await ui.context.client.connected()
 
     auth = PamAuthenticate(_username, _password)
-    print(auth)
-    if auth:
-        app.storage.client.update(
-            {
-                "username": _username,
-                "authenticated": True,
-                # "token": response["token"],
-                "login_time": time.time(),
-            }
-        )
 
-        ui.notify(f"Welcome, {_username}!", color="positive")
+    if auth:
+        uid = app.storage.tab.get("uid")
+        app.storage.general.update({"activeUser": uid, "username": _username})
         ui.navigate.to("/overview")
+
     else:
         ui.notify("Invalid username or password", color="negative")
 
@@ -30,7 +24,6 @@ async def try_login(_username: str, _password: str) -> None:
 @ui.page("/login")
 def login_page():
     init_colors()
-
     with ui.dialog() as support_dialog, ui.card():
         ui.label("Novus Power Products").classes("text-h5")
         ui.label("novuspower.com")
