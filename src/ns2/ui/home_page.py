@@ -8,6 +8,7 @@ from ns2.lib.networking import (
 )
 from ns2.api.dbus import get_dbus
 from ns2.api.pam_interface import GetPamInterface
+from ns2.lib.bridge import MakeBridgeDbusCall
 
 # import plotly.graph_objects as go
 # import plotly.express as px
@@ -30,11 +31,18 @@ async def home_page():
     # pam = await GetPamInterface(bus)
 
     log = ui.log()
+    with ui.row():
+        dest = ui.textarea("dest")
+        path = ui.textarea("path")
+        method = ui.textarea("method")
+        args = ui.textarea("args")
 
     async def test_cb():
         # result = await pam.call_get_stuff()
 
-        result = await check_authorization("com.novus.ns.snmp.reset")
+        result = await MakeBridgeDbusCall(
+            dest.value, path.value, method.value, [args.value], []
+        )
 
         log.push(result)
 

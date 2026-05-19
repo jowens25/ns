@@ -12,9 +12,8 @@ from ns2.common import formatStringToList
 
 @ui.refreshable
 async def firewall_status(on_network_page: bool):
-    AppBus = await get_dbus()
+    # AppBus = await get_dbus()
 
-    print("FIREWALL STATUS")
     firewallInfo = FirewallInfo()
     firewallInfo.Enable = await isActive(AppBus, "firewalld.service")
     firewallInfo.Status = (

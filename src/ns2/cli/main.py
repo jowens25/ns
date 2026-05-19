@@ -8,7 +8,6 @@ status_cli = typer.Typer()
 
 cli.add_typer(status_cli, name="status")
 
-from ns2.lib.bridge import httpbridgeCall
 from ns2.utils import ASSETS_DIR
 
 from ns2.ui.main import init_ui

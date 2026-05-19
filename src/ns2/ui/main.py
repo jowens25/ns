@@ -62,12 +62,13 @@ def init_ui():
             # get the "active" user marked in the auth func
             active_uid = app.storage.general.get("activeUser", None)
             # print("active uid: ", active_uid)
+            # print("check active user")
             if active_uid != app.storage.tab.get("uid"):
                 ui.navigate.to("/login")
                 return
 
         await check_active_user()
-        ui.timer(1.0, lambda: check_active_user)
+        ui.timer(1.0, lambda: check_active_user())
 
         with ui.header().classes("items-center justify-between").classes("bg-dark"):
             ui.button(on_click=lambda: left_drawer.toggle(), icon="menu").props(

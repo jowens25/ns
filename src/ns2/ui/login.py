@@ -1,23 +1,21 @@
+import asyncio
+
 from nicegui import ui, app
 from ns2.ui.theme import init_colors
 from ns2.utils import ASSETS_DIR
-from ns2.lib.bridge import PamAuthenticate
-from ns2.lib.test_networking import Bridge, CallMakeBridge, GetBridgePid
+from ns2.lib.bridge import CallPamAuthenticate
+from ns2.lib.bridge import Bridge, SetupBridge
 
 
 async def try_login(_username: str, _password: str) -> None:
     await ui.context.client.connected()
 
-    auth = PamAuthenticate(_username, _password)
+    auth = await CallPamAuthenticate(_username, _password)
 
     if auth:
+        activeUser = await SetupBridge(_username)
         uid = app.storage.tab.get("uid")
-        app.storage.general.update({"activeUser": uid, "username": _username})
-
-        # if GetBridgePid
-
-        await CallMakeBridge(_username)
-
+        app.storage.general.update({"activeUser": uid, "username": activeUser})
         ui.navigate.to("/overview")
 
     else:

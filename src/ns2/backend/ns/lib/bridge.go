@@ -21,13 +21,14 @@ import (
 )
 
 type DbusCall struct {
-	Destination string `json:"Destination" binding:"required"` // object
-	Path        string `json:"Path" binding:"required"`        // object
-	Method      string `json:"Method" binding:"required"`      // call
-	Args        []any  `json:"Args"`                           // call
+	Destination string   `json:"Destination" binding:"required"` // object
+	Path        string   `json:"Path" binding:"required"`        // object
+	Method      string   `json:"Method" binding:"required"`      // call
+	Args        []any    `json:"Args"`                           // call
+	Signature   []string `json:"Signature" binding:"required"`
 }
 
-func Call(conn *dbus.Conn, call DbusCall) (any, error) {
+func MakeDbusCall(conn *dbus.Conn, call DbusCall) (any, error) {
 
 	var result any
 	obj := conn.Object(call.Destination, dbus.ObjectPath(call.Path))
@@ -58,7 +59,7 @@ func ConnectCall(destination string, path string, method string, args []any) any
 		os.Exit(1)
 	}
 	defer conn.Close()
-	r, err := Call(conn, DbusCall{Destination: destination, Path: path, Method: method, Args: args})
+	r, err := MakeDbusCall(conn, DbusCall{Destination: destination, Path: path, Method: method, Args: args})
 
 	if err != nil {
 		return err
@@ -80,7 +81,7 @@ func callHandler(conn *dbus.Conn) gin.HandlerFunc {
 		}
 
 		//log.Println(call)
-		res, err := Call(conn, call)
+		res, err := MakeDbusCall(conn, call)
 		if err != nil {
 			c.JSON(http.StatusOK, map[string]string{"Dbus": err.Error()})
 			return
@@ -264,9 +265,9 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 	go client.transmitData()
 	go client.receiveData()
 
-	initMsg := map[string]string{"user": GetUsernameFromConnection(dbusConn)}
+	//initMsg := map[string]string{"activeUser": GetUsernameFromConnection(dbusConn)}
 
-	client.sendResponse(&initMsg)
+	//client.sendResponse(&initMsg)
 
 	// Optional: subscribe to D-Bus signals and forward to client
 	//go client.forwardSignals()
@@ -274,7 +275,7 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 
 	<-r.Context().Done()
 
-	//fmt.Println("end")
+	fmt.Println("client disconnected")
 
 }
 
@@ -293,7 +294,7 @@ func (c *Client) receiveData() {
 			break
 		}
 
-		c.handleData(rxdata)
+		c.rxHandler(rxdata)
 
 	}
 }
@@ -307,20 +308,76 @@ func (c *Client) transmitData() {
 	}
 }
 
-func (c *Client) handleData(data []byte) {
+func (c *Client) rxHandler(data []byte) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
-	msg := map[string]string{}
+	msg := map[string]any{}
 
 	if err := json.Unmarshal(data, &msg); err != nil {
 		//c.sendError(msg.RequestID, fmt.Sprintf("Invalid JSON: %v", err))
 		//continue
 	}
 
-	msg["test3"] = "myadd"
+	if msg["status"] == "?" {
+		msg["status"] = "up"
+		c.sendResponse(&msg)
+		return
+	}
 
-	c.sendResponse(&msg)
+	if msg["activeUser"] == "?" {
+		msg["activeUser"] = GetUsernameFromConnection(c.dbusConn)
+		c.sendResponse(&msg)
+		return
+	}
+
+	_, ok := msg["dbusCall"]
+	if ok {
+
+		//fmt.Printf("msg: %s\n", msg)
+		//fmt.Println("=====================================")
+		var call DbusCall
+
+		err := json.Unmarshal(data, &call)
+		if err != nil {
+			msg["dbusError"] = map[string]any{"error": err.Error()}
+		}
+		//call.Destination = msg["destination"].(string)
+		//call.Path = msg["path"].(string)
+		//call.Method = msg["method"].(string)
+		//
+		//tempArgs := msg["args"].([]any)
+		//tempSigs := msg["signature"].([]any)
+		//finalArgs := []any{}
+		//
+		//for i := range tempArgs {
+		//
+		//	sig, _ := dbus.ParseSignature(tempSigs[i].(string))
+		//
+		//	v, _ := dbus.ParseVariant(tempArgs[i].(string), sig)
+		//
+		//	finalArgs = append(finalArgs, v.Value())
+		//}
+		//
+		//call.Args = finalArgs
+		//fmt.Println("final args")
+		//fmt.Println(call.Args)
+		//fmt.Println("=====================================")
+
+		rsp, err := MakeDbusCall(c.dbusConn, call)
+		if err != nil {
+
+			msg["dbusError"] = map[string]any{"error": err.Error()}
+
+			fmt.Printf("error after makedbus call: %s\n", err.Error())
+
+		}
+		fmt.Println(rsp)
+
+		msg["dbusResponse"] = rsp
+		c.sendResponse(&msg)
+		return
+	}
 
 	fmt.Printf("%s\n", msg)
 
@@ -384,7 +441,7 @@ func (c *Client) handleData(data []byte) {
 	//c.sendResponse(&response)
 }
 
-func (c *Client) sendResponse(resp *map[string]string) {
+func (c *Client) sendResponse(resp *map[string]any) {
 	txdata, err := json.Marshal(resp)
 	if err != nil {
 		log.Printf("Marshal error: %v", err)

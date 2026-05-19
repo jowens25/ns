@@ -1,11 +1,14 @@
 import json
+from pprint import pprint
+import uuid
 
 from ns2.api.dbus import get_dbus
 from ns2.lib.networking import GetInterfaces, GetDeviceFromInterface, set_refresh_rate
 
-
 import asyncio
 import requests
+
+from numpy import uint
 
 
 async def net_test():
@@ -23,185 +26,143 @@ async def net_test():
     print(rsp.body)
 
 
-import asyncio
-from websockets.asyncio.client import connect
-from websockets import ClientConnection
+from ns2.lib.bridge import MakeBridgeDbusCall, CallMakeBridge, Bridge, CallCloseBridge
 
 
-class Bridge:
-    def __init__(self):
-        self.conn = None
-
-    async def connect(self):
-        self.conn = await connect("ws://localhost:3000/bridge")
-        asyncio.create_task(self.receive())
-
-    async def disconnect(self):
-        if self.conn:
-            await self.conn.close()
-
-    async def send(self, msg: dict):
-        await self.conn.send(json.dumps(msg))
-
-    async def receive(self):
-        async for msg in self.conn:
-            await self.on_message(json.loads(msg))
-
-    async def on_message(self, msg):
-        print("process message")
-        print(msg)
-
-
-# i think we are going to just make different types of json packets do what we need:
-#
-# {"dbus":dbuscall}
-# {"cmd":commandcall}
-# {"systemd":systemdcall}
-from dbus_next import Message
-from dbus_next.constants import BusType
-from dbus_next.aio import MessageBus
-
-
-async def CallMakeBridge(username: str) -> int:
-    """returns pid of bridge"""
-    bus = await MessageBus(bus_type=BusType.SYSTEM).connect()
-
-    rsp = await bus.call(
-        Message(
-            destination="com.novus.ns",
-            path="/com/novus/ns",
-            interface="com.novus.ns.bridge",
-            member="Make",
-            signature="s",
-            body=[username],
-        )
-    )
-    return rsp.body[0]
-
-
-async def GetBridgePid():
-    bus = await MessageBus(bus_type=BusType.SYSTEM).connect()
-    rsp = await bus.call(
-        Message(
-            destination="com.novus.ns",
-            path="/com/novus/ns",
-            interface="org.freedesktop.DBus.Properties",
-            member="Get",
-            signature="ss",
-            body=["com.novus.ns.bridge", "pid"],
-        )
-    )
-    return rsp.body[0].value
-
-
-async def CallCloseBridge():
-    bus = await MessageBus(bus_type=BusType.SYSTEM).connect()
-    rsp = await bus.call(
-        Message(
-            destination="com.novus.ns",
-            path="/com/novus/ns",
-            interface="com.novus.ns.bridge",
-            member="Close",
-            signature="",
-            body=[],
-        )
-    )
-    return rsp.body[0]
-
-
-async def tryBridge():
+async def test():
 
     await CallMakeBridge("admin")
-
     await asyncio.sleep(1)
 
-    print(await GetBridgePid())
-
     bridge = Bridge()
+
     await bridge.connect()
 
-    print(await bridge.send({"test1": "hi", "test2": "hi"}))
-    print(await bridge.send({"test1": "hi", "test2": "hi"}))
-    print(await bridge.send({"test1": "hi", "test2": "hi"}))
-    print(await bridge.send({"test1": "hi", "test2": "hi"}))
-    print(await bridge.send({"test1": "hi", "test2": "hi"}))
+    # devices = await MakeBridgeDbusCall(
+    #    bridge,
+    #    destination="org.freedesktop.NetworkManager",
+    #    path="/org/freedesktop/NetworkManager",
+    #    method="org.freedesktop.NetworkManager.GetDevices",
+    #    args=[],
+    #    signature=None,
+    # )
+    # pprint(devices)
+    #
+    # print(devices[1])
+    #
+    # pprint(
+    #    await MakeBridgeDbusCall(
+    #        bridge,
+    #        destination="org.freedesktop.NetworkManager",
+    #        path="/org/freedesktop/NetworkManager/Devices/2",
+    #        method="org.freedesktop.NetworkManager.Device.GetAppliedConnection",
+    #        args=["0"],
+    #        signature=["u"],
+    #    ),
+    # )
 
-    await asyncio.sleep(2)
+    pprint(
+        await MakeBridgeDbusCall(
+            bridge,
+            destination="org.freedesktop.NetworkManager",
+            path="/org/freedesktop/NetworkManager",
+            method="org.freedesktop.NetworkManager.Enable",
+            args=[False],
+            # signature=["b"],
+        ),
+    )
+
+    # prop = await MakeBridgeDbusCall(
+    #    bridge,
+    #    destination="org.freedesktop.NetworkManager",
+    #    path=devices[1],
+    #    method="org.freedesktop.DBus.Properties.Get",
+    #    args=["org.freedesktop.NetworkManager.Device", "ActiveConnection"],
+    # )
+    #
+    # print(prop)
 
     await bridge.disconnect()
-
     await CallCloseBridge()
 
 
 def run_test():
 
-    asyncio.run(tryBridge())
+    asyncio.run(test())
 
-    # print(
-    #    bridgeCall(
-    #        "com.novus.ns",
-    #        "/com/novus/ns",
-    #        "com.novus.ns.pam",
-    #        "GetStuff",
-    #        [],
-    #    )
-    # )
-    #
-    # print(
-    #    bridgeCall(
-    #        "com.novus.ns",
-    #        "/com/novus/ns",
-    #        "com.novus.ns.pam",
-    #        "Authenticate",
-    #        ["jowens", "jowens"],
-    #    )
-    # )
-    #
-    #    devices = bridgeCall(
-    #        destination="org.freedesktop.NetworkManager",
-    #        path="/org/freedesktop/NetworkManager",
-    #        method="org.freedesktop.NetworkManager.GetDevices",
-    #        args=[],
-    #    )
-    #
-    #    print(devices)
-    #
-    #    print(
-    #        "state: ",
-    #        bridgeCall(
-    #            destination="org.freedesktop.NetworkManager",
-    #            path="/org/freedesktop/NetworkManager",
-    #            method="org.freedesktop.DBus.Properties.Get",
-    #            args=["org.freedesktop.NetworkManager", "State"],
-    #        ),
-    #    )
-    #
-    #    prop = bridgeCall(
-    #        destination="org.freedesktop.NetworkManager",
-    #        path=devices[1],
-    #        method="org.freedesktop.DBus.Properties.Get",
-    #        args=["org.freedesktop.NetworkManager.Device", "ActiveConnection"],
-    #    )
-    #
-    #    print(prop)
 
-    # bridgeCall(
-    #    # Message(
-    #    destination="org.freedesktop.NetworkManager",
-    #    path=devices[1],
-    #    iface="org.freedesktop.NetworkManager.Device.Statistics",
-    #    method="Get",
-    #    # signature="ssv",
-    #    args=[],
-    #    # )
-    # )
+#
 
-    # print(
-    #    "allowed? result:",
-    #    bridgeCall(
-    #        destination="com.novus.ns",
-    #        path="/com/novus/ns",
-    #        method="com.novus.ns.pam.GetStuff",
-    #        args=[],
-    #    ),
-    # )
+
+# print("no test run")
+# CheckBridge
+# asyncio.run(CheckBridge())
+
+# print(
+#    bridgeCall(
+#        "com.novus.ns",
+#        "/com/novus/ns",
+#        "com.novus.ns.pam",
+#        "GetStuff",
+#        [],
+#    )
+# )
+#
+# print(
+#    bridgeCall(
+#        "com.novus.ns",
+#        "/com/novus/ns",
+#        "com.novus.ns.pam",
+#        "Authenticate",
+#        ["jowens", "jowens"],
+#    )
+# )
+#
+#    devices = bridgeCall(
+#        destination="org.freedesktop.NetworkManager",
+#        path="/org/freedesktop/NetworkManager",
+#        method="org.freedesktop.NetworkManager.GetDevices",
+#        args=[],
+#    )
+#
+#    print(devices)
+#
+#    print(
+#        "state: ",
+#        bridgeCall(
+#            destination="org.freedesktop.NetworkManager",
+#            path="/org/freedesktop/NetworkManager",
+#            method="org.freedesktop.DBus.Properties.Get",
+#            args=["org.freedesktop.NetworkManager", "State"],
+#        ),
+#    )
+#
+#    prop = bridgeCall(
+#        destination="org.freedesktop.NetworkManager",
+#        path=devices[1],
+#        method="org.freedesktop.DBus.Properties.Get",
+#        args=["org.freedesktop.NetworkManager.Device", "ActiveConnection"],
+#    )
+#
+#    print(prop)
+
+# bridgeCall(
+#    # Message(
+#    destination="org.freedesktop.NetworkManager",
+#    path=devices[1],
+#    iface="org.freedesktop.NetworkManager.Device.Statistics",
+#    method="Get",
+#    # signature="ssv",
+#    args=[],
+#    # )
+# )
+
+# print(
+#    "allowed? result:",
+#    bridgeCall(
+#        destination="com.novus.ns",
+#        path="/com/novus/ns",
+#        method="com.novus.ns.pam.GetStuff",
+#        args=[],
+#    ),
+# )
