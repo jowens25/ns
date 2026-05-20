@@ -77,7 +77,14 @@ func Test() *cobra.Command {
 			conn, _ := dbus.SystemBus()
 
 			//actions, _ := lib.EnumerateActions(dbus.Sender(conn.Names()[0]))
-			lib.GetConnectionCredentials(conn)
+			fmt.Println(lib.GetConnectionCredentials(conn))
+			var res1 []any
+
+			err := lib.MyCall(conn, "org.freedesktop.NetworkManager", "/org/freedesktop/NetworkManager/Devices/2", "org.freedesktop.NetworkManager.Device.GetAppliedConnection", 0, "u", 0).Store(res1)
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+			fmt.Println(res1)
 
 			return nil
 		},

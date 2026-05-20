@@ -10,6 +10,7 @@ import (
 	"os/exec"
 	"os/signal"
 	"os/user"
+	"strings"
 	"sync"
 	"syscall"
 	"time"
@@ -21,24 +22,61 @@ import (
 )
 
 type DbusCall struct {
-	Destination string   `json:"Destination" binding:"required"` // object
-	Path        string   `json:"Path" binding:"required"`        // object
-	Method      string   `json:"Method" binding:"required"`      // call
-	Args        []any    `json:"Args"`                           // call
-	Signature   []string `json:"Signature" binding:"required"`
+	Destination string          `json:"Destination" binding:"required"` // object
+	Path        dbus.ObjectPath `json:"Path" binding:"required"`        // object
+	Method      string          `json:"Method" binding:"required"`      // call
+	Args        []any           `json:"Args"`                           // call
+	Signature   string          `json:"Signature" binding:"required"`
 }
 
 func MakeDbusCall(conn *dbus.Conn, call DbusCall) (any, error) {
 
 	var result any
-	obj := conn.Object(call.Destination, dbus.ObjectPath(call.Path))
 
-	err := obj.Call(call.Method, 0, call.Args...).Store(&result)
+	err := MyCall(conn, call.Destination, call.Path, call.Method, 0, call.Signature, call.Args...).Store(&result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 
+}
+
+func MyCall(conn *dbus.Conn, destination string, path dbus.ObjectPath, method string, flags dbus.Flags, signature string, args ...any) *dbus.Call {
+
+	iface := ""
+	i := strings.LastIndex(method, ".")
+	if i != -1 {
+		iface = method[:i]
+	}
+	method = method[i+1:]
+
+	msg := new(dbus.Message)
+	msg.Type = dbus.TypeMethodCall
+	msg.Flags = flags & (dbus.FlagNoAutoStart | dbus.FlagNoReplyExpected)
+	msg.Headers = make(map[dbus.HeaderField]dbus.Variant)
+	msg.Headers[dbus.FieldPath] = dbus.MakeVariant(path)
+	msg.Headers[dbus.FieldDestination] = dbus.MakeVariant(destination)
+	msg.Headers[dbus.FieldMember] = dbus.MakeVariant(method)
+
+	if iface != "" {
+		msg.Headers[dbus.FieldInterface] = dbus.MakeVariant(iface)
+	}
+
+	msg.Body = args
+
+	if signature != "" {
+		sig, err := dbus.ParseSignature(signature)
+		if err != nil {
+			panic(err)
+		}
+		msg.Headers[dbus.FieldSignature] = dbus.MakeVariant(sig)
+	}
+
+	fmt.Println("Message headers:", msg.Headers)
+
+	ch := make(chan *dbus.Call, 1)
+	conn.SendWithContext(context.Background(), msg, ch)
+	return <-ch
 }
 
 // calls connect call with default:
@@ -52,19 +90,23 @@ func CallNovusService(subinterfaceMethod string, args []any) any {
 
 func ConnectCall(destination string, path string, method string, args []any) any {
 
-	conn, err := dbus.ConnectSystemBus()
+	//	conn, err := dbus.ConnectSystemBus()
+	//
+	//	if err != nil {
+	//		fmt.Fprintln(os.Stderr, "Failed to connect to sys bus:", err)
+	//		os.Exit(1)
+	//	}
+	//	defer conn.Close()
+	//	r, err := MakeDbusCall(conn, DbusCall{Destination: destination, Path: path, Method: method, Args: args})
+	//
+	//	if err != nil {
+	//		return err
+	//	}
+	//	return r
 
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "Failed to connect to sys bus:", err)
-		os.Exit(1)
-	}
-	defer conn.Close()
-	r, err := MakeDbusCall(conn, DbusCall{Destination: destination, Path: path, Method: method, Args: args})
+	var j any = 1
 
-	if err != nil {
-		return err
-	}
-	return r
+	return j
 
 }
 
