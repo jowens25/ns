@@ -26,19 +26,6 @@ def dbus():
 
 
 @cli.command()
-def ui(debug_mode: Annotated[str, typer.Argument()] = "production"):
-
-    init_ui()
-    nui.run(
-        port=8000,
-        reload=False,
-        storage_secret="your-secret-key",
-        title="Novus Configuration Tool",
-        favicon=str(ASSETS_DIR / "favicon.png"),
-    )
-
-
-@cli.command()
 def test():
     run_test()
 

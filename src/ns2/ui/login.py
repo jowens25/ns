@@ -4,19 +4,20 @@ from nicegui import ui, app
 from ns2.ui.theme import init_colors
 from ns2.utils import ASSETS_DIR
 from ns2.lib.bridge import CallPamAuthenticate
-from ns2.lib.bridge import Bridge, SetupBridge
+from ns2.lib.bridge import Bridge, SetupBridge, GetBridgePid
+import uuid
 
 
 async def try_login(_username: str, _password: str) -> None:
-    await ui.context.client.connected()
 
     auth = await CallPamAuthenticate(_username, _password)
 
     if auth:
         activeUser = await SetupBridge(_username)
-        uid = app.storage.tab.get("uid")
-        app.storage.general.update({"activeUser": uid, "username": activeUser})
-        ui.navigate.to("/overview")
+
+        uid = app.storage.user.get("uid")
+        app.storage.general.update({"activeUser": activeUser, "uid": uid})
+        ui.navigate.to("/")
 
     else:
         ui.notify("Invalid username or password", color="negative")
@@ -24,6 +25,9 @@ async def try_login(_username: str, _password: str) -> None:
 
 @ui.page("/login")
 def login_page():
+    # on log in page load
+    if not app.storage.user.get("uid"):
+        app.storage.user.update({"uid": uuid.uuid4()})
     init_colors()
     with ui.dialog() as support_dialog, ui.card():
         ui.label("Novus Power Products").classes("text-h5")
@@ -40,6 +44,7 @@ def login_page():
             password = ui.input("Password", password=True, password_toggle_button=True)
 
             async def on_login():
+                print("something is hanging up????")
                 await try_login(username.value, password.value)
 
             username.on("keydown.enter", on_login)

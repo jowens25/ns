@@ -26,134 +26,184 @@ from ns2.ui.fpga_page import fpga_page
 from ns2.ui.firewalld_page import firewall_page
 from ns2.utils import ASSETS_DIR
 
-app.storage.general.update({"uids": []})
+#!/usr/bin/env python3
+"""This is just a simple authentication example.
+
+Please see the `OAuth2 example at FastAPI <https://fastapi.tiangolo.com/tutorial/security/simple-oauth2/>`_  or
+use the great `Authlib package <https://docs.authlib.org/en/v0.13/client/starlette.html#using-fastapi>`_ to implement a classing real authentication system.
+Here we just demonstrate the NiceGUI integration.
+"""
+from fastapi import Request
+from fastapi.responses import RedirectResponse
+from starlette.middleware.base import BaseHTTPMiddleware
+
+from nicegui import app, ui
+
+unrestricted_page_routes = {
+    "/login",
+    "/favicon.ico",
+}
 
 
-def init_ui():
+def check_auth():
+    print("echeck")
+    uid = app.storage.user.get("uid")
+
+    guid = app.storage.general.get("uid")
+    print(uid)
+
+    if guid and guid != uid:
+        app.storage.user.clear()
+        ui.navigate.to("/login")
+
+
+@app.add_middleware
+class AuthMiddleware(BaseHTTPMiddleware):
+    """This middleware restricts access to all NiceGUI pages.
+    It redirects the user to the login page if they are not authenticated."""
+
+    async def dispatch(self, request: Request, call_next):
+        path = request.url.path
+        if path in unrestricted_page_routes:
+            return await call_next(request)
+        if path.startswith("/_nicegui/") or path.startswith("/static/"):
+            return await call_next(request)
+
+        uid = app.storage.user.get("uid")
+        guid = app.storage.general.get("uid")
+        if guid and guid != uid:
+            app.storage.user.clear()
+            return RedirectResponse("/login")
+        return await call_next(request)
+
+
+# def init_ui():
+#    freeze_support()
+
+# @ui.page("/")
+# @ui.page("/overview")
+# @ui.page("/networking")
+# @ui.page("/networking/firewall")
+# @ui.page("/networking/{interface_name}")
+# @ui.page("/logs")
+# @ui.page("/logs/{log}")
+# @ui.page("/services")
+# @ui.page("/snmp")
+# @ui.page("/snmp/{version}/{user}")
+# @ui.page("/terminal")
+# @ui.page("/accounts")
+# @ui.page("/accounts/{user}")
+
+
+async def controlPanel():
+    with ui.header().classes("items-center justify-between").classes("bg-dark"):
+        ui.button(on_click=lambda: left_drawer.toggle(), icon="menu").props(
+            "flat color=white"
+        )
+        ui.image(str(ASSETS_DIR / "NOVUS_LOGO.svg")).classes("w-48")
+        ui.label(f"Welcome {app.storage.general.get("activeUser","error")}!")
+        with ui.row():
+            date = ui.label().classes("font-bold")
+
+            def update_date():
+                date.set_text(datetime.now().astimezone().strftime("%m-%d-%Y %H:%M:%S"))
+
+        ui.timer(1.0, update_date)
+    with ui.left_drawer(bordered=True).classes("bg-dark") as left_drawer:
+        ui.separator()
+        ui.button(
+            "Overview",
+            on_click=lambda: ui.navigate.to("/overview"),
+        ).props(
+            "flat color=white align=left"
+        ).classes("full-width")
+        ui.button(
+            "Networking",
+            on_click=lambda: ui.navigate.to("/networking"),
+        ).props(
+            "flat color=white align=left"
+        ).classes("full-width")
+        ui.button(
+            "Logs",
+            on_click=lambda: ui.navigate.to("/logs"),
+        ).props(
+            "flat color=white align=left"
+        ).classes("full-width")
+        ui.button(
+            "Services",
+            on_click=lambda: ui.navigate.to("/services"),
+        ).props(
+            "flat color=white align=left"
+        ).classes("full-width")
+        ui.button(
+            "Terminal",
+            on_click=lambda: ui.navigate.to("/terminal"),
+        ).props(
+            "flat color=white align=left"
+        ).classes("full-width")
+        ui.button(
+            "SNMP",
+            on_click=lambda: ui.navigate.to("/snmp"),
+        ).props(
+            "flat color=white align=left"
+        ).classes("full-width")
+        ui.button(
+            "Accounts",
+            on_click=lambda: ui.navigate.to("/accounts"),
+        ).props(
+            "flat color=white align=left"
+        ).classes("full-width")
+        ui.separator()
+
+        def logout_cb():
+            ui.navigate.to("/login")
+            app.storage.general.clear()
+
+        ui.button(
+            "Logout",
+            on_click=lambda: logout_cb(),
+        ).props(
+            "flat color=negative align=left"
+        ).classes("full-width")
+    # Footer
+    with ui.footer().classes("bg-dark"):
+        ui.label(version("ns2"))
+    ui.sub_pages(
+        {
+            "/": home_page,
+            "/networking": network_page,
+            "/networking/firewall": firewall_page,
+            "/networking/{interface_name}": interface_page,
+            "/logs": logs_page,
+            "/logs/{log}": log_page,
+            "/snmp": snmp_page,
+            "/snmp/{version}/{user}": snmp_user_page,
+            "/accounts": accounts_page,
+            "/accounts/{user}": accounts_user_page,
+            "/terminal": terminal_page,
+            "/services": services_page,
+            #'/tests': tests_page
+        }
+    ).classes("w-full")
+
+
+@ui.page("/")
+async def root():
+    if not app.storage.user.get("uid"):
+        app.storage.user.update({"uid": uuid.uuid4()})
+    ui.timer(1.0, check_auth)
+    init_colors()
+    await controlPanel()
+
+
+if __name__ == "__main__":
     freeze_support()
 
-    @ui.page("/")
-    @ui.page("/overview")
-    @ui.page("/networking")
-    @ui.page("/networking/firewall")
-    @ui.page("/networking/{interface_name}")
-    @ui.page("/logs")
-    @ui.page("/logs/{log}")
-    @ui.page("/services")
-    @ui.page("/snmp")
-    @ui.page("/snmp/{version}/{user}")
-    @ui.page("/terminal")
-    @ui.page("/accounts")
-    @ui.page("/accounts/{user}")
-    async def root():
-        init_colors()
-
-        await ui.context.client.connected()
-        if not app.storage.tab.get("uid", False):
-            initUid = str(uuid.uuid4())
-            # print("uuid: ", initUid)
-            # when they connect they get an id
-            app.storage.tab.update({"uid": initUid})
-            # we add that id to our list
-            app.storage.general["uids"].append(initUid)
-
-        async def check_active_user():
-            await ui.context.client.connected()
-            # get the "active" user marked in the auth func
-            active_uid = app.storage.general.get("activeUser", None)
-            # print("active uid: ", active_uid)
-            # print("check active user")
-            if active_uid != app.storage.tab.get("uid"):
-                ui.navigate.to("/login")
-                return
-
-        await check_active_user()
-        ui.timer(1.0, lambda: check_active_user())
-
-        with ui.header().classes("items-center justify-between").classes("bg-dark"):
-            ui.button(on_click=lambda: left_drawer.toggle(), icon="menu").props(
-                "flat color=white"
-            )
-            ui.image(str(ASSETS_DIR / "NOVUS_LOGO.svg")).classes("w-48")
-            ui.label(f"Welcome {app.storage.general.get("username","error")}!")
-            with ui.row():
-                date = ui.label().classes("font-bold")
-
-                def update_date():
-                    date.set_text(
-                        datetime.now().astimezone().strftime("%m-%d-%Y %H:%M:%S")
-                    )
-
-            ui.timer(1.0, update_date)
-
-        with ui.left_drawer(bordered=True).classes("bg-dark") as left_drawer:
-            ui.separator()
-            ui.button(
-                "Overview",
-                on_click=lambda: ui.navigate.to("/overview"),
-            ).props(
-                "flat color=white align=left"
-            ).classes("full-width")
-            ui.button(
-                "Networking",
-                on_click=lambda: ui.navigate.to("/networking"),
-            ).props("flat color=white align=left").classes("full-width")
-            ui.button(
-                "Logs",
-                on_click=lambda: ui.navigate.to("/logs"),
-            ).props(
-                "flat color=white align=left"
-            ).classes("full-width")
-            ui.button(
-                "Services",
-                on_click=lambda: ui.navigate.to("/services"),
-            ).props(
-                "flat color=white align=left"
-            ).classes("full-width")
-            ui.button(
-                "Terminal",
-                on_click=lambda: ui.navigate.to("/terminal"),
-            ).props(
-                "flat color=white align=left"
-            ).classes("full-width")
-            ui.button(
-                "SNMP",
-                on_click=lambda: ui.navigate.to("/snmp"),
-            ).props(
-                "flat color=white align=left"
-            ).classes("full-width")
-            ui.button(
-                "Accounts",
-                on_click=lambda: ui.navigate.to("/accounts"),
-            ).props(
-                "flat color=white align=left"
-            ).classes("full-width")
-            ui.separator()
-            ui.button(
-                "Logout",
-                on_click=lambda: ui.navigate.to("/login"),
-            ).props(
-                "flat color=negative align=left"
-            ).classes("full-width")
-        # Footer
-        with ui.footer().classes("bg-dark"):
-            ui.label(version("ns2"))
-
-        ui.sub_pages(
-            {
-                "/": home_page,
-                "/overview": home_page,
-                "/networking": network_page,
-                "/networking/firewall": firewall_page,
-                "/networking/{interface_name}": interface_page,
-                "/logs": logs_page,
-                "/logs/{log}": log_page,
-                "/snmp": snmp_page,
-                "/snmp/{version}/{user}": snmp_user_page,
-                "/accounts": accounts_page,
-                "/accounts/{user}": accounts_user_page,
-                "/terminal": terminal_page,
-                "/services": services_page,
-                #'/tests': tests_page
-            }
-        ).classes("w-full")
+    ui.run(
+        login_page,
+        port=8000,
+        reload=False,
+        storage_secret="your-secret-key",
+        title="Novus Configuration Tool",
+        favicon=str(ASSETS_DIR / "favicon.png"),
+    )
