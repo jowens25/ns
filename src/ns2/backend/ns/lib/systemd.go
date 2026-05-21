@@ -47,7 +47,7 @@ func _startUnit(unit string) error {
 
 }
 
-func _restartUnit(unit string) {
+func _restartUnit(unit string) error {
 
 	log.Info().Msgf("_restartUnit: %s", unit)
 
@@ -57,7 +57,13 @@ func _restartUnit(unit string) {
 	}
 	defer conn.Close()
 
-	conn.RestartUnitContext(context.Background(), unit, "replace", nil)
+	_, err = conn.RestartUnitContext(context.Background(), unit, "replace", nil)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func _getUnitStatus(unit string) (string, error) {

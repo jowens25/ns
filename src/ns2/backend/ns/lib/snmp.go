@@ -42,6 +42,19 @@ func (v2 *v2User) FromDict(dict map[string]string) {
 	v2.SecurityName = dict["SecurityName"]
 }
 
+func (v2 *v2User) ToDict() map[string]string {
+
+	res := map[string]string{}
+	res["Community"] = v2.Community
+	res["Version"] = v2.Version
+	res["Permissions"] = v2.Permissions
+	res["Source"] = v2.Source
+	res["SecurityName"] = v2.SecurityName
+
+	return res
+
+}
+
 type v3User struct {
 	Username       string `json:"Username"`
 	Version        string `json:"Version"`
@@ -60,6 +73,22 @@ func (v3 *v3User) FromDict(dict map[string]string) {
 	v3.PrivType = dict["PrivType"]
 	v3.PrivPassphrase = dict["PrivPassphrase"]
 	v3.Permissions = dict["Permissions"]
+}
+
+func (v3 *v3User) ToDict() map[string]string {
+
+	res := map[string]string{}
+
+	res["Username"] = v3.Username
+	res["Version"] = v3.Version
+	res["AuthType"] = v3.AuthType
+	res["AuthPassphrase"] = v3.AuthPassphrase
+	res["PrivType"] = v3.PrivType
+	res["PrivPassphrase"] = v3.PrivPassphrase
+	res["Permissions"] = v3.Permissions
+
+	return res
+
 }
 
 type snmpGroup struct {

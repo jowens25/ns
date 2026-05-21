@@ -1,9 +1,6 @@
 package snmp
 
 import (
-	"fmt"
-
-	"github.com/jowens25/ns/ns/lib"
 	"github.com/spf13/cobra"
 )
 
@@ -18,7 +15,7 @@ func Reset() *cobra.Command {
 		Short: "reset snmp config to default",
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			fmt.Println(lib.CallNovusService("snmp.ResetSnmp", []any{}))
+			//fmt.Println(lib.CallNovusService("snmp.ResetSnmp", []any{}))
 
 			return nil
 		},
@@ -32,7 +29,7 @@ func Test() *cobra.Command {
 		Short: "test snmp daemon",
 		RunE: func(cmd *cobra.Command, args []string) error {
 
-			fmt.Println(lib.CallNovusService("snmp.TestSnmp", []any{}))
+			//fmt.Println(lib.CallNovusService("snmp.TestSnmp", []any{}))
 
 			return nil
 		},

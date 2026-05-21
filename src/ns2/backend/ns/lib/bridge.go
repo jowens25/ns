@@ -15,8 +15,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
 	"github.com/godbus/dbus/v5"
 	"github.com/gorilla/websocket"
 )
@@ -33,7 +31,11 @@ func MakeDbusCall(conn *dbus.Conn, call DbusCall) (any, error) {
 
 	var result any
 
-	err := MyCall(conn, call.Destination, call.Path, call.Method, 0, call.Signature, call.Args...).Store(&result)
+	obj := conn.Object(call.Destination, call.Path)
+
+	err := obj.Call(call.Method, 0, call.Args...).Store(&result)
+
+	//err := MyCall(conn, call.Destination, call.Path, call.Method, 0, call.Signature, call.Args...).Store(&result)
 	if err != nil {
 		return nil, err
 	}
@@ -41,6 +43,7 @@ func MakeDbusCall(conn *dbus.Conn, call DbusCall) (any, error) {
 
 }
 
+// not used right now
 func MyCall(conn *dbus.Conn, destination string, path dbus.ObjectPath, method string, flags dbus.Flags, signature string, args ...any) *dbus.Call {
 
 	iface := ""
@@ -80,103 +83,103 @@ func MyCall(conn *dbus.Conn, destination string, path dbus.ObjectPath, method st
 }
 
 // calls connect call with default:
-// com.novus.ns
+// com.novus.ns"
 // /com/novus/ns
-func CallNovusService(subinterfaceMethod string, args []any) any {
+// func CallNovusService(subinterfaceMethod string, args []any) any {
 
-	return ConnectCall("com.novus.ns", "/com/novus/ns", "com.novus.ns."+subinterfaceMethod, args)
+// 	return ConnectCall("com.novus.ns", "/com/novus/ns", "com.novus.ns."+subinterfaceMethod, args)
 
-}
+// }
 
-func ConnectCall(destination string, path string, method string, args []any) any {
+// func ConnectCall(destination string, path string, method string, args []any) any {
 
-	//	conn, err := dbus.ConnectSystemBus()
-	//
-	//	if err != nil {
-	//		fmt.Fprintln(os.Stderr, "Failed to connect to sys bus:", err)
-	//		os.Exit(1)
-	//	}
-	//	defer conn.Close()
-	//	r, err := MakeDbusCall(conn, DbusCall{Destination: destination, Path: path, Method: method, Args: args})
-	//
-	//	if err != nil {
-	//		return err
-	//	}
-	//	return r
+// 	//	conn, err := dbus.ConnectSystemBus()
+// 	//
+// 	//	if err != nil {
+// 	//		fmt.Fprintln(os.Stderr, "Failed to connect to sys bus:", err)
+// 	//		os.Exit(1)
+// 	//	}
+// 	//	defer conn.Close()
+// 	//	r, err := MakeDbusCall(conn, DbusCall{Destination: destination, Path: path, Method: method, Args: args})
+// 	//
+// 	//	if err != nil {
+// 	//		return err
+// 	//	}
+// 	//	return r
 
-	var j any = 1
+// 	var j any = 1
 
-	return j
+// 	return j
 
-}
+// }
 
-func callHandler(conn *dbus.Conn) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var call DbusCall
-		if err := c.ShouldBindJSON(&call); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error":   "Invalid request format",
-				"details": err.Error(),
-			})
-			fmt.Println(err.Error())
-			return
-		}
+// func callHandler(conn *dbus.Conn) gin.HandlerFunc {
+// 	return func(c *gin.Context) {
+// 		var call DbusCall
+// 		if err := c.ShouldBindJSON(&call); err != nil {
+// 			c.JSON(http.StatusBadRequest, gin.H{
+// 				"error":   "Invalid request format",
+// 				"details": err.Error(),
+// 			})
+// 			fmt.Println(err.Error())
+// 			return
+// 		}
 
-		//log.Println(call)
-		res, err := MakeDbusCall(conn, call)
-		if err != nil {
-			c.JSON(http.StatusOK, map[string]string{"Dbus": err.Error()})
-			return
-		}
+// 		//log.Println(call)
+// 		res, err := MakeDbusCall(conn, call)
+// 		if err != nil {
+// 			c.JSON(http.StatusOK, map[string]string{"Dbus": err.Error()})
+// 			return
+// 		}
 
-		//log.Println(res)
-		c.JSON(http.StatusOK, res)
-		return
+// 		//log.Println(res)
+// 		c.JSON(http.StatusOK, res)
+// 		return
 
-	}
-}
+// 	}
+// }
 
 // run from cmd
-func OpenDbusConnection() string {
-	// opens dbus connection as user
-	conn, err := dbus.ConnectSystemBus()
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "Failed to connect to sys bus:", err)
-		os.Exit(1)
-	}
-	return conn.Names()[0]
-}
+// func OpenDbusConnection() string {
+// 	// opens dbus connection as user
+// 	conn, err := dbus.ConnectSystemBus()
+// 	if err != nil {
+// 		fmt.Fprintln(os.Stderr, "Failed to connect to sys bus:", err)
+// 		os.Exit(1)
+// 	}
+// 	return conn.Names()[0]
+// }
 
-func InitHttpBridge() {
+// func InitHttpBridge() {
 
-	// opens dbus connection as user
-	conn, err := dbus.ConnectSystemBus()
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "Failed to connect to sys bus:", err)
-		os.Exit(1)
-	}
-	defer conn.Close()
+// 	// opens dbus connection as user
+// 	conn, err := dbus.ConnectSystemBus()
+// 	if err != nil {
+// 		fmt.Fprintln(os.Stderr, "Failed to connect to sys bus:", err)
+// 		os.Exit(1)
+// 	}
+// 	defer conn.Close()
 
-	fmt.Println(conn.Names()[0])
+// 	fmt.Println(conn.Names()[0])
 
-	//gin.SetMode(gin.ReleaseMode)
+// 	//gin.SetMode(gin.ReleaseMode)
 
-	r := gin.Default()
+// 	r := gin.Default()
 
-	cfg := cors.DefaultConfig()
+// 	cfg := cors.DefaultConfig()
 
-	cfg.AllowMethods = []string{"POST"}
-	cfg.AllowOrigins = []string{"http://localhost"}
-	r.SetTrustedProxies([]string{"http://localhost"})
+// 	cfg.AllowMethods = []string{"POST"}
+// 	cfg.AllowOrigins = []string{"http://localhost"}
+// 	r.SetTrustedProxies([]string{"http://localhost"})
 
-	r.Use(cors.New(cfg))
+// 	r.Use(cors.New(cfg))
 
-	r.Use(gin.Recovery())
+// 	r.Use(gin.Recovery())
 
-	r.POST("/call", callHandler(conn)) // POST TO THE BRIDGE IS A Call OR SET
+// 	r.POST("/call", callHandler(conn)) // POST TO THE BRIDGE IS A Call OR SET
 
-	r.Run("localhost:8080") // offical
-}
+// 	r.Run("localhost:8080") // offical
+// }
 
 func CallMakeBridge(username string) (int, error) {
 
@@ -361,6 +364,42 @@ func (c *Client) rxHandler(data []byte) {
 		//continue
 	}
 
+	if action, ok := msg["systemd"]; ok {
+
+		service := msg["service"].(string)
+
+		var systemdError error
+		var status string = "success"
+
+		switch action {
+		case "stop":
+			systemdError = _stopUnit(service)
+		case "start":
+			systemdError = _startUnit(service)
+		case "restart":
+			systemdError = _restartUnit(service)
+		case "status":
+			status, systemdError = _getUnitStatus(service)
+		}
+
+		if systemdError != nil {
+			msg["systemd"] = "error"
+			msg["service"] = service
+			msg["error"] = systemdError.Error()
+			c.sendResponse(&msg)
+			return
+		}
+
+		msg["systemd"] = status
+		msg["action"] = action
+		msg["service"] = service
+		msg["status"] = status
+
+		c.sendResponse(&msg)
+		return
+
+	}
+
 	if msg["status"] == "?" {
 		msg["status"] = "up"
 		c.sendResponse(&msg)
@@ -373,8 +412,7 @@ func (c *Client) rxHandler(data []byte) {
 		return
 	}
 
-	_, ok := msg["dbusCall"]
-	if ok {
+	if _, ok := msg["dbusCall"]; ok {
 
 		//fmt.Printf("msg: %s\n", msg)
 		//fmt.Println("=====================================")
@@ -411,7 +449,7 @@ func (c *Client) rxHandler(data []byte) {
 
 			msg["dbusError"] = map[string]any{"error": err.Error()}
 
-			fmt.Printf("error after makedbus call: %s\n", err.Error())
+			fmt.Printf("error after make dbus %s: %s\n", call.Method, err.Error())
 
 		}
 		fmt.Println(rsp)

@@ -2,6 +2,7 @@ package lib
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/godbus/dbus/v5"
@@ -21,12 +22,13 @@ type Subject struct {
 }
 
 // returns true of IsAuthorized
-func CheckAuthorization(sender dbus.Sender, actionId string) (bool, error) {
+func CheckAuthorization(sender dbus.Sender, actionId string) bool {
 
 	conn, err := dbus.SystemBus()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to connect to system bus: %v\n", err)
-		return false, err
+		log.Println(err.Error())
+		return false
 	}
 
 	subject := Subject{
@@ -49,11 +51,12 @@ func CheckAuthorization(sender dbus.Sender, actionId string) (bool, error) {
 				""}})
 
 	if err != nil {
-		return false, err
+		log.Println(err.Error())
+		return false
 	}
 
 	slice, _ := result.([]any)
-	return slice[0].(bool), nil
+	return slice[0].(bool)
 }
 
 type Action struct {
