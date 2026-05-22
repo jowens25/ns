@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"slices"
 	"strings"
+
+	"github.com/godbus/dbus/v5"
 )
 
 var SNMP_CONF_FILE string = "/etc/snmp/snmpd.conf.d/novus-snmpd.conf"
@@ -34,12 +36,33 @@ type v2User struct {
 	SecurityName string `json:"SecurityName"`
 }
 
-func (v2 *v2User) FromDict(dict map[string]string) {
-	v2.Community = dict["Community"]
-	v2.Version = dict["Version"]
-	v2.Permissions = dict["Permissions"]
-	v2.Source = dict["Source"]
-	v2.SecurityName = dict["SecurityName"]
+func getString(dict map[string]dbus.Variant, key string) string {
+
+	v, ok := dict[key]
+
+	fmt.Println("get string: ", v)
+
+	if !ok {
+		return ""
+	}
+
+	val, ok := v.Value().(string)
+	if !ok {
+		return ""
+	}
+
+	return val
+
+}
+
+func (v2 *v2User) FromDict(dict map[string]dbus.Variant) {
+
+	v2.Community = getString(dict, "Community")
+	v2.Version = getString(dict, "Version")
+	v2.Permissions = getString(dict, "Permissions")
+	v2.Source = getString(dict, "Source")
+	v2.SecurityName = getString(dict, "SecurityName")
+
 }
 
 func (v2 *v2User) ToDict() map[string]string {

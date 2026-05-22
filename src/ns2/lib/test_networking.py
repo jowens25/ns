@@ -6,9 +6,10 @@ from ns2.api.dbus import get_dbus
 from ns2.lib.networking import GetInterfaces, GetDeviceFromInterface, set_refresh_rate
 
 import asyncio
-import requests
+from ns2.lib.bridge import SetBridge
 
 from numpy import uint
+from ns2.lib.systemd1 import SystemdRestart
 
 
 async def net_test():
@@ -26,19 +27,44 @@ async def net_test():
     print(rsp.body)
 
 
-from ns2.lib.bridge import MakeBridgeDbusCall, CallMakeBridge, Bridge, CallCloseBridge
+from ns2.lib.bridge import DbusCall, CallMakeBridge, Bridge, CallCloseBridge
+from ns2.lib.networking import *
 
 
-async def test():
+async def TestFunc():
+    print("running test?")
 
     await CallMakeBridge("admin")
     await asyncio.sleep(1)
 
     bridge = Bridge()
-
     await bridge.connect()
 
-    # devices = await MakeBridgeDbusCall(
+    SetBridge(bridge)
+
+    dev_path = await GetDeviceByIpIface("enp3s0")
+
+    ac_path = await GetNmProp(dev_path, "Device", "ActiveConnection")
+
+    print(ac_path)
+
+    connect_path = await GetNmProp(ac_path, "Connection.Active", "Connection")
+
+    settings = await GetSettings(connect_path)
+
+    print(settings)
+    ip4_config_path = await GetNmProp(dev_path, "Device", "Ip4Config")
+
+    ip4AddressData = await GetNmProp(ip4_config_path, "IP4Config", "AddressData")
+
+    print(ip4AddressData)
+    # rsp = await SystemdRestart("snmpd.service")
+
+    # print(rsp)
+
+    await bridge.cleanup()
+
+    # devices = await DbusCall(
     #    bridge,
     #    destination="org.freedesktop.NetworkManager",
     #    path="/org/freedesktop/NetworkManager",
@@ -51,7 +77,7 @@ async def test():
     # print(devices[1])
     #
     # pprint(
-    #    await MakeBridgeDbusCall(
+    #    await DbusCall(
     #        bridge,
     #        destination="org.freedesktop.NetworkManager",
     #        path="/org/freedesktop/NetworkManager/Devices/2",
@@ -61,34 +87,36 @@ async def test():
     #    ),
     # )
 
-    pprint(
-        await MakeBridgeDbusCall(
-            bridge,
-            destination="org.freedesktop.NetworkManager",
-            path="/org/freedesktop/NetworkManager",
-            method="org.freedesktop.NetworkManager.Enable",
-            args=[False],
-            # signature=["b"],
-        ),
-    )
-
-    # prop = await MakeBridgeDbusCall(
-    #    bridge,
-    #    destination="org.freedesktop.NetworkManager",
-    #    path=devices[1],
-    #    method="org.freedesktop.DBus.Properties.Get",
-    #    args=["org.freedesktop.NetworkManager.Device", "ActiveConnection"],
+    # pprint(
+    #    await DbusCall(
+    #        bridge,
+    #        destination="org.freedesktop.NetworkManager",
+    #        path="/org/freedesktop/NetworkManager",
+    #        method="org.freedesktop.NetworkManager.Enable",
+    #        args=[False],
+    #        # signature=["b"],
+    #    ),
     # )
-    #
-    # print(prop)
-
-    await bridge.disconnect()
-    await CallCloseBridge()
 
 
-def run_test():
+#
+# prop = await DbusCall(
+#    bridge,
+#    destination="org.freedesktop.NetworkManager",
+#    path=devices[1],
+#    method="org.freedesktop.DBus.Properties.Get",
+#    args=["org.freedesktop.NetworkManager.Device", "ActiveConnection"],
+# )
+#
+# print(prop)
 
-    asyncio.run(test())
+# await bridge.disconnect()
+# await CallCloseBridge()
+
+
+if __name__ == "__main__":
+
+    asyncio.run(TestFunc())
 
 
 #

@@ -154,7 +154,7 @@ async def _deleteUser(username: str) -> str:
         return "delete failed"
 
 
-async def getAccountsInterface(bus: MessageBus):
+async def getAccountsInterface():
     introspection = await bus.introspect("com.novus.ns", "/com/novus/ns")
     obj = bus.get_proxy_object("com.novus.ns", "/com/novus/ns", introspection)
     return obj.get_interface("com.novus.ns.accounts")

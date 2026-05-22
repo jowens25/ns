@@ -10,7 +10,6 @@ import (
 	"os/exec"
 	"os/signal"
 	"os/user"
-	"strings"
 	"sync"
 	"syscall"
 	"time"
@@ -32,8 +31,14 @@ func MakeDbusCall(conn *dbus.Conn, call DbusCall) (any, error) {
 	var result any
 
 	obj := conn.Object(call.Destination, call.Path)
+	//fmt.Println("MAKE DBUS CALL DEBUGGER")
+	//fmt.Println(call.Method)
+	//fmt.Println(dbus.SignatureOf(call.Args))
+	//fmt.Println(dbus.SignatureOf(call.Args...)) // right way??
 
 	err := obj.Call(call.Method, 0, call.Args...).Store(&result)
+
+	//obj.CallWithContext()
 
 	//err := MyCall(conn, call.Destination, call.Path, call.Method, 0, call.Signature, call.Args...).Store(&result)
 	if err != nil {
@@ -42,144 +47,6 @@ func MakeDbusCall(conn *dbus.Conn, call DbusCall) (any, error) {
 	return result, nil
 
 }
-
-// not used right now
-func MyCall(conn *dbus.Conn, destination string, path dbus.ObjectPath, method string, flags dbus.Flags, signature string, args ...any) *dbus.Call {
-
-	iface := ""
-	i := strings.LastIndex(method, ".")
-	if i != -1 {
-		iface = method[:i]
-	}
-	method = method[i+1:]
-
-	msg := new(dbus.Message)
-	msg.Type = dbus.TypeMethodCall
-	msg.Flags = flags & (dbus.FlagNoAutoStart | dbus.FlagNoReplyExpected)
-	msg.Headers = make(map[dbus.HeaderField]dbus.Variant)
-	msg.Headers[dbus.FieldPath] = dbus.MakeVariant(path)
-	msg.Headers[dbus.FieldDestination] = dbus.MakeVariant(destination)
-	msg.Headers[dbus.FieldMember] = dbus.MakeVariant(method)
-
-	if iface != "" {
-		msg.Headers[dbus.FieldInterface] = dbus.MakeVariant(iface)
-	}
-
-	msg.Body = args
-
-	if signature != "" {
-		sig, err := dbus.ParseSignature(signature)
-		if err != nil {
-			panic(err)
-		}
-		msg.Headers[dbus.FieldSignature] = dbus.MakeVariant(sig)
-	}
-
-	fmt.Println("Message headers:", msg.Headers)
-
-	ch := make(chan *dbus.Call, 1)
-	conn.SendWithContext(context.Background(), msg, ch)
-	return <-ch
-}
-
-// calls connect call with default:
-// com.novus.ns"
-// /com/novus/ns
-// func CallNovusService(subinterfaceMethod string, args []any) any {
-
-// 	return ConnectCall("com.novus.ns", "/com/novus/ns", "com.novus.ns."+subinterfaceMethod, args)
-
-// }
-
-// func ConnectCall(destination string, path string, method string, args []any) any {
-
-// 	//	conn, err := dbus.ConnectSystemBus()
-// 	//
-// 	//	if err != nil {
-// 	//		fmt.Fprintln(os.Stderr, "Failed to connect to sys bus:", err)
-// 	//		os.Exit(1)
-// 	//	}
-// 	//	defer conn.Close()
-// 	//	r, err := MakeDbusCall(conn, DbusCall{Destination: destination, Path: path, Method: method, Args: args})
-// 	//
-// 	//	if err != nil {
-// 	//		return err
-// 	//	}
-// 	//	return r
-
-// 	var j any = 1
-
-// 	return j
-
-// }
-
-// func callHandler(conn *dbus.Conn) gin.HandlerFunc {
-// 	return func(c *gin.Context) {
-// 		var call DbusCall
-// 		if err := c.ShouldBindJSON(&call); err != nil {
-// 			c.JSON(http.StatusBadRequest, gin.H{
-// 				"error":   "Invalid request format",
-// 				"details": err.Error(),
-// 			})
-// 			fmt.Println(err.Error())
-// 			return
-// 		}
-
-// 		//log.Println(call)
-// 		res, err := MakeDbusCall(conn, call)
-// 		if err != nil {
-// 			c.JSON(http.StatusOK, map[string]string{"Dbus": err.Error()})
-// 			return
-// 		}
-
-// 		//log.Println(res)
-// 		c.JSON(http.StatusOK, res)
-// 		return
-
-// 	}
-// }
-
-// run from cmd
-// func OpenDbusConnection() string {
-// 	// opens dbus connection as user
-// 	conn, err := dbus.ConnectSystemBus()
-// 	if err != nil {
-// 		fmt.Fprintln(os.Stderr, "Failed to connect to sys bus:", err)
-// 		os.Exit(1)
-// 	}
-// 	return conn.Names()[0]
-// }
-
-// func InitHttpBridge() {
-
-// 	// opens dbus connection as user
-// 	conn, err := dbus.ConnectSystemBus()
-// 	if err != nil {
-// 		fmt.Fprintln(os.Stderr, "Failed to connect to sys bus:", err)
-// 		os.Exit(1)
-// 	}
-// 	defer conn.Close()
-
-// 	fmt.Println(conn.Names()[0])
-
-// 	//gin.SetMode(gin.ReleaseMode)
-
-// 	r := gin.Default()
-
-// 	cfg := cors.DefaultConfig()
-
-// 	cfg.AllowMethods = []string{"POST"}
-// 	cfg.AllowOrigins = []string{"http://localhost"}
-// 	r.SetTrustedProxies([]string{"http://localhost"})
-
-// 	r.Use(cors.New(cfg))
-
-// 	r.Use(gin.Recovery())
-
-// 	r.POST("/call", callHandler(conn)) // POST TO THE BRIDGE IS A Call OR SET
-
-// 	r.Run("localhost:8080") // offical
-// }
 
 func CallMakeBridge(username string) (int, error) {
 
@@ -364,6 +231,8 @@ func (c *Client) rxHandler(data []byte) {
 		//continue
 	}
 
+	fmt.Println("REQUEST: ", msg)
+
 	if action, ok := msg["systemd"]; ok {
 
 		service := msg["service"].(string)
@@ -422,103 +291,24 @@ func (c *Client) rxHandler(data []byte) {
 		if err != nil {
 			msg["dbusError"] = map[string]any{"error": err.Error()}
 		}
-		//call.Destination = msg["destination"].(string)
-		//call.Path = msg["path"].(string)
-		//call.Method = msg["method"].(string)
-		//
-		//tempArgs := msg["args"].([]any)
-		//tempSigs := msg["signature"].([]any)
-		//finalArgs := []any{}
-		//
-		//for i := range tempArgs {
-		//
-		//	sig, _ := dbus.ParseSignature(tempSigs[i].(string))
-		//
-		//	v, _ := dbus.ParseVariant(tempArgs[i].(string), sig)
-		//
-		//	finalArgs = append(finalArgs, v.Value())
-		//}
-		//
-		//call.Args = finalArgs
-		//fmt.Println("final args")
-		//fmt.Println(call.Args)
-		//fmt.Println("=====================================")
+
+		fmt.Println("args: ", call.Args)
 
 		rsp, err := MakeDbusCall(c.dbusConn, call)
 		if err != nil {
 
 			msg["dbusError"] = map[string]any{"error": err.Error()}
 
-			fmt.Printf("error after make dbus %s: %s\n", call.Method, err.Error())
+			fmt.Println("ERROR WITH METHOD: ", call.Method)
+
+			fmt.Println("ERROR FROM MAKE DBUS CALL: ", err.Error())
 
 		}
-		fmt.Println(rsp)
-
 		msg["dbusResponse"] = rsp
 		c.sendResponse(&msg)
 		return
 	}
 
-	fmt.Printf("%s\n", msg)
-
-	// Parse incoming message
-	//var msg DbusMessage
-	//if err := json.Unmarshal(message, &msg); err != nil {
-	//	c.sendError(msg.RequestID, fmt.Sprintf("Invalid JSON: %v", err))
-	//	continue
-	//}
-
-	//var response DbusResponse
-	//response.RequestID = msg.RequestID
-
-	fmt.Println(msg)
-
-	//switch msg.Type {
-	//case "call":
-	//	obj := c.dbusConn.Object(msg.Destination, dbus.ObjectPath(msg.Path))
-	//	call := obj.Call(msg.Interface+"."+msg.Member, 0, msg.Args...)
-	//
-	//	if call.Err != nil {
-	//		response.Success = false
-	//		response.Error = call.Err.Error()
-	//	} else {
-	//		response.Success = true
-	//		response.Result = call.Body
-	//	}
-	//
-	//case "get":
-	//	obj := c.dbusConn.Object(msg.Destination, dbus.ObjectPath(msg.Path))
-	//	variant, err := obj.GetProperty(msg.Interface + "." + msg.Member)
-	//
-	//	if err != nil {
-	//		response.Success = false
-	//		response.Error = err.Error()
-	//	} else {
-	//		response.Success = true
-	//		response.Result = []interface{}{variant.Value()}
-	//	}
-	//
-	//case "set":
-	//	obj := c.dbusConn.Object(msg.Destination, dbus.ObjectPath(msg.Path))
-	//	err := obj.SetProperty(msg.Interface+"."+msg.Member, dbus.MakeVariant(msg.Args[0]))
-	//
-	//	if err != nil {
-	//		response.Success = false
-	//		response.Error = err.Error()
-	//	} else {
-	//		response.Success = true
-	//	}
-	//
-	//case "test":
-	//	c.send <- []byte("hello world")
-	//
-	//default:
-	//	response.Success = false
-	//	response.Error = "Unknown message type"
-	//}
-
-	// Send response back to client
-	//c.sendResponse(&response)
 }
 
 func (c *Client) sendResponse(resp *map[string]any) {
@@ -529,15 +319,6 @@ func (c *Client) sendResponse(resp *map[string]any) {
 	}
 	c.send <- txdata
 }
-
-//func (c *Client) sendError(requestID, errMsg string) {
-//	resp := &DbusResponse{
-//		RequestID: requestID,
-//		Success:   false,
-//		Error:     errMsg,
-//	}
-//	c.sendResponse(resp)
-//}
 
 // Forward D-Bus signals to WebSocket client
 func (c *Client) forwardSignals() {

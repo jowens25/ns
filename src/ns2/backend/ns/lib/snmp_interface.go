@@ -1,11 +1,13 @@
 package lib
 
 import (
+	"fmt"
+
 	"github.com/godbus/dbus/v5"
 )
 
 // SnmpInterface implements the com.novus.ns.snmp interface
-type SnmpInterface struct{}
+type SnmpInterface struct{ conn *dbus.Conn }
 
 func (s *SnmpInterface) TestSnmp(sender dbus.Sender, message dbus.Message) (string, *dbus.Error) {
 
@@ -127,12 +129,17 @@ func (s *SnmpInterface) RemoveV3User(sender dbus.Sender, message dbus.Message, v
 }
 
 // CreateV2User creates a V2 user
-func (s *SnmpInterface) CreateV2User(sender dbus.Sender, message dbus.Message, v2Dict map[string]string) (string, *dbus.Error) {
+func (s *SnmpInterface) CreateV2User(sender dbus.Sender, message dbus.Message, v2Dict map[string]dbus.Variant) (string, *dbus.Error) {
+
+	GetUserInfoFromSender(s.conn, sender)
 
 	isAuthorized := CheckAuthorization(sender, GetActionId(message))
 
+	fmt.Println("MESSAGE::::::", message)
+
 	if isAuthorized {
 		u := v2User{}
+
 		u.FromDict(v2Dict)
 		AddV2User(u)
 		return "user created", nil
@@ -174,7 +181,7 @@ func (s *SnmpInterface) GetV2Users() ([]map[string]string, *dbus.Error) {
 }
 
 // ModifyV2User modifies a V2 user
-func (s *SnmpInterface) ModifyV2User(sender dbus.Sender, message dbus.Message, v2Dict map[string]string) (string, *dbus.Error) {
+func (s *SnmpInterface) ModifyV2User(sender dbus.Sender, message dbus.Message, v2Dict map[string]dbus.Variant) (string, *dbus.Error) {
 
 	isAuthorized := CheckAuthorization(sender, GetActionId(message))
 
@@ -194,7 +201,7 @@ func (s *SnmpInterface) ModifyV2User(sender dbus.Sender, message dbus.Message, v
 }
 
 // RemoveV2User removes a V2 user
-func (s *SnmpInterface) RemoveV2User(sender dbus.Sender, message dbus.Message, v2Dict map[string]string) (string, *dbus.Error) {
+func (s *SnmpInterface) RemoveV2User(sender dbus.Sender, message dbus.Message, v2Dict map[string]dbus.Variant) (string, *dbus.Error) {
 
 	isAuthorized := CheckAuthorization(sender, GetActionId(message))
 

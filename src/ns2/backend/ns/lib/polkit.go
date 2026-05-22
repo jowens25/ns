@@ -11,8 +11,6 @@ import (
 func GetActionId(message dbus.Message) string {
 	iface := message.Headers[dbus.FieldInterface].Value().(string)
 	member := message.Headers[dbus.FieldMember].Value().(string)
-	fmt.Println(iface)
-	fmt.Println(member)
 	return fmt.Sprintf("%s.%s", iface, member)
 }
 
@@ -27,7 +25,7 @@ func CheckAuthorization(sender dbus.Sender, actionId string) bool {
 	conn, err := dbus.SystemBus()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to connect to system bus: %v\n", err)
-		log.Println(err.Error())
+		fmt.Printf("sys conn: %s\n", err.Error())
 		return false
 	}
 
@@ -52,8 +50,12 @@ func CheckAuthorization(sender dbus.Sender, actionId string) bool {
 
 	if err != nil {
 		log.Println(err.Error())
-		return false
+		fmt.Printf("make dbus call error: %s\n", err.Error())
 	}
+
+	fmt.Println("NORMAL RETURN")
+
+	fmt.Println(result)
 
 	slice, _ := result.([]any)
 	return slice[0].(bool)

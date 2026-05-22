@@ -10,8 +10,6 @@ cli.add_typer(status_cli, name="status")
 
 from ns2.utils import ASSETS_DIR
 
-from ns2.ui.main import init_ui
-from nicegui import ui as nui
 
 from ns2.api.main import init_dbus_service
 

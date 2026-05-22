@@ -84,11 +84,11 @@ class V3User:
 
 @dataclass
 class V2User:
-    Community: Optional[str] = ""
-    Version: Optional[str] = ""
-    Permissions: Optional[str] = ""
-    Source: Optional[str] = ""
-    SecName: Optional[str] = ""
+    Community: str = ""
+    Version: str = ""
+    Permissions: str = ""
+    Source: str = ""
+    SecurityName: str = ""
 
     def from_dict(userDict: dict):
         user = V2User(
@@ -96,7 +96,7 @@ class V2User:
             Version=userDict.get("Version"),
             Permissions=userDict.get("Permissions"),
             Source=userDict.get("Source"),
-            SecName=userDict.get("SecName"),
+            SecurityName=userDict.get("SecurityName"),
         )
         return user
 
@@ -384,9 +384,9 @@ async def _overWriteWithDefaultSnmpConf():
     await runCmd(["cp", "./configs/snmpd.conf", snmp_config_file])
 
 
-async def ResetSnmpd(bus: MessageBus) -> str:
+async def ResetSnmpd() -> str:
     # 1. Stop Snmp
-    await systemd_stop(bus, "snmpd.service")
+    await SystemdStop("snmpd.service")
     # 2. Remove Persistent Dir
     await _deletePersistentDir()
     # 3. Reset Main Config
@@ -394,15 +394,15 @@ async def ResetSnmpd(bus: MessageBus) -> str:
     # 4. Set Tmp Path for Persistent Dir
     await _setPersistentDir("/var/lib/tmp")
     # 5. Start Snmp
-    await systemd_start(bus, "snmpd.service")
+    await SystemdStart("snmpd.service")
     # 6. Stop Snmp
-    await systemd_stop(bus, "snmpd.service")
+    await SystemdStop("snmpd.service")
     # 7. Remove Temp Persistent Dir
     await _deletePersistentDir()
     # 8. Set Real Path for Persistent Dir
     await _setPersistentDir("/var/lib/snmp")
     # 9. Start Snmp
-    await systemd_start(bus, "snmpd.service")
+    await SystemdStart("snmpd.service")
 
     return "snmpd reset"
 
@@ -410,12 +410,12 @@ async def ResetSnmpd(bus: MessageBus) -> str:
 # ====================================================================
 # V3 USERS
 # ====================================================================
-async def AddV3User(bus: MessageBus, user: V3User):
+async def AddV3User(user: V3User):
     """add v3 user"""
     print("add v3 dude")
-    await systemd_stop(bus, "snmpd.service")
+    await SystemdStop("snmpd.service")
     await _writeV3UserCreateDirective(user)
-    await systemd_start(bus, "snmpd.service")  # real user created
+    await SystemdStart("snmpd.service")  # real user created
     await _deleteV3UserCreateDirective(user)
 
 
@@ -445,7 +445,7 @@ async def ReadV3Users() -> list[V3User]:
     return v3s
 
 
-async def EditV3User(bus: MessageBus, inituser: V3User, finaluser: V3User):
+async def EditV3User(inituser: V3User, finaluser: V3User):
     """edit v3 user"""
     print("EditV3User")
 
@@ -453,30 +453,30 @@ async def EditV3User(bus: MessageBus, inituser: V3User, finaluser: V3User):
         print("v3 USER NOT FOUND")
         # sys.exit()
 
-    await systemd_stop(bus, "snmpd.service")
+    await SystemdStop("snmpd.service")
     await _deleteV3UserFromStorage(inituser)  # remove actual
     await _deleteV3UserFromConfig(inituser)  # remove group
     await _writeV3UserCreateDirective(finaluser)  # add grup and create
-    await systemd_start(bus, "snmpd.service")
+    await SystemdStart("snmpd.service")
     await _deleteV3UserCreateDirective(finaluser)  # remove create dir
 
 
-async def DeleteV3User(bus: MessageBus, user: V3User):
-    await systemd_stop(bus, "snmpd.service")
+async def DeleteV3User(user: V3User):
+    await SystemdStop("snmpd.service")
     await _deleteV3UserFromConfig(user)
     await _deleteV3UserFromStorage(user)
-    await systemd_start(bus, "snmpd.service")
+    await SystemdStart("snmpd.service")
 
 
 # ====================================================================
 # V2 USERS
 # ====================================================================
-async def AddV2User(bus: MessageBus, user: V2User):
+async def AddV2User(user: V2User):
     """add v2 user"""
     print("add a v2 user")
-    await systemd_stop(bus, "snmpd.service")
+    await SystemdStop("snmpd.service")
     await _writeV2User(user)
-    await systemd_start(bus, "snmpd.service")
+    await SystemdStart("snmpd.service")
 
 
 async def ReadV2UserByCommunity(community: str) -> V2User:
@@ -511,7 +511,7 @@ async def ReadV2Users() -> list[V2User]:
     return v2s
 
 
-async def EditV2User(bus: MessageBus, user: V2User):
+async def EditV2User(user: V2User):
     """edit v2 user"""
     print("EditV2User")
     existingUser = await ReadV2UserBySecurityName(user.SecName)
@@ -520,17 +520,18 @@ async def EditV2User(bus: MessageBus, user: V2User):
         print("USER NOT FOUND")
         sys.exit()
 
-    await systemd_stop(bus, "snmpd.service")
+    SystemdStop
+    await SystemdStop("snmpd.service")
     await DeleteV2User(existingUser)
     await _writeV2User(user)
-    await systemd_start(bus, "snmpd.service")
+    await SystemdStart("snmpd.service")
 
 
-async def DeleteV2User(bus: MessageBus, user: V2User):
+async def DeleteV2User(user: V2User):
     """delete v2 user"""
     print("delete v2")
 
-    await systemd_stop(bus, "snmpd.service")
+    await SystemdStop("snmpd.service")
 
     _user = [user.SecName, user.Source, user.Community]
     _group = [user.Permissions, user.Version, user.SecName]
@@ -547,7 +548,7 @@ async def DeleteV2User(bus: MessageBus, user: V2User):
     async with aiofiles.open(snmp_config_file, "w") as f:
         await f.writelines(content)
 
-    await systemd_start(bus, "snmpd.service")
+    await SystemdStart("snmpd.service")
 
 
 # ====================================================================

@@ -1,5 +1,6 @@
 import asyncio
 import json
+from pprint import pprint
 from websockets.asyncio.client import connect
 from websockets import ClientConnection
 
@@ -113,10 +114,11 @@ async def SetupBridge(_username: str) -> str:
     bridge = Bridge()
 
     await CallMakeBridge(_username)
-    await asyncio.sleep(0.1)
+    await asyncio.sleep(0.5)
     await bridge.connect()
 
     if bridge.isConnected:
+        print("new bridge connected")
         SetBridge(bridge)
         return await GetActiveUserBridge(bridge)
     else:
@@ -142,8 +144,13 @@ def SetBridge(bridge: Bridge):
     UserBridge = bridge
 
 
-async def CheckBridge(bridge) -> bool:
+async def CheckBridge() -> bool:
     """checks to make sure its up"""
+    bridge = GetBridge()
+
+    if not bridge:
+        return False
+
     rsp = await bridge.writeRead({"status": "?"})
     print(rsp)
     if rsp["status"] == "up":
@@ -177,13 +184,26 @@ async def tryBridge():
     await CallCloseBridge()
 
 
-async def MakeBridgeDbusCall(
+async def SnmpCall(meth, args):
+    return await DbusCall(
+        "com.novus.ns", "/com/novus/ns", "com.novus.ns.snmp", meth, "", args
+    )
+
+
+async def DbusCall(
     destination: str,
     path: str,
-    method: str,
+    interface: str,
+    member: str,
+    signature: str,
     args,
-    signature=None,
 ):
+
+    if type(args) != list:
+        print("CHECK INPUT OF: ", member)
+        # return
+
+    method = interface + "." + member
 
     bridge = GetBridge()
 
@@ -196,6 +216,9 @@ async def MakeBridgeDbusCall(
         "signature": signature,
     }
 
+    print("REQUEST: ")
+    pprint(req)
+
     rsp = await bridge.writeRead(req)
 
     # print(rsp)
@@ -203,4 +226,16 @@ async def MakeBridgeDbusCall(
     if err is not None:
         return err
 
+    print("RESPONSE: ")
+    pprint(rsp)
+
     return rsp.get("dbusResponse")
+
+
+async def WriteBridge(req: dict):
+
+    bridge = GetBridge()
+
+    rsp = await bridge.writeRead(req)
+
+    return rsp

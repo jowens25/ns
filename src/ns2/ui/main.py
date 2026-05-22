@@ -38,6 +38,7 @@ from fastapi.responses import RedirectResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from nicegui import app, ui
+from ns2.lib.bridge import CheckBridge, GetBridge, SetupBridge
 
 unrestricted_page_routes = {
     "/login",
@@ -45,38 +46,57 @@ unrestricted_page_routes = {
 }
 
 
-def check_auth():
-    print("echeck")
+async def check_auth():
+
+    if stay_logged_in:
+        return
+    # print("echeck")
     uid = app.storage.user.get("uid")
 
     guid = app.storage.general.get("uid")
-    print(uid)
+
+    if not await CheckBridge():
+        # bridge.cleanup()
+        app.storage.user.clear()
+        ui.navigate.to("/login")
 
     if guid and guid != uid:
         app.storage.user.clear()
         ui.navigate.to("/login")
 
 
-@app.add_middleware
-class AuthMiddleware(BaseHTTPMiddleware):
+'''
+@app.middleware("http")
+async def auth_middleware(request: Request, call_next):
     """This middleware restricts access to all NiceGUI pages.
     It redirects the user to the login page if they are not authenticated."""
 
-    async def dispatch(self, request: Request, call_next):
-        path = request.url.path
-        if path in unrestricted_page_routes:
-            return await call_next(request)
-        if path.startswith("/_nicegui/") or path.startswith("/static/"):
-            return await call_next(request)
+    path = request.url.path
 
-        uid = app.storage.user.get("uid")
-        guid = app.storage.general.get("uid")
-        if guid and guid != uid:
-            app.storage.user.clear()
-            return RedirectResponse("/login")
+    if stay_logged_in:
         return await call_next(request)
 
+    # Allow unrestricted routes
+    if path in unrestricted_page_routes:
+        return await call_next(request)
 
+    # Allow static assets
+    if path.startswith("/_nicegui/") or path.startswith("/static/"):
+        return await call_next(request)
+
+    # Get the user's session UID
+    uid = app.storage.user.get("uid")
+    guid = app.storage.general.get("uid")
+    # Validate against the active session
+    if guid and guid != uid:
+        # Clear invalid session
+        # app.storage.user.clear()
+        # app.storage.general.clear()
+        # app.storage.user["redirect_after_login"] = path
+        return RedirectResponse("/login")
+
+    return await call_next(request)
+#'''
 # def init_ui():
 #    freeze_support()
 
@@ -189,6 +209,8 @@ async def controlPanel():
 
 @ui.page("/")
 async def root():
+    activeUser = await SetupBridge("root")
+    print("TEMP FIXed BRIDGE FOR: ", activeUser)
     if not app.storage.user.get("uid"):
         app.storage.user.update({"uid": uuid.uuid4()})
     ui.timer(1.0, check_auth)
@@ -196,14 +218,36 @@ async def root():
     await controlPanel()
 
 
-if __name__ == "__main__":
-    freeze_support()
+restartable = True
+stay_logged_in = True
+REUSE_FIXED_BRIDGE = True
+
+
+def restartablefunc():
 
     ui.run(
-        login_page,
+        root,
         port=8000,
-        reload=False,
+        reload=True,
         storage_secret="your-secret-key",
         title="Novus Configuration Tool",
         favicon=str(ASSETS_DIR / "favicon.png"),
     )
+
+
+if restartable:
+    restartablefunc()
+
+else:
+
+    if __name__ == "__main__":
+        freeze_support()
+
+        ui.run(
+            login_page,
+            port=8000,
+            reload=False,
+            storage_secret="your-secret-key",
+            title="Novus Configuration Tool",
+            favicon=str(ASSETS_DIR / "favicon.png"),
+        )

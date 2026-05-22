@@ -1,7 +1,7 @@
 from dbus_next.aio import MessageBus
 from dbus_next.constants import BusType
 
-AppBus: MessageBus = None
+App = None
 
 
 async def connect_to_dbus():

@@ -8,7 +8,10 @@ from dbus_next.aio import MessageBus
 
 
 class AccountsInterface(ServiceInterface):
-    def __init__(self, name, bus: MessageBus):
+    def __init__(
+        self,
+        name,
+    ):
         super().__init__(name)
         self.bus = bus
 

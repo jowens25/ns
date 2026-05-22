@@ -14,6 +14,8 @@ async def try_login(_username: str, _password: str) -> None:
 
     if auth:
         activeUser = await SetupBridge(_username)
+        if not app.storage.user.get("uid"):
+            app.storage.user.update({"uid": str(uuid.uuid4())})
 
         uid = app.storage.user.get("uid")
         app.storage.general.update({"activeUser": activeUser, "uid": uid})
@@ -26,8 +28,7 @@ async def try_login(_username: str, _password: str) -> None:
 @ui.page("/login")
 def login_page():
     # on log in page load
-    if not app.storage.user.get("uid"):
-        app.storage.user.update({"uid": uuid.uuid4()})
+
     init_colors()
     with ui.dialog() as support_dialog, ui.card():
         ui.label("Novus Power Products").classes("text-h5")

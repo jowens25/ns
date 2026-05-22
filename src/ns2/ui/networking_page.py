@@ -10,7 +10,6 @@ from ns2.ui.firewalld_page import firewall_status
 
 
 async def network_page():
-    AppBus = await get_dbus()
 
     print("NETWORK PAGE")
 
@@ -85,9 +84,9 @@ async def interface_card(nm: ProxyInterface, device: ProxyInterface, interface):
                             ).props("flat color=accent align=left")
                     result = await dialog
                     if result == "enable":
-                        await nm.call_activate_connection("/", interface._dev_path, "/")
+                        await nm.call_activate_connection("/", interface.dev_path, "/")
                     elif result == "disable":
-                        await nm.call_deactivate_connection(interface._act_con_path)
+                        await nm.call_deactivate_connection(interface.act_con_path)
                     else:
                         print("canceled")
 
@@ -115,7 +114,7 @@ async def interface_card(nm: ProxyInterface, device: ProxyInterface, interface):
 
                 async def auto_connect_cb(e):
                     return
-                    device = await GetDevice(dbus.Bus, interface._dev_path)
+                    device = await GetDevice(dbus.Bus, interface.dev_path)
                     settings = await GetSettings(device)
                     settings["connection"]["autoconnect"] = Variant("b", e.value)
                     # await connection.call_update2(settings, 0x1, {})
@@ -141,7 +140,6 @@ async def interface_card(nm: ProxyInterface, device: ProxyInterface, interface):
 
 
 async def interface_page(interface_name: str):
-    AppBus = await get_dbus()
 
     nm = await GetNetworkManager(AppBus)
 
@@ -174,7 +172,6 @@ async def interface_page(interface_name: str):
 
 
 async def edit_ip_connection(version: str, device: ProxyInterface):
-    AppBus = await get_dbus()
 
     settings = await GetSettings(AppBus, device)
 

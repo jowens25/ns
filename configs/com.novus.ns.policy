@@ -8,7 +8,7 @@
   <vendor_url>https://novuspower.com</vendor_url>
 
   <!-- SNMP Management Actions -->
-  <action id="com.novus.ns.snmp.reset">
+  <action id="com.novus.ns.snmp.Reset">
     <description>Reset SNMP configuration</description>
     <message>Authentication is required to reset SNMP configuration</message>
     <defaults>
@@ -18,7 +18,7 @@
     </defaults>
   </action>
 
-  <action id="com.novus.ns.snmp.create-v3-user">
+  <action id="com.novus.ns.snmp.CreateV3User">
     <description>Create SNMP v3 user</description>
     <message>Authentication is required to create SNMP v3 user</message>
     <defaults>
@@ -28,7 +28,7 @@
     </defaults>
   </action>
 
-  <action id="com.novus.ns.snmp.modify-v3-user">
+  <action id="com.novus.ns.snmp.ModifyV3User">
     <description>Modify SNMP v3 user</description>
     <message>Authentication is required to modify SNMP v3 user</message>
     <defaults>
@@ -38,7 +38,7 @@
     </defaults>
   </action>
 
-  <action id="com.novus.ns.snmp.remove-v3-user">
+  <action id="com.novus.ns.snmp.RemoveV3User">
     <description>Remove SNMP v3 user</description>
     <message>Authentication is required to remove SNMP v3 user</message>
     <defaults>
@@ -48,7 +48,7 @@
     </defaults>
   </action>
 
-  <action id="com.novus.ns.snmp.create-v2-user">
+  <action id="com.novus.ns.snmp.CreateV2User">
     <description>Create SNMP v2 user</description>
     <message>Authentication is required to create SNMP v2 user</message>
     <defaults>
@@ -58,7 +58,7 @@
     </defaults>
   </action>
 
-  <action id="com.novus.ns.snmp.modify-v2-user">
+  <action id="com.novus.ns.snmp.ModifyV2User">
     <description>Modify SNMP v2 user</description>
     <message>Authentication is required to modify SNMP v2 user</message>
     <defaults>
@@ -68,7 +68,7 @@
     </defaults>
   </action>
 
-  <action id="com.novus.ns.snmp.remove-v2-user">
+  <action id="com.novus.ns.snmp.RemoveV2User">
     <description>Remove SNMP v2 user</description>
     <message>Authentication is required to remove SNMP v2 user</message>
     <defaults>
@@ -90,7 +90,7 @@
   </action>
 
   <!-- PAM Authentication Actions -->
-  <action id="com.novus.ns.pam.authenticate">
+  <action id="com.novus.ns.pam.Authenticate">
     <description>Authenticate user</description>
     <message>Authentication is required</message>
     <defaults>

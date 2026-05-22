@@ -6,7 +6,7 @@ from dbus_next.aio.proxy_object import ProxyInterface
 from dbus_next.aio import MessageBus
 from dbus_next import Message
 
-async def systemd_start(bus: MessageBus, service: str):
+async def systemd_start(, service: str):
     async def on_job_removed(id, job_path, unit, result):
         job_dict = {"id":id,
                     "job_path":job_path,
@@ -31,7 +31,7 @@ async def systemd_start(bus: MessageBus, service: str):
         systemd.off_job_removed(on_job_removed)
         
         
-async def systemd_stop(bus: MessageBus, service: str):
+async def systemd_stop(, service: str):
     async def on_job_removed(id, job_path, unit, result):
         job_dict = {"id":id,
                     "job_path":job_path,
@@ -56,7 +56,7 @@ async def systemd_stop(bus: MessageBus, service: str):
         
         
 
-async def systemd_restart(bus: MessageBus, service: str):
+async def systemd_restart(, service: str):
     async def on_job_removed(id, job_path, unit, result):
         job_dict = {"id":id,
                     "job_path":job_path,
@@ -80,20 +80,20 @@ async def systemd_restart(bus: MessageBus, service: str):
         systemd.off_job_removed(on_job_removed)
 
 
-async def getUnitInterface(bus: MessageBus, unit:str) -> ProxyInterface:
+async def getUnitInterface(, unit:str) -> ProxyInterface:
     unitPath =  await getUnitPath(bus, unit)
     introspection = await bus.introspect('org.freedesktop.systemd1', unitPath)
     obj = bus.get_proxy_object('org.freedesktop.systemd1', unitPath, introspection)
     return obj.get_interface('org.freedesktop.systemd1.Manager')
 
 
-async def getSystemdManager(bus: MessageBus) -> ProxyInterface:
+async def getSystemdManager() -> ProxyInterface:
     introspection = await bus.introspect('org.freedesktop.systemd1', '/org/freedesktop/systemd1')
     obj = bus.get_proxy_object('org.freedesktop.systemd1', '/org/freedesktop/systemd1', introspection)
     return obj.get_interface('org.freedesktop.systemd1.Manager')
 
 
-async def getUnitPropertiesInterface(bus: MessageBus, unit:str) -> ProxyInterface:
+async def getUnitPropertiesInterface(, unit:str) -> ProxyInterface:
     unitPath =  await getUnitPath(bus, unit)
     introspection = await bus.introspect('org.freedesktop.systemd1', unitPath)
     obj = bus.get_proxy_object('org.freedesktop.systemd1', unitPath, introspection)
@@ -101,7 +101,7 @@ async def getUnitPropertiesInterface(bus: MessageBus, unit:str) -> ProxyInterfac
 
 
 
-async def getUnitPath(bus: MessageBus, service: str) -> str:
+async def getUnitPath(, service: str) -> str:
     rsp = await bus.call(
         Message(
             destination='org.freedesktop.systemd1',
@@ -119,7 +119,7 @@ async def getUnitPath(bus: MessageBus, service: str) -> str:
 
 
 
-async def getUnitProperties(bus: MessageBus, unitPath: str) -> dict:
+async def getUnitProperties(, unitPath: str) -> dict:
         
     rsp = await bus.call(
     Message(
@@ -135,14 +135,14 @@ async def getUnitProperties(bus: MessageBus, unitPath: str) -> dict:
     return unitProps
     
     
-async def getServiceState(bus: MessageBus, service: str) -> str:
+async def getServiceState(, service: str) -> str:
     path = await getUnitPath(bus, service)
     props = await getUnitProperties(bus, path)
     return props.get("ActiveState", Variant('s', 'StateNotFound')).value
 
 
 
-async def isActive(bus: MessageBus, service: str) -> bool:
+async def isActive(, service: str) -> bool:
     state = await getServiceState(bus, service)
     print(f'{service} is active: {state}')
     if state == 'active':

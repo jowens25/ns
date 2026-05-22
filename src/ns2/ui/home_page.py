@@ -8,7 +8,7 @@ from ns2.lib.networking import (
 )
 from ns2.api.dbus import get_dbus
 from ns2.api.pam_interface import GetPamInterface
-from ns2.lib.bridge import MakeBridgeDbusCall
+from ns2.lib.bridge import DbusCall
 
 # import plotly.graph_objects as go
 # import plotly.express as px
@@ -40,9 +40,7 @@ async def home_page():
     async def test_cb():
         # result = await pam.call_get_stuff()
 
-        result = await MakeBridgeDbusCall(
-            dest.value, path.value, method.value, [args.value], []
-        )
+        result = await DbusCall(dest.value, path.value, method.value, [args.value], [])
 
         log.push(result)
 
@@ -65,7 +63,7 @@ async def home_page():
     #            async def update_plots():
     #                global rx_mbs
     #                global tx_mbs
-    #                AppBus = await get_dbus()
+    #
     #                device_paths = await getDevices(AppBus)
     #                for d in device_paths:
     #                    props = await get_device_properties(AppBus, d)

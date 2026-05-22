@@ -44,7 +44,7 @@ def MakeServicesDict(servs):
 
 async def services_page():
 
-    serviceUnits = MakeServicesDict(await ListUnits(await get_dbus()))
+    serviceUnits = MakeServicesDict(await ListUnits())
     # print(serviceUnits)
 
     servicesTable = (

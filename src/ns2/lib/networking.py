@@ -11,6 +11,8 @@ from dbus_next import Message
 from ns2.common import formatListToString
 from ns2.utils import INTROSPECTION_DIR
 
+from ns2.lib.bridge import DbusCall
+
 # ====================================================================
 # data classes
 # ====================================================================
@@ -92,8 +94,8 @@ class InterfaceData:
     Ip4: Optional[str] = ""
     Ip6: Optional[str] = ""
     AutoConnect: Optional[bool] = False
-    _dev_path: Optional[str] = ""
-    _act_con_path: Optional[str] = ""
+    dev_path: Optional[str] = ""
+    act_con_path: Optional[str] = ""
 
 
 # ====================================================================
@@ -103,124 +105,182 @@ class InterfaceData:
 INTERFACE = "org.freedesktop.NetworkManager"
 
 
-async def GetInterface(bus: MessageBus, path: str, interface: str) -> ProxyInterface:
-    interfaces = [INTERFACE, interface]
-    introspection = await bus.introspect(INTERFACE, path)
-    obj = bus.get_proxy_object(INTERFACE, path, introspection)
-    return obj.get_interface(".".join(filter(None, interfaces)))
-
-
-async def GetNetworkManager(bus: MessageBus) -> ProxyInterface:
-
-    introspection = await bus.introspect(INTERFACE, "/org/freedesktop/NetworkManager")
-
-    obj = bus.get_proxy_object(
-        INTERFACE, "/org/freedesktop/NetworkManager", introspection
+async def getDevices():
+    rsp = await DbusCall(
+        destination="org.freedesktop.NetworkManager",
+        path="/org/freedesktop/NetworkManager",
+        interface="org.freedesktop.NetworkManager",
+        member="GetDevices",
+        signature="",
+        args=[],
     )
-    return obj.get_interface(INTERFACE)
+    return rsp
 
 
-async def GetDevice(bus: MessageBus, path: str) -> ProxyInterface:
-    return await GetInterface(bus, path, "Device")
-
-
-async def GetActiveConnection(bus: MessageBus, path: str) -> ProxyInterface:
-    return await GetInterface(bus, path, "Connection.Active")
-
-
-async def GetIp4Config(bus: MessageBus, path: str) -> ProxyInterface:
-    return await GetInterface(bus, path, "IP4Config")
-
-
-async def GetIp6Config(bus: MessageBus, path: str) -> ProxyInterface:
-    return await GetInterface(bus, path, "IP6Config")
-
-
-async def GetConnection(bus: MessageBus, path: str) -> ProxyInterface:
-    return await GetInterface(bus, path, "Settings.Connection")
-
-
-async def GetConnectionFromDevice(
-    bus: MessageBus, device: ProxyInterface
-) -> ProxyInterface:
-    active_connection_path = await device.get_active_connection()
-    if len(active_connection_path) > 1:
-        activeConnection = await GetActiveConnection(bus, active_connection_path)
-        connection_path = await activeConnection.get_connection()
-        return GetConnection(bus, connection_path)
-
-
-async def getDevices(bus: MessageBus):
-
-    rsp = await bus.call(
-        Message(
-            destination="org.freedesktop.NetworkManager",
-            path="/org/freedesktop/NetworkManager",
-            interface="org.freedesktop.NetworkManager",
-            member="GetDevices",
-            signature="",
-            body=[],
-        )
-    )
-    return rsp.body[0]
-
-
-async def set_refresh_rate(bus: MessageBus, device_path: str, rate_ms: int):
+async def set_refresh_rate(device_path: str, rate_ms: int):
     """Set the refresh rate for statistics (in milliseconds)."""
 
-    rsp = await bus.call(
-        Message(
-            destination="org.freedesktop.NetworkManager",
-            path=device_path,
-            interface="org.freedesktop.DBus.Properties",
-            member="Set",
-            signature="ssv",
-            body=[
-                "org.freedesktop.NetworkManager.Device.Statistics",
-                "RefreshRateMs",
-                Variant("u", rate_ms),  # 'u' is unsigned int
-            ],
-        )
+    rsp = await DbusCall(
+        destination="org.freedesktop.NetworkManager",
+        path=device_path,
+        interface="org.freedesktop.DBus.Properties",
+        member="Set",
+        signature="ssv",
+        body=[
+            "org.freedesktop.NetworkManager.Device.Statistics",
+            "RefreshRateMs",
+            Variant("u", rate_ms),  # 'u' is unsigned int
+        ],
     )
 
     return rsp
 
 
-async def get_device_statistics(bus: MessageBus, device_path: str):
+async def get_device_statistics(device_path: str):
 
-    rsp = await bus.call(
-        Message(
-            destination="org.freedesktop.NetworkManager",
-            path=device_path,  # e.g., '/org/freedesktop/NetworkManager/Devices/1'
-            interface="org.freedesktop.DBus.Properties",
-            member="GetAll",
-            signature="s",
-            body=["org.freedesktop.NetworkManager.Device.Statistics"],
-        )
+    rsp = await DbusCall(
+        destination="org.freedesktop.NetworkManager",
+        path=device_path,  # e.g., '/org/freedesktop/NetworkManager/Devices/1'
+        interface="org.freedesktop.DBus.Properties",
+        member="GetAll",
+        signature="s",
+        body=["org.freedesktop.NetworkManager.Device.Statistics"],
     )
 
-    props = rsp.body[0]
+    props = rsp
     return {
-        "refresh_rate_ms": props.get("RefreshRateMs", 0).value,
-        "tx_bytes": props.get("TxBytes", 0).value,
-        "rx_bytes": props.get("RxBytes", 0).value,
+        "refresh_rate_ms": props.get("RefreshRateMs", 0),
+        "tx_bytes": props.get("TxBytes", 0),
+        "rx_bytes": props.get("RxBytes", 0),
     }
 
 
-async def get_device_properties(bus: MessageBus, device_path: str):
+async def get_device_properties(device_path: str):
+    rsp = await DbusCall(
+        destination="org.freedesktop.NetworkManager",
+        path=device_path,  # e.g., '/org/freedesktop/NetworkManager/Devices/1'
+        interface="org.freedesktop.DBus.Properties",
+        member="GetAll",
+        signature="s",
+        args=["org.freedesktop.NetworkManager.Device"],
+    )
+    return rsp
 
-    rsp = await bus.call(
-        Message(
-            destination="org.freedesktop.NetworkManager",
-            path=device_path,  # e.g., '/org/freedesktop/NetworkManager/Devices/1'
-            interface="org.freedesktop.DBus.Properties",
-            member="GetAll",
-            signature="s",
-            body=["org.freedesktop.NetworkManager.Device"],
-        )
+
+async def GetDeviceProperty(device_path: str, property: str):
+    rsp = await DbusCall(
+        destination="org.freedesktop.NetworkManager",
+        path=device_path,  # e.g., '/org/freedesktop/NetworkManager/Devices/1'
+        interface="org.freedesktop.DBus.Properties",
+        member="Get",
+        signature="ss",
+        args=["org.freedesktop.NetworkManager.Device", property],
+    )
+    return rsp
+
+
+async def GetNmProp(
+    objectPath: str,
+    interface_suffix: str | None = None,
+    property: str | None = None,
+):
+
+    root = "org.freedesktop.NetworkManager"
+
+    interface = root
+    if interface_suffix is not None:
+        interface = ".".join([root, interface_suffix])
+
+    return await GetProperty(
+        root,
+        objectPath,
+        interface,
+        property,
     )
 
-    return rsp.body[0]
+
+async def GetProperty(destination: str, objectPath: str, interface: str, property: str):
+    rsp = await DbusCall(
+        destination=destination,
+        path=objectPath,
+        interface="org.freedesktop.DBus.Properties",
+        member="Get",
+        signature="ss",
+        args=[interface, property],
+    )
+    return rsp
+
+
+async def GetIp4Property(device_path: str, property: str):
+    rsp = await DbusCall(
+        destination="org.freedesktop.NetworkManager",
+        path=device_path,  # e.g., '/org/freedesktop/NetworkManager/Devices/1'
+        interface="org.freedesktop.DBus.Properties",
+        member="Get",
+        signature="ss",
+        args=["org.freedesktop.NetworkManager.IP4Config", property],
+    )
+    return rsp
+
+
+async def GetIp6Property(device_path: str, property: str):
+    rsp = await DbusCall(
+        destination="org.freedesktop.NetworkManager",
+        path=device_path,  # e.g., '/org/freedesktop/NetworkManager/Devices/1'
+        interface="org.freedesktop.DBus.Properties",
+        member="Get",
+        signature="ss",
+        args=["org.freedesktop.NetworkManager.IP6Config", property],
+    )
+    return rsp
+
+
+async def GetActiveConnectionProperty(ac_path: str, property: str):
+    rsp = await DbusCall(
+        destination="org.freedesktop.NetworkManager",
+        path=ac_path,  # e.g., '/org/freedesktop/NetworkManager/Devices/1'
+        interface="org.freedesktop.DBus.Properties",
+        member="Get",
+        signature="ss",
+        args=["org.freedesktop.NetworkManager.Connection.Active", property],
+    )
+    return rsp
+
+
+async def GetConnectionProperty(p: str, property: str):
+    rsp = await DbusCall(
+        destination="org.freedesktop.NetworkManager",
+        path=p,
+        interface="org.freedesktop.DBus.Properties",
+        member="Get",
+        signature="ss",
+        args=["org.freedesktop.NetworkManager.Settings.Connection", property],
+    )
+    return rsp
+
+
+async def GetSettings(connection_path: str):
+    rsp = await DbusCall(
+        destination="org.freedesktop.NetworkManager",
+        path=connection_path,
+        interface="org.freedesktop.NetworkManager.Settings.Connection",
+        member="GetSettings",
+        signature="",
+        args=[],
+    )
+    return rsp
+
+
+async def GetDeviceByIpIface(iface: str):
+    rsp = await DbusCall(
+        destination="org.freedesktop.NetworkManager",
+        path="/org/freedesktop/NetworkManager",
+        interface="org.freedesktop.NetworkManager",
+        member="GetDeviceByIpIface",
+        signature="s",
+        args=[iface],
+    )
+    return rsp
 
 
 # ====================================================================
@@ -228,38 +288,43 @@ async def get_device_properties(bus: MessageBus, device_path: str):
 # ====================================================================
 
 
-async def GetInterfaceData(
-    bus: MessageBus, nm: ProxyInterface, iface: str
-) -> InterfaceData:
+async def GetInterfaceData(iface: str) -> InterfaceData:
     i = InterfaceData()
-    i._dev_path = await nm.call_get_device_by_ip_iface(iface)
-    dev = await GetDevice(bus, i._dev_path)
+    i.dev_path = await GetDeviceByIpIface(iface)
+    # dev = await GetDevice(bus, i.dev_path)
     i.Name = iface
-    i.HardwareAddress = await dev.get_hw_address()
-    i.StateNumber = await dev.get_state()
+    i.HardwareAddress = await GetNmProp(i.dev_path, "Device", "HwAddress")
+    i.StateNumber = await GetNmProp(i.dev_path, "Device", "State")
     i.StateString = processDeviceState(i.StateNumber)
     i.Active = True if i.StateNumber == 100 else False
-    i.Carrier = processInterfaceFlags(await dev.get_interface_flags())
+    i.Carrier = processInterfaceFlags(
+        await GetNmProp(i.dev_path, "Device", "InterfaceFlags")
+    )
 
-    ip4_config_path = await dev.get_ip4_config()
-    ip6_config_path = await dev.get_ip6_config()
+    ip4_config_path = await GetNmProp(i.dev_path, "Device", "Ip4Config")
+    ip6_config_path = await GetNmProp(i.dev_path, "Device", "Ip6Config")
+    i.act_con_path = await GetNmProp(i.dev_path, "Device", "ActiveConnection")
 
-    i._act_con_path = await dev.get_active_connection()
-
-    if len(i._act_con_path) > 1:
-        activeConnection = await GetActiveConnection(bus, i._act_con_path)
-        connection_path = await activeConnection.get_connection()
-        connection = await GetConnection(bus, connection_path)
-        settings = await connection.call_get_settings()
-        i.AutoConnect = (
-            settings["connection"].get("autoconnect", Variant("b", True)).value
-        )
+    # if len(i.act_con_path) > 1:
+    #    # activeConnection = await GetActiveConnection(bus, i.act_con_path)
+    #    connection_path = await GetActiveConnectionProperty(
+    #        i.act_con_path, "Connection"
+    #    )
+    #    # connection_path = await activeConnection.get_connection()
+    #    # connection = await GetConnection(bus, connection_path)
+    #    settings = await GetConnectionProperty()
+    #    settings = await connection.call_get_settings()
+    #    #i.AutoConnect = (
+    #    #    settings["connection"].get("autoconnect", Variant("b", True))
+    #    #)
 
     if len(ip4_config_path) > 1:
-        ip4Config = await GetIp4Config(bus, ip4_config_path)
-        ip6Config = await GetIp6Config(bus, ip6_config_path)
-        ip4AddressData = await ip4Config.get_address_data()
-        ip6AddressData = await ip6Config.get_address_data()
+        # ipv4Config = await
+
+        ip4AddressData = await GetNmProp(ip4_config_path, "IP4Config", "AddressData")
+
+        ip6AddressData = await GetNmProp(ip6_config_path, "IP6Config", "AddressData")
+
         i.Ip4 = addressDataToString(ip4AddressData)
         i.Ip6 = addressDataToString(ip6AddressData)
 
@@ -268,14 +333,14 @@ async def GetInterfaceData(
     return i
 
 
-async def GetSettings(bus: MessageBus, dev: ProxyInterface) -> dict:
-    active_connection_path = await dev.get_active_connection()
-    if len(active_connection_path) > 1:
-        activeConnection = await GetActiveConnection(bus, active_connection_path)
-        connection_path = await activeConnection.get_connection()
-        connection = await GetConnection(bus, connection_path)
-        connection_settings = await connection.call_get_settings()
-        return connection_settings
+# async def GetSettings(dev: ProxyInterface) -> dict:
+#    active_connection_path = await dev.get_active_connection()
+#    if len(active_connection_path) > 1:
+#        activeConnection = await GetActiveConnection(bus, active_connection_path)
+#        connection_path = await activeConnection.get_connection()
+#        connection = await GetConnection(bus, connection_path)
+#        connection_settings = await connection.call_get_settings()
+#        return connection_settings
 
 
 def GetIp(version: str, settings: dict) -> Ipv4v6:
@@ -533,7 +598,7 @@ def combineAddresses(ipv4AddressData, ipv6AddressData) -> str:
     return formatAddressString(addresses)
 
 
-async def GetDeviceFromInterface(bus: MessageBus, iface: str) -> Device:
+async def GetDeviceFromInterface(iface: str) -> Device:
     nm = await GetNetworkManager(bus)
     device_path = await nm.call_get_device_by_ip_iface(iface)
     device = await GetDevice(bus, device_path)
@@ -568,11 +633,11 @@ def isAutoconnect(settings: dict) -> bool:
     return settings["connection"]
 
 
-async def GetInterfaces(bus: MessageBus) -> list:
+async def GetInterfaces() -> list:
 
     interfaces = []
 
-    nm = await GetNetworkManager(bus)
+    nm = await GetNetworkManager()
 
     devices_paths = await nm.call_get_devices()
 
@@ -587,7 +652,7 @@ async def GetInterfaces(bus: MessageBus) -> list:
     return interfaces
 
 
-async def GetInterfacesAndAddresses(bus: MessageBus) -> list:
+async def GetInterfacesAndAddresses() -> list:
 
     rows = []
 
@@ -637,7 +702,7 @@ async def GetInterfacesAndAddresses(bus: MessageBus) -> list:
     return rows
 
 
-# async def nm_call(bus: MessageBus, member: str, signature: str, body):
+# async def nm_call( member: str, signature: str, body):
 #
 #    rsp = await bus.call(
 #        Message(

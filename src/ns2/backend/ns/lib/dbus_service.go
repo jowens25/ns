@@ -27,6 +27,7 @@ func StartDbus() {
 	}
 	// export interfaces
 	snmp := &SnmpInterface{}
+	snmp.conn = conn
 	err = conn.Export(snmp, "/com/novus/ns", "com.novus.ns.snmp")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to export SnmpInterface: %v\n", err)

@@ -26,7 +26,7 @@ class PamInterface(ServiceInterface):
         return "STUFF"
 
 
-async def GetPamInterface(bus: MessageBus) -> ProxyInterface:
+async def GetPamInterface() -> ProxyInterface:
     introspection = await bus.introspect("com.novus.ns", "/com/novus/ns")
     obj = bus.get_proxy_object("com.novus.ns", "/com/novus/ns", introspection)
     return obj.get_interface("com.novus.ns.pam")
