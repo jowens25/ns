@@ -36,7 +36,7 @@ func CheckAuthorization(sender dbus.Sender, actionId string) bool {
 		},
 	}
 
-	result, err := MakeDbusCall(conn,
+	_, result, err := MakeDbusCall(conn,
 		DbusCall{
 			Destination: "org.freedesktop.PolicyKit1",
 			Path:        "/org/freedesktop/PolicyKit1/Authority",
@@ -82,7 +82,7 @@ func EnumerateActions(sender dbus.Sender) ([]Action, error) {
 		return []Action{}, err
 	}
 
-	result, err := MakeDbusCall(conn,
+	_, result, err := MakeDbusCall(conn,
 		DbusCall{
 			Destination: "org.freedesktop.PolicyKit1",
 			Path:        "/org/freedesktop/PolicyKit1/Authority",

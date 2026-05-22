@@ -1,0 +1,186 @@
+Date : 2026-05-22 15:17:56
+Directory : /home/jowens/Projects/ns2
+Total : 125 files,  10498 codes, 2223 comments, 2406 blanks, all 15127 lines
+
+Languages
++------------------+------------+------------+------------+------------+------------+
+| language         | files      | code       | comment    | blank      | total      |
++------------------+------------+------------+------------+------------+------------+
+| Python           |         52 |      4,070 |      1,508 |      1,390 |      6,968 |
+| Go               |         27 |      2,299 |        560 |        774 |      3,633 |
+| toml             |          2 |      1,758 |          0 |         85 |      1,843 |
+| XML              |          6 |      1,715 |          1 |          4 |      1,720 |
+| Properties       |         10 |        365 |        143 |        111 |        619 |
+| Go Checksum File |          1 |        115 |          0 |          1 |        116 |
+| JSON             |         14 |         56 |          0 |          0 |         56 |
+| Go Module File   |          1 |         48 |          0 |          5 |         53 |
+| Makefile         |          2 |         34 |          4 |         14 |         52 |
+| Shell Script     |          7 |         21 |          7 |         19 |         47 |
+| HTML             |          1 |         16 |          0 |          1 |         17 |
+| Log              |          1 |          1 |          0 |          1 |          2 |
+| Markdown         |          1 |          0 |          0 |          1 |          1 |
++------------------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                      | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                         |        125 |     10,498 |      2,223 |      2,406 |     15,127 |
+| . (Files)                                                                                 |          6 |      1,793 |          9 |        104 |      1,906 |
+| .nicegui                                                                                  |         12 |         12 |          0 |          0 |         12 |
+| configs                                                                                   |          8 |        739 |         86 |        146 |        971 |
+| debian                                                                                    |          1 |          1 |          0 |          1 |          2 |
+| reference                                                                                 |         13 |      1,803 |         95 |         73 |      1,971 |
+| src                                                                                       |         85 |      6,150 |      2,033 |      2,082 |     10,265 |
+| src/ns2                                                                                   |         85 |      6,150 |      2,033 |      2,082 |     10,265 |
+| src/ns2 (Files)                                                                           |          4 |         43 |          1 |         23 |         67 |
+| src/ns2/api                                                                               |          6 |        124 |         56 |         69 |        249 |
+| src/ns2/assets                                                                            |          1 |        103 |          1 |          2 |        106 |
+| src/ns2/backend                                                                           |         32 |      1,977 |        524 |        690 |      3,191 |
+| src/ns2/backend (Files)                                                                   |          2 |        163 |          0 |          6 |        169 |
+| src/ns2/backend/ns                                                                        |         30 |      1,814 |        524 |        684 |      3,022 |
+| src/ns2/backend/ns (Files)                                                                |          4 |         16 |         53 |         15 |         84 |
+| src/ns2/backend/ns/cmd                                                                    |          6 |        161 |         77 |         72 |        310 |
+| src/ns2/backend/ns/internal                                                               |          4 |        184 |         32 |         56 |        272 |
+| src/ns2/backend/ns/internal/account                                                       |          1 |         48 |         24 |         13 |         85 |
+| src/ns2/backend/ns/internal/bridge                                                        |          1 |         28 |          1 |         13 |         42 |
+| src/ns2/backend/ns/internal/dbus                                                          |          1 |         76 |          4 |         20 |        100 |
+| src/ns2/backend/ns/internal/snmp                                                          |          1 |         32 |          3 |         10 |         45 |
+| src/ns2/backend/ns/lib                                                                    |         16 |      1,453 |        362 |        541 |      2,356 |
+| src/ns2/cli                                                                               |          3 |         40 |         10 |         26 |         76 |
+| src/ns2/lib                                                                               |         13 |      2,080 |        324 |        711 |      3,115 |
+| src/ns2/tests                                                                             |         10 |        456 |         62 |        200 |        718 |
+| src/ns2/ui                                                                                |         16 |      1,327 |      1,055 |        361 |      2,743 |
++-------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
+| filename                                                                                  | language         | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+
+| /home/jowens/Projects/ns2/.nicegui/storage-general.json                                   | JSON             |          1 |          0 |          0 |          1 |
+| /home/jowens/Projects/ns2/.nicegui/storage-user-02dabf4c-21f0-4e75-ad67-b3d7652a182a.json | JSON             |          1 |          0 |          0 |          1 |
+| /home/jowens/Projects/ns2/.nicegui/storage-user-061b6597-dbfa-4983-abcc-2a330ee65ff2.json | JSON             |          1 |          0 |          0 |          1 |
+| /home/jowens/Projects/ns2/.nicegui/storage-user-09977514-ef20-40e7-8866-c03f8481150c.json | JSON             |          1 |          0 |          0 |          1 |
+| /home/jowens/Projects/ns2/.nicegui/storage-user-39dda508-d4c0-4168-815e-b0568f6fbf25.json | JSON             |          1 |          0 |          0 |          1 |
+| /home/jowens/Projects/ns2/.nicegui/storage-user-783cd550-77bc-4fc0-8aef-04378de28895.json | JSON             |          1 |          0 |          0 |          1 |
+| /home/jowens/Projects/ns2/.nicegui/storage-user-7e0a265d-052b-45ac-bbd0-ed8e5720f3af.json | JSON             |          1 |          0 |          0 |          1 |
+| /home/jowens/Projects/ns2/.nicegui/storage-user-a4a64473-23d3-4ceb-874a-8c9a428cec0f.json | JSON             |          1 |          0 |          0 |          1 |
+| /home/jowens/Projects/ns2/.nicegui/storage-user-b25fa7ba-a08e-481d-9fc9-9afeb504055b.json | JSON             |          1 |          0 |          0 |          1 |
+| /home/jowens/Projects/ns2/.nicegui/storage-user-c6724266-a971-4913-aa46-2528b323eb5b.json | JSON             |          1 |          0 |          0 |          1 |
+| /home/jowens/Projects/ns2/.nicegui/storage-user-eb3cd2f9-8fd0-4b9f-8b1a-66d594c874ae.json | JSON             |          1 |          0 |          0 |          1 |
+| /home/jowens/Projects/ns2/.nicegui/storage-user-efdd0f41-1583-4140-b8ce-78a401aa8964.json | JSON             |          1 |          0 |          0 |          1 |
+| /home/jowens/Projects/ns2/Makefile                                                        | Makefile         |         29 |          4 |         12 |         45 |
+| /home/jowens/Projects/ns2/README.md                                                       | Markdown         |          0 |          0 |          1 |          1 |
+| /home/jowens/Projects/ns2/build.sh                                                        | Shell Script     |          2 |          2 |          5 |          9 |
+| /home/jowens/Projects/ns2/configs/com.novus.ns.conf                                       | Properties       |         28 |          0 |          6 |         34 |
+| /home/jowens/Projects/ns2/configs/nginx.conf                                              | Properties       |         94 |         15 |         21 |        130 |
+| /home/jowens/Projects/ns2/configs/ns-admin-rp.conf                                        | Properties       |         36 |          2 |          6 |         44 |
+| /home/jowens/Projects/ns2/configs/ns2-ui.conf                                             | Properties       |         36 |          2 |          6 |         44 |
+| /home/jowens/Projects/ns2/configs/ns2.xml                                                 | XML              |          6 |          0 |          0 |          6 |
+| /home/jowens/Projects/ns2/configs/ns_admin.xml                                            | XML              |          6 |          0 |          0 |          6 |
+| /home/jowens/Projects/ns2/configs/ntl.go                                                  | Go               |        514 |         36 |         95 |        645 |
+| /home/jowens/Projects/ns2/configs/snmpd.conf                                              | Properties       |         19 |         31 |         12 |         62 |
+| /home/jowens/Projects/ns2/debian/ns-admin.debhelper.log                                   | Log              |          1 |          0 |          1 |          2 |
+| /home/jowens/Projects/ns2/makegroups.sh                                                   | Shell Script     |          4 |          3 |          1 |          8 |
+| /home/jowens/Projects/ns2/pyproject.toml                                                  | toml             |         24 |          0 |          5 |         29 |
+| /home/jowens/Projects/ns2/reference/build.sh                                              | Shell Script     |          1 |          0 |          0 |          1 |
+| /home/jowens/Projects/ns2/reference/com.novus.ns.conf                                     | Properties       |         28 |          0 |          6 |         34 |
+| /home/jowens/Projects/ns2/reference/dev_deploy.sh                                         | Shell Script     |          6 |          2 |          7 |         15 |
+| /home/jowens/Projects/ns2/reference/index.html                                            | HTML             |         16 |          0 |          1 |         17 |
+| /home/jowens/Projects/ns2/reference/init_settings.json                                    | JSON             |         24 |          0 |          0 |         24 |
+| /home/jowens/Projects/ns2/reference/nginx.conf                                            | Properties       |         44 |          7 |         12 |         63 |
+| /home/jowens/Projects/ns2/reference/org.freedesktop.systemd1.xml                          | XML              |        558 |          0 |          0 |        558 |
+| /home/jowens/Projects/ns2/reference/run.sh                                                | Shell Script     |          4 |          0 |          3 |          7 |
+| /home/jowens/Projects/ns2/reference/snmpd copy.conf                                       | Properties       |         42 |         30 |         12 |         84 |
+| /home/jowens/Projects/ns2/reference/snmpd.conf                                            | Properties       |         20 |         30 |         10 |         60 |
+| /home/jowens/Projects/ns2/reference/snmpd1.conf                                           | Properties       |         18 |         26 |         20 |         64 |
+| /home/jowens/Projects/ns2/reference/socket.xml                                            | XML              |        113 |          0 |          0 |        113 |
+| /home/jowens/Projects/ns2/reference/test.xml                                              | XML              |        929 |          0 |          2 |        931 |
+| /home/jowens/Projects/ns2/src/ns2/__init__.py                                             | Python           |          0 |          0 |          1 |          1 |
+| /home/jowens/Projects/ns2/src/ns2/api/__init__.py                                         | Python           |          0 |          0 |          1 |          1 |
+| /home/jowens/Projects/ns2/src/ns2/api/accounts_interface.py                               | Python           |         17 |         37 |         11 |         65 |
+| /home/jowens/Projects/ns2/src/ns2/api/dbus.py                                             | Python           |         18 |          0 |          8 |         26 |
+| /home/jowens/Projects/ns2/src/ns2/api/main.py                                             | Python           |         20 |          7 |         18 |         45 |
+| /home/jowens/Projects/ns2/src/ns2/api/pam_interface.py                                    | Python           |         23 |          0 |         10 |         33 |
+| /home/jowens/Projects/ns2/src/ns2/api/snmp_interface.py                                   | Python           |         46 |         12 |         21 |         79 |
+| /home/jowens/Projects/ns2/src/ns2/assets/NOVUS_LOGO.svg                                   | XML              |        103 |          1 |          2 |        106 |
+| /home/jowens/Projects/ns2/src/ns2/backend/go.mod                                          | Go Module File   |         48 |          0 |          5 |         53 |
+| /home/jowens/Projects/ns2/src/ns2/backend/go.sum                                          | Go Checksum File |        115 |          0 |          1 |        116 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/Makefile                                     | Makefile         |          5 |          0 |          2 |          7 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/cmd/restart.go                               | Go               |         20 |         11 |          9 |         40 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/cmd/root.go                                  | Go               |         31 |         17 |         13 |         61 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/cmd/start.go                                 | Go               |         23 |         11 |         10 |         44 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/cmd/status.go                                | Go               |         18 |         11 |          9 |         38 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/cmd/stop.go                                  | Go               |         23 |         11 |         11 |         45 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/cmd/test.go                                  | Go               |         46 |         16 |         20 |         82 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/internal/account/add.go                      | Go               |         48 |         24 |         13 |         85 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/internal/bridge/bridge.go                    | Go               |         28 |          1 |         13 |         42 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/internal/dbus/dbus.go                        | Go               |         76 |          4 |         20 |        100 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/internal/snmp/snmp.go                        | Go               |         32 |          3 |         10 |         45 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/lib/account.go                               | Go               |         91 |          1 |         29 |        121 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/lib/account_interface.go                     | Go               |         10 |          1 |          5 |         16 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/lib/bridge.go                                | Go               |        259 |         18 |         77 |        354 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/lib/bridge_interface.go                      | Go               |        131 |          8 |         40 |        179 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/lib/dbus_service.go                          | Go               |        117 |          5 |         13 |        135 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/lib/firewall.go                              | Go               |         15 |          3 |         11 |         29 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/lib/networking.go                            | Go               |          1 |          0 |          1 |          2 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/lib/pam_interface.go                         | Go               |         30 |          2 |         11 |         43 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/lib/polkit.go                                | Go               |         91 |          1 |         21 |        113 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/lib/snmp.go                                  | Go               |        397 |         15 |        136 |        548 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/lib/snmp_interface.go                        | Go               |        143 |         12 |         67 |        222 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/lib/systemd.go                               | Go               |         79 |          2 |         34 |        115 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/lib/temp_bridge.go                           | Go               |          1 |        293 |         63 |        357 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/lib/test.go                                  | Go               |         40 |          0 |         20 |         60 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/lib/test.json                                | JSON             |         20 |          0 |          0 |         20 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/lib/utils.go                                 | Go               |         28 |          1 |         13 |         42 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/main.go                                      | Go               |          7 |         53 |         10 |         70 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/openConnection.sh                            | Shell Script     |          1 |          0 |          2 |          3 |
+| /home/jowens/Projects/ns2/src/ns2/backend/ns/test.sh                                      | Shell Script     |          3 |          0 |          1 |          4 |
+| /home/jowens/Projects/ns2/src/ns2/cli/__init__.py                                         | Python           |          0 |          0 |          1 |          1 |
+| /home/jowens/Projects/ns2/src/ns2/cli/main.py                                             | Python           |         26 |          0 |         16 |         42 |
+| /home/jowens/Projects/ns2/src/ns2/cli/status.py                                           | Python           |         14 |         10 |          9 |         33 |
+| /home/jowens/Projects/ns2/src/ns2/common.py                                               | Python           |          9 |          0 |          8 |         17 |
+| /home/jowens/Projects/ns2/src/ns2/lib/__init__.py                                         | Python           |          0 |          0 |          1 |          1 |
+| /home/jowens/Projects/ns2/src/ns2/lib/accounts_lib.py                                     | Python           |        108 |          0 |         53 |        161 |
+| /home/jowens/Projects/ns2/src/ns2/lib/authorization.py                                    | Python           |         78 |         10 |         22 |        110 |
+| /home/jowens/Projects/ns2/src/ns2/lib/bridge.py                                           | Python           |        164 |         22 |         64 |        250 |
+| /home/jowens/Projects/ns2/src/ns2/lib/dbus.py                                             | Python           |         59 |          2 |         13 |         74 |
+| /home/jowens/Projects/ns2/src/ns2/lib/firewalld.py                                        | Python           |        304 |         64 |        109 |        477 |
+| /home/jowens/Projects/ns2/src/ns2/lib/networking.py                                       | Python           |        519 |         25 |        154 |        698 |
+| /home/jowens/Projects/ns2/src/ns2/lib/nm.py                                               | Python           |        141 |          0 |         25 |        166 |
+| /home/jowens/Projects/ns2/src/ns2/lib/ns_socket.py                                        | Python           |        140 |         13 |         58 |        211 |
+| /home/jowens/Projects/ns2/src/ns2/lib/old_systemd.py                                      | Python           |        116 |          0 |         35 |        151 |
+| /home/jowens/Projects/ns2/src/ns2/lib/snmp.py                                             | Python           |        389 |         52 |        116 |        557 |
+| /home/jowens/Projects/ns2/src/ns2/lib/systemd1.py                                         | Python           |         33 |         20 |         24 |         77 |
+| /home/jowens/Projects/ns2/src/ns2/lib/test_networking.py                                  | Python           |         29 |        116 |         37 |        182 |
+| /home/jowens/Projects/ns2/src/ns2/main.py                                                 | Python           |          3 |          0 |          2 |          5 |
+| /home/jowens/Projects/ns2/src/ns2/tests/account_test.py                                   | Python           |          3 |          0 |          2 |          5 |
+| /home/jowens/Projects/ns2/src/ns2/tests/network_delay.py                                  | Python           |         57 |          8 |         29 |         94 |
+| /home/jowens/Projects/ns2/src/ns2/tests/nm_tests.py                                       | Python           |         13 |          1 |          9 |         23 |
+| /home/jowens/Projects/ns2/src/ns2/tests/pam_client.py                                     | Python           |         15 |         14 |         10 |         39 |
+| /home/jowens/Projects/ns2/src/ns2/tests/ping_data_collector.py                            | Python           |         27 |          0 |         10 |         37 |
+| /home/jowens/Projects/ns2/src/ns2/tests/socket_client.py                                  | Python           |         16 |         11 |         18 |         45 |
+| /home/jowens/Projects/ns2/src/ns2/tests/systemd_tests.py                                  | Python           |         11 |          0 |          8 |         19 |
+| /home/jowens/Projects/ns2/src/ns2/tests/test-snmp.py                                      | Python           |         41 |          1 |         20 |         62 |
+| /home/jowens/Projects/ns2/src/ns2/tests/udp_client.py                                     | Python           |        161 |         21 |         45 |        227 |
+| /home/jowens/Projects/ns2/src/ns2/tests/udp_server.py                                     | Python           |        112 |          6 |         49 |        167 |
+| /home/jowens/Projects/ns2/src/ns2/ui/__init__.py                                          | Python           |          0 |          0 |          1 |          1 |
+| /home/jowens/Projects/ns2/src/ns2/ui/accountsDialogs.py                                   | Python           |         40 |        132 |         25 |        197 |
+| /home/jowens/Projects/ns2/src/ns2/ui/accounts_page.py                                     | Python           |         61 |        124 |          8 |        193 |
+| /home/jowens/Projects/ns2/src/ns2/ui/firewalld_page.py                                    | Python           |        196 |        258 |         37 |        491 |
+| /home/jowens/Projects/ns2/src/ns2/ui/fpga_page.py                                         | Python           |         20 |          0 |          7 |         27 |
+| /home/jowens/Projects/ns2/src/ns2/ui/home_page.py                                         | Python           |         25 |         76 |         17 |        118 |
+| /home/jowens/Projects/ns2/src/ns2/ui/login.py                                             | Python           |         43 |          1 |         16 |         60 |
+| /home/jowens/Projects/ns2/src/ns2/ui/logs_page.py                                         | Python           |        113 |          5 |         29 |        147 |
+| /home/jowens/Projects/ns2/src/ns2/ui/main.py                                              | Python           |        171 |         40 |         43 |        254 |
+| /home/jowens/Projects/ns2/src/ns2/ui/networking_page.py                                   | Python           |        270 |         66 |         74 |        410 |
+| /home/jowens/Projects/ns2/src/ns2/ui/services_page.py                                     | Python           |         43 |         29 |         17 |         89 |
+| /home/jowens/Projects/ns2/src/ns2/ui/session.py                                           | Python           |          0 |          2 |          2 |          4 |
+| /home/jowens/Projects/ns2/src/ns2/ui/snmp_page.py                                         | Python           |        208 |        308 |         20 |        536 |
+| /home/jowens/Projects/ns2/src/ns2/ui/terminal.py                                          | Python           |         52 |          7 |         14 |         73 |
+| /home/jowens/Projects/ns2/src/ns2/ui/tests_page.py                                        | Python           |         68 |          5 |         44 |        117 |
+| /home/jowens/Projects/ns2/src/ns2/ui/theme.py                                             | Python           |         17 |          2 |          7 |         26 |
+| /home/jowens/Projects/ns2/src/ns2/utils.py                                                | Python           |         31 |          1 |         12 |         44 |
+| /home/jowens/Projects/ns2/uv.lock                                                         | toml             |      1,734 |          0 |         80 |      1,814 |
+| Total                                                                                     |                  |     10,498 |      2,223 |      2,406 |     15,127 |
++-------------------------------------------------------------------------------------------+------------------+------------+------------+------------+------------+

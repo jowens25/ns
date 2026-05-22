@@ -1,5 +1,6 @@
 import asyncio
 import json
+import os
 from pprint import pprint
 from websockets.asyncio.client import connect
 from websockets import ClientConnection
@@ -197,6 +198,7 @@ async def DbusCall(
     member: str,
     signature: str,
     args,
+    returnSignature: str = "",
 ):
 
     if type(args) != list:
@@ -214,20 +216,28 @@ async def DbusCall(
         "method": method,
         "args": args,
         "signature": signature,
+        "returnsignature": returnSignature,
     }
 
-    print("REQUEST: ")
-    pprint(req)
+    # print("REQUEST: ")
+    # pprint(req)
 
     rsp = await bridge.writeRead(req)
 
     # print(rsp)
     err = rsp.get("dbusError", None)
     if err is not None:
-        return err
+        print(err)
+        # input()
+        exit(-1)
 
-    print("RESPONSE: ")
-    pprint(rsp)
+    err = rsp.get("error", None)
+    if err is not None:
+        print(err)
+        exit(-2)
+
+    # print("RESPONSE: ")
+    # pprint(rsp)
 
     return rsp.get("dbusResponse")
 

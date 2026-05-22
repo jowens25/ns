@@ -1,0 +1,127 @@
+"filename", "language", "Markdown", "toml", "Go", "Properties", "XML", "Shell Script", "JSON", "HTML", "Log", "Makefile", "Python", "Go Checksum File", "Go Module File", "comment", "blank", "total"
+"/home/jowens/Projects/ns2/.nicegui/storage-general.json", "JSON", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"/home/jowens/Projects/ns2/.nicegui/storage-user-02dabf4c-21f0-4e75-ad67-b3d7652a182a.json", "JSON", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"/home/jowens/Projects/ns2/.nicegui/storage-user-061b6597-dbfa-4983-abcc-2a330ee65ff2.json", "JSON", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"/home/jowens/Projects/ns2/.nicegui/storage-user-09977514-ef20-40e7-8866-c03f8481150c.json", "JSON", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"/home/jowens/Projects/ns2/.nicegui/storage-user-39dda508-d4c0-4168-815e-b0568f6fbf25.json", "JSON", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"/home/jowens/Projects/ns2/.nicegui/storage-user-783cd550-77bc-4fc0-8aef-04378de28895.json", "JSON", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"/home/jowens/Projects/ns2/.nicegui/storage-user-7e0a265d-052b-45ac-bbd0-ed8e5720f3af.json", "JSON", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"/home/jowens/Projects/ns2/.nicegui/storage-user-a4a64473-23d3-4ceb-874a-8c9a428cec0f.json", "JSON", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"/home/jowens/Projects/ns2/.nicegui/storage-user-b25fa7ba-a08e-481d-9fc9-9afeb504055b.json", "JSON", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"/home/jowens/Projects/ns2/.nicegui/storage-user-c6724266-a971-4913-aa46-2528b323eb5b.json", "JSON", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"/home/jowens/Projects/ns2/.nicegui/storage-user-eb3cd2f9-8fd0-4b9f-8b1a-66d594c874ae.json", "JSON", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"/home/jowens/Projects/ns2/.nicegui/storage-user-efdd0f41-1583-4140-b8ce-78a401aa8964.json", "JSON", 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"/home/jowens/Projects/ns2/Makefile", "Makefile", 0, 0, 0, 0, 0, 0, 0, 0, 0, 29, 0, 0, 0, 4, 12, 45
+"/home/jowens/Projects/ns2/README.md", "Markdown", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"/home/jowens/Projects/ns2/build.sh", "Shell Script", 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 5, 9
+"/home/jowens/Projects/ns2/configs/com.novus.ns.conf", "Properties", 0, 0, 0, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 34
+"/home/jowens/Projects/ns2/configs/nginx.conf", "Properties", 0, 0, 0, 94, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 21, 130
+"/home/jowens/Projects/ns2/configs/ns-admin-rp.conf", "Properties", 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 6, 44
+"/home/jowens/Projects/ns2/configs/ns2-ui.conf", "Properties", 0, 0, 0, 36, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 6, 44
+"/home/jowens/Projects/ns2/configs/ns2.xml", "XML", 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6
+"/home/jowens/Projects/ns2/configs/ns_admin.xml", "XML", 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6
+"/home/jowens/Projects/ns2/configs/ntl.go", "Go", 0, 0, 514, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 95, 645
+"/home/jowens/Projects/ns2/configs/snmpd.conf", "Properties", 0, 0, 0, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 31, 12, 62
+"/home/jowens/Projects/ns2/debian/ns-admin.debhelper.log", "Log", 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 2
+"/home/jowens/Projects/ns2/makegroups.sh", "Shell Script", 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 3, 1, 8
+"/home/jowens/Projects/ns2/pyproject.toml", "toml", 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 29
+"/home/jowens/Projects/ns2/reference/build.sh", "Shell Script", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"/home/jowens/Projects/ns2/reference/com.novus.ns.conf", "Properties", 0, 0, 0, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 34
+"/home/jowens/Projects/ns2/reference/dev_deploy.sh", "Shell Script", 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 2, 7, 15
+"/home/jowens/Projects/ns2/reference/index.html", "HTML", 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0, 0, 0, 0, 1, 17
+"/home/jowens/Projects/ns2/reference/init_settings.json", "JSON", 0, 0, 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 24
+"/home/jowens/Projects/ns2/reference/nginx.conf", "Properties", 0, 0, 0, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 12, 63
+"/home/jowens/Projects/ns2/reference/org.freedesktop.systemd1.xml", "XML", 0, 0, 0, 0, 558, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 558
+"/home/jowens/Projects/ns2/reference/run.sh", "Shell Script", 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 3, 7
+"/home/jowens/Projects/ns2/reference/snmpd copy.conf", "Properties", 0, 0, 0, 42, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 12, 84
+"/home/jowens/Projects/ns2/reference/snmpd.conf", "Properties", 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 10, 60
+"/home/jowens/Projects/ns2/reference/snmpd1.conf", "Properties", 0, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 20, 64
+"/home/jowens/Projects/ns2/reference/socket.xml", "XML", 0, 0, 0, 0, 113, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 113
+"/home/jowens/Projects/ns2/reference/test.xml", "XML", 0, 0, 0, 0, 929, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 931
+"/home/jowens/Projects/ns2/src/ns2/__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"/home/jowens/Projects/ns2/src/ns2/api/__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"/home/jowens/Projects/ns2/src/ns2/api/accounts_interface.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 37, 11, 65
+"/home/jowens/Projects/ns2/src/ns2/api/dbus.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 0, 8, 26
+"/home/jowens/Projects/ns2/src/ns2/api/main.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 7, 18, 45
+"/home/jowens/Projects/ns2/src/ns2/api/pam_interface.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 23, 0, 0, 0, 10, 33
+"/home/jowens/Projects/ns2/src/ns2/api/snmp_interface.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 46, 0, 0, 12, 21, 79
+"/home/jowens/Projects/ns2/src/ns2/assets/NOVUS_LOGO.svg", "XML", 0, 0, 0, 0, 103, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 106
+"/home/jowens/Projects/ns2/src/ns2/backend/go.mod", "Go Module File", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 48, 0, 5, 53
+"/home/jowens/Projects/ns2/src/ns2/backend/go.sum", "Go Checksum File", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 115, 0, 0, 1, 116
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/Makefile", "Makefile", 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 2, 7
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/cmd/restart.go", "Go", 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 9, 40
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/cmd/root.go", "Go", 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 13, 61
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/cmd/start.go", "Go", 0, 0, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 10, 44
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/cmd/status.go", "Go", 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 9, 38
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/cmd/stop.go", "Go", 0, 0, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 45
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/cmd/test.go", "Go", 0, 0, 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 20, 82
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/internal/account/add.go", "Go", 0, 0, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 13, 85
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/internal/bridge/bridge.go", "Go", 0, 0, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 13, 42
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/internal/dbus/dbus.go", "Go", 0, 0, 76, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 20, 100
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/internal/snmp/snmp.go", "Go", 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 10, 45
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/lib/account.go", "Go", 0, 0, 91, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 29, 121
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/lib/account_interface.go", "Go", 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 16
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/lib/bridge.go", "Go", 0, 0, 259, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 77, 354
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/lib/bridge_interface.go", "Go", 0, 0, 131, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 40, 179
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/lib/dbus_service.go", "Go", 0, 0, 117, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 13, 135
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/lib/firewall.go", "Go", 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 11, 29
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/lib/networking.go", "Go", 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/lib/pam_interface.go", "Go", 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 11, 43
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/lib/polkit.go", "Go", 0, 0, 91, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 21, 113
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/lib/snmp.go", "Go", 0, 0, 397, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 136, 548
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/lib/snmp_interface.go", "Go", 0, 0, 143, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 67, 222
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/lib/systemd.go", "Go", 0, 0, 79, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 34, 115
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/lib/temp_bridge.go", "Go", 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 293, 63, 357
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/lib/test.go", "Go", 0, 0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 60
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/lib/test.json", "JSON", 0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 20
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/lib/utils.go", "Go", 0, 0, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 13, 42
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/main.go", "Go", 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 10, 70
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/openConnection.sh", "Shell Script", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3
+"/home/jowens/Projects/ns2/src/ns2/backend/ns/test.sh", "Shell Script", 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4
+"/home/jowens/Projects/ns2/src/ns2/cli/__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"/home/jowens/Projects/ns2/src/ns2/cli/main.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 0, 0, 0, 16, 42
+"/home/jowens/Projects/ns2/src/ns2/cli/status.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 10, 9, 33
+"/home/jowens/Projects/ns2/src/ns2/common.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 8, 17
+"/home/jowens/Projects/ns2/src/ns2/lib/__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"/home/jowens/Projects/ns2/src/ns2/lib/accounts_lib.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 108, 0, 0, 0, 53, 161
+"/home/jowens/Projects/ns2/src/ns2/lib/authorization.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 78, 0, 0, 10, 22, 110
+"/home/jowens/Projects/ns2/src/ns2/lib/bridge.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 164, 0, 0, 22, 64, 250
+"/home/jowens/Projects/ns2/src/ns2/lib/dbus.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 59, 0, 0, 2, 13, 74
+"/home/jowens/Projects/ns2/src/ns2/lib/firewalld.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 304, 0, 0, 64, 109, 477
+"/home/jowens/Projects/ns2/src/ns2/lib/networking.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 519, 0, 0, 25, 154, 698
+"/home/jowens/Projects/ns2/src/ns2/lib/nm.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 141, 0, 0, 0, 25, 166
+"/home/jowens/Projects/ns2/src/ns2/lib/ns_socket.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 140, 0, 0, 13, 58, 211
+"/home/jowens/Projects/ns2/src/ns2/lib/old_systemd.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 116, 0, 0, 0, 35, 151
+"/home/jowens/Projects/ns2/src/ns2/lib/snmp.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 389, 0, 0, 52, 116, 557
+"/home/jowens/Projects/ns2/src/ns2/lib/systemd1.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 33, 0, 0, 20, 24, 77
+"/home/jowens/Projects/ns2/src/ns2/lib/test_networking.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 29, 0, 0, 116, 37, 182
+"/home/jowens/Projects/ns2/src/ns2/main.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 2, 5
+"/home/jowens/Projects/ns2/src/ns2/tests/account_test.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 2, 5
+"/home/jowens/Projects/ns2/src/ns2/tests/network_delay.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 57, 0, 0, 8, 29, 94
+"/home/jowens/Projects/ns2/src/ns2/tests/nm_tests.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 1, 9, 23
+"/home/jowens/Projects/ns2/src/ns2/tests/pam_client.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 14, 10, 39
+"/home/jowens/Projects/ns2/src/ns2/tests/ping_data_collector.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27, 0, 0, 0, 10, 37
+"/home/jowens/Projects/ns2/src/ns2/tests/socket_client.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 11, 18, 45
+"/home/jowens/Projects/ns2/src/ns2/tests/systemd_tests.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 8, 19
+"/home/jowens/Projects/ns2/src/ns2/tests/test-snmp.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 1, 20, 62
+"/home/jowens/Projects/ns2/src/ns2/tests/udp_client.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 161, 0, 0, 21, 45, 227
+"/home/jowens/Projects/ns2/src/ns2/tests/udp_server.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 112, 0, 0, 6, 49, 167
+"/home/jowens/Projects/ns2/src/ns2/ui/__init__.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"/home/jowens/Projects/ns2/src/ns2/ui/accountsDialogs.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 0, 0, 132, 25, 197
+"/home/jowens/Projects/ns2/src/ns2/ui/accounts_page.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 61, 0, 0, 124, 8, 193
+"/home/jowens/Projects/ns2/src/ns2/ui/firewalld_page.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 196, 0, 0, 258, 37, 491
+"/home/jowens/Projects/ns2/src/ns2/ui/fpga_page.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 7, 27
+"/home/jowens/Projects/ns2/src/ns2/ui/home_page.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 76, 17, 118
+"/home/jowens/Projects/ns2/src/ns2/ui/login.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 43, 0, 0, 1, 16, 60
+"/home/jowens/Projects/ns2/src/ns2/ui/logs_page.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 113, 0, 0, 5, 29, 147
+"/home/jowens/Projects/ns2/src/ns2/ui/main.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 171, 0, 0, 40, 43, 254
+"/home/jowens/Projects/ns2/src/ns2/ui/networking_page.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 270, 0, 0, 66, 74, 410
+"/home/jowens/Projects/ns2/src/ns2/ui/services_page.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 43, 0, 0, 29, 17, 89
+"/home/jowens/Projects/ns2/src/ns2/ui/session.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 4
+"/home/jowens/Projects/ns2/src/ns2/ui/snmp_page.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 208, 0, 0, 308, 20, 536
+"/home/jowens/Projects/ns2/src/ns2/ui/terminal.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 52, 0, 0, 7, 14, 73
+"/home/jowens/Projects/ns2/src/ns2/ui/tests_page.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 68, 0, 0, 5, 44, 117
+"/home/jowens/Projects/ns2/src/ns2/ui/theme.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 2, 7, 26
+"/home/jowens/Projects/ns2/src/ns2/utils.py", "Python", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 31, 0, 0, 1, 12, 44
+"/home/jowens/Projects/ns2/uv.lock", "toml", 0, 1734, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 80, 1814
+"Total", "-", 0, 1758, 2299, 365, 1715, 21, 56, 16, 1, 34, 4070, 115, 48, 2223, 2406, 15127

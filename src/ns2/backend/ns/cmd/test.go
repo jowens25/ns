@@ -5,7 +5,10 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
+	"github.com/godbus/dbus/v5"
+	"github.com/jowens25/ns/ns/lib"
 	"github.com/spf13/cobra"
 )
 
@@ -20,9 +23,33 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-
-		//lib.TestUI()
 		fmt.Println("test called")
+
+		conn, err := dbus.SystemBus()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to connect to system bus: %v\n", err)
+			os.Exit(1)
+		}
+		defer conn.Close()
+
+		var thisCall lib.DbusCall
+		thisCall.Destination = "org.freedesktop.NetworkManager"
+		thisCall.Path = "/org/freedesktop/NetworkManager/IP4Config/2"
+		thisCall.Method = "org.freedesktop.DBus.Properties.Get"
+		thisCall.Args = []any{"org.freedesktop.NetworkManager.IP4Config", "AddressData"}
+
+		obj := conn.Object(thisCall.Destination, thisCall.Path)
+
+		dbuscall := obj.Call(thisCall.Method, 0, thisCall.Args...)
+
+		var result any
+
+		err = dbuscall.Store(&result)
+
+		fmt.Println(result)
+
+		//lib.ParseWithReturnType("aa{sv}", dbuscall.Body[0].(dbus.Variant))
+
 	},
 }
 

@@ -1,10 +1,9 @@
-from nicegui import ui, app, binding
+from nicegui import ui
 from ns2.lib.networking import *
 from ns2.lib.firewalld import *
 from dbus_next.signature import Variant
 from dbus_next.errors import DBusError
-from dbus_next.aio.proxy_object import ProxyInterface
-from ns2.api.dbus import get_dbus
+
 
 from ns2.ui.firewalld_page import firewall_status
 
@@ -17,7 +16,7 @@ async def network_page():
         with ui.card().classes("w-full").props("flat"):
             await firewall_status(True)
 
-        interfaces = await GetInterfacesAndAddresses(AppBus)
+        interfaces = await GetInterfacesAndAddresses()
 
         interface_table = (
             ui.table(
@@ -58,7 +57,7 @@ async def network_page():
 
 
 @ui.refreshable
-async def interface_card(nm: ProxyInterface, device: ProxyInterface, interface):
+async def interface_card(interface: InterfaceData):
 
     with ui.card().props("flat"):
         with ui.row():
@@ -71,30 +70,31 @@ async def interface_card(nm: ProxyInterface, device: ProxyInterface, interface):
                 ui.label().classes("text-h6").bind_text(interface, "Name")
                 ui.label().classes("text-h6").bind_text(interface, "HardwareAddress")
 
-                async def connection_sw_cb(e):
-                    action = "enable" if e.sender.value else "disable"
-                    with ui.dialog() as dialog, ui.card():
-                        ui.label(f"Are you sure you want to {action} this connection?")
-                        with ui.row():
-                            ui.button(
-                                "Cancel", on_click=lambda: dialog.submit("Cancel")
-                            ).props("flat color=accent align=left")
-                            ui.button(
-                                f"{action}", on_click=lambda: dialog.submit(action)
-                            ).props("flat color=accent align=left")
-                    result = await dialog
-                    if result == "enable":
-                        await nm.call_activate_connection("/", interface.dev_path, "/")
-                    elif result == "disable":
-                        await nm.call_deactivate_connection(interface.act_con_path)
-                    else:
-                        print("canceled")
-
-                    interface_card.refresh()
-
-                ui.switch("Connected").on("click", lambda e: connection_sw_cb(e)).props(
-                    "flat color=accent"
-                ).bind_value_from(interface, "Active")
+                # async def connection_sw_cb(e):
+                #    action = "enable" if e.sender.value else "disable"
+                #    with ui.dialog() as dialog, ui.card():
+                #        ui.label(f"Are you sure you want to {action} this connection?")
+                #        with ui.row():
+                #            ui.button(
+                #                "Cancel", on_click=lambda: dialog.submit("Cancel")
+                #            ).props("flat color=accent align=left")
+                #            ui.button(
+                #                f"{action}", on_click=lambda: dialog.submit(action)
+                #            ).props("flat color=accent align=left")
+                #    result = await dialog
+                #    if result == "enable":
+                #        await nm.call_activate_connection("/", interface.dev_path, "/")
+                #        await
+                #    elif result == "disable":
+                #        await nm.call_deactivate_connection(interface.act_con_path)
+                #    else:
+                #        print("canceled")
+        #
+        #    interface_card.refresh()
+        #
+        # ui.switch("Connected").on("click", lambda e: connection_sw_cb(e)).props(
+        #    "flat color=accent"
+        # ).bind_value_from(interface, "Active")
         ui.separator()
 
         # ui.spinner(size='lg').bind_visibility_from(interface, "Active", backward=lambda e: (not e))
@@ -129,33 +129,31 @@ async def interface_card(nm: ProxyInterface, device: ProxyInterface, interface):
                 ui.label().bind_text_from(interface, "Ip4")
                 ui.label("Edit").classes(
                     "text-accent cursor-pointer hover:underline"
-                ).on("click", lambda: edit_ip_connection("ipv4", device))
+                ).on("click", lambda: edit_ip_connection("ipv4", interface.dev_path))
 
             with ui.row().classes("flex-1 gap-16"):
                 ui.label("IPv6").classes("font-bold w-8")
                 ui.label().bind_text_from(interface, "Ip6")
                 ui.label("Edit").classes(
                     "text-accent cursor-pointer hover:underline"
-                ).on("click", lambda: edit_ip_connection("ipv6", device))
+                ).on("click", lambda: edit_ip_connection("ipv6", interface.dev_path))
 
 
 async def interface_page(interface_name: str):
 
-    nm = await GetNetworkManager(AppBus)
+    dev_path = await GetDeviceByIpIface(interface_name)
 
-    dev_path = await nm.call_get_device_by_ip_iface(interface_name)
+    # device = await GetDevice(AppBus, dev_path)
 
-    device = await GetDevice(AppBus, dev_path)
+    interface = await GetInterfaceData(interface_name)
 
-    interface = await GetInterfaceData(AppBus, nm, interface_name)
-
-    await interface_card(nm, device, interface)
+    await interface_card(interface)
 
     async def state_changed_cb(u1, u2, u3):
 
         print(u1, u2, u3)
         # Re-fetch the interface data to get the new state
-        updated_interface = await GetInterfaceData(AppBus, nm, interface_name)
+        updated_interface = await GetInterfaceData(interface_name)
 
         # Update the existing interface object's properties
         # This will trigger the UI bindings to update automatically
@@ -168,16 +166,20 @@ async def interface_page(interface_name: str):
         interface.Ip6 = updated_interface.Ip6
         # Add any other properties that might change
 
-    device.on_state_changed(state_changed_cb)
+    # device.on_state_changed(state_changed_cb)
 
 
-async def edit_ip_connection(version: str, device: ProxyInterface):
+async def edit_ip_connection(version: str, dev_path: str):
 
-    settings = await GetSettings(AppBus, device)
+    ac_path = await GetNmProp(dev_path, "Device", "ActiveConnection")
+
+    connection_path = await GetNmProp(ac_path, "Connection.Active", "Connection")
+
+    settings = await GetSettings(connection_path)
 
     ip = GetIp(version, settings)
 
-    connection = await GetConnectionFromDevice(AppBus, device)
+    # connection = await GetConnectionFromDevice(AppBus, device)
 
     def add_ip_address(a: str = None, p: str = None, g: str = None):
         ip.AddressData.append(IpAddress(a, p))
@@ -379,9 +381,11 @@ async def edit_ip_connection(version: str, device: ProxyInterface):
 
                             _settings = ApplyModes(version, _settings)
 
-                            await connection.call_update2(_settings, 0x1, {})
+                            await ConnectionUpdate2(connection_path, _settings, 0x1, {})
 
-                            await device.call_reapply(_settings, 0, 0)
+                            # await connection.call_update2(_settings, 0x1, {})
+
+                            await DeviceReapply(dev_path, _settings, 0, 0)
 
                             dialog.close()
 

@@ -70,7 +70,6 @@ class Settings:
 
 @binding.bindable_dataclass
 class Device:
-    Proxy: Optional[ProxyInterface] = None
     Path: Optional[str] = ""
     ActiveConnectionPath: Optional[str] = ""
     HardwareAddress: Optional[str] = ""
@@ -105,7 +104,7 @@ class InterfaceData:
 INTERFACE = "org.freedesktop.NetworkManager"
 
 
-async def getDevices():
+async def GetDevices():
     rsp = await DbusCall(
         destination="org.freedesktop.NetworkManager",
         path="/org/freedesktop/NetworkManager",
@@ -113,6 +112,30 @@ async def getDevices():
         member="GetDevices",
         signature="",
         args=[],
+    )
+    return rsp
+
+
+async def ConnectionUpdate2(settings_path: str, settings: dict, flags: int, args: dict):
+    rsp = await DbusCall(
+        destination="org.freedesktop.NetworkManager",
+        path=settings_path,
+        interface="org.freedesktop.NetworkManager.Settings.Connection",
+        member="Update2",
+        signature=["a{sa{sv}}", "u", "a{sv}"],
+        args=[settings, flags, args],
+    )
+    return rsp
+
+
+async def DeviceReapply(device_path: str, connection: dict, flags: int, args: int):
+    rsp = await DbusCall(
+        destination="org.freedesktop.NetworkManager",
+        path=device_path,
+        interface="org.freedesktop.NetworkManager.Settings.Connection",
+        member="Update2",
+        signature=["a{sa{sv}}", "t", "u"],
+        args=[connection, flags, args],
     )
     return rsp
 
@@ -183,6 +206,7 @@ async def GetNmProp(
     objectPath: str,
     interface_suffix: str | None = None,
     property: str | None = None,
+    returnSig: str = "",
 ):
 
     root = "org.freedesktop.NetworkManager"
@@ -191,15 +215,16 @@ async def GetNmProp(
     if interface_suffix is not None:
         interface = ".".join([root, interface_suffix])
 
-    return await GetProperty(
-        root,
-        objectPath,
-        interface,
-        property,
-    )
+    return await GetProperty(root, objectPath, interface, property, returnSig)
 
 
-async def GetProperty(destination: str, objectPath: str, interface: str, property: str):
+async def GetProperty(
+    destination: str,
+    objectPath: str,
+    interface: str,
+    property: str,
+    returnSig: str = "",
+):
     rsp = await DbusCall(
         destination=destination,
         path=objectPath,
@@ -207,54 +232,7 @@ async def GetProperty(destination: str, objectPath: str, interface: str, propert
         member="Get",
         signature="ss",
         args=[interface, property],
-    )
-    return rsp
-
-
-async def GetIp4Property(device_path: str, property: str):
-    rsp = await DbusCall(
-        destination="org.freedesktop.NetworkManager",
-        path=device_path,  # e.g., '/org/freedesktop/NetworkManager/Devices/1'
-        interface="org.freedesktop.DBus.Properties",
-        member="Get",
-        signature="ss",
-        args=["org.freedesktop.NetworkManager.IP4Config", property],
-    )
-    return rsp
-
-
-async def GetIp6Property(device_path: str, property: str):
-    rsp = await DbusCall(
-        destination="org.freedesktop.NetworkManager",
-        path=device_path,  # e.g., '/org/freedesktop/NetworkManager/Devices/1'
-        interface="org.freedesktop.DBus.Properties",
-        member="Get",
-        signature="ss",
-        args=["org.freedesktop.NetworkManager.IP6Config", property],
-    )
-    return rsp
-
-
-async def GetActiveConnectionProperty(ac_path: str, property: str):
-    rsp = await DbusCall(
-        destination="org.freedesktop.NetworkManager",
-        path=ac_path,  # e.g., '/org/freedesktop/NetworkManager/Devices/1'
-        interface="org.freedesktop.DBus.Properties",
-        member="Get",
-        signature="ss",
-        args=["org.freedesktop.NetworkManager.Connection.Active", property],
-    )
-    return rsp
-
-
-async def GetConnectionProperty(p: str, property: str):
-    rsp = await DbusCall(
-        destination="org.freedesktop.NetworkManager",
-        path=p,
-        interface="org.freedesktop.DBus.Properties",
-        member="Get",
-        signature="ss",
-        args=["org.freedesktop.NetworkManager.Settings.Connection", property],
+        returnSignature=returnSig,
     )
     return rsp
 
@@ -305,25 +283,16 @@ async def GetInterfaceData(iface: str) -> InterfaceData:
     ip6_config_path = await GetNmProp(i.dev_path, "Device", "Ip6Config")
     i.act_con_path = await GetNmProp(i.dev_path, "Device", "ActiveConnection")
 
-    # if len(i.act_con_path) > 1:
-    #    # activeConnection = await GetActiveConnection(bus, i.act_con_path)
-    #    connection_path = await GetActiveConnectionProperty(
-    #        i.act_con_path, "Connection"
-    #    )
-    #    # connection_path = await activeConnection.get_connection()
-    #    # connection = await GetConnection(bus, connection_path)
-    #    settings = await GetConnectionProperty()
-    #    settings = await connection.call_get_settings()
-    #    #i.AutoConnect = (
-    #    #    settings["connection"].get("autoconnect", Variant("b", True))
-    #    #)
-
     if len(ip4_config_path) > 1:
-        # ipv4Config = await
 
-        ip4AddressData = await GetNmProp(ip4_config_path, "IP4Config", "AddressData")
-
-        ip6AddressData = await GetNmProp(ip6_config_path, "IP6Config", "AddressData")
+        ip4AddressData = await GetNmProp(
+            ip4_config_path, "IP4Config", "AddressData", "aa{sv}"
+        )
+        print(ip4AddressData)
+        print(ip4AddressData)
+        ip6AddressData = await GetNmProp(
+            ip6_config_path, "IP6Config", "AddressData", "aa{sv}"
+        )
 
         i.Ip4 = addressDataToString(ip4AddressData)
         i.Ip6 = addressDataToString(ip6AddressData)
@@ -331,16 +300,6 @@ async def GetInterfaceData(iface: str) -> InterfaceData:
         i.Status = combineAddresses(ip4AddressData, ip6AddressData)
 
     return i
-
-
-# async def GetSettings(dev: ProxyInterface) -> dict:
-#    active_connection_path = await dev.get_active_connection()
-#    if len(active_connection_path) > 1:
-#        activeConnection = await GetActiveConnection(bus, active_connection_path)
-#        connection_path = await activeConnection.get_connection()
-#        connection = await GetConnection(bus, connection_path)
-#        connection_settings = await connection.call_get_settings()
-#        return connection_settings
 
 
 def GetIp(version: str, settings: dict) -> Ipv4v6:
@@ -469,7 +428,7 @@ def addressDataToAddress(addressdata: list[dict]) -> list:
         address = addr.get("address")
         prefix = addr.get("prefix")
         if address and prefix:
-            formatted.append(f"{address.value}/{prefix.value}")
+            formatted.append(f"{address}/{prefix}")
     return formatted
 
 
@@ -599,22 +558,20 @@ def combineAddresses(ipv4AddressData, ipv6AddressData) -> str:
 
 
 async def GetDeviceFromInterface(iface: str) -> Device:
-    nm = await GetNetworkManager(bus)
-    device_path = await nm.call_get_device_by_ip_iface(iface)
-    device = await GetDevice(bus, device_path)
 
-    hwaddr = await device.get_hw_address()
-    flags = await device.get_interface_flags()
+    device_path = await GetDeviceByIpIface(iface)
+
+    hwaddr = await GetNmProp(device_path, "Device", "HwAddress")
+    flags = await GetNmProp(device_path, "Device", "InterfaceFlags")
     carrier = processInterfaceFlags(flags)
-
-    state = await device.get_state()
+    state = await GetNmProp(device_path, "Device", "State")
     deviceState = processDeviceState(state)
-    ip4_config_path = await device.get_ip4_config()
-    ip4_config_path = await device.get_ip6_config()
-    active_connection_path = await device.get_active_connection()
+    ip4_config_path = await GetNmProp(device_path, "Device", "IP6Config")
+    ip6_config_path = await GetNmProp(device_path, "Device", "IP6Config")
+
+    active_connection_path = await GetNmProp(device_path, "Device", "ActiveConnection")
 
     myDevice = Device(
-        Proxy=device,
         Path=device_path,
         ActiveConnectionPath=active_connection_path,
         HardwareAddress=hwaddr,
@@ -623,7 +580,7 @@ async def GetDeviceFromInterface(iface: str) -> Device:
         State=state,
         DeviceState=deviceState,
         Ip4ConfigPath=ip4_config_path,
-        Ip6ConfigPath=ip4_config_path,
+        Ip6ConfigPath=ip6_config_path,
     )
 
     return myDevice
@@ -637,17 +594,14 @@ async def GetInterfaces() -> list:
 
     interfaces = []
 
-    nm = await GetNetworkManager()
-
-    devices_paths = await nm.call_get_devices()
+    devices_paths = await GetDevices()
 
     for p in devices_paths:
-        dev = await GetDevice(bus, p)
-        deviceType = await dev.get_device_type()
-        # print(f"device type: {deviceType}")
+        deviceType = await GetNmProp(p, "Device", "DeviceType")
+        iface = await GetNmProp(p, "Device", "Interface")
         if deviceType not in [1]:
             continue
-        interfaces.append(await dev.get_interface())
+        interfaces.append(iface)
 
     return interfaces
 
@@ -656,36 +610,37 @@ async def GetInterfacesAndAddresses() -> list:
 
     rows = []
 
-    nm = await GetNetworkManager(bus)
-
-    device_paths = await nm.call_get_devices()
+    device_paths = await GetDevices()
 
     for devicePath in device_paths:
 
-        device = await GetDevice(bus, devicePath)
-        interface = await device.get_interface()
-        hwaddr = await device.get_hw_address()
-        state = await device.get_state()
-        deviceType = await device.get_device_type()
-        # print(f"device type: {deviceType}")
+        interface = await GetNmProp(devicePath, "Device", "Interface")
+        hwaddr = await GetNmProp(devicePath, "Device", "HwAddress")
+        state = await GetNmProp(devicePath, "Device", "State")
+        deviceType = await GetNmProp(devicePath, "Device", "DeviceType")
+
         if deviceType not in [1]:  # // wired types only
             continue
         # processDeviceState
-        ip4_config_path = await device.get_ip4_config()
-        ip6_config_path = await device.get_ip6_config()
+        ip4_config_path = await GetNmProp(devicePath, "Device", "Ip4Config")
+        ip6_config_path = await GetNmProp(devicePath, "Device", "Ip6Config")
+
+        print("IP 4 CONFIG PATH: ", ip4_config_path)
+
         if len(ip4_config_path) > 1:
 
-            ip4Config = await GetIp4Config(bus, ip4_config_path)
-            ip6Config = await GetIp6Config(bus, ip6_config_path)
-
-            ip4AddressData = await ip4Config.get_address_data()
-            ip6AddressData = await ip6Config.get_address_data()
+            ip4AddressData = await GetNmProp(
+                ip4_config_path, "IP4Config", "AddressData"
+            )
+            ip6AddressData = await GetNmProp(
+                ip6_config_path, "IP6Config", "AddressData"
+            )
 
             gw = []
-            ip4gw = await ip4Config.get_gateway()
+            ip4gw = await GetNmProp(ip4_config_path, "IP4Config", "Gateway")
             if ip4gw:
                 gw.append(ip4gw)
-            ip6gw = await ip6Config.get_gateway()
+            ip6gw = await GetNmProp(ip6_config_path, "IP6Config", "Gateway")
             if ip6gw:
                 gw.append(ip4gw)
 
@@ -700,20 +655,3 @@ async def GetInterfacesAndAddresses() -> list:
             )
 
     return rows
-
-
-# async def nm_call( member: str, signature: str, body):
-#
-#    rsp = await bus.call(
-#        Message(
-#            destination="org.freedesktop.NetworkManager",
-#            path="/org/freedesktop/NetworkManager",
-#            interface="org.freedesktop.NetworkManager",
-#            member=member,
-#            signature=signature,
-#            body=[body],
-#        )
-#    )
-#
-#    if rsp.body:
-#        return rsp.body[0]

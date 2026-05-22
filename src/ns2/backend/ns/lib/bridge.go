@@ -19,32 +19,66 @@ import (
 )
 
 type DbusCall struct {
-	Destination string          `json:"Destination" binding:"required"` // object
-	Path        dbus.ObjectPath `json:"Path" binding:"required"`        // object
-	Method      string          `json:"Method" binding:"required"`      // call
-	Args        []any           `json:"Args"`                           // call
-	Signature   string          `json:"Signature" binding:"required"`
+	Destination     string          `json:"Destination" binding:"required"` // object
+	Path            dbus.ObjectPath `json:"Path" binding:"required"`        // object
+	Method          string          `json:"Method" binding:"required"`      // call
+	Args            []any           `json:"Args"`                           // call
+	Signature       string          `json:"Signature" binding:"required"`
+	ReturnSignature string          `json:"ReturnSignature" binding:"required"`
 }
 
-func MakeDbusCall(conn *dbus.Conn, call DbusCall) (any, error) {
+// swtich type assert then iterate and pack into map[string]string
+func ParseWithReturnType(returnType string, rsp any) []map[string]string {
+
+	result := []map[string]string{}
+
+	response := rsp.(dbus.Variant)
+
+	responseValue := response.Value()
+
+	switch returnType {
+
+	case "aa{sv}":
+
+		dict, ok := responseValue.([]map[string]dbus.Variant)
+
+		if ok {
+			for _, entry := range dict {
+
+				result = append(result, map[string]string{"temp": fmt.Sprintf("%v", entry)})
+
+				//for label, data := range entry {
+				//
+				//}
+			}
+		}
+
+	default:
+
+		fmt.Println("no return type")
+
+	}
+
+	return result
+
+}
+
+// returns body, result, err
+func MakeDbusCall(conn *dbus.Conn, call DbusCall) (any, any, error) {
 
 	var result any
 
 	obj := conn.Object(call.Destination, call.Path)
-	//fmt.Println("MAKE DBUS CALL DEBUGGER")
-	//fmt.Println(call.Method)
-	//fmt.Println(dbus.SignatureOf(call.Args))
-	//fmt.Println(dbus.SignatureOf(call.Args...)) // right way??
 
-	err := obj.Call(call.Method, 0, call.Args...).Store(&result)
+	dbuscall := obj.Call(call.Method, 0, call.Args...)
+	fmt.Println("dbuscall: ", dbuscall)
 
-	//obj.CallWithContext()
+	err := dbuscall.Store(&result)
 
-	//err := MyCall(conn, call.Destination, call.Path, call.Method, 0, call.Signature, call.Args...).Store(&result)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return result, nil
+	return dbuscall.Body[0], result, nil
 
 }
 
@@ -231,7 +265,7 @@ func (c *Client) rxHandler(data []byte) {
 		//continue
 	}
 
-	fmt.Println("REQUEST: ", msg)
+	//fmt.Println("REQUEST: ", msg)
 
 	if action, ok := msg["systemd"]; ok {
 
@@ -294,7 +328,7 @@ func (c *Client) rxHandler(data []byte) {
 
 		fmt.Println("args: ", call.Args)
 
-		rsp, err := MakeDbusCall(c.dbusConn, call)
+		body, rsp, err := MakeDbusCall(c.dbusConn, call)
 		if err != nil {
 
 			msg["dbusError"] = map[string]any{"error": err.Error()}
@@ -304,7 +338,12 @@ func (c *Client) rxHandler(data []byte) {
 			fmt.Println("ERROR FROM MAKE DBUS CALL: ", err.Error())
 
 		}
+		if len(call.ReturnSignature) > 0 {
+			rsp = ParseWithReturnType(call.ReturnSignature, body)
+		}
+
 		msg["dbusResponse"] = rsp
+
 		c.sendResponse(&msg)
 		return
 	}
@@ -312,6 +351,11 @@ func (c *Client) rxHandler(data []byte) {
 }
 
 func (c *Client) sendResponse(resp *map[string]any) {
+
+	for k, v := range *resp {
+		log.Printf("%s: %T %#v", k, v, v)
+	}
+
 	txdata, err := json.Marshal(resp)
 	if err != nil {
 		log.Printf("Marshal error: %v", err)

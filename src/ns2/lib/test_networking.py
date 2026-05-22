@@ -42,22 +42,7 @@ async def TestFunc():
 
     SetBridge(bridge)
 
-    dev_path = await GetDeviceByIpIface("enp3s0")
-
-    ac_path = await GetNmProp(dev_path, "Device", "ActiveConnection")
-
-    print(ac_path)
-
-    connect_path = await GetNmProp(ac_path, "Connection.Active", "Connection")
-
-    settings = await GetSettings(connect_path)
-
-    print(settings)
-    ip4_config_path = await GetNmProp(dev_path, "Device", "Ip4Config")
-
-    ip4AddressData = await GetNmProp(ip4_config_path, "IP4Config", "AddressData")
-
-    print(ip4AddressData)
+    print(await GetInterfaceData("enp3s0"))
     # rsp = await SystemdRestart("snmpd.service")
 
     # print(rsp)

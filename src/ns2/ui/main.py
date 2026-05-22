@@ -209,7 +209,7 @@ async def controlPanel():
 
 @ui.page("/")
 async def root():
-    activeUser = await SetupBridge("root")
+    activeUser = await SetupBridge("admin")
     print("TEMP FIXed BRIDGE FOR: ", activeUser)
     if not app.storage.user.get("uid"):
         app.storage.user.update({"uid": uuid.uuid4()})

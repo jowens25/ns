@@ -2,7 +2,6 @@ from nicegui import ui, app
 from ns2.lib.authorization import CheckAuthorization
 from ns2.lib.networking import (
     get_device_statistics,
-    getDevices,
     get_device_properties,
     set_refresh_rate,
 )
@@ -27,7 +26,7 @@ tx_mbs = []
 
 async def home_page():
 
-    bus = await get_dbus()
+    # bus = await get_dbus()
     # pam = await GetPamInterface(bus)
 
     log = ui.log()
