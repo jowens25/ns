@@ -177,6 +177,8 @@ async def edit_ip_connection(version: str, dev_path: str):
 
     settings = await GetSettings(connection_path)
 
+    print(settings)
+
     ip = GetIp(version, settings)
 
     # connection = await GetConnectionFromDevice(AppBus, device)

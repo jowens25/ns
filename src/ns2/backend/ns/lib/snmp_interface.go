@@ -9,7 +9,7 @@ import (
 // SnmpInterface implements the com.novus.ns.snmp interface
 type SnmpInterface struct{ conn *dbus.Conn }
 
-func (s *SnmpInterface) TestSnmp(sender dbus.Sender, message dbus.Message) (string, *dbus.Error) {
+func (s *SnmpInterface) Test(sender dbus.Sender, message dbus.Message) (string, *dbus.Error) {
 
 	isAuthorized := CheckAuthorization(sender, GetActionId(message))
 
@@ -24,7 +24,7 @@ func (s *SnmpInterface) TestSnmp(sender dbus.Sender, message dbus.Message) (stri
 
 }
 
-func (s *SnmpInterface) ResetSnmp(sender dbus.Sender, message dbus.Message) (string, *dbus.Error) {
+func (s *SnmpInterface) Reset(sender dbus.Sender, message dbus.Message) (string, *dbus.Error) {
 
 	isAuthorized := CheckAuthorization(sender, GetActionId(message))
 

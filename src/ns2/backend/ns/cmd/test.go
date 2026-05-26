@@ -16,12 +16,7 @@ import (
 var testCmd = &cobra.Command{
 	Use:   "test",
 	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("test called")
 
@@ -34,21 +29,16 @@ to quickly create a Cobra application.`,
 
 		var thisCall lib.DbusCall
 		thisCall.Destination = "org.freedesktop.NetworkManager"
-		thisCall.Path = "/org/freedesktop/NetworkManager/IP4Config/2"
-		thisCall.Method = "org.freedesktop.DBus.Properties.Get"
-		thisCall.Args = []any{"org.freedesktop.NetworkManager.IP4Config", "AddressData"}
+		thisCall.Path = "/org/freedesktop/NetworkManager/Devices/2"
+		thisCall.Method = "org.freedesktop.NetworkManager.Device.GetAppliedConnection"
+
+		thisCall.Args = []any{uint32(0)}
 
 		obj := conn.Object(thisCall.Destination, thisCall.Path)
 
 		dbuscall := obj.Call(thisCall.Method, 0, thisCall.Args...)
 
-		var result any
-
-		err = dbuscall.Store(&result)
-
-		fmt.Println(result)
-
-		//lib.ParseWithReturnType("aa{sv}", dbuscall.Body[0].(dbus.Variant))
+		fmt.Println(dbuscall.Body)
 
 	},
 }
@@ -56,13 +46,4 @@ to quickly create a Cobra application.`,
 func init() {
 	rootCmd.AddCommand(testCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// testCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// testCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

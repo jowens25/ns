@@ -15,9 +15,9 @@ func MakeBridge() *cobra.Command {
 			isWs, _ := cmd.Flags().GetBool("ws")
 
 			if isWs {
-				lib.InitWebSocketBridge()
+				//lib.InitWebSocketBridge()
 			} else {
-				//lib.InitHttpBridge()
+				lib.StartBridgeProxy("none")
 			}
 
 			return nil

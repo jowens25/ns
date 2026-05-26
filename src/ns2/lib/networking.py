@@ -140,6 +140,18 @@ async def DeviceReapply(device_path: str, connection: dict, flags: int, args: in
     return rsp
 
 
+async def GetAppliedConnection(device_path: str, flags: int):
+    rsp = await DbusCall(
+        destination="org.freedesktop.NetworkManager",
+        path=device_path,
+        interface="org.freedesktop.NetworkManager.Device",
+        member="GetAppliedConnection",
+        signature="u",
+        args=[flags],
+    )
+    return rsp
+
+
 async def set_refresh_rate(device_path: str, rate_ms: int):
     """Set the refresh rate for statistics (in milliseconds)."""
 
@@ -232,7 +244,7 @@ async def GetProperty(
         member="Get",
         signature="ss",
         args=[interface, property],
-        returnSignature=returnSig,
+        returns=returnSig,
     )
     return rsp
 
@@ -257,6 +269,7 @@ async def GetDeviceByIpIface(iface: str):
         member="GetDeviceByIpIface",
         signature="s",
         args=[iface],
+        returns="o",
     )
     return rsp
 
@@ -288,6 +301,7 @@ async def GetInterfaceData(iface: str) -> InterfaceData:
         ip4AddressData = await GetNmProp(
             ip4_config_path, "IP4Config", "AddressData", "aa{sv}"
         )
+
         print(ip4AddressData)
         print(ip4AddressData)
         ip6AddressData = await GetNmProp(
@@ -630,10 +644,10 @@ async def GetInterfacesAndAddresses() -> list:
         if len(ip4_config_path) > 1:
 
             ip4AddressData = await GetNmProp(
-                ip4_config_path, "IP4Config", "AddressData"
+                ip4_config_path, "IP4Config", "AddressData", "aa{sv}"
             )
             ip6AddressData = await GetNmProp(
-                ip6_config_path, "IP6Config", "AddressData"
+                ip6_config_path, "IP6Config", "AddressData", "aa{sv}"
             )
 
             gw = []

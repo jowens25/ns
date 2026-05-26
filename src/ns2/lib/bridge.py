@@ -187,8 +187,16 @@ async def tryBridge():
 
 async def SnmpCall(meth, args):
     return await DbusCall(
-        "com.novus.ns", "/com/novus/ns", "com.novus.ns.snmp", meth, "", args
+        "com.novus.ns", "/com/novus/ns", "com.novus.ns.snmp", meth, "", args, ""
     )
+
+
+def DbusToWebsocket(sig: list, args: list) -> list:
+    """returns a list of dict of key value pairs where each pair is a type and value"""
+    r = []
+    for i in range(len(args)):
+        r.append({"t": sig[i], "v": args[i]})
+    return r
 
 
 async def DbusCall(
@@ -196,9 +204,9 @@ async def DbusCall(
     path: str,
     interface: str,
     member: str,
-    signature: str,
-    args,
-    returnSignature: str = "",
+    signature: list,
+    args: list,
+    returns: str = "",
 ):
 
     if type(args) != list:
@@ -216,11 +224,8 @@ async def DbusCall(
         "method": method,
         "args": args,
         "signature": signature,
-        "returnsignature": returnSignature,
+        "returns": returns,
     }
-
-    # print("REQUEST: ")
-    # pprint(req)
 
     rsp = await bridge.writeRead(req)
 
