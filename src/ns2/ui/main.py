@@ -38,7 +38,7 @@ from fastapi.responses import RedirectResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from nicegui import app, ui
-from ns2.lib.bridge import CheckBridge, GetBridge, SetupBridge
+from ns2.lib.bridge import CheckBridge, SetupBridge
 
 unrestricted_page_routes = {
     "/login",
@@ -55,7 +55,7 @@ async def check_auth():
 
     guid = app.storage.general.get("uid")
 
-    if not await CheckBridge():
+    if not await CheckBridge("admin"):
         # bridge.cleanup()
         app.storage.user.clear()
         ui.navigate.to("/login")
@@ -209,8 +209,9 @@ async def controlPanel():
 
 @ui.page("/")
 async def root():
+    print("RUNNING ROOT FUNCTION")
     activeUser = await SetupBridge("admin")
-    print("TEMP FIXed BRIDGE FOR: ", activeUser)
+    print("BRIDGE FOR: ", activeUser)
     if not app.storage.user.get("uid"):
         app.storage.user.update({"uid": uuid.uuid4()})
     ui.timer(1.0, check_auth)

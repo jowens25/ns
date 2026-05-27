@@ -3,9 +3,8 @@ from ns2.lib.systemd1 import isActive, SystemdStop, SystemdStart, SystemdRestart
 from nicegui import ui
 from dataclasses import asdict
 
-from ns2.api.dbus import get_dbus
 
-from ns2.lib.bridge import DbusCall, SnmpCall
+from ns2.lib.bridge import BridgeCall
 from ns2.lib.snmp import (
     V3User,
     V2User,
@@ -13,7 +12,6 @@ from ns2.lib.snmp import (
     default_persistent_dir_path,
 )
 
-from ns2.api.snmp_interface import GetSnmpInterface
 
 from ns2.lib.snmp import *
 
@@ -94,8 +92,12 @@ async def create_v3_user_dialog():
                             )
                         ):
                             print(asdict(v3))
-                            rsp = await SnmpCall(
+                            rsp = await BridgeCall(
+                                "com.novus.ns",
+                                "/com/novus/ns",
+                                "com.novus.ns.snmp",
                                 "CreateV3User",
+                                "a{ss}",
                                 [asdict(v3)],
                             )
                             # snmp = await GetSnmpInterface(AppBus)
@@ -123,7 +125,7 @@ async def create_v3_user_dialog():
 @ui.refreshable
 async def v3table():
 
-    v3Users = await SnmpCall("GetV3Users", [])
+    v3Users = await BridgeCall("GetV3Users", [])
 
     createV3Dialog = await create_v3_user_dialog()
 
@@ -156,7 +158,7 @@ async def v3table():
 @ui.refreshable
 async def v2table():
 
-    v2Users = await SnmpCall("GetV2Users", [])
+    v2Users = await BridgeCall("GetV2Users", [])
 
     print(v2Users)
 
@@ -198,7 +200,7 @@ async def v2table():
                         if all(
                             validate_group([version, permissions, community, source])
                         ):
-                            await SnmpCall("CreateV2User", [asdict(v2)])
+                            await BridgeCall("CreateV2User", [asdict(v2)])
                             await v2table.refresh()
                             createV2Dialog.close()
                         else:
@@ -282,7 +284,7 @@ async def snmp_status():
                     )
             if await dialog == "reset":
 
-                await SnmpCall("ResetSnmp", [""])
+                await BridgeCall("ResetSnmp", [""])
                 v2table.refresh()
                 v3table.refresh()
 
@@ -332,7 +334,7 @@ def disable_group(fields):
 async def edit_delete_v2_user_card(community):
 
     # user = await snmp.call_get_v2_user_by_community(community)
-    user = await SnmpCall("GetV2UserByCommunity", [community])
+    user = await BridgeCall("GetV2UserByCommunity", [community])
     v2User = V2User(**user)
     with ui.card().classes("w-full"):
         with ui.column().classes("w-full"):
@@ -367,7 +369,7 @@ async def edit_delete_v2_user_card(community):
                     disable_group(group)
                     save_button.enabled = False
                     edit_button.enabled = True
-                    await SnmpCall("ModifyV2User", [asdict(v2User)])
+                    await BridgeCall("ModifyV2User", [asdict(v2User)])
                     await v2table.refresh()
                     ui.navigate.back()
 
@@ -388,7 +390,7 @@ async def edit_delete_v2_user_card(community):
                             ).props("flat color=accent align=left")
                     result = await dialog
                     if result:
-                        await SnmpCall("RemoveV2User", [asdict(v2User)])
+                        await BridgeCall("RemoveV2User", [asdict(v2User)])
                         v2table.refresh()
                         ui.navigate.back()
                         ui.notify(f"User {v2User.Community} deleted...")
@@ -414,7 +416,7 @@ async def edit_delete_v2_user_card(community):
 
 async def edit_delete_v3_user_card(username):
 
-    userData = await SnmpCall("GetV3UserByUsername", [username])
+    userData = await BridgeCall("GetV3UserByUsername", [username])
     initUser = V3User(**userData)
     finalUser = V3User(**userData)
 
@@ -478,7 +480,7 @@ async def edit_delete_v3_user_card(username):
                         )
                     ):
 
-                        await SnmpCall(
+                        await BridgeCall(
                             "ModifyV3User", [asdict(initUser), [asdict(finalUser)]]
                         )
                         ui.navigate.back()
@@ -504,7 +506,7 @@ async def edit_delete_v3_user_card(username):
                             ).props("flat color=accent align=left")
                     result = await dialog
                     if result:
-                        await SnmpCall("RemoveV3User", [asdict(initUser)])
+                        await BridgeCall("RemoveV3User", [asdict(initUser)])
                         # await DeleteV3User(AppBus, asdict(initUser))
                         ui.navigate.back()
                         ui.notify(f"User {initUser.UserName} deleted...")

@@ -1,9 +1,8 @@
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from typing import Optional
-from nicegui import ui, app
+from nicegui import ui
 
 from ns2.lib.systemd1 import *
-from ns2.api.dbus import get_dbus
 
 
 @dataclass

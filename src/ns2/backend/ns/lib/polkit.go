@@ -32,7 +32,7 @@ func CheckAuthorization(sender dbus.Sender, actionId string) bool {
 	subject := Subject{
 		Kind: "system-bus-name",
 		Details: map[string]dbus.Variant{
-			"name": dbus.MakeVariant(sender),
+			"name": dbus.MakeVariant(string(sender)),
 		},
 	}
 

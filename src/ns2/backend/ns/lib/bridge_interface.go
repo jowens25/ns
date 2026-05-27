@@ -31,6 +31,38 @@ func NewBridgeInterface() *BridgeInterface {
 
 }
 
+func (b *BridgeInterface) GetActiveUser(sender dbus.Sender) (string, *dbus.Error) {
+
+	u, err := GetUserInfoFromSender(b.conn, sender)
+
+	if err != nil {
+
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+
+	}
+
+	return u.Username, nil
+}
+
+func (b *BridgeInterface) GetOwner(sender dbus.Sender) (string, *dbus.Error) {
+
+	u, err := GetUserInfoFromSender(b.conn, sender)
+
+	if err != nil {
+
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+
+	}
+
+	return u.Username, nil
+}
+
 func (b *BridgeInterface) Make(username string) (int, *dbus.Error) {
 
 	b.propsLock.RLock()

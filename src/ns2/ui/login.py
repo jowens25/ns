@@ -4,7 +4,7 @@ from nicegui import ui, app
 from ns2.ui.theme import init_colors
 from ns2.utils import ASSETS_DIR
 from ns2.lib.bridge import CallPamAuthenticate
-from ns2.lib.bridge import Bridge, SetupBridge, GetBridgePid
+from ns2.lib.bridge import SetupBridge, GetBridgePid
 import uuid
 
 

@@ -1,7 +1,7 @@
 from nicegui import ui, app
 
 from ns2.lib.accounts_lib import _getUsersAndAdmins, GetUserByName
-from ns2.api.dbus import get_dbus
+
 from ns2.ui.accountsDialogs import *
 
 

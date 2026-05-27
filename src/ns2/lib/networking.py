@@ -3,15 +3,10 @@ from typing import List, Optional
 from nicegui import ui, app, binding
 
 from dbus_next.signature import Variant
-from dbus_next.errors import DBusError
-from dbus_next.aio.proxy_object import ProxyInterface
-from dbus_next.aio import MessageBus
-from dbus_next import Message
 
 from ns2.common import formatListToString
-from ns2.utils import INTROSPECTION_DIR
 
-from ns2.lib.bridge import DbusCall
+from ns2.lib.bridge import BridgeCall
 
 # ====================================================================
 # data classes
@@ -92,6 +87,8 @@ class InterfaceData:
     Carrier: Optional[str] = ""
     Ip4: Optional[str] = ""
     Ip6: Optional[str] = ""
+    ip4_config_path: Optional[str] = ""
+    ip6_config_path: Optional[str] = ""
     AutoConnect: Optional[bool] = False
     dev_path: Optional[str] = ""
     act_con_path: Optional[str] = ""
@@ -105,57 +102,60 @@ INTERFACE = "org.freedesktop.NetworkManager"
 
 
 async def GetDevices():
-    rsp = await DbusCall(
+    rsp = await BridgeCall(
         destination="org.freedesktop.NetworkManager",
         path="/org/freedesktop/NetworkManager",
         interface="org.freedesktop.NetworkManager",
         member="GetDevices",
         signature="",
-        args=[],
+        body=[],
     )
-    return rsp
+    return rsp.body[0]
 
 
 async def ConnectionUpdate2(settings_path: str, settings: dict, flags: int, args: dict):
-    rsp = await DbusCall(
+    rsp = await BridgeCall(
         destination="org.freedesktop.NetworkManager",
         path=settings_path,
         interface="org.freedesktop.NetworkManager.Settings.Connection",
         member="Update2",
-        signature=["a{sa{sv}}", "u", "a{sv}"],
-        args=[settings, flags, args],
+        signature="a{sa{sv}}ua{sv}",
+        body=[settings, flags, args],
     )
-    return rsp
+    return rsp.body[0]
 
 
 async def DeviceReapply(device_path: str, connection: dict, flags: int, args: int):
-    rsp = await DbusCall(
+    rsp = await BridgeCall(
         destination="org.freedesktop.NetworkManager",
         path=device_path,
-        interface="org.freedesktop.NetworkManager.Settings.Connection",
-        member="Update2",
-        signature=["a{sa{sv}}", "t", "u"],
-        args=[connection, flags, args],
+        interface="org.freedesktop.NetworkManager.Device",
+        member="Reapply",
+        signature="a{sa{sv}}tu",
+        body=[connection, flags, args],
     )
-    return rsp
+    if len(rsp.body) > 0:
+        return rsp.body[0]
+    else:
+        return None
 
 
 async def GetAppliedConnection(device_path: str, flags: int):
-    rsp = await DbusCall(
+    rsp = await BridgeCall(
         destination="org.freedesktop.NetworkManager",
         path=device_path,
         interface="org.freedesktop.NetworkManager.Device",
         member="GetAppliedConnection",
         signature="u",
-        args=[flags],
+        body=[flags],
     )
-    return rsp
+    return rsp.body[0]
 
 
 async def set_refresh_rate(device_path: str, rate_ms: int):
     """Set the refresh rate for statistics (in milliseconds)."""
 
-    rsp = await DbusCall(
+    rsp = await BridgeCall(
         destination="org.freedesktop.NetworkManager",
         path=device_path,
         interface="org.freedesktop.DBus.Properties",
@@ -168,12 +168,12 @@ async def set_refresh_rate(device_path: str, rate_ms: int):
         ],
     )
 
-    return rsp
+    return rsp.body[0]
 
 
 async def get_device_statistics(device_path: str):
 
-    rsp = await DbusCall(
+    rsp = await BridgeCall(
         destination="org.freedesktop.NetworkManager",
         path=device_path,  # e.g., '/org/freedesktop/NetworkManager/Devices/1'
         interface="org.freedesktop.DBus.Properties",
@@ -191,34 +191,33 @@ async def get_device_statistics(device_path: str):
 
 
 async def get_device_properties(device_path: str):
-    rsp = await DbusCall(
+    rsp = await BridgeCall(
         destination="org.freedesktop.NetworkManager",
         path=device_path,  # e.g., '/org/freedesktop/NetworkManager/Devices/1'
         interface="org.freedesktop.DBus.Properties",
         member="GetAll",
         signature="s",
-        args=["org.freedesktop.NetworkManager.Device"],
+        body=["org.freedesktop.NetworkManager.Device"],
     )
-    return rsp
+    return rsp.body[0]
 
 
 async def GetDeviceProperty(device_path: str, property: str):
-    rsp = await DbusCall(
+    rsp = await BridgeCall(
         destination="org.freedesktop.NetworkManager",
         path=device_path,  # e.g., '/org/freedesktop/NetworkManager/Devices/1'
         interface="org.freedesktop.DBus.Properties",
         member="Get",
         signature="ss",
-        args=["org.freedesktop.NetworkManager.Device", property],
+        body=["org.freedesktop.NetworkManager.Device", property],
     )
-    return rsp
+    return rsp.body[0]
 
 
 async def GetNmProp(
     objectPath: str,
-    interface_suffix: str | None = None,
-    property: str | None = None,
-    returnSig: str = "",
+    interface_suffix: str,
+    property: str,
 ):
 
     root = "org.freedesktop.NetworkManager"
@@ -227,7 +226,7 @@ async def GetNmProp(
     if interface_suffix is not None:
         interface = ".".join([root, interface_suffix])
 
-    return await GetProperty(root, objectPath, interface, property, returnSig)
+    return await GetProperty(root, objectPath, interface, property)
 
 
 async def GetProperty(
@@ -235,43 +234,44 @@ async def GetProperty(
     objectPath: str,
     interface: str,
     property: str,
-    returnSig: str = "",
 ):
-    rsp = await DbusCall(
+    rsp = await BridgeCall(
         destination=destination,
         path=objectPath,
         interface="org.freedesktop.DBus.Properties",
         member="Get",
         signature="ss",
-        args=[interface, property],
-        returns=returnSig,
+        body=[interface, property],
     )
-    return rsp
+
+    if type(rsp.body[0]) == Variant:
+        return rsp.body[0].value
+    else:
+        return rsp.body[0]
 
 
 async def GetSettings(connection_path: str):
-    rsp = await DbusCall(
+    rsp = await BridgeCall(
         destination="org.freedesktop.NetworkManager",
         path=connection_path,
         interface="org.freedesktop.NetworkManager.Settings.Connection",
         member="GetSettings",
         signature="",
-        args=[],
+        body=[],
     )
-    return rsp
+    return rsp.body[0]
 
 
 async def GetDeviceByIpIface(iface: str):
-    rsp = await DbusCall(
+    rsp = await BridgeCall(
         destination="org.freedesktop.NetworkManager",
         path="/org/freedesktop/NetworkManager",
         interface="org.freedesktop.NetworkManager",
         member="GetDeviceByIpIface",
         signature="s",
-        args=[iface],
-        returns="o",
+        body=[iface],
     )
-    return rsp
+    return rsp.body[0]
 
 
 # ====================================================================
@@ -292,21 +292,17 @@ async def GetInterfaceData(iface: str) -> InterfaceData:
         await GetNmProp(i.dev_path, "Device", "InterfaceFlags")
     )
 
-    ip4_config_path = await GetNmProp(i.dev_path, "Device", "Ip4Config")
-    ip6_config_path = await GetNmProp(i.dev_path, "Device", "Ip6Config")
+    i.ip4_config_path = await GetNmProp(i.dev_path, "Device", "Ip4Config")
+    i.ip6_config_path = await GetNmProp(i.dev_path, "Device", "Ip6Config")
     i.act_con_path = await GetNmProp(i.dev_path, "Device", "ActiveConnection")
 
-    if len(ip4_config_path) > 1:
+    if len(i.ip4_config_path) > 1:
 
-        ip4AddressData = await GetNmProp(
-            ip4_config_path, "IP4Config", "AddressData", "aa{sv}"
-        )
+        ip4AddressData = await GetNmProp(i.ip4_config_path, "IP4Config", "AddressData")
 
         print(ip4AddressData)
         print(ip4AddressData)
-        ip6AddressData = await GetNmProp(
-            ip6_config_path, "IP6Config", "AddressData", "aa{sv}"
-        )
+        ip6AddressData = await GetNmProp(i.ip6_config_path, "IP6Config", "AddressData")
 
         i.Ip4 = addressDataToString(ip4AddressData)
         i.Ip6 = addressDataToString(ip6AddressData)
@@ -439,8 +435,8 @@ def ApplyModes(version: str, settings: dict) -> dict:
 def addressDataToAddress(addressdata: list[dict]) -> list:
     formatted = []
     for addr in addressdata:
-        address = addr.get("address")
-        prefix = addr.get("prefix")
+        address = addr.get("address").value
+        prefix = addr.get("prefix").value
         if address and prefix:
             formatted.append(f"{address}/{prefix}")
     return formatted
@@ -644,10 +640,10 @@ async def GetInterfacesAndAddresses() -> list:
         if len(ip4_config_path) > 1:
 
             ip4AddressData = await GetNmProp(
-                ip4_config_path, "IP4Config", "AddressData", "aa{sv}"
+                ip4_config_path, "IP4Config", "AddressData"
             )
             ip6AddressData = await GetNmProp(
-                ip6_config_path, "IP6Config", "AddressData", "aa{sv}"
+                ip6_config_path, "IP6Config", "AddressData"
             )
 
             gw = []

@@ -36,24 +36,3 @@ func GetUsernameFromConnection(conn *dbus.Conn) string {
 	return GetUserNameFromUid(GetConnectionCredentials(conn))
 
 }
-
-func GetUserInfoFromSender(conn *dbus.Conn, sender dbus.Sender) {
-
-	var response map[string]dbus.Variant
-
-	obj := conn.Object("org.freedesktop.DBus", "/org/freedesktop/DBus")
-	err := obj.Call("org.freedesktop.DBus.GetConnectionCredentials", 0, sender).Store(&response)
-	if err != nil {
-		log.Fatal("Failed to look up user")
-	}
-
-	uid := response["UnixUserID"].Value().(uint32)
-
-	u, err := user.LookupId(fmt.Sprintf("%d", uid))
-	if err != nil {
-		log.Fatalf("Could not find user with UID %s: %v", uid, err)
-	}
-
-	fmt.Println(u)
-
-}

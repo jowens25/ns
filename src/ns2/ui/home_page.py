@@ -5,9 +5,8 @@ from ns2.lib.networking import (
     get_device_properties,
     set_refresh_rate,
 )
-from ns2.api.dbus import get_dbus
-from ns2.api.pam_interface import GetPamInterface
-from ns2.lib.bridge import DbusCall
+
+from ns2.lib.bridge import BridgeCall
 
 # import plotly.graph_objects as go
 # import plotly.express as px

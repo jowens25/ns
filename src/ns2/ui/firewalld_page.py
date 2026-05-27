@@ -4,7 +4,6 @@ from ns2.lib.firewalld import *
 from dbus_next.signature import Variant
 from dbus_next.errors import DBusError
 from dbus_next.aio.proxy_object import ProxyInterface
-from ns2.api.dbus import get_dbus
 
 from ns2.lib.systemd1 import *
 from ns2.common import formatStringToList

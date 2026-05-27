@@ -1,19 +1,16 @@
 #!/usr/bin/env python3
 """Test Polkit authorization check."""
 
-import asyncio
 import os
 from pathlib import Path
 from dbus_next import Message, Variant
-from dbus_next.aio import MessageBus
-
-from ns2.api.dbus import get_dbus
+from ns2.lib.bridge import BridgeCall
 
 
 async def getPid(sender: str):
-    bus = get_dbus()
+    # bus = get_dbus()
 
-    result = await bus.call(
+    result = await BridgeCall(
         Message(
             destination="org.freedesktop.DBus",
             path="/org/freedesktop/DBus",

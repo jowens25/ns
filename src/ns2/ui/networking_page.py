@@ -129,14 +129,14 @@ async def interface_card(interface: InterfaceData):
                 ui.label().bind_text_from(interface, "Ip4")
                 ui.label("Edit").classes(
                     "text-accent cursor-pointer hover:underline"
-                ).on("click", lambda: edit_ip_connection("ipv4", interface.dev_path))
+                ).on("click", lambda: edit_ip_connection("ipv4", interface))
 
             with ui.row().classes("flex-1 gap-16"):
                 ui.label("IPv6").classes("font-bold w-8")
                 ui.label().bind_text_from(interface, "Ip6")
                 ui.label("Edit").classes(
                     "text-accent cursor-pointer hover:underline"
-                ).on("click", lambda: edit_ip_connection("ipv6", interface.dev_path))
+                ).on("click", lambda: edit_ip_connection("ipv6", interface))
 
 
 async def interface_page(interface_name: str):
@@ -169,15 +169,20 @@ async def interface_page(interface_name: str):
     # device.on_state_changed(state_changed_cb)
 
 
-async def edit_ip_connection(version: str, dev_path: str):
+async def edit_ip_connection(version: str, id: InterfaceData):
 
-    ac_path = await GetNmProp(dev_path, "Device", "ActiveConnection")
-
-    connection_path = await GetNmProp(ac_path, "Connection.Active", "Connection")
+    connection_path = await GetNmProp(
+        id.act_con_path, "Connection.Active", "Connection"
+    )
 
     settings = await GetSettings(connection_path)
-
-    print(settings)
+    if version == "ipv6":
+        settings[version]["gateway"] = Variant(
+            "s", await GetNmProp(id.ip6_config_path, "IP6Config", "Gateway")
+        )
+    settings[version]["gateway"] = Variant(
+        "s", await GetNmProp(id.ip4_config_path, "IP4Config", "Gateway")
+    )
 
     ip = GetIp(version, settings)
 
@@ -383,11 +388,14 @@ async def edit_ip_connection(version: str, dev_path: str):
 
                             _settings = ApplyModes(version, _settings)
 
-                            await ConnectionUpdate2(connection_path, _settings, 0x1, {})
-
-                            # await connection.call_update2(_settings, 0x1, {})
-
-                            await DeviceReapply(dev_path, _settings, 0, 0)
+                            rsp = await ConnectionUpdate2(
+                                connection_path, _settings, 0x1, {}
+                            )
+                            if rsp:
+                                ui.notify(rsp, type="negative")
+                            rsp = await DeviceReapply(id.dev_path, _settings, 0, 0)
+                            if rsp:
+                                ui.notify(rsp, type="positive")
 
                             dialog.close()
 
@@ -395,9 +403,9 @@ async def edit_ip_connection(version: str, dev_path: str):
                             ui.notify(e, type="negative")
                             # dialog.close()
 
-                        except Exception as e:
-                            print(e)
-                            ui.notify("Please correct the errors", type="negative")
+                        # except Exception as e:
+                        #    print(e)
+                        #    ui.notify("Please correct the errors", type="negative")
 
                     def on_cancel_cb():
                         dialog.close()

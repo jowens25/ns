@@ -1,7 +1,6 @@
 from nicegui import ui, app, binding
 
 from ns2.lib.accounts_lib import *
-from ns2.api.dbus import get_dbus
 
 # username
 # password
