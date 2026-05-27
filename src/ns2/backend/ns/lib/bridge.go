@@ -6,17 +6,14 @@ import (
 	"io"
 	"log"
 	"net"
-	"net/http"
 	"os"
 	"os/exec"
 	"os/signal"
 	"os/user"
 	"strconv"
-	"sync"
 	"syscall"
 
 	"github.com/godbus/dbus/v5"
-	"github.com/gorilla/websocket"
 )
 
 type DbusCall struct {
@@ -112,7 +109,6 @@ func CallMakeBridge(username string) (int, error) {
 		"ns",
 		"bridge",
 		"make",
-		"--ws",
 	)
 
 	cmd.Stdout = os.Stdout
@@ -142,37 +138,37 @@ func callCloseBridge(pid int) error {
 	return nil
 }
 
-var upgrader = websocket.Upgrader{
-	CheckOrigin: func(r *http.Request) bool {
-		// In production, validate origin properly
-		//origin := r.Header.Get("Origin")
-		return true //return origin == "http://localhost" || origin == "ws://localhost:8080"
-	},
-}
-
-type DbusMessage struct {
-	Type        string        `json:"type"` // "call", "signal", "get", "set"
-	Destination string        `json:"destination,omitempty"`
-	Path        string        `json:"path,omitempty"`
-	Interface   string        `json:"interface,omitempty"`
-	Member      string        `json:"member,omitempty"`
-	Args        []interface{} `json:"args,omitempty"`
-	RequestID   string        `json:"request_id,omitempty"`
-}
-
-type DbusResponse struct {
-	RequestID string        `json:"request_id"`
-	Success   bool          `json:"success"`
-	Result    []interface{} `json:"result,omitempty"`
-	Error     string        `json:"error,omitempty"`
-}
-
-type Client struct {
-	conn     *websocket.Conn
-	send     chan []byte
-	dbusConn *dbus.Conn
-	mu       sync.Mutex
-}
+//var upgrader = websocket.Upgrader{
+//	CheckOrigin: func(r *http.Request) bool {
+//		// In production, validate origin properly
+//		//origin := r.Header.Get("Origin")
+//		return true //return origin == "http://localhost" || origin == "ws://localhost:8080"
+//	},
+//}
+//
+//type DbusMessage struct {
+//	Type        string        `json:"type"` // "call", "signal", "get", "set"
+//	Destination string        `json:"destination,omitempty"`
+//	Path        string        `json:"path,omitempty"`
+//	Interface   string        `json:"interface,omitempty"`
+//	Member      string        `json:"member,omitempty"`
+//	Args        []interface{} `json:"args,omitempty"`
+//	RequestID   string        `json:"request_id,omitempty"`
+//}
+//
+//type DbusResponse struct {
+//	RequestID string        `json:"request_id"`
+//	Success   bool          `json:"success"`
+//	Result    []interface{} `json:"result,omitempty"`
+//	Error     string        `json:"error,omitempty"`
+//}
+//
+//type Client struct {
+//	conn     *websocket.Conn
+//	send     chan []byte
+//	dbusConn *dbus.Conn
+//	mu       sync.Mutex
+//}
 
 // func InitWebSocketBridge() {
 // 	mux := http.NewServeMux()
