@@ -2,19 +2,29 @@ package lib
 
 import (
 	"fmt"
-	"log"
-	"os/exec"
 	"slices"
 	"strings"
+	"time"
+
+	"github.com/godbus/dbus/v5"
 )
 
 var ADMIN_GROUP string = "nsadmin"
 var USER_GROUP string = "nsuser"
 
-func MakeNewAdmin(username string) {
+type User struct {
+	Username string `json:"Username"`
+	Group    string `json:"Group"`
+	Last     string `json:"Last"`
+}
 
-	cmd := exec.Command(
-		"useradd",
+func RemoveUser(username string) error {
+	return runCmd("userdel", username, "-rf")
+}
+
+func MakeNewAdmin(username string) error {
+
+	return runCmd("useradd",
 		"-M",
 		"-N",
 		"-g",
@@ -25,21 +35,14 @@ func MakeNewAdmin(username string) {
 		"/bin/bash",
 		"-d",
 		fmt.Sprintf("/home/%s", username),
-		username,
-	)
-
-	stdoutStderr, err := cmd.CombinedOutput()
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("%s\n", stdoutStderr)
+		username)
 
 }
 
 // this needs to run as root...
-func MakeNewUser(username string) {
+func MakeNewUser(username string) error {
 
-	cmd := exec.Command(
+	return runCmd(
 		"useradd",
 		"-M",
 		"-N",
@@ -51,14 +54,7 @@ func MakeNewUser(username string) {
 		"/bin/bash",
 		"-d",
 		fmt.Sprintf("/home/%s", username),
-		username,
-	)
-
-	stdoutStderr, err := cmd.CombinedOutput()
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("%s\n", stdoutStderr)
+		username)
 
 }
 
@@ -66,7 +62,9 @@ func getAdmins() []string {
 	for _, line := range GetFileLines("/etc/group") {
 		if strings.HasPrefix(line, ADMIN_GROUP) {
 			fields := strings.Split(line, ":")
-			return strings.Split(strings.Trim(fields[3], "\n"), ",")
+			if len(fields[3]) > 0 {
+				return strings.Split(strings.Trim(fields[3], "\n"), ",")
+			}
 
 		}
 	}
@@ -78,7 +76,10 @@ func getUsers() []string {
 	for _, line := range GetFileLines("/etc/group") {
 		if strings.HasPrefix(line, USER_GROUP) {
 			fields := strings.Split(line, ":")
-			return strings.Split(strings.Trim(fields[3], "\n"), ",")
+
+			if len(fields[3]) > 0 {
+				return strings.Split(strings.Trim(fields[3], "\n"), ",")
+			}
 
 		}
 	}
@@ -93,19 +94,24 @@ func getUserAndAdmins() []string {
 
 	var allUsers []string
 
-	for _, a := range admins {
-		idx := slices.Index(users, a)
-		if idx > 0 {
-			users = slices.Delete(users, idx, idx+1)
-		}
+	if len(admins) > 0 {
 
-		allUsers = append(allUsers, a)
+		for _, a := range admins {
+			idx := slices.Index(users, a)
+			if idx != -1 {
+				users = slices.Delete(users, idx, idx+1)
+			}
+
+			allUsers = append(allUsers, a)
+		}
 	}
 
-	for _, u := range users {
+	if len(users) > 0 {
+		for _, u := range users {
 
-		allUsers = append(allUsers, u)
+			allUsers = append(allUsers, u)
 
+		}
 	}
 
 	return allUsers
@@ -113,8 +119,39 @@ func getUserAndAdmins() []string {
 
 func ListAccounts() {
 
-	for _, a := range getUserAndAdmins() {
-		println(a)
+	accounts := getUserAndAdmins()
+
+	fmt.Println(len(accounts))
+
+	for _, a := range accounts {
+		fmt.Println(a)
 	}
+
+}
+
+func GetLastLogin(uid uint32) (string, error) {
+
+	path, err := Call("org.freedesktop.login1", "/org/freedesktop/login1", "org.freedesktop.login1.Manager.GetUser", []any{uid})
+	if err != nil {
+		return "", err
+	}
+
+	if p, ok := path.(dbus.ObjectPath); ok {
+		ts, err := Call("org.freedesktop.login1", p, "org.freedesktop.DBus.Properties.Get", []any{"org.freedesktop.login1.User", "Timestamp"})
+		ts64, _ := ts.(uint64)
+		if err != nil {
+			return "", err
+		}
+
+		ts64 = ts64 / 1000000
+
+		tm := time.Unix(int64(ts64), 0)
+
+		fmt.Println(ts64)
+
+		return fmt.Sprintf(tm.Format("2006-01-02 15:04:05")), nil
+	}
+
+	return "", fmt.Errorf("invalid path object")
 
 }

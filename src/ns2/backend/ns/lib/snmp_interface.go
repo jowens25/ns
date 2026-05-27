@@ -29,7 +29,17 @@ func (s *SnmpInterface) Reset(sender dbus.Sender, message dbus.Message) (string,
 	isAuthorized := CheckAuthorization(sender, GetActionId(message))
 
 	if isAuthorized {
-		return ResetSnmpd(), nil
+
+		err := ResetSnmpd()
+
+		if err != nil {
+			return "", &dbus.Error{
+				Name: "org.freedesktop.DBus.Error",
+				Body: []any{err.Error()},
+			}
+		}
+
+		return "reset complete", nil
 
 	}
 
@@ -129,7 +139,7 @@ func (s *SnmpInterface) RemoveV3User(sender dbus.Sender, message dbus.Message, v
 }
 
 // CreateV2User creates a V2 user
-func (s *SnmpInterface) CreateV2User(sender dbus.Sender, message dbus.Message, v2Dict map[string]dbus.Variant) (string, *dbus.Error) {
+func (s *SnmpInterface) CreateV2User(sender dbus.Sender, message dbus.Message, v2Dict map[string]string) (string, *dbus.Error) {
 
 	GetUserInfoFromSender(s.conn, sender)
 
@@ -181,7 +191,7 @@ func (s *SnmpInterface) GetV2Users() ([]map[string]string, *dbus.Error) {
 }
 
 // ModifyV2User modifies a V2 user
-func (s *SnmpInterface) ModifyV2User(sender dbus.Sender, message dbus.Message, v2Dict map[string]dbus.Variant) (string, *dbus.Error) {
+func (s *SnmpInterface) ModifyV2User(sender dbus.Sender, message dbus.Message, v2Dict map[string]string) (string, *dbus.Error) {
 
 	isAuthorized := CheckAuthorization(sender, GetActionId(message))
 
@@ -201,7 +211,7 @@ func (s *SnmpInterface) ModifyV2User(sender dbus.Sender, message dbus.Message, v
 }
 
 // RemoveV2User removes a V2 user
-func (s *SnmpInterface) RemoveV2User(sender dbus.Sender, message dbus.Message, v2Dict map[string]dbus.Variant) (string, *dbus.Error) {
+func (s *SnmpInterface) RemoveV2User(sender dbus.Sender, message dbus.Message, v2Dict map[string]string) (string, *dbus.Error) {
 
 	isAuthorized := CheckAuthorization(sender, GetActionId(message))
 

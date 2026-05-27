@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os/user"
 
+	"log"
+
 	"github.com/godbus/dbus/v5"
 )
 
@@ -12,6 +14,26 @@ type DbusCall struct {
 	Path        dbus.ObjectPath `json:"Path" binding:"required"`        // object
 	Method      string          `json:"Method" binding:"required"`      // call
 	Args        []any           `json:"Args"`                           // call
+}
+
+func Call(destination string, path dbus.ObjectPath, method string, args []any) (any, error) {
+	conn, err := dbus.SystemBus()
+	if err != nil {
+		log.Println(err.Error())
+	}
+
+	var result any
+
+	obj := conn.Object(destination, path)
+
+	call := obj.Call(method, 0, args...)
+
+	err = call.Store(&result)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+
 }
 
 func MakeDbusCall(conn *dbus.Conn, call DbusCall) (any, any, error) {

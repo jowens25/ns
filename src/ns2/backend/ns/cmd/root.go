@@ -10,6 +10,7 @@ import (
 	"github.com/jowens25/ns/ns/internal/bridge"
 	"github.com/jowens25/ns/ns/internal/dbus"
 	"github.com/jowens25/ns/ns/internal/snmp"
+	"github.com/jowens25/ns/ns/internal/socket"
 
 	"github.com/spf13/cobra"
 )
@@ -44,6 +45,7 @@ func init() {
 	rootCmd.AddCommand(snmp.Snmp)
 	rootCmd.AddCommand(account.Account)
 	rootCmd.AddCommand(bridge.Bridge)
+	rootCmd.AddCommand(socket.Socket)
 
 	//rootCmd.AddCommand(ui.NewCommand())
 	// Here you will define your flags and configuration settings.

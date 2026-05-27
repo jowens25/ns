@@ -6,8 +6,6 @@ import (
 	"path/filepath"
 	"slices"
 	"strings"
-
-	"github.com/godbus/dbus/v5"
 )
 
 var SNMP_CONF_FILE string = "/etc/snmp/snmpd.conf.d/novus-snmpd.conf"
@@ -36,26 +34,19 @@ type v2User struct {
 	SecurityName string `json:"SecurityName"`
 }
 
-func getString(dict map[string]dbus.Variant, key string) string {
+func getString(dict map[string]string, key string) string {
 
 	v, ok := dict[key]
 
-	fmt.Println("get string: ", v)
-
 	if !ok {
 		return ""
 	}
 
-	val, ok := v.Value().(string)
-	if !ok {
-		return ""
-	}
-
-	return val
+	return v
 
 }
 
-func (v2 *v2User) FromDict(dict map[string]dbus.Variant) {
+func (v2 *v2User) FromDict(dict map[string]string) {
 
 	v2.Community = getString(dict, "Community")
 	v2.Version = getString(dict, "Version")
@@ -134,10 +125,12 @@ func _readGroupsFromFile() []snmpGroup {
 		if strings.HasPrefix(line, "group") {
 			fields := strings.Fields(line)
 			var g snmpGroup
-			g.Permissions = fields[1]
-			g.Version = fields[2]
-			g.SecurityName = fields[3]
-			groups = append(groups, g)
+			if len(fields) == 4 {
+				g.Permissions = fields[1]
+				g.Version = fields[2]
+				g.SecurityName = fields[3]
+				groups = append(groups, g)
+			}
 		}
 	}
 
@@ -166,6 +159,7 @@ func _readV2UsersFromFile() []v2User {
 func _readV3UsersFromFile() []v3User {
 
 	var v3s []v3User
+	log.Println("_readv3Usersfromfile...")
 	for _, line := range GetFileLines(_getPersistentConfPath()) {
 
 		line = strings.TrimSuffix(line, "\n")
@@ -196,11 +190,11 @@ func ReadV2Users() []v2User {
 	groups := _readGroupsFromFile()
 	v2s := _readV2UsersFromFile()
 	for _, g := range groups {
-		for _, v2 := range v2s {
+		for i, v2 := range v2s {
 			if g.SecurityName == v2.SecurityName {
-				v2.SecurityName = g.SecurityName
-				v2.Permissions = g.Permissions
-				v2.Version = g.Version
+				v2s[i].SecurityName = g.SecurityName
+				v2s[i].Permissions = g.Permissions
+				v2s[i].Version = g.Version
 			}
 		}
 	}
@@ -304,13 +298,23 @@ func _writeV3UserCreateDirective(user v3User) {
 }
 
 func _deleteV3UserFromStorage(user v3User) {
-	lines := GetFileLines(SNMP_CONF_FILE)
+
+	lines := GetFileLines(_getPersistentConfPath())
 	for idx, line := range lines {
 
 		if strings.HasPrefix(line, "usmUser") {
 			fields := strings.Fields(line)
-			temp_auth_type := USM_OID_MAP[fields[7]]
-			temp_priv_type := USM_OID_MAP[fields[9]]
+			temp_auth_type, ok := USM_OID_MAP[fields[7]]
+
+			if !ok {
+				log.Println("Error v3 del with USM OID MAP 7")
+			}
+
+			temp_priv_type, ok := USM_OID_MAP[fields[9]]
+			if !ok {
+				log.Println("Error v3 del with USM OID MAP 9")
+
+			}
 
 			if strings.Contains(line, user.Username) && temp_auth_type == user.AuthType && temp_priv_type == user.PrivType {
 				lines = slices.Delete(lines, idx, idx+1)
@@ -319,7 +323,7 @@ func _deleteV3UserFromStorage(user v3User) {
 		}
 	}
 
-	SetFileLines(SNMP_CONF_FILE, lines)
+	SetFileLines(_getPersistentConfPath(), lines)
 }
 
 func _deleteV3UserCreateDirective(user v3User) {
@@ -339,6 +343,8 @@ func _deleteV3UserCreateDirective(user v3User) {
 			lines = slices.Delete(lines, idx, idx+1)
 		}
 	}
+
+	SetFileLines(SNMP_CONF_FILE, lines)
 
 }
 
@@ -379,7 +385,7 @@ func _setPersistentDir(path string) {
 	lines := GetFileLines(SNMP_CONF_FILE)
 	for i := range lines {
 		if strings.HasPrefix(lines[i], "persistentDir") {
-			lines[i] = fmt.Sprintf("persistentDir %s\n", path)
+			lines[i] = fmt.Sprintf("persistentDir %s", path)
 			break
 
 		}
@@ -392,23 +398,32 @@ func _getPersistentConfPath() string {
 	return filepath.Join(_getPersistentDir(), "snmpd.conf")
 }
 
-func _deletePersistentDir() {
-	runCmd("rm", "-rf", _getPersistentDir())
+func _deletePersistentDir() error {
+	return runCmd("rm", "-rf", _getPersistentDir())
 }
 
-func _overwriteWithDefaultSnmpConf() {
-	runCmd("cp", "./configs/snmpd.conf", SNMP_CONF_FILE)
+func _overwriteWithDefaultSnmpConf() error {
+	return runCmd("cp", "./configs/snmpd.conf", SNMP_CONF_FILE)
 }
 
 // stops cleans and restarts snmpd
-func ResetSnmpd() string {
+func ResetSnmpd() error {
 
 	// 1. Stop Snmp
-	_stopUnit("snmpd.service")
+	err := _stopUnit("snmpd.service")
+	if err != nil {
+		return err
+	}
 	// 2. Remove Persistent Dir
-	_deletePersistentDir()
+	err = _deletePersistentDir()
+	if err != nil {
+		return err
+	}
 	// 3. Reset Main Config
-	_overwriteWithDefaultSnmpConf()
+	err = _overwriteWithDefaultSnmpConf()
+	if err != nil {
+		return err
+	}
 	// 4. Set Tmp Path for Persistent Dir
 	_setPersistentDir("/var/lib/tmp")
 	// 5. Start Snmp
@@ -422,7 +437,9 @@ func ResetSnmpd() string {
 	// 9. Start Snmp
 	_startUnit("snmpd.service")
 
-	return "snmpd config reset"
+	log.Println("snmp reset sequence finished")
+
+	return nil
 }
 
 func AddV3User(user v3User) {
@@ -450,11 +467,11 @@ func ReadV3Users() []v3User {
 
 	for _, g := range groups {
 
-		for _, v3 := range v3s {
+		for i, v3 := range v3s {
 
 			if g.SecurityName == v3.Username {
-				v3.Permissions = g.Permissions
-				v3.Version = g.Version
+				v3s[i].Permissions = g.Permissions
+				v3s[i].Version = g.Version
 
 			}
 		}
@@ -492,6 +509,7 @@ func DeleteV2User(user v2User) {
 	_user := []string{user.SecurityName, user.Source, user.Community}
 	_group := []string{user.Permissions, user.Version, user.SecurityName}
 
+	log.Println("Delete v2 user")
 	lines := GetFileLines(SNMP_CONF_FILE)
 
 	for idx, line := range lines {

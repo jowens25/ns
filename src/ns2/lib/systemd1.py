@@ -20,7 +20,7 @@ async def ListUnits() -> str:
 
 
 async def GetSystemdProxy():
-    bridge = await GetBridge()
+    bridge = GetBridge()
     introspection = await bridge.introspect(
         "org.freedesktop.systemd1", "/org/freedesktop/systemd1"
     )

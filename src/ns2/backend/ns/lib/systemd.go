@@ -5,46 +5,52 @@ import (
 	"fmt"
 
 	"github.com/coreos/go-systemd/v22/dbus"
+
 	"github.com/rs/zerolog/log"
 )
 
 func _stopUnit(unit string) error {
-
-	log.Info().Msgf("_stopUnit: %s", unit)
-
 	conn, err := dbus.NewSystemConnectionContext(context.Background())
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("dbus connect: %w", err)
 	}
 	defer conn.Close()
 
-	_, err = conn.StopUnitContext(context.Background(), unit, "replace", nil)
-
+	resultCh := make(chan string, 1)
+	_, err = conn.StopUnitContext(context.Background(), unit, "replace", resultCh)
 	if err != nil {
-		return err
+		return fmt.Errorf("stop %s: %w", unit, err)
 	}
 
+	result := <-resultCh // blocks until systemd confirms the unit is stopped
+	if result != "done" {
+		return fmt.Errorf("stop %s result: %s", unit, result)
+	}
+
+	log.Debug().Msgf("stopped %s successfully", unit)
 	return nil
 }
 
 func _startUnit(unit string) error {
-
-	log.Info().Msgf("_startUnit: %s", unit)
-
 	conn, err := dbus.NewSystemConnectionContext(context.Background())
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("dbus connect: %w", err)
 	}
 	defer conn.Close()
 
-	_, err = conn.StartUnitContext(context.Background(), unit, "replace", nil)
-
+	resultCh := make(chan string, 1)
+	_, err = conn.StartUnitContext(context.Background(), unit, "replace", resultCh)
 	if err != nil {
-		return err
+		return fmt.Errorf("start %s: %w", unit, err)
 	}
 
-	return nil
+	result := <-resultCh // blocks until systemd confirms the unit is stopped
+	if result != "done" {
+		return fmt.Errorf("start %s result: %s", unit, result)
+	}
 
+	log.Debug().Msgf("started %s successfully", unit)
+	return nil
 }
 
 func _restartUnit(unit string) error {

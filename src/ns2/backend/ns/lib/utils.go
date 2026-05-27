@@ -1,6 +1,7 @@
 package lib
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -13,6 +14,9 @@ func GetFileLines(path string) []string {
 	content, err := os.ReadFile(path)
 	if err != nil {
 		log.Println("get file lines: failed to read: ", path)
+		log.Println(err)
+
+		return []string{}
 	}
 
 	return strings.Split(string(content), "\n")
@@ -22,9 +26,16 @@ func SetFileLines(path string, lines []string) {
 	os.WriteFile(path, []byte(strings.Join(lines, "\n")), 0644)
 }
 
-func runCmd(cmd string, args ...string) {
+func runCmd(cmd string, args ...string) error {
 
-	exec.Command(cmd, args...).Run()
+	out, err := exec.Command(cmd, args...).CombinedOutput()
+
+	if err != nil {
+
+		return fmt.Errorf("run Cmd failed with: %s -> out: %s", err.Error(), string(out))
+	}
+
+	return nil
 
 }
 

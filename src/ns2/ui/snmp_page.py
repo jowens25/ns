@@ -46,7 +46,7 @@ async def create_v3_user_dialog():
                 username = (
                     ui.input(label="Username", validation=usernameValidation)
                     .classes("w-full")
-                    .bind_value(v3, "UserName")
+                    .bind_value(v3, "Username")
                 ).props("debounce=1000")
                 permissions = (
                     ui.select(
@@ -92,6 +92,7 @@ async def create_v3_user_dialog():
                             )
                         ):
                             print(asdict(v3))
+
                             rsp = await BridgeCall(
                                 "com.novus.ns",
                                 "/com/novus/ns",
@@ -100,6 +101,7 @@ async def create_v3_user_dialog():
                                 "a{ss}",
                                 [asdict(v3)],
                             )
+                            rsp = rsp.body[0]
                             # snmp = await GetSnmpInterface(AppBus)
                             # rsp = await snmp.call_create_v3_user(asdict(v3))
                             # rsp = await AddV3User(AppBus, asdict(v3))
@@ -125,7 +127,11 @@ async def create_v3_user_dialog():
 @ui.refreshable
 async def v3table():
 
-    v3Users = await BridgeCall("GetV3Users", [])
+    v3Users = await BridgeCall(
+        "com.novus.ns", "/com/novus/ns", "com.novus.ns.snmp", "GetV3Users", "", []
+    )
+
+    v3Users = v3Users.body[0]
 
     createV3Dialog = await create_v3_user_dialog()
 
@@ -139,14 +145,14 @@ async def v3table():
     ).classes("w-full")
 
     table.add_slot(
-        f"body-cell-UserName",
+        f"body-cell-Username",
         f""" <q-td :props="props">
-                   <a :href="'/snmp/v3/'+ props.row.UserName" class="text-accent cursor-pointer hover:underline"> {{{{ props.value }}}} </a>
+                   <a :href="'/snmp/v3/'+ props.row.Username" class="text-accent cursor-pointer hover:underline"> {{{{ props.value }}}} </a>
                    </q-td> """,
     )
 
     table.props(
-        f'visible-columns={"UserName,Version,GroupName,AuthType,PrivType"}'
+        f'visible-columns={"Username,Version,GroupName,AuthType,PrivType"}'
     )  # Only show these
 
     with table.add_slot("top-right"):
@@ -158,7 +164,11 @@ async def v3table():
 @ui.refreshable
 async def v2table():
 
-    v2Users = await BridgeCall("GetV2Users", [])
+    v2Users = await BridgeCall(
+        "com.novus.ns", "/com/novus/ns", "com.novus.ns.snmp", "GetV2Users", "", []
+    )
+
+    v2Users = v2Users.body[0]
 
     print(v2Users)
 
@@ -200,7 +210,14 @@ async def v2table():
                         if all(
                             validate_group([version, permissions, community, source])
                         ):
-                            await BridgeCall("CreateV2User", [asdict(v2)])
+                            await BridgeCall(
+                                "com.novus.ns",
+                                "/com/novus/ns",
+                                "com.novus.ns.snmp",
+                                "CreateV2User",
+                                "a{ss}",
+                                [asdict(v2)],
+                            )
                             await v2table.refresh()
                             createV2Dialog.close()
                         else:
@@ -284,7 +301,16 @@ async def snmp_status():
                     )
             if await dialog == "reset":
 
-                await BridgeCall("ResetSnmp", [""])
+                rsp = await BridgeCall(
+                    "com.novus.ns",
+                    "/com/novus/ns",
+                    "com.novus.ns.snmp",
+                    "Reset",
+                    "",
+                    [],
+                )
+                if rsp:
+                    ui.notify(rsp.body[0], type="warning")
                 v2table.refresh()
                 v3table.refresh()
 
@@ -334,7 +360,15 @@ def disable_group(fields):
 async def edit_delete_v2_user_card(community):
 
     # user = await snmp.call_get_v2_user_by_community(community)
-    user = await BridgeCall("GetV2UserByCommunity", [community])
+    user = await BridgeCall(
+        "com.novus.ns",
+        "/com/novus/ns",
+        "com.novus.ns.snmp",
+        "GetV2UserByCommunity",
+        "s",
+        [community],
+    )
+    user = user.body[0]
     v2User = V2User(**user)
     with ui.card().classes("w-full"):
         with ui.column().classes("w-full"):
@@ -369,7 +403,14 @@ async def edit_delete_v2_user_card(community):
                     disable_group(group)
                     save_button.enabled = False
                     edit_button.enabled = True
-                    await BridgeCall("ModifyV2User", [asdict(v2User)])
+                    await BridgeCall(
+                        "com.novus.ns",
+                        "/com/novus/ns",
+                        "com.novus.ns.snmp",
+                        "ModifyV2User",
+                        "a{ss}",
+                        [asdict(v2User)],
+                    )
                     await v2table.refresh()
                     ui.navigate.back()
 
@@ -390,7 +431,14 @@ async def edit_delete_v2_user_card(community):
                             ).props("flat color=accent align=left")
                     result = await dialog
                     if result:
-                        await BridgeCall("RemoveV2User", [asdict(v2User)])
+                        await BridgeCall(
+                            "com.novus.ns",
+                            "/com/novus/ns",
+                            "com.novus.ns.snmp",
+                            "RemoveV2User",
+                            "a{ss}",
+                            [asdict(v2User)],
+                        )
                         v2table.refresh()
                         ui.navigate.back()
                         ui.notify(f"User {v2User.Community} deleted...")
@@ -416,7 +464,15 @@ async def edit_delete_v2_user_card(community):
 
 async def edit_delete_v3_user_card(username):
 
-    userData = await BridgeCall("GetV3UserByUsername", [username])
+    userData = await BridgeCall(
+        "com.novus.ns",
+        "/com/novus/ns",
+        "com.novus.ns.snmp",
+        "GetV3UserByUsername",
+        "s",
+        [username],
+    )
+    userData = userData.body[0]
     initUser = V3User(**userData)
     finalUser = V3User(**userData)
 
@@ -432,7 +488,7 @@ async def edit_delete_v3_user_card(username):
             username = (
                 ui.input(label="Username", validation=usernameValidation)
                 .classes("w-full")
-                .bind_value(finalUser, "UserName")
+                .bind_value(finalUser, "Username")
             )
             permissions = (
                 ui.select(label="Permissions", options=["roprivgroup", "rwprivgroup"])
@@ -481,7 +537,12 @@ async def edit_delete_v3_user_card(username):
                     ):
 
                         await BridgeCall(
-                            "ModifyV3User", [asdict(initUser), [asdict(finalUser)]]
+                            "com.novus.ns",
+                            "/com/novus/ns",
+                            "com.novus.ns.snmp",
+                            "ModifyV3User",
+                            "a{ss}",
+                            [asdict(initUser), [asdict(finalUser)]],
                         )
                         ui.navigate.back()
                     else:
@@ -495,7 +556,7 @@ async def edit_delete_v3_user_card(username):
                 async def on_delete_cb():
                     with ui.dialog() as dialog, ui.card():
                         ui.label(
-                            f"Are you sure you want to delete {initUser.UserName}?"
+                            f"Are you sure you want to delete {initUser.Username}?"
                         )
                         with ui.row():
                             ui.button(
@@ -506,10 +567,17 @@ async def edit_delete_v3_user_card(username):
                             ).props("flat color=accent align=left")
                     result = await dialog
                     if result:
-                        await BridgeCall("RemoveV3User", [asdict(initUser)])
+                        await BridgeCall(
+                            "com.novus.ns",
+                            "/com/novus/ns",
+                            "com.novus.ns.snmp",
+                            "RemoveV3User",
+                            "a{ss}",
+                            [asdict(initUser)],
+                        )
                         # await DeleteV3User(AppBus, asdict(initUser))
                         ui.navigate.back()
-                        ui.notify(f"User {initUser.UserName} deleted...")
+                        ui.notify(f"User {initUser.Username} deleted...")
                     else:
                         dialog.close()
 

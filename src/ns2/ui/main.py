@@ -25,6 +25,7 @@ from ns2.ui.fpga_page import fpga_page
 # from ns2.tests_page import tests_page
 from ns2.ui.firewalld_page import firewall_page
 from ns2.utils import ASSETS_DIR
+import sys
 
 #!/usr/bin/env python3
 """This is just a simple authentication example.
@@ -133,7 +134,7 @@ async def controlPanel():
         ui.separator()
         ui.button(
             "Overview",
-            on_click=lambda: ui.navigate.to("/overview"),
+            on_click=lambda: ui.navigate.to("/"),
         ).props(
             "flat color=white align=left"
         ).classes("full-width")
@@ -210,7 +211,7 @@ async def controlPanel():
 @ui.page("/")
 async def root():
     print("RUNNING ROOT FUNCTION")
-    activeUser = await SetupBridge("admin")
+    activeUser = await SetupBridge(sys.argv[1])
     print("BRIDGE FOR: ", activeUser)
     if not app.storage.user.get("uid"):
         app.storage.user.update({"uid": uuid.uuid4()})
