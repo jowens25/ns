@@ -47,22 +47,88 @@ def deleteUserDialog(user):
     return dialog
 
 
-def addUserDialog():
+usernameValidation = {
+    "Username must be at least 5 characters": lambda value: len(value) >= 5,
+    "Username must be 24 or less characaters": lambda value: 24 >= len(value),
+}
+
+
+async def validatePass(value):
+    rsp = await ValidatePassword(value)
+    if rsp.error_name is not None:
+        return rsp.body[0]
+    else:
+        return None
+
+
+async def AddUser(u: User) -> Message:
+
+    if u.Group == "admin":
+
+        return await BridgeCall(
+            "com.novus.ns",
+            "/com/novus/ns",
+            "com.novus.ns.accounts",
+            "AddAdmin",
+            "ss",
+            [u.Username, u.Password],
+        )
+
+    else:
+        return await BridgeCall(
+            "com.novus.ns",
+            "/com/novus/ns",
+            "com.novus.ns.accounts",
+            "AddUser",
+            "ss",
+            [u.Username, u.Password],
+        )
+
+
+def validate_group(group: list):
+    return [x.validate(return_result=False) for x in group]
+
+
+async def addUserDialog():
     newUser = User()
     with ui.dialog() as dialog:
         with ui.card().classes("w-full max-h-[90vh] overflow-y-auto"):
             ui.label("Add user").classes("text-h5")
-            ui.button("close", on_click=dialog.close)
 
-            ui.input("username").bind_value(newUser, "Username")
+            user = ui.input("username", validation=usernameValidation).bind_value(
+                newUser, "Username"
+            )
 
-            ui.input("password")
+            def mustMatch(v):
+                if not v == p1.value:
+                    return "passwords must match"
+                else:
+                    return None
 
-            ui.input("repeat password").bind_value_to(newUser, "Password")
+            p1 = ui.input("password", validation=validatePass)
 
-            ui.label(newUser.PasswordRules)
+            p2 = ui.input("repeat password", validation=mustMatch).bind_value_to(
+                newUser, "Password"
+            )
 
             ui.select(["admin", "user"]).bind_value(newUser, "Group")
+
+            async def on_save_cb():
+                if all(validate_group([p1, p2, user])):
+
+                    rsp = await AddUser(newUser)
+
+                    if rsp.error_name is not None:
+                        ui.notify(rsp.body[0])
+                    else:
+                        dialog.close()
+
+                else:
+                    ui.notify("Please correct the errors", type="negative")
+
+            with ui.row():
+                ui.button("Add", on_click=on_save_cb)
+                ui.button("Cancel", on_click=dialog.close)
 
     return dialog
     # with ui.column().classes("w-full"):

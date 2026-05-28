@@ -1,0 +1,6 @@
+digit: true
+lower: true
+max: 16
+min: 8
+symbol: true
+upper: true

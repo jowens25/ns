@@ -72,12 +72,12 @@ func (s *SnmpInterface) CreateV3User(sender dbus.Sender, message dbus.Message, v
 // GetV3UserByUsername returns a V3 user by username
 func (s *SnmpInterface) GetV3UserByUsername(username string) (map[string]string, *dbus.Error) {
 
-	u := ReadV3UserByUsername(username)
+	u, err := ReadV3UserByUsername(username)
 
-	if u == nil {
-		return map[string]string{}, &dbus.Error{
+	if err != nil {
+		return nil, &dbus.Error{
 			Name: "org.freedesktop.DBus.Error",
-			Body: []any{"User not found"},
+			Body: []any{err.Error()},
 		}
 	}
 
@@ -88,7 +88,14 @@ func (s *SnmpInterface) GetV3UserByUsername(username string) (map[string]string,
 func (s *SnmpInterface) GetV3Users() ([]map[string]string, *dbus.Error) {
 
 	users := []map[string]string{}
-	v3s := ReadV3Users()
+	v3s, err := ReadV3Users()
+
+	if err != nil {
+		return nil, &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+	}
 
 	for _, u := range v3s {
 		users = append(users, u.ToDict())
@@ -165,12 +172,12 @@ func (s *SnmpInterface) CreateV2User(sender dbus.Sender, message dbus.Message, v
 // GetV2UserByCommunity returns a V2 user by community
 func (s *SnmpInterface) GetV2UserByCommunity(community string) (map[string]string, *dbus.Error) {
 
-	u := ReadV2UserByCommunity(community)
+	u, err := ReadV2UserByCommunity(community)
 
-	if u == nil {
-		return map[string]string{}, &dbus.Error{
+	if err != nil {
+		return nil, &dbus.Error{
 			Name: "org.freedesktop.DBus.Error",
-			Body: []any{"user not found"},
+			Body: []any{err.Error()},
 		}
 	}
 
@@ -181,7 +188,14 @@ func (s *SnmpInterface) GetV2UserByCommunity(community string) (map[string]strin
 func (s *SnmpInterface) GetV2Users() ([]map[string]string, *dbus.Error) {
 
 	users := []map[string]string{}
-	v2s := ReadV2Users()
+	v2s, err := ReadV2Users()
+
+	if err != nil {
+		return nil, &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+	}
 
 	for _, u := range v2s {
 		users = append(users, u.ToDict())

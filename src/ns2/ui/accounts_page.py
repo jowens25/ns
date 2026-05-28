@@ -1,21 +1,32 @@
-from nicegui import ui, app
+from nicegui import ui
 
-from ns2.lib.accounts import _getUsersAndAdmins, GetUserByName
-
-from ns2.ui.accountsDialogs import *
+from ns2.lib.accounts import GetUsers
+from ns2.ui.accountsDialogs import (
+    SystemAccount,
+    addUserDialog,
+    deleteUserDialog,
+    editUserDialog,
+)
 
 
 async def accounts_page():
     """user page content"""
 
-    addDialog = addUserDialog()
+    addDialog = await addUserDialog()
     # editDialog = editUserDialog()
     # deleteDialog = deleteUserDialog(None)
+
+    rsp = await GetUsers()
+
+    if rsp.error_name is not None:
+        ui.notify(rsp.error_name)
+        ui.label(rsp.error_name)
+        return
 
     accountsTable = (
         ui.table(
             title="Accounts",
-            rows=await _getUsersAndAdmins(),
+            rows=rsp.body[0],
             column_defaults={
                 "align": "left",
                 "headerClasses": "uppercase text-primary",
@@ -24,7 +35,7 @@ async def accounts_page():
         .classes("w-full")
         .props("dense")
     )
-    accountsTable.props(f'visible-columns={"Username,Groups"}')  # Only show these
+    # accountsTable.props(f"visible-columns={'Username,Groups,login'}")  # Only show these
     accountsTable.add_slot(
         "header",
         r"""
@@ -64,7 +75,7 @@ async def accounts_page():
             <!-- normal columns with special handling for Username -->
             <q-td v-for="col in props.cols" :key="col.name" :props="props">
                 <template v-if="col.name === 'Username'">
-                    <a :href="'/accounts/' + props.row.Username" 
+                    <a :href="'/accounts/' + props.row.Username"
                        class="text-accent cursor-pointer hover:underline">
                         {{ col.value }}
                     </a>
@@ -78,21 +89,21 @@ async def accounts_page():
                 <q-btn flat round dense icon="more_vert" color="accent">
                     <q-menu auto-close>
                         <q-list style="min-width: 150px">
-                        
+
                             <q-item clickable
                                 @click="$parent.$emit('edit-account', props.row.Username)">
                                 <q-item-section class="text-negative">
                                     Edit account
                                 </q-item-section>
-                            </q-item>  
-                            
+                            </q-item>
+
                             <q-item clickable
                                 @click="$parent.$emit('delete-account', props.row.Username)">
                                 <q-item-section class="text-negative">
                                     Delete account
                                 </q-item-section>
-                            </q-item>  
-                            
+                            </q-item>
+
                         </q-list>
                     </q-menu>
                 </q-btn>
@@ -109,17 +120,17 @@ async def accounts_user_page(user: str):
 
 @ui.refreshable
 async def edit_card(username: str):
-    user: SystemAccount
+    user = SystemAccount()
     # user = awaitGetUserByName(username)
 
     with ui.card().props("flat"):
         with ui.row():
             ui.link("Accounts", "/accounts").classes("text-accent")
             ui.label(">")
-            ui.label(user.UserName)
+            ui.label(user.Username)
 
         with ui.row().classes("w-full justify-between"):
-            ui.label(user.UserName).classes("font-bold").classes("text-h5")
+            ui.label(user.Username).classes("font-bold").classes("text-h5")
             with ui.row():
                 ui.button("Terminate session")
                 ui.button("Delete")
@@ -127,7 +138,6 @@ async def edit_card(username: str):
         ui.separator()
 
         with ui.column().classes("flex-1 gap-4"):
-
             with ui.row().classes("flex-1"):
                 ui.label("Full name").classes("font-bold w-32")
                 ui.input().bind_value(user, "UserInfo").props("dense")
@@ -180,12 +190,15 @@ async def new_card():
     user = SystemAccount()
     user.UserName = "New User"
 
+    ui.button("test")
+
 
 @ui.refreshable
 async def account_card(username: str):
 
-    if username == "create-new-user":
+    await new_card()
 
+    if username == "create-new-user":
         await new_card()
     # else:
 

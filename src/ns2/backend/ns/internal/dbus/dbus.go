@@ -13,7 +13,7 @@ func Export() *cobra.Command {
 		Use:   "export",
 		Short: "export interfaces on system bus",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			lib.StartDbus()
+			lib.StartDbusServer()
 			return nil
 		},
 	}

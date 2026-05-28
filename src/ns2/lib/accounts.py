@@ -1,11 +1,14 @@
+from dataclasses import asdict, dataclass
 from typing import Optional
 
-from dataclasses import asdict, dataclass
+from dbus_next import Message
+
+from ns2.lib.bridge import BridgeCall
 
 
 @dataclass
 class SystemAccount:
-    UserName: Optional[str] = None
+    Username: Optional[str] = None
     Password: Optional[str] = None
     UID: Optional[str] = None
     GID: Optional[str] = None
@@ -22,3 +25,29 @@ class SystemGroup:
     GID: Optional[str] = None
     NumberOfUsers: Optional[str] = None
     Accounts: Optional[list[str]] = None
+
+
+async def GetUsers() -> Message:
+    rsp = await BridgeCall(
+        destination="com.novus.ns",
+        path="/com/novus/ns",
+        interface="com.novus.ns.accounts",
+        member="GetUsers",
+        signature="",
+        body=[],
+    )
+
+    return rsp
+
+
+async def ValidatePassword(password: str) -> Message:
+    rsp = await BridgeCall(
+        destination="com.novus.ns",
+        path="/com/novus/ns",
+        interface="com.novus.ns.accounts",
+        member="ValidatePassword",
+        signature="s",
+        body=[password],
+    )
+
+    return rsp

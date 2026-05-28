@@ -5,7 +5,6 @@ package cmd
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/jowens25/ns/ns/lib"
 	"github.com/spf13/cobra"
@@ -19,9 +18,7 @@ var testCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("test called")
 
-		uid, _ := strconv.ParseInt(args[0], 10, 64)
-
-		fmt.Println(lib.GetLastLogin(uint32(uid)))
+		fmt.Println(lib.GetLastLogin(args[0]))
 		//conn, err := dbus.SystemBus()
 		//if err != nil {
 		//	fmt.Fprintf(os.Stderr, "Failed to connect to system bus: %v\n", err)

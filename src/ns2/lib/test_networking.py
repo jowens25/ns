@@ -1,55 +1,56 @@
-import json
 from pprint import pprint
-import uuid
-
-from ns2.api.dbus import get_dbus
-from ns2.lib.networking import GetInterfaces, GetDeviceFromInterface, set_refresh_rate
+from ns2.lib.accounts import GetUsers
 
 import asyncio
 from ns2.lib.bridge import SetBridge
 
-from numpy import uint
-from ns2.lib.systemd1 import SystemdRestart
-
-
-async def net_test():
-
-    bus = await get_dbus()
-
-    i = await GetInterfaces(bus)
-
-    device = await GetDeviceFromInterface(bus, i[0])
-
-    print(device.Path)
-
-    rsp = await set_refresh_rate(bus, device.Path, 30)
-
-    print(rsp.body)
-
-
-from ns2.lib.bridge import DbusCall, CallMakeBridge, Bridge, CallCloseBridge
+from ns2.lib.bridge import CallMakeBridge, SetupBridge, CleanupBridge, GetBridge
 from ns2.lib.networking import *
+
+from dbus_next import Message
+
+
+def message_handler(msg):
+    print(msg)
+    if msg.interface == "com.novus.ns.accounts" and msg.member == "ValidatePassword":
+        print(msg)
+        return Message.new_method_return(msg, "s", ["got it"])
 
 
 async def TestFunc():
     print("running test?")
 
-    await CallMakeBridge("admin")
+    print("setup bridge as: ", await SetupBridge("admin"))
     await asyncio.sleep(1)
 
-    bridge = Bridge()
-    await bridge.connect()
+    bridge = GetBridge()
 
-    SetBridge(bridge)
-
-    device_path = await GetDeviceByIpIface("enp3s0")
-
-    ip4_config_path = await GetNmProp(device_path, "Device", "Ip4Config")
-    ip4AddressData = await GetNmProp(
-        ip4_config_path, "IP4Config", "AddressData", "aa{sv}"
+    rsp = await BridgeCall(
+        destination="org.freedesktop.DBus",
+        path="/org/freedesktop/DBus",
+        interface="org.freedesktop.DBus",
+        member="AddMatch",
+        signature="s",
+        body=["member='ValidatePassword', interface='com.novus.ns.accounts'"],
     )
 
-    print(ip4AddressData)
+    print(rsp.body)
+
+    bridge.add_message_handler(message_handler)
+
+    while True:
+        await asyncio.sleep(1)
+
+    await CleanupBridge()
+
+    # device_path = await GetDeviceByIpIface("enp3s0")
+    #
+    # ip4_config_path = await GetNmProp(device_path, "Device", "Ip4Config")
+    # ip4AddressData = await GetNmProp(
+    #    ip4_config_path, "IP4Config", "AddressData", "aa{sv}"
+    # )
+    #
+    # print(ip4AddressData)
 
     # rsp = await GetAppliedConnection(device_path, 0)
     #
@@ -59,8 +60,6 @@ async def TestFunc():
     # rsp = await SystemdRestart("snmpd.service")
 
     # print(rsp)
-
-    await bridge.cleanup()
 
     # devices = await DbusCall(
     #    bridge,

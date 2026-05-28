@@ -17,16 +17,16 @@ func Add() *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "add",
-		Args:  cobra.ExactArgs(1),
+		Args:  cobra.ExactArgs(2),
 		Short: "add users or admins",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if isAdmin {
-				err := lib.MakeNewAdmin(args[0])
+				err := lib.MakeNewAdmin(args[0], args[1])
 				if err != nil {
 					fmt.Println(err.Error())
 				}
 			} else {
-				err := lib.MakeNewUser(args[0])
+				err := lib.MakeNewUser(args[0], args[1])
 				if err != nil {
 					fmt.Println(err.Error())
 				}

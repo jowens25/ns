@@ -118,10 +118,14 @@ type snmpTrap struct {
 // SNMP Files and Directories
 // ====================================================================
 
-func _readGroupsFromFile() []snmpGroup {
+func _readGroupsFromFile() ([]snmpGroup, error) {
 
 	var groups []snmpGroup
-	for _, line := range GetFileLines(SNMP_CONF_FILE) {
+	lines, err := GetFileLines(SNMP_CONF_FILE)
+	if err != nil {
+		return nil, err
+	}
+	for _, line := range lines {
 		if strings.HasPrefix(line, "group") {
 			fields := strings.Fields(line)
 			var g snmpGroup
@@ -134,12 +138,16 @@ func _readGroupsFromFile() []snmpGroup {
 		}
 	}
 
-	return groups
+	return groups, nil
 }
 
-func _readV2UsersFromFile() []v2User {
+func _readV2UsersFromFile() ([]v2User, error) {
 	var v2s []v2User
-	for _, line := range GetFileLines(SNMP_CONF_FILE) {
+	lines, err := GetFileLines(SNMP_CONF_FILE)
+	if err != nil {
+		return nil, err
+	}
+	for _, line := range lines {
 		line = strings.TrimSuffix(line, "\n")
 		if strings.HasPrefix(line, "com2sec") {
 			var v2 v2User
@@ -153,14 +161,22 @@ func _readV2UsersFromFile() []v2User {
 		}
 	}
 
-	return v2s
+	return v2s, nil
 }
 
-func _readV3UsersFromFile() []v3User {
+func _readV3UsersFromFile() ([]v3User, error) {
 
 	var v3s []v3User
 	log.Println("_readv3Usersfromfile...")
-	for _, line := range GetFileLines(_getPersistentConfPath()) {
+	dir, err := _getPersistentConfPath()
+	if err != nil {
+		return nil, err
+	}
+	lines, err := GetFileLines(dir)
+	if err != nil {
+		return nil, err
+	}
+	for _, line := range lines {
 
 		line = strings.TrimSuffix(line, "\n")
 
@@ -183,12 +199,18 @@ func _readV3UsersFromFile() []v3User {
 
 	}
 
-	return v3s
+	return v3s, nil
 }
 
-func ReadV2Users() []v2User {
-	groups := _readGroupsFromFile()
-	v2s := _readV2UsersFromFile()
+func ReadV2Users() ([]v2User, error) {
+	groups, err := _readGroupsFromFile()
+	if err != nil {
+		return nil, err
+	}
+	v2s, err := _readV2UsersFromFile()
+	if err != nil {
+		return nil, err
+	}
 	for _, g := range groups {
 		for i, v2 := range v2s {
 			if g.SecurityName == v2.SecurityName {
@@ -198,15 +220,22 @@ func ReadV2Users() []v2User {
 			}
 		}
 	}
-	return v2s
+	return v2s, nil
 }
 
-func _writeV2User(user v2User) {
+func _writeV2User(user v2User) error {
 
-	comNumber := len(ReadV2Users())
+	users, err := ReadV2Users()
+	if err != nil {
+		return err
+	}
 
-	lines := GetFileLines(SNMP_CONF_FILE)
+	comNumber := len(users)
 
+	lines, err := GetFileLines(SNMP_CONF_FILE)
+	if err != nil {
+		return err
+	}
 	lineCount := 0
 	userIndex := -1
 	groupIndex := -1
@@ -246,18 +275,26 @@ func _writeV2User(user v2User) {
 		lines = append(lines[:groupIndex], append([]string{newGroupLine}, lines[groupIndex:]...)...)
 	}
 
-	SetFileLines(SNMP_CONF_FILE, lines)
+	err = SetFileLines(SNMP_CONF_FILE, lines)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 
 }
 
-func _writeV3UserCreateDirective(user v3User) {
+func _writeV3UserCreateDirective(user v3User) error {
 
 	lineCount := 0
 	userIndex := -1
 	groupIndex := -1
 
-	lines := GetFileLines(SNMP_CONF_FILE)
-
+	lines, err := GetFileLines(SNMP_CONF_FILE)
+	if err != nil {
+		return nil
+	}
 	for _, line := range lines {
 
 		if strings.HasPrefix(line, "#com2sec") {
@@ -295,11 +332,21 @@ func _writeV3UserCreateDirective(user v3User) {
 
 	SetFileLines(SNMP_CONF_FILE, lines)
 
+	return nil
+
 }
 
-func _deleteV3UserFromStorage(user v3User) {
+func _deleteV3UserFromStorage(user v3User) error {
 
-	lines := GetFileLines(_getPersistentConfPath())
+	dir, err := _getPersistentConfPath()
+	if err != nil {
+		return err
+	}
+
+	lines, err := GetFileLines(dir)
+	if err != nil {
+		return err
+	}
 	for idx, line := range lines {
 
 		if strings.HasPrefix(line, "usmUser") {
@@ -323,10 +370,14 @@ func _deleteV3UserFromStorage(user v3User) {
 		}
 	}
 
-	SetFileLines(_getPersistentConfPath(), lines)
+	err = SetFileLines(dir, lines)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func _deleteV3UserCreateDirective(user v3User) {
+func _deleteV3UserCreateDirective(user v3User) error {
 
 	_props := []string{
 		user.Username,
@@ -335,7 +386,11 @@ func _deleteV3UserCreateDirective(user v3User) {
 		user.PrivType,
 		user.AuthPassphrase}
 
-	lines := GetFileLines(SNMP_CONF_FILE)
+	lines, err := GetFileLines(SNMP_CONF_FILE)
+
+	if err != nil {
+		return err
+	}
 
 	for idx, line := range lines {
 
@@ -344,11 +399,14 @@ func _deleteV3UserCreateDirective(user v3User) {
 		}
 	}
 
-	SetFileLines(SNMP_CONF_FILE, lines)
-
+	err = SetFileLines(SNMP_CONF_FILE, lines)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func _deleteV3UserFromConfig(user v3User) {
+func _deleteV3UserFromConfig(user v3User) error {
 
 	_props := []string{
 		user.Permissions,
@@ -356,7 +414,11 @@ func _deleteV3UserFromConfig(user v3User) {
 		user.Username,
 	}
 
-	lines := GetFileLines(SNMP_CONF_FILE)
+	lines, err := GetFileLines(SNMP_CONF_FILE)
+
+	if err != nil {
+		return err
+	}
 
 	for idx, line := range lines {
 		if strings.HasPrefix(line, "group") && HasAll(line, _props) {
@@ -364,25 +426,35 @@ func _deleteV3UserFromConfig(user v3User) {
 		}
 	}
 
-	SetFileLines(SNMP_CONF_FILE, lines)
+	err = SetFileLines(SNMP_CONF_FILE, lines)
 
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func _getPersistentDir() string {
-
-	for _, line := range GetFileLines(SNMP_CONF_FILE) {
+func _getPersistentDir() (string, error) {
+	lines, err := GetFileLines(SNMP_CONF_FILE)
+	if err != nil {
+		return "", err
+	}
+	for _, line := range lines {
 		if strings.HasPrefix(line, "persistentDir") {
 			fields := strings.Fields(line)
 			if len(fields) == 2 {
-				return strings.TrimSuffix(fields[1], "\n")
+				return strings.TrimSuffix(fields[1], "\n"), nil
 			}
 		}
 	}
-	return "notfound"
+	return "", fmt.Errorf("persistent directory not found in config")
 }
 
-func _setPersistentDir(path string) {
-	lines := GetFileLines(SNMP_CONF_FILE)
+func _setPersistentDir(path string) error {
+	lines, err := GetFileLines(SNMP_CONF_FILE)
+	if err != nil {
+		return err
+	}
 	for i := range lines {
 		if strings.HasPrefix(lines[i], "persistentDir") {
 			lines[i] = fmt.Sprintf("persistentDir %s", path)
@@ -390,16 +462,29 @@ func _setPersistentDir(path string) {
 
 		}
 	}
-	SetFileLines(SNMP_CONF_FILE, lines)
+	err = SetFileLines(SNMP_CONF_FILE, lines)
 
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func _getPersistentConfPath() string {
-	return filepath.Join(_getPersistentDir(), "snmpd.conf")
+func _getPersistentConfPath() (string, error) {
+	dir, err := _getPersistentDir()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(dir, "snmpd.conf"), nil
 }
 
 func _deletePersistentDir() error {
-	return runCmd("rm", "-rf", _getPersistentDir())
+
+	dir, err := _getPersistentDir()
+	if err != nil {
+		return err
+	}
+	return runCmd("rm", "-rf", dir)
 }
 
 func _overwriteWithDefaultSnmpConf() error {
@@ -410,60 +495,87 @@ func _overwriteWithDefaultSnmpConf() error {
 func ResetSnmpd() error {
 
 	// 1. Stop Snmp
-	err := _stopUnit("snmpd.service")
-	if err != nil {
+	if err := _stopUnit("snmpd.service"); err != nil {
 		return err
 	}
 	// 2. Remove Persistent Dir
-	err = _deletePersistentDir()
-	if err != nil {
+	if err := _deletePersistentDir(); err != nil {
 		return err
 	}
 	// 3. Reset Main Config
-	err = _overwriteWithDefaultSnmpConf()
-	if err != nil {
+	if err := _overwriteWithDefaultSnmpConf(); err != nil {
 		return err
 	}
 	// 4. Set Tmp Path for Persistent Dir
-	_setPersistentDir("/var/lib/tmp")
+	if err := _setPersistentDir("/var/lib/tmp"); err != nil {
+		return err
+	}
 	// 5. Start Snmp
-	_startUnit("snmpd.service")
+	if err := _startUnit("snmpd.service"); err != nil {
+		return err
+	}
 	// 6. Stop Snmp
-	_stopUnit("snmpd.service")
+	if err := _stopUnit("snmpd.service"); err != nil {
+		return err
+	}
 	// 7. Remove Temp Persistent Dir
-	_deletePersistentDir()
+	if err := _deletePersistentDir(); err != nil {
+		return err
+	}
 	// 8. Set Real Path for Persistent Dir
-	_setPersistentDir("/var/lib/snmp")
+	if err := _setPersistentDir("/var/lib/snmp"); err != nil {
+		return err
+	}
 	// 9. Start Snmp
-	_startUnit("snmpd.service")
+	if err := _startUnit("snmpd.service"); err != nil {
+		return err
+	}
 
 	log.Println("snmp reset sequence finished")
 
 	return nil
 }
 
-func AddV3User(user v3User) {
+func AddV3User(user v3User) error {
 
-	_stopUnit("snmpd.service")
-	_writeV3UserCreateDirective(user)
-	_startUnit("snmpd.service")
-	_deleteV3UserCreateDirective(user)
-}
-
-func ReadV3UserByUsername(username string) *v3User {
-
-	for _, u := range ReadV3Users() {
-		if u.Username == username {
-			return &u
-		}
+	if err := _stopUnit("snmpd.service"); err != nil {
+		return err
+	}
+	if err := _writeV3UserCreateDirective(user); err != nil {
+		return err
+	}
+	if err := _startUnit("snmpd.service"); err != nil {
+		return err
+	}
+	if err := _deleteV3UserCreateDirective(user); err != nil {
+		return err
 	}
 	return nil
 }
 
-func ReadV3Users() []v3User {
+func ReadV3UserByUsername(username string) (*v3User, error) {
+	users, err := ReadV3Users()
+	if err != nil {
+		return nil, err
+	}
+	for _, u := range users {
+		if u.Username == username {
+			return &u, nil
+		}
+	}
+	return nil, fmt.Errorf("v3 user not found by username")
+}
 
-	groups := _readGroupsFromFile()
-	v3s := _readV3UsersFromFile()
+func ReadV3Users() ([]v3User, error) {
+
+	groups, err := _readGroupsFromFile()
+	if err != nil {
+		return nil, err
+	}
+	v3s, err := _readV3UsersFromFile()
+	if err != nil {
+		return nil, err
+	}
 
 	for _, g := range groups {
 
@@ -477,40 +589,74 @@ func ReadV3Users() []v3User {
 		}
 	}
 
-	return v3s
+	return v3s, nil
 }
 
-func EditV3User(initUser v3User, finalUser v3User) {
+func EditV3User(initUser v3User, finalUser v3User) error {
 
-	_stopUnit("snmpd.service")
-	_deleteV3UserFromStorage(initUser)
-	_deleteV3UserFromConfig(initUser)
-	_writeV3UserCreateDirective(finalUser)
-	_startUnit("snmpd.service")
-	_deleteV3UserCreateDirective(finalUser)
+	if err := _stopUnit("snmpd.service"); err != nil {
+		return err
+	}
+	if err := _deleteV3UserFromStorage(initUser); err != nil {
+		return err
+	}
+	if err := _deleteV3UserFromConfig(initUser); err != nil {
+		return err
+	}
+	if err := _writeV3UserCreateDirective(finalUser); err != nil {
+		return err
+	}
+	if err := _startUnit("snmpd.service"); err != nil {
+		return err
+	}
+	if err := _deleteV3UserCreateDirective(finalUser); err != nil {
+		return err
+	}
+	return nil
 }
 
-func DeleteV3User(user v3User) {
-	_stopUnit("snmpd.service")
-	_deleteV3UserFromConfig(user)
-	_deleteV3UserFromStorage(user)
-	_startUnit("snmpd.service")
+func DeleteV3User(user v3User) error {
+	if err := _stopUnit("snmpd.service"); err != nil {
+		return err
+	}
+	if err := _deleteV3UserFromConfig(user); err != nil {
+		return err
+	}
+	if err := _deleteV3UserFromStorage(user); err != nil {
+		return err
+	}
+	if err := _startUnit("snmpd.service"); err != nil {
+		return err
+	}
+	return nil
 }
 
-func AddV2User(user v2User) {
-	_stopUnit("snmpd.service")
-	_writeV2User(user)
-	_startUnit("snmpd.service")
+func AddV2User(user v2User) error {
+	if err := _stopUnit("snmpd.service"); err != nil {
+		return err
+	}
+	if err := _writeV2User(user); err != nil {
+		return err
+	}
+	if err := _startUnit("snmpd.service"); err != nil {
+		return err
+	}
+	return nil
 }
 
-func DeleteV2User(user v2User) {
+func DeleteV2User(user v2User) error {
 
-	_stopUnit("snmpd.service")
+	if err := _stopUnit("snmpd.service"); err != nil {
+		return err
+	}
 	_user := []string{user.SecurityName, user.Source, user.Community}
 	_group := []string{user.Permissions, user.Version, user.SecurityName}
 
 	log.Println("Delete v2 user")
-	lines := GetFileLines(SNMP_CONF_FILE)
+	lines, err := GetFileLines(SNMP_CONF_FILE)
+	if err != nil {
+		return err
+	}
 
 	for idx, line := range lines {
 
@@ -525,41 +671,66 @@ func DeleteV2User(user v2User) {
 		}
 	}
 
-	SetFileLines(SNMP_CONF_FILE, lines)
+	if err := SetFileLines(SNMP_CONF_FILE, lines); err != nil {
+		return err
+	}
 
-	_startUnit("snmpd.service")
+	if err := _startUnit("snmpd.service"); err != nil {
+		return err
+	}
 
+	return nil
 }
 
-func ReadV2UserByCommunity(community string) *v2User {
-	for _, u := range ReadV2Users() {
+func ReadV2UserByCommunity(community string) (*v2User, error) {
+	users, err := ReadV2Users()
+	if err != nil {
+		return nil, err
+
+	}
+	for _, u := range users {
 		if u.Community == community {
-			return &u
+			return &u, nil
 		}
 	}
-	return nil
+	return nil, fmt.Errorf("read v2 user by community failed")
 }
 
-func ReadV2UserBySecurityName(securityname string) *v2User {
-	for _, u := range ReadV2Users() {
+func ReadV2UserBySecurityName(securityname string) (*v2User, error) {
+	users, err := ReadV2Users()
+	for _, u := range users {
 		if u.SecurityName == securityname {
-			return &u
+			return &u, nil
 		}
 	}
-	return nil
+	return nil, err
 }
 
-func EditV2User(user v2User) {
+func EditV2User(user v2User) error {
 
-	existingUser := ReadV2UserByCommunity(user.SecurityName)
+	existingUser, err := ReadV2UserByCommunity(user.SecurityName)
+	if err != nil {
+		return err
+	}
 
 	if existingUser == nil {
-		log.Fatal("no user found by sec name")
+		return fmt.Errorf("no user found by sec name")
 	}
 
-	_stopUnit("snmpd.service")
-	DeleteV2User(*existingUser)
-	_writeV2User(user)
-	_startUnit("snmpd.service")
+	if err := _stopUnit("snmpd.service"); err != nil {
+		return err
+	}
+	if err := DeleteV2User(*existingUser); err != nil {
+		return err
+	}
+
+	if err := _writeV2User(user); err != nil {
+		return err
+	}
+	if err := _startUnit("snmpd.service"); err != nil {
+		return err
+	}
+
+	return nil
 
 }

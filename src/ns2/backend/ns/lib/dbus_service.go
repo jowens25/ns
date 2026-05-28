@@ -2,13 +2,19 @@ package lib
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/godbus/dbus/v5"
 	"github.com/godbus/dbus/v5/introspect"
 )
 
-func StartDbus() {
+func StartDbusServer() {
+
+	SetupPolicy()
+
 	conn, err := dbus.SystemBus()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to connect to system bus: %v\n", err)
@@ -57,7 +63,9 @@ func StartDbus() {
 	}
 
 	account := &AccountInterface{}
-	err = conn.Export(account, "/com/novus/ns", "com.novus.ns.account")
+	account.conn = conn
+
+	err = conn.Export(account, "/com/novus/ns", "com.novus.ns.accounts")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to export AccountInterface: %v\n", err)
 		os.Exit(1)
@@ -90,9 +98,20 @@ func StartDbus() {
 				Properties: nil,
 			},
 			{
-				Name:       "com.novus.ns.accounts",
-				Methods:    introspect.Methods(account),
-				Properties: nil,
+				Name:    "com.novus.ns.accounts",
+				Methods: introspect.Methods(account),
+				Signals: []introspect.Signal{
+					{
+						Name: "ValidatePassword",
+						Args: []introspect.Arg{
+							{
+								Name:      "result",
+								Type:      "s",
+								Direction: "out",
+							},
+						},
+					},
+				},
 			},
 		},
 	}
@@ -101,9 +120,17 @@ func StartDbus() {
 		fmt.Fprintf(os.Stderr, "Failed to export introspectable: %v\n", err)
 		os.Exit(1)
 	}
-	fmt.Println("Starting ns service... com.novus.ns")
-	// Wait forever
-	select {}
+
+	log.Println("Starting dbus server... com.novus.ns")
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+
+	log.Println("Shutting down dbus server... com.novus.ns")
+
+	conn.Close()
+
 }
 
 func TryClient() {

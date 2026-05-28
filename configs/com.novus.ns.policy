@@ -79,15 +79,56 @@
   </action>
 
   <!-- Account Management Actions -->
-  <action id="com.novus.ns.accounts.delete-user">
-    <description>Delete system user</description>
-    <message>Authentication is required to delete system user</message>
+  <action id="com.novus.ns.accounts.AddAdmin">
+    <description>Add system admin</description>
+    <message>Authentication is required to add system admin</message>
     <defaults>
       <allow_any>no</allow_any>
       <allow_inactive>no</allow_inactive>
       <allow_active>auth_admin</allow_active>
     </defaults>
   </action>
+
+  <action id="com.novus.ns.accounts.AddUser">
+    <description>Add system user</description>
+    <message>Authentication is required to add system user</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
+  <action id="com.novus.ns.accounts.Remove">
+    <description>Remove system users</description>
+    <message>Authentication is required to remove system user</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
+  <action id="com.novus.ns.accounts.UpdatePassword">
+    <description>UpdatePassword system users</description>
+    <message>Authentication is required to update system user password</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
+  <action id="com.novus.ns.accounts.SetPasswordPolicy">
+    <description>Set system password Policy</description>
+    <message>Authentication is required to update system password policy</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
 
   <!-- PAM Authentication Actions -->
   <action id="com.novus.ns.pam.Authenticate">

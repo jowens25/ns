@@ -75,7 +75,7 @@ func StartBridgeProxy() error {
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
 	<-stop
 
-	fmt.Println("shutting down...")
+	log.Println("shutting down bridge proxy listener...")
 	listener.Close() // closing the listener is sufficient - Accept() will error and the goroutine exits
 	return nil
 }
