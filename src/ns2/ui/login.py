@@ -1,11 +1,19 @@
-import asyncio
-
 from nicegui import ui, app
 from ns2.ui.theme import init_colors
 from ns2.utils import ASSETS_DIR
 from ns2.lib.bridge import CallPamAuthenticate
-from ns2.lib.bridge import SetupBridge, GetBridgePid
+from ns2.lib.bridge import SetupBridge, CleanupBridge
 import uuid
+
+from ns2.utils import log
+
+
+async def logout_cb():
+    ui.navigate.to("/")
+    app.storage.general.clear()
+    rsp = await CleanupBridge()
+    if rsp:
+        log.info("log out cleanup", rsp.body[0])
 
 
 async def try_login(_username: str, _password: str) -> None:
@@ -19,13 +27,13 @@ async def try_login(_username: str, _password: str) -> None:
 
         uid = app.storage.user.get("uid")
         app.storage.general.update({"activeUser": activeUser, "uid": uid})
-        ui.navigate.to("/")
+        ui.navigate.to("/home")
 
     else:
         ui.notify("Invalid username or password", color="negative")
 
 
-@ui.page("/login")
+@ui.page("/")
 def login_page():
     # on log in page load
 
@@ -45,7 +53,6 @@ def login_page():
             password = ui.input("Password", password=True, password_toggle_button=True)
 
             async def on_login():
-                print("something is hanging up????")
                 await try_login(username.value, password.value)
 
             username.on("keydown.enter", on_login)

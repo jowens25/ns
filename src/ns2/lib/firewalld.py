@@ -1,22 +1,17 @@
-import asyncio
-from dataclasses import asdict, field
-from pprint import pprint
-from typing import List, Optional
-from nicegui import ui, app, binding
-from ns2.utils import runCmd
-from ns2.ui.theme import init_colors
+from dataclasses import field
+
+from typing import Optional
+from nicegui import binding
+
 from ns2.lib.networking import GetInterfaces
 
 from ns2.common import formatListToString
 
 from dbus_next.signature import Variant
-from dbus_next.errors import DBusError
-from dbus_next.aio.proxy_object import ProxyInterface
-from dbus_next.aio import MessageBus
-from dbus_next import Message
+from ns2.utils import log
 
 
-from ns2.lib.bridge import *
+from ns2.lib.bridge import BridgeCall
 
 
 @binding.bindable_dataclass
@@ -67,12 +62,37 @@ async def zoneRemoveService(zoneName: str, serviceName: str):
     return rsp.body[0]
 
 
+async def zoneAddService(zoneName: str, serviceName: str):
+
+    rsp = await BridgeCall(
+        destination="org.fedoraproject.FirewallD1",
+        path="/org/fedoraproject/FirewallD1",
+        interface="org.fedoraproject.FirewallD1.zone",
+        member="addService",
+        signature="ss",
+        body=[zoneName, serviceName, 0],
+    )
+    return rsp.body[0]
+
+
 async def zoneConfigRemoveService(zonePath: str, serviceName: str):
     rsp = await BridgeCall(
         destination="org.fedoraproject.FirewallD1",
         path=zonePath,
         interface="org.fedoraproject.FirewallD1.config.zone",
         member="removeService",
+        signature="s",
+        body=[serviceName],
+    )
+    return rsp.body[0]
+
+
+async def zoneConfigAddService(zonePath: str, serviceName: str):
+    rsp = await BridgeCall(
+        destination="org.fedoraproject.FirewallD1",
+        path=zonePath,
+        interface="org.fedoraproject.FirewallD1.config.zone",
+        member="addService",
         signature="s",
         body=[serviceName],
     )
@@ -181,7 +201,7 @@ async def GetSelectableZones():
     allzones = await GetZones()
     actzones = await GetActiveZones()
     for z in allzones:
-        print(z)
+        log.info(z)
         if (z in default_zones) and (z not in actzones):
             available_zones.append(z)
 
@@ -307,7 +327,7 @@ async def Update2(zonePath: str, settings: dict):
         body=[settings],
     )
 
-    # return rsp.body[0].body[0]
+    return rsp.body[0]
 
 
 def getZoneInfo(name: str, zone: dict) -> dict:
@@ -322,10 +342,10 @@ async def AddZone(zoneName: str, interfaces: list[str], sources: list[str]):
     zp = await GetZoneByName(zoneName)
 
     for interface in interfaces:
-        print(await AddInterface(zoneName, interface))
+        log.info(await AddInterface(zoneName, interface))
 
     for source in sources:
-        print(await AddSource(zoneName, source))
+        log.info(await AddSource(zoneName, source))
 
     settings = {
         "interfaces": Variant("as", interfaces),
@@ -342,12 +362,12 @@ async def RemoveZone(zoneName: str):
     zoneInfo = MakeZoneInfo(settings)
 
     for interface in zoneInfo.Interfaces:
-        print(await RemoveInterface(zoneName, interface))
+        log.info(await RemoveInterface(zoneName, interface))
 
     for source in zoneInfo.Sources:
-        print(await RemoveSource(zoneName, source))
+        log.info(await RemoveSource(zoneName, source))
 
-    if settings.get("interfaces") != None:
+    if settings.get("interfaces") is not None:
         del settings["interfaces"]
 
     await Update2(zp, settings)
@@ -409,5 +429,5 @@ def formatServicesInRows(serviceSettings: dict):
             }
         )
 
-    # pprint(rows)
+    # plog.info(rows)
     return rows

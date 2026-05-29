@@ -31,6 +31,10 @@ func (a *AccountInterface) SetPasswordPolicy(policy map[string]any, sender dbus.
 			}
 
 		}
+		err = a.conn.Emit("/com/novus/ns", "com.novus.ns.accounts.Changed", "SetPasswordPolicy")
+		if err != nil {
+			log.Println(err.Error())
+		}
 		return nil
 	}
 
@@ -74,12 +78,6 @@ func (a *AccountInterface) ValidatePassword(password string) (bool, *dbus.Error)
 
 	}
 
-	err = a.conn.Emit("/com/novus/ns", "com.novus.ns.accounts.ValidatePassword", "validated")
-
-	if err != nil {
-		log.Println(err.Error())
-	}
-
 	return isValid, nil
 
 }
@@ -96,6 +94,11 @@ func (a *AccountInterface) AddUser(username string, password string, sender dbus
 				Body: []any{err.Error()},
 			}
 
+		}
+
+		err = a.conn.Emit("/com/novus/ns", "com.novus.ns.accounts.Changed", "AddUser")
+		if err != nil {
+			log.Println(err.Error())
 		}
 
 		return fmt.Sprintf("added %s", username), nil
@@ -121,6 +124,10 @@ func (a *AccountInterface) AddAdmin(username string, password string, sender dbu
 				Body: []any{err.Error()},
 			}
 
+		}
+		err = a.conn.Emit("/com/novus/ns", "com.novus.ns.accounts.Changed", "AddAdmin")
+		if err != nil {
+			log.Println(err.Error())
 		}
 
 		return fmt.Sprintf("added %s", username), nil
@@ -154,6 +161,10 @@ func (a *AccountInterface) Remove(sender dbus.Sender, message dbus.Message, user
 					Body: []any{err.Error()},
 				}
 
+			}
+			err = a.conn.Emit("/com/novus/ns", "com.novus.ns.accounts.Changed", "Remove")
+			if err != nil {
+				log.Println(err.Error())
 			}
 			return fmt.Sprintf("removed %s", username), nil
 
@@ -203,7 +214,10 @@ func (a *AccountInterface) UpdatePassword(username string, newpassword string, s
 			}
 
 		}
-
+		err = a.conn.Emit("/com/novus/ns", "com.novus.ns.accounts.Changed", "UpdatePassword")
+		if err != nil {
+			log.Println(err.Error())
+		}
 		return "password updated", nil
 
 	}

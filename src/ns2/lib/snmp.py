@@ -1,11 +1,5 @@
-import os
-import sys
-from dataclasses import asdict, dataclass
-from ns2.utils import runCmd
+from dataclasses import dataclass
 from typing import Optional
-import aiofiles
-
-from ns2.lib.systemd1 import *
 
 snmp_config_file = "/etc/snmp/snmpd.conf.d/novus-snmpd.conf"
 default_persistent_dir_path = "/var/lib/snmp"

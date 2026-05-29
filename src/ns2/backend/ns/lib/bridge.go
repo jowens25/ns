@@ -39,7 +39,7 @@ func CallMakeBridge(username string) (int, error) {
 	return cmd.Process.Pid, nil
 }
 
-func callCloseBridge(pid int) error {
+func callClose(pid int) error {
 
 	cmd := exec.Command(
 		"sudo",
@@ -55,6 +55,7 @@ func callCloseBridge(pid int) error {
 }
 
 func StartBridgeProxy() error {
+	log.Println("starting bridge proxy...")
 
 	listener, err := net.Listen("tcp", "localhost:3000")
 	if err != nil {

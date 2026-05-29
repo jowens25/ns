@@ -1,11 +1,10 @@
-import asyncio
-from nicegui import ui, app, background_tasks, events
+from nicegui import ui, events
 from ns2.utils import runAsyncCmd
 import os
 
 
 async def fpga_page():
-    with ui.column() as pageContainer:
+    with ui.column():
         ui.label("FPGA Bitstream flasher").classes("text-h5")
         with ui.row():
 

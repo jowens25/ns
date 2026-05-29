@@ -1,10 +1,8 @@
-from dataclasses import dataclass, asdict
 import asyncio
-from nicegui import Event, app
+from nicegui import Event
 
-from dbus_next.service import ServiceInterface, method, signal
-from dbus_next.aio import MessageBus
-import socket
+
+from ns2.utils import log
 
 socket_path = "/var/lib/ns/ns-serial-mux.sock"
 
@@ -14,11 +12,11 @@ socket_open = False
 
 
 async def main(max_string: int):
-    reader, writer = await asyncio.open_unix_connection(socket_path)
+    _, writer = await asyncio.open_unix_connection(socket_path)
 
     for i in range(max_string + 1):
         cmd = f"$NVS{i}=1\r\n"
-        print("sending: ", cmd)
+        log.info("sending: ", cmd)
         writer.write(cmd.encode())
         await writer.drain()
 
@@ -33,11 +31,12 @@ def set_status_string(status, num):
 async def listen_to(path):
 
     socket_path = path
-    reader, writer = await asyncio.open_unix_connection(socket_path)
+    reader, _ = await asyncio.open_unix_connection(socket_path)
     while True:
         line = await reader.readline()
+
         if line:
-            print(line.decode("utf-8", errors="ignore").strip("\r\n"))
+            log.info(line.decode("utf-8", errors="ignore").strip("\r\n"))
 
 
 async def read_socket(reader, cmd, timeout=1):
@@ -88,7 +87,7 @@ async def socket_stream():
     global socket_open
     try:
         reader, writer = await asyncio.open_unix_connection(socket_path)
-        print("SOCKET OPENED")
+        log.info("SOCKET OPENED")
         socket_open = True
         while True:
             line = (await reader.readline()).decode("utf-8", errors="ignore")
@@ -99,19 +98,19 @@ async def socket_stream():
             else:
                 break
     except FileNotFoundError:
-        print("SOCKET NOT AVAILABLE")
+        log.info("SOCKET NOT AVAILABLE")
         # self.socket_received.emit("Socket Not Available")
         socket_open = False
         raise
     except asyncio.CancelledError:
-        print("SOCKET LISTENER CANCELLED")
+        log.info("SOCKET LISTENER CANCELLED")
         socket_open = False
         if writer:
             writer.close()
             await writer.wait_closed()
         raise
     finally:
-        print("SOCKET LISTENER CLOSED")
+        log.info("SOCKET LISTENER CLOSED")
         socket_open = False
         if writer:
             writer.close()
@@ -119,28 +118,27 @@ async def socket_stream():
 
 
 async def sendCommands(commands: dict, get_responses: bool = False) -> list[str]:
-    rx = asyncio.Event()
     reader, writer = await asyncio.open_unix_connection(socket_path)
     responses = {}
     for name, command in commands.items():
-        print("sending: ", command)
+        log.info("sending: ", command)
         command = command + "\r\n"
         writer.write(command.encode())
         await writer.drain()
-        # print("finsihed drain")
+        # log.info("finsihed drain")
         if get_responses:
             try:
                 # await asyncio.wait_for(rx, 2.0)
 
                 while True:
-                    # print("awaiting for response")
+                    # log.info("awaiting for response")
                     line = (await reader.readline()).decode("utf-8", errors="ignore")
                     if line:
                         if any(
                             line.startswith(marker)
                             for marker in ["$ER", "$RR", "$WR", "$GPNTL", "$BAUD"]
                         ):
-                            print(f"got: {line}")
+                            log.info(f"got: {line}")
                             responses[name] = ParseNtlResponse(line)
                             # responses.append(line)
                             break
@@ -197,8 +195,8 @@ async def WriteNtlProperty(module: int, property: int, value: str):
 def ParseNtlResponse(response: str) -> str:
     fields = response.split(",")
     if len(fields) == 4:
-        module = fields[1]
-        property = fields[2]
+        # module = fields[1]
+        # property = fields[2]
         value = fields[3]
         return value.strip("\r\n")
 

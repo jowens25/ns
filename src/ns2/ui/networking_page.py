@@ -1,16 +1,32 @@
 from nicegui import ui
-from ns2.lib.networking import *
-from ns2.lib.firewalld import *
+from ns2.lib.networking import (
+    GetInterfacesAndAddresses,
+    InterfaceData,
+    GetDeviceByIpIface,
+    GetNmProp,
+    GetInterfaceData,
+    GetSettings,
+    IpAddress,
+    DnsServer,
+    IpRoute,
+    GetIp,
+    SetIp,
+    ApplyModes,
+    ConnectionUpdate2,
+    DeviceReapply,
+)
+
 from dbus_next.signature import Variant
 from dbus_next.errors import DBusError
 
+from ns2.utils import log
 
 from ns2.ui.firewalld_page import firewall_status
 
 
 async def network_page():
 
-    print("NETWORK PAGE")
+    log.info("NETWORK PAGE")
 
     with ui.column().classes("w-full"):
         with ui.card().classes("w-full").props("flat"):
@@ -53,8 +69,6 @@ async def network_page():
             """,
         )
 
-    # with ui.card():
-
 
 @ui.refreshable
 async def interface_card(interface: InterfaceData):
@@ -70,34 +84,7 @@ async def interface_card(interface: InterfaceData):
                 ui.label().classes("text-h6").bind_text(interface, "Name")
                 ui.label().classes("text-h6").bind_text(interface, "HardwareAddress")
 
-                # async def connection_sw_cb(e):
-                #    action = "enable" if e.sender.value else "disable"
-                #    with ui.dialog() as dialog, ui.card():
-                #        ui.label(f"Are you sure you want to {action} this connection?")
-                #        with ui.row():
-                #            ui.button(
-                #                "Cancel", on_click=lambda: dialog.submit("Cancel")
-                #            ).props("flat color=accent align=left")
-                #            ui.button(
-                #                f"{action}", on_click=lambda: dialog.submit(action)
-                #            ).props("flat color=accent align=left")
-                #    result = await dialog
-                #    if result == "enable":
-                #        await nm.call_activate_connection("/", interface.dev_path, "/")
-                #        await
-                #    elif result == "disable":
-                #        await nm.call_deactivate_connection(interface.act_con_path)
-                #    else:
-                #        print("canceled")
-        #
-        #    interface_card.refresh()
-        #
-        # ui.switch("Connected").on("click", lambda e: connection_sw_cb(e)).props(
-        #    "flat color=accent"
-        # ).bind_value_from(interface, "Active")
         ui.separator()
-
-        # ui.spinner(size='lg').bind_visibility_from(interface, "Active", backward=lambda e: (not e))
 
         with ui.column().classes("flex-1 gap-4"):
             with ui.row().classes("flex-1 gap-16"):
@@ -109,20 +96,6 @@ async def interface_card(interface: InterfaceData):
             with ui.row().classes("flex-1 gap-16"):
                 ui.label("Carrier").classes("font-bold w-8")
                 ui.label().bind_text_from(interface, "Carrier")
-                # with ui.row().classes("flex-1 gap-16"):
-                #    ui.label("General").classes("font-bold w-8")
-
-                async def auto_connect_cb(e):
-                    return
-                    device = await GetDevice(dbus.Bus, interface.dev_path)
-                    settings = await GetSettings(device)
-                    settings["connection"]["autoconnect"] = Variant("b", e.value)
-                    # await connection.call_update2(settings, 0x1, {})
-                    # await device.call_reapply(settings, 0, 0)
-
-                # ui.checkbox("Connect automatically", on_change=auto_connect_cb).props(
-                #    "flat color=accent dense"
-                # ).bind_value(interface, "AutoConnect")
 
             with ui.row().classes("flex-1 gap-16"):
                 ui.label("IPv4").classes("font-bold w-8")
@@ -141,7 +114,7 @@ async def interface_card(interface: InterfaceData):
 
 async def interface_page(interface_name: str):
 
-    dev_path = await GetDeviceByIpIface(interface_name)
+    await GetDeviceByIpIface(interface_name)
 
     # device = await GetDevice(AppBus, dev_path)
 
@@ -151,7 +124,7 @@ async def interface_page(interface_name: str):
 
     async def state_changed_cb(u1, u2, u3):
 
-        print(u1, u2, u3)
+        log.info(u1, u2, u3)
         # Re-fetch the interface data to get the new state
         updated_interface = await GetInterfaceData(interface_name)
 
@@ -302,13 +275,13 @@ async def edit_ip_connection(version: str, id: InterfaceData):
                             on_change=on_method_change,
                         ).props("dense").classes("w-24").bind_value(ip, "Method")
 
-                        ip_address_button = ui.button(
-                            icon="add", on_click=add_ip_address
-                        ).props("flat color=accent dense")
+                        ui.button(icon="add", on_click=add_ip_address).props(
+                            "flat color=accent dense"
+                        )
 
                 with ui.column().classes("items-center justify-between gap-4 w-full"):
                     await ip_address_list()
-                    print()
+                    log.info()
                 ###
 
                 ### DNS SERVER
@@ -317,18 +290,16 @@ async def edit_ip_connection(version: str, id: InterfaceData):
                     ui.label("DNS Servers")
                     with ui.row():
 
-                        dns_server_switch = (
-                            ui.switch("Automatic")
-                            .props("flat color=accent dense")
-                            .classes("w-24")
-                            .bind_value(
-                                ip,
-                                "IgnoreAutoDns",
-                                forward=lambda x: not x,
-                                backward=lambda x: not x,
-                            )
+                        ui.switch("Automatic").props("flat color=accent dense").classes(
+                            "w-24"
+                        ).bind_value(
+                            ip,
+                            "IgnoreAutoDns",
+                            forward=lambda x: not x,
+                            backward=lambda x: not x,
                         )
-                        dns_server_button = ui.button(
+
+                        ui.button(
                             icon="add",
                             on_click=add_dns_server,
                         ).props("flat color=accent dense")
@@ -341,14 +312,12 @@ async def edit_ip_connection(version: str, id: InterfaceData):
                 with ui.row().classes("w-full justify-between"):
                     ui.label("DNS Searches")
                     with ui.row():
-                        dns_search_button = (
-                            ui.button(
-                                icon="add",
-                                on_click=add_dns_search,
-                            )
-                            .props("flat color=accent")
-                            .props("dense")
-                        )
+
+                        ui.button(
+                            icon="add",
+                            on_click=add_dns_search,
+                        ).props("flat color=accent dense")
+
                 with ui.column().classes("items-center justify-between gap-4 w-full"):
                     await dns_search_list()
                 ###
@@ -358,23 +327,20 @@ async def edit_ip_connection(version: str, id: InterfaceData):
                 with ui.row().classes("w-full justify-between"):
                     ui.label("Routes")
                     with ui.row():
-                        route_switch = (
-                            ui.switch("Automatic")
-                            .props("flat color=accent")
-                            .props("dense")
-                            .classes("w-24")
-                            .bind_value(
-                                ip,
-                                "IgnoreAutoRoutes",
-                                forward=lambda x: not x,
-                                backward=lambda x: not x,
-                            )
+
+                        ui.switch("Automatic").props("flat color=accent dense").classes(
+                            "w-24"
+                        ).bind_value(
+                            ip,
+                            "IgnoreAutoRoutes",
+                            forward=lambda x: not x,
+                            backward=lambda x: not x,
                         )
-                        route_button = (
-                            ui.button(icon="add", on_click=add_route)
-                            .props("flat color=accent")
-                            .props("dense")
+
+                        ui.button(icon="add", on_click=add_route).props(
+                            "flat color=accent dense"
                         )
+
                 with ui.column().classes("items-center justify-between gap-4 w-full"):
                     await route_list()
                 ###
@@ -404,16 +370,16 @@ async def edit_ip_connection(version: str, id: InterfaceData):
                             # dialog.close()
 
                         # except Exception as e:
-                        #    print(e)
+                        #    log.info(e)
                         #    ui.notify("Please correct the errors", type="negative")
 
                     def on_cancel_cb():
                         dialog.close()
 
-                    save_button = ui.button("save", on_click=on_save_cb).props(
+                    ui.button("save", on_click=on_save_cb).props(
                         "flat color=accent align=left"
                     )
-                    cancel_button = ui.button("cancel", on_click=on_cancel_cb).props(
+                    ui.button("cancel", on_click=on_cancel_cb).props(
                         "flat color=accent align=left"
                     )
     await dialog

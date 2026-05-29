@@ -5,39 +5,28 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/jowens25/ns/ns/lib"
 	"github.com/spf13/cobra"
 )
 
-// testCmd represents the test command
+// stopCmd represents the stop command
 var testCmd = &cobra.Command{
 	Use:   "test",
-	Short: "A brief description of your command",
+	Args:  cobra.ExactArgs(1),
+	Short: "test entry point",
 
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("test called")
 
-		fmt.Println(lib.GetLastLogin(args[0]))
-		//conn, err := dbus.SystemBus()
-		//if err != nil {
-		//	fmt.Fprintf(os.Stderr, "Failed to connect to system bus: %v\n", err)
-		//	os.Exit(1)
-		//}
-		//defer conn.Close()
-		//
-		//var thisCall lib.DbusCall
-		//thisCall.Destination = "org.freedesktop.NetworkManager"
-		//thisCall.Path = "/org/freedesktop/NetworkManager/Devices/2"
-		//thisCall.Method = "org.freedesktop.NetworkManager.Device.GetAppliedConnection"
-		//
-		//thisCall.Args = []any{uint32(0)}
-		//
-		//obj := conn.Object(thisCall.Destination, thisCall.Path)
-		//
-		//dbuscall := obj.Call(thisCall.Method, 0, thisCall.Args...)
-		//
-		//fmt.Println(dbuscall.Body)
+		pid, err := lib.CallMakeTerminal(args[0])
+
+		if err != nil {
+			log.Println(err.Error())
+		}
+
+		fmt.Println(pid)
 
 	},
 }

@@ -1,20 +1,45 @@
 from nicegui import ui
-
+from dbus_next import Message
 from ns2.lib.accounts import GetUsers
+from ns2.lib.bridge import GetBridge, BridgeCall
 from ns2.ui.accountsDialogs import (
     SystemAccount,
     addUserDialog,
     deleteUserDialog,
     editUserDialog,
+    editPolicyDialog,
 )
 
+from ns2.utils import log
 
-async def accounts_page():
-    """user page content"""
+
+def notification_handler(msg: Message):
+    if msg.interface == "com.novus.ns.accounts" and msg.member == "Changed":
+        log.info(msg.body)
+        accounts_table.refresh()
+        return True
+
+
+async def SetupNotifications():
+    await BridgeCall(
+        destination="org.freedesktop.DBus",
+        path="/org/freedesktop/DBus",
+        interface="org.freedesktop.DBus",
+        member="AddMatch",
+        signature="s",
+        body=["type='signal',member='Changed',interface='com.novus.ns.accounts'"],
+    )
+
+    bridge = GetBridge()
+
+    bridge.add_message_handler(notification_handler)
+
+
+@ui.refreshable
+async def accounts_table():
 
     addDialog = await addUserDialog()
-    # editDialog = editUserDialog()
-    # deleteDialog = deleteUserDialog(None)
+    policyDialog = await editPolicyDialog()
 
     rsp = await GetUsers()
 
@@ -22,7 +47,6 @@ async def accounts_page():
         ui.notify(rsp.error_name)
         ui.label(rsp.error_name)
         return
-
     accountsTable = (
         ui.table(
             title="Accounts",
@@ -52,10 +76,13 @@ async def accounts_page():
 
             ui.button(icon="add", on_click=addDialog.open).props("color=accent")
 
+            ui.button(icon="settings", on_click=policyDialog.open).props("color=accent")
+
     # accountsTable.on("edit-account", editDialog.open)
 
     async def on_delete_cb(e):
-        with deleteUserDialog(e.args) as dialog:
+        username: str = e.args
+        with deleteUserDialog(username) as dialog:
             result = await dialog
             ui.notify(result)
 
@@ -111,6 +138,17 @@ async def accounts_page():
         </q-tr>
         """,
     )
+
+
+async def accounts_page():
+    """user page content"""
+
+    await SetupNotifications()
+
+    await accounts_table()
+
+    # editDialog = editUserDialog()
+    # deleteDialog = deleteUserDialog(None)
 
 
 async def accounts_user_page(user: str):
@@ -176,7 +214,7 @@ async def edit_card(username: str):
                 ui.label().bind_text_from(user, "Shell")
                 ui.link("change").classes("text-accent")
 
-                ui.label(await GetUsersState(await get_dbus()))
+                # ui.label(await GetUsersState(await get_dbus()))
 
     with ui.card():
         with ui.row().classes("w-full justify-between"):

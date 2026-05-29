@@ -2,6 +2,7 @@ package lib
 
 import (
 	"fmt"
+	"log"
 	"sync"
 
 	"github.com/godbus/dbus/v5"
@@ -25,6 +26,7 @@ func NewBridgeInterface() *BridgeInterface {
 
 	b.propsLock.Lock()
 	b.props["pid"] = -1
+	b.props["term"] = -1
 	b.propsLock.Unlock()
 
 	return b
@@ -34,32 +36,12 @@ func NewBridgeInterface() *BridgeInterface {
 func (b *BridgeInterface) GetActiveUser(sender dbus.Sender) (string, *dbus.Error) {
 
 	u, err := GetUserInfoFromSender(b.conn, sender)
-
 	if err != nil {
-
 		return "", &dbus.Error{
 			Name: "org.freedesktop.DBus.Error",
 			Body: []any{err.Error()},
 		}
-
 	}
-
-	return u.Username, nil
-}
-
-func (b *BridgeInterface) GetOwner(sender dbus.Sender) (string, *dbus.Error) {
-
-	u, err := GetUserInfoFromSender(b.conn, sender)
-
-	if err != nil {
-
-		return "", &dbus.Error{
-			Name: "org.freedesktop.DBus.Error",
-			Body: []any{err.Error()},
-		}
-
-	}
-
 	return u.Username, nil
 }
 
@@ -70,33 +52,35 @@ func (b *BridgeInterface) Make(username string) (int, *dbus.Error) {
 	b.propsLock.RUnlock()
 
 	if !ok {
-		return -1, dbus.NewError("org.freedesktop.DBus.Error.Failed", []any{"pid type error"})
+		return -1, &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{"pid type error"},
+		}
 	}
 
 	if initPid > 0 {
 
-		fmt.Println("closed existing")
+		log.Println("closed existing bridge")
 
-		err := callCloseBridge(initPid)
+		err := callClose(initPid)
 		if err != nil {
-			return -1, dbus.NewError(
-				"org.freedesktop.DBus.Error.Failed",
-				[]any{err.Error()},
-			)
+			return -1, &dbus.Error{
+				Name: "org.freedesktop.DBus.Error",
+				Body: []any{err.Error()},
+			}
 		}
 	}
 
-	pid, _ := CallMakeBridge(username)
+	pid, err := CallMakeBridge(username)
 
-	if pid < 0 {
+	if err != nil {
 
-		return -1, dbus.NewError(
-			"org.freedesktop.DBus.Error.Failed",
-			[]any{"CallMakeBridge failed"},
-		)
+		return -1, &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
 	}
 
-	// Lock before writing to the map
 	b.propsLock.Lock()
 	b.props["pid"] = pid
 	b.propsLock.Unlock()
@@ -112,30 +96,121 @@ func (b *BridgeInterface) Make(username string) (int, *dbus.Error) {
 	return pid, nil
 }
 
+func (b *BridgeInterface) Terminal(username string) (int, *dbus.Error) {
+
+	b.propsLock.RLock()
+	initPid, ok := b.props["term"].(int)
+	b.propsLock.RUnlock()
+
+	if !ok {
+		return -1, &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{"pid type error"},
+		}
+	}
+
+	if initPid > 0 {
+
+		log.Println("closed existing terminal")
+
+		err := callClose(initPid)
+		if err != nil {
+			return -1, dbus.NewError(
+				"org.freedesktop.DBus.Error",
+				[]any{err.Error()},
+			)
+		}
+	}
+
+	pid, err := CallMakeTerminal(username)
+
+	if err != nil {
+
+		return -1, &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+	}
+
+	// Lock before writing to the map
+	b.propsLock.Lock()
+	b.props["term"] = pid
+	b.propsLock.Unlock()
+
+	if b.conn != nil {
+		b.emitPropertiesChanged("com.novus.ns.bridge",
+			map[string]dbus.Variant{
+				"term": dbus.MakeVariant(pid),
+			},
+			[]string{})
+	}
+
+	return pid, nil
+}
+
 func (b *BridgeInterface) Close() (string, *dbus.Error) {
 	b.propsLock.RLock()
 	currentPid, ok := b.props["pid"].(int)
 	b.propsLock.RUnlock()
 
 	if !ok {
-		return "", dbus.NewError("org.freedesktop.DBus.Error.Failed", []any{"type error?"})
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{"pid type error"},
+		}
 	}
 
 	if currentPid < 0 {
-		return "", dbus.NewError("org.freedesktop.DBus.Error.Failed", []any{"No active session"})
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{"no active session"},
+		}
 	}
 
-	err := callCloseBridge(currentPid)
+	err := callClose(currentPid)
 	if err != nil {
-		return "", dbus.NewError(
-			"org.freedesktop.DBus.Error.Failed",
-			[]any{err.Error()},
-		)
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
 	}
 
-	// Clean up the property
 	b.propsLock.Lock()
 	b.props["pid"] = -1
+	b.propsLock.Unlock()
+
+	return fmt.Sprintf("closed: %d", currentPid), nil
+}
+
+func (b *BridgeInterface) CloseTerminal() (string, *dbus.Error) {
+	b.propsLock.RLock()
+	currentPid, ok := b.props["term"].(int)
+	b.propsLock.RUnlock()
+
+	if !ok {
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{"pid type error"},
+		}
+	}
+
+	if currentPid < 0 {
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{"no active terminal"},
+		}
+	}
+
+	err := callClose(currentPid)
+	if err != nil {
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+	}
+
+	b.propsLock.Lock()
+	b.props["term"] = -1
 	b.propsLock.Unlock()
 
 	return fmt.Sprintf("closed: %d", currentPid), nil

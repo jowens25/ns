@@ -1,14 +1,15 @@
-from nicegui import ui, app, binding
+from typing import Optional
 
-from ns2.lib.accounts import *
+from nicegui import ui, binding
 
-# username
-# password
-# repeat password
+from ns2.lib.bridge import BridgeCall
 
-# 12 chars, lower case, upper case, special char
-#
-# group: admin, user
+from dbus_next.signature import Variant
+from dbus_next import Message
+
+from ns2.utils import log
+
+from ns2.lib.accounts import ValidatePassword
 
 
 @binding.bindable_dataclass
@@ -19,7 +20,7 @@ class User:
     Group: Optional[str] = "admin"
 
 
-def editUserDialog(user):
+def editUserDialog():
     with ui.dialog() as dialog:
         with ui.card().classes("w-full max-h-[90vh] overflow-y-auto"):
             ui.label("Edit user").classes("text-h5")
@@ -28,19 +29,84 @@ def editUserDialog(user):
     return dialog
 
 
-def deleteUserDialog(user):
+async def editPolicyDialog():
+    policy = {}
+    rsp = await BridgeCall(
+        "com.novus.ns",
+        "/com/novus/ns",
+        "com.novus.ns.accounts",
+        "GetPasswordPolicy",
+        "",
+        [],
+    )
+
+    if rsp.error_name is not None:
+        ui.notify(rsp.error_name)
+    else:
+        for k, v in rsp.body[0].items():
+            policy[k] = v.value
+
+    with ui.dialog() as dialog:
+
+        with ui.card().classes("w-full max-h-[90vh] overflow-y-auto"):
+            ui.label("Edit Password Policy").classes("text-h5")
+
+            ui.input("max length").bind_value(policy, "max")
+            ui.input("min length").bind_value(policy, "min")
+            ui.checkbox("require upper").bind_value(policy, "upper")
+            ui.checkbox("require lower").bind_value(policy, "lower")
+            ui.checkbox("require symbol").bind_value(policy, "symbol")
+            ui.checkbox("require digit").bind_value(policy, "digit")
+
+            async def on_save_cb():
+                newPolicy = {
+                    "max": Variant("u", policy["max"]),
+                    "min": Variant("u", policy["min"]),
+                    "upper": Variant("b", policy["upper"]),
+                    "lower": Variant("b", policy["lower"]),
+                    "symbol": Variant("b", policy["symbol"]),
+                    "digit": Variant("b", policy["digit"]),
+                }
+                rsp = await BridgeCall(
+                    "com.novus.ns",
+                    "/com/novus/ns",
+                    "com.novus.ns.accounts",
+                    "SetPasswordPolicy",
+                    "a{sv}",
+                    [newPolicy],
+                )
+                if rsp.error_name is not None:
+                    ui.notify(rsp.body[0])
+                    dialog.close()
+
+            with ui.row():
+                ui.button("save", on_click=on_save_cb)
+                ui.button("close", on_click=dialog.close)
+
+    return dialog
+
+
+def deleteUserDialog(username: str):
+
     with ui.dialog() as dialog:
         with ui.card().classes("w-full max-h-[90vh] overflow-y-auto"):
             ui.label(f"Delete Account").classes("text-h5")
-            ui.label(f"Are you sure you want to delete {user}")
+            ui.label(f"Are you sure you want to delete {username}")
             with ui.row():
                 ui.button("Cancel", on_click=dialog.close())
 
-                async def on_delete_cb(user):
-                    print("CALL delete DBUS")
-                    bus = await get_dbus()
+                async def on_delete_cb():
+                    log.info("CALL delete DBUS")
+                    await BridgeCall(
+                        "com.novus.ns",
+                        "/com/novus/ns",
+                        "com.novus.ns.accounts",
+                        "Remove",
+                        "s",
+                        [username],
+                    )
 
-                    dialog.submit(f"DELETED!!! {user} RESULTS")
+                    dialog.submit(f"DELETED!!! {username} RESULTS")
 
                 ui.button("Delete", on_click=on_delete_cb)
 
@@ -121,6 +187,7 @@ async def addUserDialog():
                     if rsp.error_name is not None:
                         ui.notify(rsp.body[0])
                     else:
+                        ui.notify(rsp, type="positive")
                         dialog.close()
 
                 else:
@@ -131,131 +198,3 @@ async def addUserDialog():
                 ui.button("Cancel", on_click=dialog.close)
 
     return dialog
-    # with ui.column().classes("w-full"):
-
-
-#
-#    ### ADDRESSES
-#    with ui.row().classes("w-full justify-between"):
-#        ui.label("Addresses")
-#        with ui.row():
-#
-#            def on_method_change(e):
-#                # SetIp4Method(settings, e.value)
-#                return
-#
-#            ui.select(
-#                options=["disabled", "auto", "manual"],
-#                on_change=on_method_change,
-#            ).props("dense").classes("w-24").bind_value(ip, "Method")
-#
-#            ip_address_button = ui.button(
-#                icon="add", on_click=add_ip_address
-#            ).props("flat color=accent dense")
-#
-#    with ui.column().classes("items-center justify-between gap-4 w-full"):
-#        await ip_address_list()
-#        print()
-#    ###
-#
-#    ### DNS SERVER
-#    ui.separator()
-#    with ui.row().classes("w-full justify-between"):
-#        ui.label("DNS Servers")
-#        with ui.row():
-#
-#            dns_server_switch = (
-#                ui.switch("Automatic")
-#                .props("flat color=accent dense")
-#                .classes("w-24")
-#                .bind_value(
-#                    ip,
-#                    "IgnoreAutoDns",
-#                    forward=lambda x: not x,
-#                    backward=lambda x: not x,
-#                )
-#            )
-#            dns_server_button = ui.button(
-#                icon="add",
-#                on_click=add_dns_server,
-#            ).props("flat color=accent dense")
-#    with ui.column().classes("items-center justify-between gap-4 w-full"):
-#        await dns_server_list()
-#    ###
-#
-#    ### DNS SEARCH
-#    ui.separator()
-#    with ui.row().classes("w-full justify-between"):
-#        ui.label("DNS Searches")
-#        with ui.row():
-#            dns_search_button = (
-#                ui.button(
-#                    icon="add",
-#                    on_click=add_dns_search,
-#                )
-#                .props("flat color=accent")
-#                .props("dense")
-#            )
-#    with ui.column().classes("items-center justify-between gap-4 w-full"):
-#        await dns_search_list()
-#    ###
-#
-#    ### ROUTES
-#    ui.separator()
-#    with ui.row().classes("w-full justify-between"):
-#        ui.label("Routes")
-#        with ui.row():
-#            route_switch = (
-#                ui.switch("Automatic")
-#                .props("flat color=accent")
-#                .props("dense")
-#                .classes("w-24")
-#                .bind_value(
-#                    ip,
-#                    "IgnoreAutoRoutes",
-#                    forward=lambda x: not x,
-#                    backward=lambda x: not x,
-#                )
-#            )
-#            route_button = (
-#                ui.button(icon="add", on_click=add_route)
-#                .props("flat color=accent")
-#                .props("dense")
-#            )
-#    with ui.column().classes("items-center justify-between gap-4 w-full"):
-#        await route_list()
-#    ###
-#
-#    with ui.row().classes("items-center justify-between gap-4 w-full"):
-#
-#        async def on_save_cb():
-#            try:
-#
-#                _settings = SetIp(ip, version, settings)
-#
-#                _settings = ApplyModes(version, _settings)
-#
-#                await connection.call_update2(_settings, 0x1, {})
-#
-#                await device.call_reapply(_settings, 0, 0)
-#
-#                dialog.close()
-#
-#            except DBusError as e:
-#                ui.notify(e, type="negative")
-#                # dialog.close()
-#
-#            except Exception as e:
-#                print(e)
-#                ui.notify("Please correct the errors", type="negative")
-#
-#        def on_cancel_cb():
-#            dialog.close()
-#
-#        save_button = ui.button("save", on_click=on_save_cb).props(
-#            "flat color=accent align=left"
-#        )
-#        cancel_button = ui.button("cancel", on_click=on_cancel_cb).props(
-#            "flat color=accent align=left"
-#        )
-# return dialog

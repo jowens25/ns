@@ -8,7 +8,7 @@ import (
 func MakeBridge() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "make",
-		Short: "make bridge <port> <handle func>",
+		Short: "make bridge",
 
 		RunE: func(cmd *cobra.Command, args []string) error {
 

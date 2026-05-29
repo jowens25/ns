@@ -1,6 +1,6 @@
-digit: true
-lower: true
+digit: false
+lower: false
 max: 16
 min: 8
-symbol: true
-upper: true
+symbol: false
+upper: false

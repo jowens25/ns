@@ -1,19 +1,15 @@
-from ns2.lib.systemd1 import isActive, SystemdStop, SystemdStart, SystemdRestart
+from ns2.lib.systemd1 import isActive, SystemdStop, SystemdStart
 
 from nicegui import ui
 from dataclasses import asdict
 
+from ns2.utils import log
 
 from ns2.lib.bridge import BridgeCall
 from ns2.lib.snmp import (
     V3User,
     V2User,
-    snmp_config_file,
-    default_persistent_dir_path,
 )
-
-
-from ns2.lib.snmp import *
 
 sourceValidation = {
     "Please enter a valid ip address, network or default": lambda value: len(value) > 0
@@ -91,7 +87,7 @@ async def create_v3_user_dialog():
                                 ]
                             )
                         ):
-                            print(asdict(v3))
+                            log.info(asdict(v3))
 
                             rsp = await BridgeCall(
                                 "com.novus.ns",
@@ -105,7 +101,7 @@ async def create_v3_user_dialog():
                             # snmp = await GetSnmpInterface(AppBus)
                             # rsp = await snmp.call_create_v3_user(asdict(v3))
                             # rsp = await AddV3User(AppBus, asdict(v3))
-                            print(rsp)
+                            log.info(rsp)
                             await v3table.refresh()
                             createV3Dialog.close()
                         else:
@@ -170,7 +166,7 @@ async def v2table():
 
     v2Users = v2Users.body[0]
 
-    print(v2Users)
+    log.info(v2Users)
 
     with ui.dialog() as createV2Dialog:
         v2 = V2User()

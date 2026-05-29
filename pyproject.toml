@@ -26,3 +26,5 @@ build-backend = "uv_build"
 [project.scripts]
 ns = "ns2.main:cli"
 
+[tool.ruff.lint]
+ignore = ["F541"]  # Skips line-length and missing docstring errors

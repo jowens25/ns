@@ -1,12 +1,13 @@
-from dataclasses import asdict, field
-from typing import List, Optional
-from nicegui import ui, app, binding
+from dataclasses import field
+from typing import Optional
+from nicegui import binding
 
 from dbus_next.signature import Variant
 
 from ns2.common import formatListToString
 
 from ns2.lib.bridge import BridgeCall
+from ns2.utils import log
 
 # ====================================================================
 # data classes
@@ -244,7 +245,7 @@ async def GetProperty(
         body=[interface, property],
     )
 
-    if type(rsp.body[0]) == Variant:
+    if type(rsp.body[0]) is Variant:
         return rsp.body[0].value
     else:
         return rsp.body[0]
@@ -300,8 +301,8 @@ async def GetInterfaceData(iface: str) -> InterfaceData:
 
         ip4AddressData = await GetNmProp(i.ip4_config_path, "IP4Config", "AddressData")
 
-        print(ip4AddressData)
-        print(ip4AddressData)
+        log.info(ip4AddressData)
+        log.info(ip4AddressData)
         ip6AddressData = await GetNmProp(i.ip6_config_path, "IP6Config", "AddressData")
 
         i.Ip4 = addressDataToString(ip4AddressData)
@@ -519,7 +520,7 @@ def processDeviceState(state: int) -> str:
 
 
 def processInterfaceFlags(flags: int) -> str:
-    NM_DEVICE_INTERFACE_FLAG_NONE = 0  # an alias for numeric zero, no flags set.
+    # NM_DEVICE_INTERFACE_FLAG_NONE = 0  # an alias for numeric zero, no flags set.
     NM_DEVICE_INTERFACE_FLAG_UP = 0x1  # the interface is enabled from the administrative point of view. Corresponds to kernel IFF_UP.
     NM_DEVICE_INTERFACE_FLAG_LOWER_UP = (
         0x2  # the physical link is up. Corresponds to kernel IFF_LOWER_UP.
@@ -635,7 +636,7 @@ async def GetInterfacesAndAddresses() -> list:
         ip4_config_path = await GetNmProp(devicePath, "Device", "Ip4Config")
         ip6_config_path = await GetNmProp(devicePath, "Device", "Ip6Config")
 
-        print("IP 4 CONFIG PATH: ", ip4_config_path)
+        log.info("IP 4 CONFIG PATH: ", ip4_config_path)
 
         if len(ip4_config_path) > 1:
 

@@ -4,6 +4,7 @@ import asyncio
 from dbus_next import Message
 from dbus_next.constants import BusType
 from dbus_next.aio import MessageBus
+from ns2.utils import log
 
 # app bus is a dbus connection over tcp via localhost:3000 called a bridge
 BRIDGE: MessageBus = None
@@ -20,13 +21,15 @@ async def SetupBridge(_username: str) -> str:
         await CleanupBridge()
 
     await CallMakeBridge(_username)
-    await asyncio.sleep(0.5)
+    await asyncio.sleep(0.25)
     bus = MessageBus(bus_address="tcp:host=localhost,port=3000")
     await bus.connect()
 
     if bus.connected:
-        print("new bridge connected")
+        log.info("new bridge connected")
         SetBridge(bus)
+        await CallMakeTerminal(_username)
+
         return await GetActiveUser()
     else:
         return False
@@ -34,10 +37,12 @@ async def SetupBridge(_username: str) -> str:
 
 async def CleanupBridge():
     global BRIDGE
-    BRIDGE.disconnect()
-    await BRIDGE.wait_for_disconnect()
-    await CallCloseBridge()
-    BRIDGE = None
+    if BRIDGE:
+        await CallCloseTerminal()
+        BRIDGE.disconnect()
+        await BRIDGE.wait_for_disconnect()
+        await CallCloseBridge()
+        BRIDGE = None
 
 
 def GetBridge() -> MessageBus:
@@ -145,11 +150,26 @@ async def CallCloseBridge():
         body=[],
     )
 
-    return rsp.body[0]
+    return rsp
+
+
+async def CallCloseTerminal():
+    rsp = await BusCall(
+        destination="com.novus.ns",
+        path="/com/novus/ns",
+        interface="com.novus.ns.bridge",
+        member="CloseTerminal",
+        signature="",
+        body=[],
+    )
+
+    return rsp
 
 
 async def CallMakeBridge(username: str) -> int:
     """returns pid of bridge"""
+
+    log.info("making bridge for: " + username)
 
     rsp = await BusCall(
         destination="com.novus.ns",
@@ -159,5 +179,32 @@ async def CallMakeBridge(username: str) -> int:
         signature="s",
         body=[username],
     )
+
+    log.info(rsp.body)
+
+    if rsp.error_name is not None:
+        log.info(rsp.error_name)
+        return rsp.error_name
+
+    return int(rsp.body[0])
+
+
+async def CallMakeTerminal(username: str) -> int:
+    """returns pid of 'terminal' session"""
+
+    rsp = await BridgeCall(
+        "com.novus.ns",
+        "/com/novus/ns",
+        "com.novus.ns.bridge",
+        "Terminal",
+        "s",
+        [username],
+    )
+
+    log.info(rsp.body)
+
+    if rsp.error_name is not None:
+        log.info(rsp.error_name)
+        return rsp.error_name
 
     return int(rsp.body[0])
