@@ -15,7 +15,7 @@ async def ListUnits() -> str:
         body=[],
     )
 
-    return rsp
+    return rsp.body[0]
 
 
 async def GetSystemdProxy():

@@ -23,7 +23,7 @@ from ns2.lib.firewalld import (
 
 
 from dbus_next.errors import DBusError
-
+from dbus_next.signature import Variant
 from ns2.lib.systemd1 import isActive, SystemdStart, SystemdStop
 from ns2.common import formatListToString, formatStringToList
 from ns2.lib.systemd1 import GetServiceState
@@ -116,7 +116,7 @@ def AllowedAddressText(sources):
 async def removeServiceFromZone(zoneName: str, serviceName: str):
 
     log.info(f"remove {serviceName} from {zoneName}")
-    res = zoneRemoveService(zoneName, serviceName)
+    res = await zoneRemoveService(zoneName, serviceName)
     log.info("res1: ", res)
     p = await GetZoneByName(zoneName)
     log.info(p)
@@ -237,7 +237,7 @@ async def addZoneDialog():
                 interfaces = {}
                 selected_interfaces = []
                 for i in await GetAvailableInterfaces():
-                    # interfaces[i] = False
+                    log.info(i)
                     ui.checkbox(i).props(
                         "flat color=accent align=left dense"
                     ).bind_value(interfaces, i)
@@ -407,9 +407,12 @@ async def zone_list():
 
                 settings = await GetZoneSettings2(zoneName)
                 # log.info("other ", other_settings)
-                log.info("ZONE SETTINGS 2", settings)
-                interfaces = settings.get("interfaces", ["default"])
-                sources = settings.get("sources", [])
+                log.info("ZONE SETTINGS 2")
+                print(settings)
+                interfaces = settings.get(
+                    "interfaces", Variant("as", ["default"])
+                ).value
+                sources = settings.get("sources", Variant("as", [])).value
 
                 with ui.card().classes("w-full").props("flat").classes("bg-secondary"):
                     with ui.column():

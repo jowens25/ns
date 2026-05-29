@@ -11,6 +11,7 @@ from ns2.utils import log
 async def logout_cb():
     ui.navigate.to("/")
     app.storage.general.clear()
+    log.info("logout cb general cleared")
     rsp = await CleanupBridge()
     if rsp:
         log.info("log out cleanup", rsp.body[0])

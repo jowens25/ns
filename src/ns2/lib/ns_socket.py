@@ -16,7 +16,7 @@ async def main(max_string: int):
 
     for i in range(max_string + 1):
         cmd = f"$NVS{i}=1\r\n"
-        log.info("sending: ", cmd)
+        log.info(f"sending: {cmd}")
         writer.write(cmd.encode())
         await writer.drain()
 

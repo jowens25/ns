@@ -636,7 +636,7 @@ async def GetInterfacesAndAddresses() -> list:
         ip4_config_path = await GetNmProp(devicePath, "Device", "Ip4Config")
         ip6_config_path = await GetNmProp(devicePath, "Device", "Ip6Config")
 
-        log.info("IP 4 CONFIG PATH: ", ip4_config_path)
+        log.info(f"IP 4 CONFIG PATH: {ip4_config_path}")
 
         if len(ip4_config_path) > 1:
 

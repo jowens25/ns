@@ -69,7 +69,7 @@ async def zoneAddService(zoneName: str, serviceName: str):
         path="/org/fedoraproject/FirewallD1",
         interface="org.fedoraproject.FirewallD1.zone",
         member="addService",
-        signature="ss",
+        signature="ssi",
         body=[zoneName, serviceName, 0],
     )
     return rsp.body[0]
@@ -84,7 +84,8 @@ async def zoneConfigRemoveService(zonePath: str, serviceName: str):
         signature="s",
         body=[serviceName],
     )
-    return rsp.body[0]
+    if len(rsp.body) > 0:
+        return rsp.body[0]
 
 
 async def zoneConfigAddService(zonePath: str, serviceName: str):
@@ -108,7 +109,8 @@ async def AddSource(zoneName: str, source: str):
         signature="ss",
         body=[zoneName, source],
     )
-    return rsp.body[0]
+    if len(rsp.body) > 0:
+        return rsp.body[0]
 
 
 async def RemoveSource(zoneName: str, source: str):
@@ -210,11 +212,13 @@ async def GetSelectableZones():
 
 def MakeZoneInfo(settings: dict):
     zoneInfo = ZoneInfo()
-    zoneInfo.Description = settings.get("description", "description not available")
-    zoneInfo.Interfaces = settings.get("interfaces", [])
-    zoneInfo.Services = settings.get("services", [])
-    zoneInfo.Short = settings.get("short", "short not available")
-    zoneInfo.Sources = settings.get("sources", [])
+    zoneInfo.Description = settings.get(
+        "description", Variant("s", "description not available")
+    ).value
+    zoneInfo.Interfaces = settings.get("interfaces", Variant("as", [])).value
+    zoneInfo.Services = settings.get("services", Variant("as", [])).value
+    zoneInfo.Short = settings.get("short", Variant("s", "short not available")).value
+    zoneInfo.Sources = settings.get("sources", Variant("as", [])).value
 
     return zoneInfo
 
@@ -327,7 +331,8 @@ async def Update2(zonePath: str, settings: dict):
         body=[settings],
     )
 
-    return rsp.body[0]
+    if len(rsp.body) > 0:
+        return rsp.body[0]
 
 
 def getZoneInfo(name: str, zone: dict) -> dict:

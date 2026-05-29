@@ -1296,3 +1296,1099 @@ new bridge connected
 /home
 snmpd.service is active: active
 [{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+app starting
+/
+unrestricted
+making bridge for: jowens
+[1413869]
+new bridge connected
+[1413886]
+/home
+NETWORK PAGE
+firewalld.service is active: active
+firewalld.service is active: active
+firewalld.service is active: active
+{'short': <dbus_next.signature.Variant ('s', Public)>, 'description': <dbus_next.signature.Variant ('s', For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.)>, 'target': <dbus_next.signature.Variant ('s', default)>, 'masquerade': <dbus_next.signature.Variant ('b', False)>, 'icmp_block_inversion': <dbus_next.signature.Variant ('b', False)>, 'forward': <dbus_next.signature.Variant ('b', True)>, 'ingress_priority': <dbus_next.signature.Variant ('i', 0)>, 'egress_priority': <dbus_next.signature.Variant ('i', 0)>}
+ZONE SETTINGS 2
+<dbus_next.signature.Variant ('as', ['enp3s0'])>
+app starting
+/
+unrestricted
+/_nicegui/auto/static/e01c095c4fa5173c7fec87f528e7c827/NOVUS_LOGO.svg
+static
+making bridge for: jowens
+[1414998]
+new bridge connected
+[1415022]
+/home
+NETWORK PAGE
+firewalld.service is active: active
+firewalld.service is active: active
+firewalld.service is active: active
+{'short': <dbus_next.signature.Variant ('s', Public)>, 'description': <dbus_next.signature.Variant ('s', For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.)>, 'target': <dbus_next.signature.Variant ('s', default)>, 'masquerade': <dbus_next.signature.Variant ('b', False)>, 'icmp_block_inversion': <dbus_next.signature.Variant ('b', False)>, 'forward': <dbus_next.signature.Variant ('b', True)>, 'ingress_priority': <dbus_next.signature.Variant ('i', 0)>, 'egress_priority': <dbus_next.signature.Variant ('i', 0)>}
+ZONE SETTINGS 2
+app starting
+/
+unrestricted
+making bridge for: jowens
+[1416591]
+new bridge connected
+[1416609]
+/home
+NETWORK PAGE
+firewalld.service is active: active
+firewalld.service is active: active
+firewalld.service is active: active
+{'short': <dbus_next.signature.Variant ('s', Public)>, 'description': <dbus_next.signature.Variant ('s', For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.)>, 'target': <dbus_next.signature.Variant ('s', default)>, 'masquerade': <dbus_next.signature.Variant ('b', False)>, 'icmp_block_inversion': <dbus_next.signature.Variant ('b', False)>, 'forward': <dbus_next.signature.Variant ('b', True)>, 'ingress_priority': <dbus_next.signature.Variant ('i', 0)>, 'egress_priority': <dbus_next.signature.Variant ('i', 0)>}
+ZONE SETTINGS 2
+app starting
+/
+unrestricted
+/networking/firewall
+making bridge for: jowens
+[1417586]
+new bridge connected
+[1417604]
+/home
+NETWORK PAGE
+firewalld.service is active: active
+firewalld.service is active: active
+firewalld.service is active: active
+{'short': <dbus_next.signature.Variant ('s', Public)>, 'description': <dbus_next.signature.Variant ('s', For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.)>, 'target': <dbus_next.signature.Variant ('s', default)>, 'masquerade': <dbus_next.signature.Variant ('b', False)>, 'icmp_block_inversion': <dbus_next.signature.Variant ('b', False)>, 'forward': <dbus_next.signature.Variant ('b', True)>, 'ingress_priority': <dbus_next.signature.Variant ('i', 0)>, 'egress_priority': <dbus_next.signature.Variant ('i', 0)>}
+ZONE SETTINGS 2
+app starting
+/
+unrestricted
+/networking/firewall
+making bridge for: jowens
+[1418907]
+new bridge connected
+[1418934]
+/home
+NETWORK PAGE
+firewalld.service is active: active
+firewalld.service is active: active
+firewalld.service is active: active
+{'short': <dbus_next.signature.Variant ('s', Public)>, 'description': <dbus_next.signature.Variant ('s', For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.)>, 'target': <dbus_next.signature.Variant ('s', default)>, 'masquerade': <dbus_next.signature.Variant ('b', False)>, 'icmp_block_inversion': <dbus_next.signature.Variant ('b', False)>, 'forward': <dbus_next.signature.Variant ('b', True)>, 'ingress_priority': <dbus_next.signature.Variant ('i', 0)>, 'egress_priority': <dbus_next.signature.Variant ('i', 0)>}
+ZONE SETTINGS 2
+app starting
+/
+unrestricted
+/networking/firewall
+making bridge for: jowens
+[1419993]
+new bridge connected
+[1420014]
+/home
+NETWORK PAGE
+firewalld.service is active: active
+firewalld.service is active: active
+firewalld.service is active: active
+{'short': <dbus_next.signature.Variant ('s', Public)>, 'description': <dbus_next.signature.Variant ('s', For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.)>, 'target': <dbus_next.signature.Variant ('s', default)>, 'masquerade': <dbus_next.signature.Variant ('b', False)>, 'icmp_block_inversion': <dbus_next.signature.Variant ('b', False)>, 'forward': <dbus_next.signature.Variant ('b', True)>, 'ingress_priority': <dbus_next.signature.Variant ('i', 0)>, 'egress_priority': <dbus_next.signature.Variant ('i', 0)>}
+ZONE SETTINGS 2
+['enp3s0']
+app starting
+/
+unrestricted
+/networking/firewall
+making bridge for: jowens
+[1422720]
+new bridge connected
+[1422747]
+/home
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+firewalld.service is active: active
+firewalld.service is active: active
+{'short': <dbus_next.signature.Variant ('s', Public)>, 'description': <dbus_next.signature.Variant ('s', For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.)>, 'target': <dbus_next.signature.Variant ('s', default)>, 'masquerade': <dbus_next.signature.Variant ('b', False)>, 'icmp_block_inversion': <dbus_next.signature.Variant ('b', False)>, 'forward': <dbus_next.signature.Variant ('b', True)>, 'ingress_priority': <dbus_next.signature.Variant ('i', 0)>, 'egress_priority': <dbus_next.signature.Variant ('i', 0)>}
+ZONE SETTINGS 2
+['enp3s0']
+block
+dmz
+docker
+drop
+external
+home
+internal
+nm-shared
+public
+trusted
+work
+app starting
+/
+unrestricted
+/networking/firewall
+/networking/firewall
+making bridge for: jowens
+[1424058]
+new bridge connected
+[1424074]
+/home
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+firewalld.service is active: active
+firewalld.service is active: active
+{'short': <dbus_next.signature.Variant ('s', Public)>, 'description': <dbus_next.signature.Variant ('s', For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.)>, 'target': <dbus_next.signature.Variant ('s', default)>, 'masquerade': <dbus_next.signature.Variant ('b', False)>, 'icmp_block_inversion': <dbus_next.signature.Variant ('b', False)>, 'forward': <dbus_next.signature.Variant ('b', True)>, 'ingress_priority': <dbus_next.signature.Variant ('i', 0)>, 'egress_priority': <dbus_next.signature.Variant ('i', 0)>}
+ZONE SETTINGS 2
+['enp3s0']
+block
+dmz
+docker
+drop
+external
+home
+internal
+nm-shared
+public
+trusted
+work
+app starting
+/
+unrestricted
+making bridge for: jowens
+[1426622]
+new bridge connected
+[1426647]
+/home
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+firewalld.service is active: active
+firewalld.service is active: active
+{'short': <dbus_next.signature.Variant ('s', Public)>, 'description': <dbus_next.signature.Variant ('s', For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.)>, 'target': <dbus_next.signature.Variant ('s', default)>, 'masquerade': <dbus_next.signature.Variant ('b', False)>, 'icmp_block_inversion': <dbus_next.signature.Variant ('b', False)>, 'forward': <dbus_next.signature.Variant ('b', True)>, 'ingress_priority': <dbus_next.signature.Variant ('i', 0)>, 'egress_priority': <dbus_next.signature.Variant ('i', 0)>}
+ZONE SETTINGS 2
+['enp3s0']
+block
+dmz
+docker
+drop
+external
+home
+internal
+nm-shared
+public
+trusted
+work
+dialog created then opened
+[{'Service': 'ssh', 'UDP': None, 'TCP': '22', 'Description': 'Secure Shell (SSH) is a protocol for logging into and executing commands on remote machines. It provides secure encrypted communications. If you plan on accessing your machine remotely via SSH over a firewalled interface, enable this option. You need the openssh-server package installed for this option to be useful.'}]
+add ssh to public
+app starting
+/
+unrestricted
+/networking/firewall
+making bridge for: jowens
+[1430626]
+new bridge connected
+[1430641]
+/home
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+firewalld.service is active: active
+firewalld.service is active: active
+{'short': <dbus_next.signature.Variant ('s', Public)>, 'description': <dbus_next.signature.Variant ('s', For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.)>, 'target': <dbus_next.signature.Variant ('s', default)>, 'masquerade': <dbus_next.signature.Variant ('b', False)>, 'icmp_block_inversion': <dbus_next.signature.Variant ('b', False)>, 'forward': <dbus_next.signature.Variant ('b', True)>, 'ingress_priority': <dbus_next.signature.Variant ('i', 0)>, 'egress_priority': <dbus_next.signature.Variant ('i', 0)>}
+ZONE SETTINGS 2
+['enp3s0']
+[{'Service': 'ssh', 'UDP': None, 'TCP': '22', 'Description': 'Secure Shell (SSH) is a protocol for logging into and executing commands on remote machines. It provides secure encrypted communications. If you plan on accessing your machine remotely via SSH over a firewalled interface, enable this option. You need the openssh-server package installed for this option to be useful.'}]
+add ssh to public
+/org/fedoraproject/FirewallD1/config/zone/8
+app starting
+/
+unrestricted
+/networking/firewall
+making bridge for: jowens
+[1433635]
+new bridge connected
+[1433654]
+/home
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+firewalld.service is active: active
+firewalld.service is active: active
+{'short': <dbus_next.signature.Variant ('s', Public)>, 'description': <dbus_next.signature.Variant ('s', For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.)>, 'target': <dbus_next.signature.Variant ('s', default)>, 'services': <dbus_next.signature.Variant ('as', ['ssh'])>, 'masquerade': <dbus_next.signature.Variant ('b', False)>, 'icmp_block_inversion': <dbus_next.signature.Variant ('b', False)>, 'forward': <dbus_next.signature.Variant ('b', True)>, 'ingress_priority': <dbus_next.signature.Variant ('i', 0)>, 'egress_priority': <dbus_next.signature.Variant ('i', 0)>}
+ZONE SETTINGS 2
+['enp3s0']
+remove ssh from public
+/org/fedoraproject/FirewallD1/config/zone/8
+app starting
+/
+unrestricted
+/networking/firewall
+/networking/firewall
+making bridge for: jowens
+[1434776]
+new bridge connected
+[1434797]
+/home
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+firewalld.service is active: active
+firewalld.service is active: active
+{'short': <dbus_next.signature.Variant ('s', Public)>, 'description': <dbus_next.signature.Variant ('s', For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.)>, 'target': <dbus_next.signature.Variant ('s', default)>, 'masquerade': <dbus_next.signature.Variant ('b', False)>, 'icmp_block_inversion': <dbus_next.signature.Variant ('b', False)>, 'forward': <dbus_next.signature.Variant ('b', True)>, 'ingress_priority': <dbus_next.signature.Variant ('i', 0)>, 'egress_priority': <dbus_next.signature.Variant ('i', 0)>}
+ZONE SETTINGS 2
+['enp3s0']
+remove ssh from public
+/org/fedoraproject/FirewallD1/config/zone/8
+NOT_ENABLED: ssh
+public
+app starting
+/
+unrestricted
+/networking/firewall
+/networking/firewall
+making bridge for: jowens
+[1436777]
+new bridge connected
+[1436806]
+/home
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+firewalld.service is active: active
+firewalld.service is active: active
+{'short': <dbus_next.signature.Variant ('s', Public)>, 'description': <dbus_next.signature.Variant ('s', For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.)>, 'target': <dbus_next.signature.Variant ('s', default)>, 'masquerade': <dbus_next.signature.Variant ('b', False)>, 'icmp_block_inversion': <dbus_next.signature.Variant ('b', False)>, 'forward': <dbus_next.signature.Variant ('b', True)>, 'ingress_priority': <dbus_next.signature.Variant ('i', 0)>, 'egress_priority': <dbus_next.signature.Variant ('i', 0)>}
+ZONE SETTINGS 2
+['default']
+firewalld.service is active: active
+firewalld.service is active: active
+{'short': <dbus_next.signature.Variant ('s', Public)>, 'description': <dbus_next.signature.Variant ('s', For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.)>, 'target': <dbus_next.signature.Variant ('s', default)>, 'masquerade': <dbus_next.signature.Variant ('b', False)>, 'icmp_block_inversion': <dbus_next.signature.Variant ('b', False)>, 'forward': <dbus_next.signature.Variant ('b', True)>, 'ingress_priority': <dbus_next.signature.Variant ('i', 0)>, 'egress_priority': <dbus_next.signature.Variant ('i', 0)>}
+ZONE SETTINGS 2
+['default']
+firewalld.service is active: active
+{'id': 129709, 'job_path': '/org/freedesktop/systemd1/job/129709', 'unit': 'firewalld.service', 'method': 'stop', 'result': 'done'}
+firewalld.service is active: inactive
+firewalld.service is active: inactive
+firewalld.service is active: inactive
+{'id': 129710, 'job_path': '/org/freedesktop/systemd1/job/129710', 'unit': 'firewalld.service', 'method': 'start', 'result': 'done'}
+firewalld.service is active: active
+firewalld.service is active: active
+{'short': <dbus_next.signature.Variant ('s', Public)>, 'description': <dbus_next.signature.Variant ('s', For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.)>, 'target': <dbus_next.signature.Variant ('s', default)>, 'masquerade': <dbus_next.signature.Variant ('b', False)>, 'icmp_block_inversion': <dbus_next.signature.Variant ('b', False)>, 'forward': <dbus_next.signature.Variant ('b', True)>, 'ingress_priority': <dbus_next.signature.Variant ('i', 0)>, 'egress_priority': <dbus_next.signature.Variant ('i', 0)>}
+ZONE SETTINGS 2
+['enp3s0']
+block
+dmz
+docker
+drop
+external
+home
+internal
+nm-shared
+public
+trusted
+work
+dialog created then opened
+public
+firewalld.service is active: active
+firewalld.service is active: active
+{'short': <dbus_next.signature.Variant ('s', Public)>, 'description': <dbus_next.signature.Variant ('s', For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.)>, 'target': <dbus_next.signature.Variant ('s', default)>, 'masquerade': <dbus_next.signature.Variant ('b', False)>, 'icmp_block_inversion': <dbus_next.signature.Variant ('b', False)>, 'forward': <dbus_next.signature.Variant ('b', True)>, 'ingress_priority': <dbus_next.signature.Variant ('i', 0)>, 'egress_priority': <dbus_next.signature.Variant ('i', 0)>}
+ZONE SETTINGS 2
+['default']
+block
+dmz
+docker
+drop
+external
+home
+internal
+nm-shared
+public
+trusted
+work
+enp3s0
+dialog created then opened
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+[{'address': <dbus_next.signature.Variant ('s', 10.1.10.205)>, 'prefix': <dbus_next.signature.Variant ('u', 32)>}, {'address': <dbus_next.signature.Variant ('s', 10.1.10.205)>, 'prefix': <dbus_next.signature.Variant ('u', 24)>}]
+[{'address': <dbus_next.signature.Variant ('s', 10.1.10.205)>, 'prefix': <dbus_next.signature.Variant ('u', 32)>}, {'address': <dbus_next.signature.Variant ('s', 10.1.10.205)>, 'prefix': <dbus_next.signature.Variant ('u', 24)>}]
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+CALL delete DBUS
+['Remove']
+CALL delete DBUS
+['Remove']
+CALL delete DBUS
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+firewalld.service is active: active
+firewalld.service is active: active
+app starting
+/
+unrestricted
+/networking/firewall
+making bridge for: jowens
+[1443131]
+new bridge connected
+[1443143]
+/home
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+firewalld.service is active: active
+firewalld.service is active: active
+block
+dmz
+docker
+drop
+external
+home
+internal
+nm-shared
+public
+trusted
+work
+app starting
+/
+unrestricted
+/networking/firewall
+making bridge for: jowens
+[1450022]
+new bridge connected
+[1450039]
+/home
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+firewalld.service is active: active
+firewalld.service is active: active
+/networking/firewall
+making bridge for: jowens
+[1451094]
+new bridge connected
+[1451107]
+/home
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+firewalld.service is active: active
+firewalld.service is active: active
+{'short': <dbus_next.signature.Variant ('s', Public)>, 'description': <dbus_next.signature.Variant ('s', For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.)>, 'target': <dbus_next.signature.Variant ('s', default)>, 'masquerade': <dbus_next.signature.Variant ('b', False)>, 'icmp_block_inversion': <dbus_next.signature.Variant ('b', False)>, 'forward': <dbus_next.signature.Variant ('b', True)>, 'ingress_priority': <dbus_next.signature.Variant ('i', 0)>, 'egress_priority': <dbus_next.signature.Variant ('i', 0)>}
+ZONE SETTINGS 2
+['default']
+/
+unrestricted
+making bridge for: jowens
+[1451741]
+new bridge connected
+[1451760]
+/home
+CALL delete DBUS
+/accounts
+making bridge for: jowens
+[1453116]
+new bridge connected
+[1453127]
+/home
+CALL delete DBUS
+/accounts
+making bridge for: jowens
+[1453802]
+new bridge connected
+[1453815]
+/home
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+CALL delete DBUS
+app starting
+/
+unrestricted
+/accounts
+making bridge for: jowens
+[1455867]
+new bridge connected
+[1455890]
+/home
+CALL delete DBUS
+CALL delete DBUS
+CALL delete DBUS
+/accounts
+app starting
+/
+unrestricted
+/accounts
+making bridge for: jowens
+[1458714]
+new bridge connected
+[1458728]
+/home
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+firewalld.service is active: active
+firewalld.service is active: active
+{'short': <dbus_next.signature.Variant ('s', Public)>, 'description': <dbus_next.signature.Variant ('s', For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.)>, 'target': <dbus_next.signature.Variant ('s', default)>, 'masquerade': <dbus_next.signature.Variant ('b', False)>, 'icmp_block_inversion': <dbus_next.signature.Variant ('b', False)>, 'forward': <dbus_next.signature.Variant ('b', True)>, 'ingress_priority': <dbus_next.signature.Variant ('i', 0)>, 'egress_priority': <dbus_next.signature.Variant ('i', 0)>}
+ZONE SETTINGS 2
+['default']
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+CALL delete DBUS
+['Remove']
+app starting
+/
+unrestricted
+/accounts
+/accounts
+making bridge for: jowens
+[1460566]
+new bridge connected
+[1460580]
+/home
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+snmpd.service is active: active
+[{'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup'}]
+['AddUser']
+/
+unrestricted
+making bridge for: novus123
+[1461461]
+new bridge connected
+[1461474]
+/home
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+firewalld.service is active: active
+firewalld.service is active: active
+N
+o
+t
+ 
+A
+u
+t
+h
+o
+r
+i
+z
+e
+d
+(
+p
+o
+l
+k
+i
+t
+)
+:
+ 
+o
+r
+g
+.
+f
+e
+d
+o
+r
+a
+p
+r
+o
+j
+e
+c
+t
+.
+F
+i
+r
+e
+w
+a
+l
+l
+D
+1
+.
+i
+n
+f
+o
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+firewalld.service is active: active
+firewalld.service is active: active
+/terminal
+making bridge for: novus123
+[1463136]
+new bridge connected
+[1463145]
+/home
+/
+unrestricted
+making bridge for: novus123
+[1464097]
+new bridge connected
+[1464107]
+/home
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+app starting
+/
+unrestricted
+making bridge for: novus123
+[1465152]
+new bridge connected
+[1465169]
+/home
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+[{'address': <dbus_next.signature.Variant ('s', 10.1.10.205)>, 'prefix': <dbus_next.signature.Variant ('u', 32)>}, {'address': <dbus_next.signature.Variant ('s', 10.1.10.205)>, 'prefix': <dbus_next.signature.Variant ('u', 24)>}]
+[{'address': <dbus_next.signature.Variant ('s', 10.1.10.205)>, 'prefix': <dbus_next.signature.Variant ('u', 32)>}, {'address': <dbus_next.signature.Variant ('s', 10.1.10.205)>, 'prefix': <dbus_next.signature.Variant ('u', 24)>}]
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+firewalld.service is active: active
+firewalld.service is active: active
+app starting
+/
+unrestricted
+/_nicegui/auto/static/e01c095c4fa5173c7fec87f528e7c827/NOVUS_LOGO.svg
+static
+/networking/firewall
+making bridge for: novus123
+[1469022]
+new bridge connected
+[1469036]
+/home
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+firewalld.service is active: active
+firewalld.service is active: active
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+firewalld.service is active: active
+firewalld.service is active: active
+firewalld.service is active: active
+/networking/firewall
+making bridge for: novus123
+[1469741]
+new bridge connected
+[1469753]
+/home
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+firewalld.service is active: active
+firewalld.service is active: active
+making bridge for: jowens
+[1484866]
+new bridge connected
+[1484876]
+/home
+/home
+/home
+/home
+/home
+/home
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+/networking
+making bridge for: jowens
+[1485617]
+new bridge connected
+[1485630]
+/home
+/home
+/home
+/home
+/home
+/home
+/home
+/home
+/home
+/home
+/home
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+/networking
+app starting
+/
+unrestricted
+/networking
+making bridge for: jowens
+[1487734]
+new bridge connected
+[1487757]
+/home
+/home
+/home
+snmpd.service is active: active
+[{'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default'}]
+/snmp
+app starting
+/
+unrestricted
+/snmp
+making bridge for: jowens
+[1490277]
+new bridge connected
+[1490301]
+/home
+app starting
+/
+unrestricted
+/home
+/snmp
+auth check
+auth check
+auth check
+auth check
+auth check
+making bridge for: jowens
+[1490859]
+new bridge connected
+[1490876]
+/home
+auth check
+auth check
+auth check
+auth check
+auth check
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+app starting
+/
+unrestricted
+/home
+auth check
+auth check
+auth check
+auth check
+auth check
+making bridge for: jowens
+[1493167]
+auth check
+new bridge connected
+[1493180]
+/home
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+auth check
+auth check
+auth check
+auth check
+/networking
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+app starting
+/
+unrestricted
+/networking
+/home
+auth check
+auth check
+making bridge for: jowens
+[1495073]
+auth check
+new bridge connected
+[1495086]
+/home
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+/networking
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+making bridge for: jowens
+[1495571]
+new bridge connected
+[1495580]
+/home
+auth check
+auth check
+auth check
+auth check
+/home
+auth check
+/home
+auth check
+auth check
+/home
+auth check
+auth check
+/home
+auth check
+auth check
+auth check
+/home
+auth check
+auth check
+auth check
+/home
+auth check
+auth check
+auth check
+auth check
+/home
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+auth check
+auth check
+auth check
+/networking
+auth check
+auth check
+auth check
+app starting
+/
+unrestricted
+/networking
+end of middleware with /networking
+making bridge for: jowens
+[1497820]
+new bridge connected
+[1497836]
+/home
+end of middleware with /home
+auth check
+auth check
+auth check
+auth check
+auth check
+/home
+end of middleware with /home
+auth check
+auth check
+/home
+end of middleware with /home
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+auth check
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+auth check
+/networking
+end of middleware with /networking
+auth check
+auth check
+auth check
+app starting
+/
+unrestricted
+/networking
+end of middleware with /networking
+making bridge for: jowens
+[1499277]
+new bridge connected
+[1499291]
+/home
+end of middleware with /home
+auth check
+uid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+guid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+auth check
+uid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+guid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+auth check
+uid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+guid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+auth check
+uid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+guid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+auth check
+uid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+guid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+auth check
+uid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+guid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+auth check
+uid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+guid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+auth check
+uid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+guid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+auth check
+uid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+guid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+auth check
+uid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+guid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+/networking
+end of middleware with /networking
+auth check
+uid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+guid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+auth check
+uid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+guid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+auth check
+uid: 57a07677-ec8c-47b5-9397-a504d43c3f70
+guid: 57a07677-ec8c-47b5-9397-a504d43c3f70

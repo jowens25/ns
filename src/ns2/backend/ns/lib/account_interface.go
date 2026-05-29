@@ -153,7 +153,40 @@ func (a *AccountInterface) Remove(sender dbus.Sender, message dbus.Message, user
 			}
 
 		}
-		if numAdmins > 1 {
+
+		if isAdmin, err := IsAdmin(username); isAdmin {
+
+			if err != nil {
+				return "", &dbus.Error{
+					Name: "org.freedesktop.DBus.Error",
+					Body: []any{err.Error()},
+				}
+			}
+
+			if numAdmins > 1 {
+				err = RemoveUser(username)
+				if err != nil {
+					return "", &dbus.Error{
+						Name: "org.freedesktop.DBus.Error",
+						Body: []any{err.Error()},
+					}
+
+				}
+				err = a.conn.Emit("/com/novus/ns", "com.novus.ns.accounts.Changed", "Remove")
+				if err != nil {
+					log.Println(err.Error())
+				}
+				return fmt.Sprintf("removed %s", username), nil
+
+			} else {
+				return "", &dbus.Error{
+					Name: "org.freedesktop.DBus.Error",
+					Body: []any{"cannot remove the last admin"},
+				}
+
+			}
+		} else {
+
 			err = RemoveUser(username)
 			if err != nil {
 				return "", &dbus.Error{
@@ -167,12 +200,6 @@ func (a *AccountInterface) Remove(sender dbus.Sender, message dbus.Message, user
 				log.Println(err.Error())
 			}
 			return fmt.Sprintf("removed %s", username), nil
-
-		} else {
-			return "", &dbus.Error{
-				Name: "org.freedesktop.DBus.Error",
-				Body: []any{"cannot remove the last admin"},
-			}
 
 		}
 

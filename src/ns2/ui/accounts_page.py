@@ -1,14 +1,14 @@
 from nicegui import ui
 from dbus_next import Message
-from ns2.lib.accounts import GetUsers
+from ns2.lib.accounts import GetUsers, SystemAccount
 from ns2.lib.bridge import GetBridge, BridgeCall
 from ns2.ui.accountsDialogs import (
-    SystemAccount,
     addUserDialog,
     deleteUserDialog,
     editUserDialog,
     editPolicyDialog,
 )
+
 
 from ns2.utils import log
 

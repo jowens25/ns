@@ -42,33 +42,33 @@ levels = {
 
 
 def fetch_logs(daterange, level, id) -> list[str]:
-    global log
+    global _log
 
     if levels[level] >= 0:
         j.add_match("PRIORITY=0")
-        log.info("using 0")
+        _log.info("using 0")
 
     if levels[level] >= 1:
         j.add_match("PRIORITY=1")
-        log.info("using 1")
+        _log.info("using 1")
     if levels[level] >= 2:
         j.add_match("PRIORITY=2")
-        log.info("using 2")
+        _log.info("using 2")
     if levels[level] >= 3:
         j.add_match("PRIORITY=3")
-        log.info("using 3")
+        _log.info("using 3")
     if levels[level] >= 4:
         j.add_match("PRIORITY=4")
-        log.info("using 4")
+        _log.info("using 4")
     if levels[level] >= 5:
         j.add_match("PRIORITY=5")
-        log.info("using 5")
+        _log.info("using 5")
     if levels[level] >= 6:
         j.add_match("PRIORITY=6")
-        log.info("using 6")
+        _log.info("using 6")
     if levels[level] >= 7:
         j.add_match("PRIORITY=7")
-        log.info("using 7")
+        _log.info("using 7")
 
     match daterange:
         case "Last 24 hours":
@@ -80,7 +80,7 @@ def fetch_logs(daterange, level, id) -> list[str]:
             j.seek_realtime(since)
         case "Current boot":
             j.this_boot()
-            log.info("using current boot")
+            _log.info("using current boot")
         case _:
             since = datetime.now() - timedelta(hours=1)
             j.seek_realtime(since)
@@ -91,11 +91,11 @@ def fetch_logs(daterange, level, id) -> list[str]:
         # plog.info(entry)
         name = entry.get("_COMM") or entry.get("SYSLOG_IDENTIFIER")
         line = f"{entry["__REALTIME_TIMESTAMP"]} {entry["MESSAGE"]} {name}"
-        log.push(line)
+        _log.push(line)
 
 
 async def logs_page():
-    global log
+    global _log
     ui.label("System Logs").classes("text-h5")
 
     with ui.card():
@@ -136,7 +136,7 @@ async def logs_page():
                 on_change=selects_change_cb,
             )
 
-    log = ui.log()
+    _log = ui.log()
 
     fetch_logs("Last 1 hour", "Info and above", "any")
 

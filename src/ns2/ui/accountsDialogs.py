@@ -97,7 +97,7 @@ def deleteUserDialog(username: str):
 
                 async def on_delete_cb():
                     log.info("CALL delete DBUS")
-                    await BridgeCall(
+                    rsp = await BridgeCall(
                         "com.novus.ns",
                         "/com/novus/ns",
                         "com.novus.ns.accounts",
@@ -105,6 +105,8 @@ def deleteUserDialog(username: str):
                         "s",
                         [username],
                     )
+                    if rsp.error_name is not None:
+                        ui.notify(rsp.body[0])
 
                     dialog.submit(f"DELETED!!! {username} RESULTS")
 

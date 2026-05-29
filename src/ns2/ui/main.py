@@ -22,7 +22,7 @@ from ns2.ui.services_page import services_page
 from ns2.ui.firewalld_page import firewall_page
 from ns2.utils import ASSETS_DIR, log
 
-
+authTimer = None
 from fastapi import Request
 from fastapi.responses import RedirectResponse
 
@@ -39,8 +39,14 @@ async def check_auth():
     guid = app.storage.general.get("uid", None)
 
     if guid and guid != uid:
-        app.storage.user.clear()
+        app.storage.general.clear()
+        log.info("check auth: general store cleared")
         ui.navigate.to("/")
+    elif guid is None and uid is None:
+        log.info("loggd out????")
+
+    log.info(f"uid: {uid}")
+    log.info(f"guid: {guid}")
 
 
 #'''
@@ -72,17 +78,22 @@ async def auth_middleware(request: Request, call_next):
     # Validate against the active session
     if guid and guid != uid:
         # Clear invalid session
-        app.storage.user.clear()
+        # app.storage.user.clear()
+        log.info("middleware: app storage general cleared")
         app.storage.general.clear()
         # app.storage.user["redirect_after_login"] = path
         log.info("/login")
         return RedirectResponse("/login")
+
+    log.info(f"end of middleware with {path}")
 
     return await call_next(request)
 
 
 @ui.page("/home")
 def controlPanel():
+    global authTimer
+    authTimer = ui.timer(1.0, check_auth)
     init_colors()
     with ui.header().classes("items-center justify-between").classes("bg-dark"):
         ui.button(on_click=lambda: left_drawer.toggle(), icon="menu").props(

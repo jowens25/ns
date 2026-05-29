@@ -1,0 +1,23 @@
+polkit.addRule(function(action, subject) {
+    if (
+        action.id === "org.fedoraproject.FirewallD1.all" ||
+        action.id === "org.fedoraproject.FirewallD1.config" ||
+        action.id === "org.fedoraproject.FirewallD1.direct" ||
+        action.id === "org.fedoraproject.FirewallD1.info"
+    ) {
+        if (subject.isInGroup("nsadmin")) {
+            return polkit.Result.YES;
+        }
+        return polkit.Result.NO;
+    }
+
+
+    if (
+        action.id === "org.fedoraproject.FirewallD1.config.info"
+    ) {
+        return polkit.Result.YES;}
+        
+
+
+
+});
