@@ -13,7 +13,7 @@ import (
 
 func StartDbusServer() {
 
-	SetupPolicy()
+	SetupNsConfig()
 
 	conn, err := dbus.SystemBus()
 	if err != nil {
@@ -82,6 +82,11 @@ func StartDbusServer() {
 				Properties: []introspect.Property{
 					{
 						Name:   "pid",
+						Type:   "u",
+						Access: "read",
+					},
+					{
+						Name:   "term",
 						Type:   "u",
 						Access: "read",
 					},

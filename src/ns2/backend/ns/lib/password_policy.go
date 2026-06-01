@@ -17,7 +17,7 @@ type Policy struct {
 	RequireSymbol    bool
 }
 
-func SetupPolicy() {
+func SetupNsConfig() {
 
 	viper.SetDefault("max", 16)
 	viper.SetDefault("min", 8)
@@ -25,10 +25,11 @@ func SetupPolicy() {
 	viper.SetDefault("lower", false)
 	viper.SetDefault("digit", false)
 	viper.SetDefault("symbol", false)
+	viper.SetDefault("path", "/etc/ns/ns.yaml")
 
-	viper.SetConfigName("policy")
+	viper.AddConfigPath("/etc/ns/")
+	viper.SetConfigName("ns")
 	viper.SetConfigType("yaml")
-	viper.AddConfigPath(".")
 
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {

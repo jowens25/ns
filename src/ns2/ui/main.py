@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
+from fastapi import Request
+from fastapi.responses import RedirectResponse
 from importlib.metadata import version
 from nicegui import app, ui
 
-
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+from zoneinfo import ZoneInfo
 
 from multiprocessing import freeze_support
 from ns2.ui.login import login_page, logout_cb
@@ -18,23 +20,20 @@ from ns2.ui.home_page import home_page
 from ns2.ui.snmp_page import snmp_page, snmp_user_page
 from ns2.ui.services_page import services_page
 
+from ns2.lib.timedate1 import CallListTimezones, CallGetTimezone, CallSetTimezone
 
 from ns2.ui.firewalld_page import firewall_page
 from ns2.utils import ASSETS_DIR, log
 
-authTimer = None
-from fastapi import Request
-from fastapi.responses import RedirectResponse
-
 unrestricted_page_routes = {
-    "/",
+    "/login",
     "/favicon.ico",
 }
 
 
 async def check_auth():
 
-    log.info("auth check")
+    # log.info("auth check")
     uid = app.storage.user.get("uid", None)
     guid = app.storage.general.get("uid", None)
 
@@ -45,8 +44,8 @@ async def check_auth():
     elif guid is None and uid is None:
         log.info("loggd out????")
 
-    log.info(f"uid: {uid}")
-    log.info(f"guid: {guid}")
+    # log.info(f"uid: {uid}")
+    # log.info(f"guid: {guid}")
 
 
 #'''
@@ -57,43 +56,68 @@ async def auth_middleware(request: Request, call_next):
 
     path = request.url.path
 
-    log.info(path)
+    # log.info(path)
 
-    # if stay_logged_in:
-    #    return await call_next(request)
+    uid = app.storage.user.get("uid")
+    guid = app.storage.general.get("uid")
+    if guid and uid == guid:
+        return await call_next(request)
 
     # Allow unrestricted routes
     if path in unrestricted_page_routes:
-        log.info("unrestricted")
+        # log.info("unrestricted")
         return await call_next(request)
 
     # Allow static assets
     if path.startswith("/_nicegui/") or path.startswith("/static/"):
-        log.info("static")
+        # log.info("static")
         return await call_next(request)
 
-    # Get the user's session UID
-    uid = app.storage.user.get("uid")
-    guid = app.storage.general.get("uid")
-    # Validate against the active session
-    if guid and guid != uid:
-        # Clear invalid session
-        # app.storage.user.clear()
-        log.info("middleware: app storage general cleared")
-        app.storage.general.clear()
-        # app.storage.user["redirect_after_login"] = path
-        log.info("/login")
-        return RedirectResponse("/login")
+    # log.info(f"end of middleware with {path}")
 
-    log.info(f"end of middleware with {path}")
-
-    return await call_next(request)
+    return RedirectResponse("/login")
 
 
-@ui.page("/home")
-def controlPanel():
-    global authTimer
-    authTimer = ui.timer(1.0, check_auth)
+@ui.refreshable
+def dateLabel():
+    tz = app.storage.general.get("tz")
+    tzObj = ZoneInfo(tz)
+    ui.label(datetime.now().astimezone(tzObj).strftime("%m-%d-%Y %H:%M:%S")).classes(
+        "font-bold"
+    )
+
+
+async def Clock():
+    dateLabel()
+
+    async def SetTimeCb(e):
+        log.info(f"timezone change -> {e.value}")
+        await CallSetTimezone(e.value)
+        app.storage.general.update({"tz": e.value})
+
+    tzs = await CallListTimezones()
+    current_tz = await CallGetTimezone()
+    ui.select(tzs, with_input=True, value=current_tz, on_change=SetTimeCb).props(
+        "dense"
+    )
+
+
+@ui.page("/")
+@ui.page("/overview")
+@ui.page("/networking")
+@ui.page("/networking/firewall")
+@ui.page("/networking/{interface_name}")
+@ui.page("/logs")
+@ui.page("/logs/{log}")
+@ui.page("/services")
+@ui.page("/snmp")
+@ui.page("/snmp/{version}/{user}")
+@ui.page("/terminal")
+@ui.page("/accounts")
+@ui.page("/accounts/{user}")
+async def controlPanel():
+    ui.timer(1.0, check_auth)
+    ui.timer(1.0, dateLabel.refresh)
     init_colors()
     with ui.header().classes("items-center justify-between").classes("bg-dark"):
         ui.button(on_click=lambda: left_drawer.toggle(), icon="menu").props(
@@ -101,18 +125,14 @@ def controlPanel():
         )
         ui.image(str(ASSETS_DIR / "NOVUS_LOGO.svg")).classes("w-48")
         ui.label(f"Welcome {app.storage.general.get("activeUser","error")}!")
-        with ui.row():
-            date = ui.label().classes("font-bold")
+        with ui.row().classes("items-center no-wrap"):
+            await Clock()
 
-            def update_date():
-                date.set_text(datetime.now().astimezone().strftime("%m-%d-%Y %H:%M:%S"))
-
-        ui.timer(1.0, update_date)
     with ui.left_drawer(bordered=True).classes("bg-dark") as left_drawer:
         ui.separator()
         ui.button(
             "Overview",
-            on_click=lambda: ui.navigate.to("/home"),
+            on_click=lambda: ui.navigate.to("/"),
         ).props(
             "flat color=white align=left"
         ).classes("full-width")
@@ -165,7 +185,7 @@ def controlPanel():
         ui.label(version("ns2"))
     ui.sub_pages(
         {
-            "/home": home_page,
+            "/": home_page,
             "/networking": network_page,
             "/networking/firewall": firewall_page,
             "/networking/{interface_name}": interface_page,
@@ -182,14 +202,17 @@ def controlPanel():
     ).classes("w-full")
 
 
-if __name__ == "__main__":
+def main():
     freeze_support()
     log.info("app starting")
     ui.run(
-        login_page,
         port=8000,
         reload=False,
         storage_secret="your-secret-key",
         title="Novus Configuration Tool",
         favicon=str(ASSETS_DIR / "favicon.png"),
     )
+
+
+if __name__ == "__main__":
+    main()

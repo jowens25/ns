@@ -24,7 +24,14 @@ def MakeServicesDict(servs):
     services = []
 
     for s in servs:
-        if s[0].endswith(".service"):
+        if s[0] in [
+            "ns-serial-mux.service",
+            "ns-admin.service",
+            "ns.service",
+            "snmpd.service",
+            "ns-agent.service",
+            "nginx.service" "firewalld.service" "NetworkManager.service",
+        ]:
 
             services.append(
                 {

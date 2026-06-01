@@ -11,7 +11,7 @@ ASSETS_DIR = files("ns2") / "assets"
 
 log = logging.getLogger("ns-admin")
 log.setLevel(logging.INFO)  # This is a FILTER, not a message level
-log.addHandler(journal.JournalHandler())
+log.addHandler(journal.JournalHandler(SYSLOG_IDENTIFIER="ns-admin"))
 log.addHandler(logging.StreamHandler(sys.stdout))
 log.addHandler(logging.FileHandler("debug.log"))
 

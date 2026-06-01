@@ -281,7 +281,7 @@ async def edit_ip_connection(version: str, id: InterfaceData):
 
                 with ui.column().classes("items-center justify-between gap-4 w-full"):
                     await ip_address_list()
-                    log.info()
+                    log.info("ip address list")
                 ###
 
                 ### DNS SERVER

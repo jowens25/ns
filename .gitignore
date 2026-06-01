@@ -1,6 +1,8 @@
 .venv
-
+.nicegui
+.ruff_cache
 build
 dist
 debian/ns-admin
 debian/.debhelper
+src/ns2/backend/ns/ns

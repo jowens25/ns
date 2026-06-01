@@ -5,8 +5,8 @@ from ns2.utils import runAsyncCmdShell
 
 
 # page / card for a log
-async def log_page(log):
-    ui.label(f"A log: {log}").classes("text-h5")
+async def log_page(_log):
+    ui.label(f"A log: {_log}").classes("text-h5")
     return
 
 
@@ -42,33 +42,24 @@ levels = {
 
 
 def fetch_logs(daterange, level, id) -> list[str]:
-    global _log
+    global log_panel
 
     if levels[level] >= 0:
         j.add_match("PRIORITY=0")
-        _log.info("using 0")
-
     if levels[level] >= 1:
         j.add_match("PRIORITY=1")
-        _log.info("using 1")
     if levels[level] >= 2:
         j.add_match("PRIORITY=2")
-        _log.info("using 2")
     if levels[level] >= 3:
         j.add_match("PRIORITY=3")
-        _log.info("using 3")
     if levels[level] >= 4:
         j.add_match("PRIORITY=4")
-        _log.info("using 4")
     if levels[level] >= 5:
         j.add_match("PRIORITY=5")
-        _log.info("using 5")
     if levels[level] >= 6:
         j.add_match("PRIORITY=6")
-        _log.info("using 6")
     if levels[level] >= 7:
         j.add_match("PRIORITY=7")
-        _log.info("using 7")
 
     match daterange:
         case "Last 24 hours":
@@ -80,7 +71,7 @@ def fetch_logs(daterange, level, id) -> list[str]:
             j.seek_realtime(since)
         case "Current boot":
             j.this_boot()
-            _log.info("using current boot")
+            print("using current boot")
         case _:
             since = datetime.now() - timedelta(hours=1)
             j.seek_realtime(since)
@@ -91,11 +82,11 @@ def fetch_logs(daterange, level, id) -> list[str]:
         # plog.info(entry)
         name = entry.get("_COMM") or entry.get("SYSLOG_IDENTIFIER")
         line = f"{entry["__REALTIME_TIMESTAMP"]} {entry["MESSAGE"]} {name}"
-        _log.push(line)
+        log_panel.push(line)
 
 
 async def logs_page():
-    global _log
+    global log_panel
     ui.label("System Logs").classes("text-h5")
 
     with ui.card():
@@ -136,7 +127,7 @@ async def logs_page():
                 on_change=selects_change_cb,
             )
 
-    _log = ui.log()
+    log_panel = ui.log()
 
     fetch_logs("Last 1 hour", "Info and above", "any")
 

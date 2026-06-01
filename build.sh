@@ -1,4 +1,9 @@
 #!/bin/bash
+rm -rf dist/*
+# grab the version from the deb change log so the python and deb are the same...
+ver="$(sed -n '1{s/^[^(]*(\([^)]*\)).*/\1/p;}' debian/changelog)"
+sed -i "s/^version = \".*\"$/version = \"$ver\"/" pyproject.toml
+
 dpkg-buildpackage -us -uc -b
 
 mv ../*.ddeb ../*.deb ../*.buildinfo ../*.changes dist/

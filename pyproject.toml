@@ -1,10 +1,11 @@
 [project]
 name = "ns2"
-version = "2.0.11"
+version = "2.0.17"
 description = "ns2 is collection of tools to support Novus Power Products"
 readme = "README.md"
 requires-python = ">=3.12.3"
 dependencies = [
+
     "dbus-next>=0.2.3",
     "nicegui>=3.8.0",
     "numpy>=2.4.2",
@@ -24,7 +25,7 @@ requires = ["uv_build>=0.9.28,<0.10.0"]
 build-backend = "uv_build"
 
 [project.scripts]
-ns = "ns2.main:cli"
+ns-admin = "ns2.ui.main:main"
 
 [tool.ruff.lint]
 ignore = ["F541"]  # Skips line-length and missing docstring errors

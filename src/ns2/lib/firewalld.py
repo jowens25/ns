@@ -173,7 +173,10 @@ async def GetActiveZones() -> list[ZoneInfo]:
         body=[],
     )
 
-    return rsp.body[0]
+    if rsp.error_name is not None:
+        return []
+    else:
+        return rsp.body[0]
 
 
 async def GetZones() -> list[ZoneInfo]:

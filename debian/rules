@@ -10,3 +10,13 @@ override_dh_strip:
 override_dh_shlibdeps:
 	# Skip shared library dependencies - PyInstaller bundles everything
 	dh_shlibdeps --exclude=_internal
+
+override_dh_dwz:
+	# Skip DWARF optimization - PyInstaller .so files lack .debug_info
+	# and the Go binary has compressed debug sections dwz can't handle
+	dh_dwz --exclude=_internal --exclude=ns
+
+
+override_dh_installsystemd:
+	dh_installsystemd --name=ns ns.service
+	dh_installsystemd --name=ns-admin ns-admin.service

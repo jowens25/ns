@@ -42,6 +42,7 @@ async def accounts_table():
     policyDialog = await editPolicyDialog()
 
     rsp = await GetUsers()
+    print(rsp.body)
 
     if rsp.error_name is not None:
         ui.notify(rsp.error_name)
@@ -50,6 +51,11 @@ async def accounts_table():
     accountsTable = (
         ui.table(
             title="Accounts",
+            columns=[
+                {"name": "Username", "label": "Username", "field": "Username"},
+                {"name": "Groups", "label": "Groups", "field": "Groups"},
+                {"name": "login", "label": "Login", "field": "login"},
+            ],
             rows=rsp.body[0],
             column_defaults={
                 "align": "left",

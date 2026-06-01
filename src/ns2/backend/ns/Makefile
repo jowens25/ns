@@ -1,6 +1,6 @@
 build: 
 	go build .
-	sudo cp ns /usr/bin/ns
+	#sudo cp ns /usr/bin/ns
 
 clean:
 

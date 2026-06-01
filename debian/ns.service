@@ -1,20 +1,19 @@
 [Unit]
-Description=Dbus api for ns admin
+Description=Dbus api for ns-admin
 After=network.target
-
-[Service]
-Type=simple
-ExecStart=/usr/bin/ns dbus
-
-Restart=always
-RestartSec=5s
 StartLimitIntervalSec=30
 StartLimitBurst=2
 
+[Service]
+Type=simple
+ExecStart=/usr/bin/ns dbus export
+
+Restart=always
+RestartSec=5s
 
 StandardOutput=journal
 StandardError=journal
-SyslogIdentifier=ns-dbus
+SyslogIdentifier=ns
 
 
 [Install]

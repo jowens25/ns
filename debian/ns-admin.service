@@ -1,15 +1,15 @@
 [Unit]
 Description=UI for ns2
 After=network.target
+StartLimitIntervalSec=30
+StartLimitBurst=2  
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/ns ui
+ExecStart=/usr/bin/ns-admin
 
 Restart=always
 RestartSec=5s      
-StartLimitIntervalSec=30
-StartLimitBurst=2  
 
 StandardOutput=journal
 StandardError=journal

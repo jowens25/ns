@@ -9,7 +9,7 @@ from ns2.utils import log
 
 
 async def logout_cb():
-    ui.navigate.to("/")
+    ui.navigate.to("/login")
     app.storage.general.clear()
     log.info("logout cb general cleared")
     rsp = await CleanupBridge()
@@ -27,16 +27,17 @@ async def try_login(_username: str, _password: str) -> None:
             app.storage.user.update({"uid": str(uuid.uuid4())})
 
         uid = app.storage.user.get("uid")
+        log.info("try login general store updated")
         app.storage.general.update({"activeUser": activeUser, "uid": uid})
-        ui.navigate.to("/home")
+        ui.navigate.to("/")
 
     else:
         ui.notify("Invalid username or password", color="negative")
 
 
-@ui.page("/")
+@ui.page("/login")
 def login_page():
-    # on log in page load
+    log.info("LOGIN PAGE LOADED")
 
     init_colors()
     with ui.dialog() as support_dialog, ui.card():
@@ -49,7 +50,7 @@ def login_page():
     with ui.column(align_items="center").classes("absolute-center gap-16"):
         ui.image(str(ASSETS_DIR / "NOVUS_LOGO.svg")).classes("w-128 max-w-128")
 
-        with ui.card():
+        with ui.card().props("flat"):
             username = ui.input("Username")
             password = ui.input("Password", password=True, password_toggle_button=True)
 

@@ -38,7 +38,9 @@ async def SetupBridge(_username: str) -> str:
 async def CleanupBridge():
     global BRIDGE
     if BRIDGE:
-        await CallCloseTerminal()
+        term = await GetTerminalPid()
+        if term > 0:
+            await CallCloseTerminal()
         BRIDGE.disconnect()
         await BRIDGE.wait_for_disconnect()
         await CallCloseBridge()
@@ -135,6 +137,19 @@ async def GetBridgePid():
         member="Get",
         signature="ss",
         body=["com.novus.ns.bridge", "pid"],
+    )
+
+    return rsp.body[0].value
+
+
+async def GetTerminalPid():
+    rsp = await BusCall(
+        destination="com.novus.ns",
+        path="/com/novus/ns",
+        interface="org.freedesktop.DBus.Properties",
+        member="Get",
+        signature="ss",
+        body=["com.novus.ns.bridge", "term"],
     )
 
     return rsp.body[0].value
