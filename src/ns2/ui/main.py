@@ -4,13 +4,13 @@ from fastapi.responses import RedirectResponse
 from importlib.metadata import version
 from nicegui import app, ui
 
-from datetime import datetime, timezone, timedelta
+from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from multiprocessing import freeze_support
-from ns2.ui.login import login_page, logout_cb
+from ns2.ui.login import logout_cb
 
-from ns2.ui.logs_page import logs_page, log_page
+# from ns2.ui.logs_page import logs_page, log_page
 from ns2.ui.accounts_page import accounts_page, accounts_user_page
 
 from ns2.ui.networking_page import network_page, interface_page
@@ -80,7 +80,8 @@ async def auth_middleware(request: Request, call_next):
 
 @ui.refreshable
 def dateLabel():
-    tz = app.storage.general.get("tz")
+    tz = app.storage.general.get("tz", "UTC")
+
     tzObj = ZoneInfo(tz)
     ui.label(datetime.now().astimezone(tzObj).strftime("%m-%d-%Y %H:%M:%S")).classes(
         "font-bold"
@@ -116,6 +117,10 @@ async def Clock():
 @ui.page("/accounts")
 @ui.page("/accounts/{user}")
 async def controlPanel():
+    current_tz = await CallGetTimezone()
+
+    app.storage.general.update({"tz": current_tz})
+
     ui.timer(1.0, check_auth)
     ui.timer(1.0, dateLabel.refresh)
     init_colors()
@@ -142,12 +147,12 @@ async def controlPanel():
         ).props(
             "flat color=white align=left"
         ).classes("full-width")
-        ui.button(
-            "Logs",
-            on_click=lambda: ui.navigate.to("/logs"),
-        ).props(
-            "flat color=white align=left"
-        ).classes("full-width")
+        # ui.button(
+        #    "Logs",
+        #    on_click=lambda: ui.navigate.to("/logs"),
+        # ).props(
+        #    "flat color=white align=left"
+        # ).classes("full-width")
         ui.button(
             "Services",
             on_click=lambda: ui.navigate.to("/services"),
@@ -189,8 +194,8 @@ async def controlPanel():
             "/networking": network_page,
             "/networking/firewall": firewall_page,
             "/networking/{interface_name}": interface_page,
-            "/logs": logs_page,
-            "/logs/{log}": log_page,
+            # "/logs": logs_page,
+            # "/logs/{log}": log_page,
             "/snmp": snmp_page,
             "/snmp/{version}/{user}": snmp_user_page,
             "/accounts": accounts_page,
@@ -205,6 +210,7 @@ async def controlPanel():
 def main():
     freeze_support()
     log.info("app starting")
+
     ui.run(
         port=8000,
         reload=False,

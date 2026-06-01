@@ -1,123 +1,36 @@
-from ns2.lib.systemd1 import isActive, SystemdStop, SystemdStart
-
 from nicegui import ui
 from dataclasses import asdict
 
-from ns2.utils import log
+from ns2.utils import log, validate_group
+from dbus_next import Message
+from ns2.lib.bridge import BridgeCall, GetBridge
+from ns2.lib.systemd1 import isActive, SystemdStop, SystemdStart
 
-from ns2.lib.bridge import BridgeCall
-from ns2.lib.snmp import (
-    V3User,
-    V2User,
-)
+from ns2.lib.snmp import V3User, V2User
 
-sourceValidation = {
-    "Please enter a valid ip address, network or default": lambda value: len(value) > 0
-}
-passphraseValidation = {
-    "Passphrase must be at least 8 characters": lambda value: len(value) >= 8,
-    "Passphrase must be 24 or less characaters": lambda value: 24 >= len(value),
-}
-usernameValidation = {
-    "Username must be at least 5 characters": lambda value: len(value) >= 5,
-    "Username must be 24 or less characaters": lambda value: 24 >= len(value),
-}
+from ns2.ui.snmpDialogs import create_v3_user_dialog
 
 
-def validate_group(group: list):
-    return [x.validate() for x in group]
+def notification_handler(msg: Message):
+    if msg.interface == "com.novus.ns.accounts" and msg.member == "Changed":
+        log.info(msg.body)
+        accounts_table.refresh()
+        return True
 
 
-async def create_v3_user_dialog():
-    with ui.dialog() as createV3Dialog:
-        v3 = V3User()
-        with ui.card().classes("w-full"):
-            with ui.column().classes("w-full"):
-                version = (
-                    ui.input(label="Version")
-                    .classes("w-full")
-                    .bind_value(v3, "Version")
-                )
-                version.disable()
-                username = (
-                    ui.input(label="Username", validation=usernameValidation)
-                    .classes("w-full")
-                    .bind_value(v3, "Username")
-                ).props("debounce=1000")
-                permissions = (
-                    ui.select(
-                        label="Permissions", options=["roprivgroup", "rwprivgroup"]
-                    )
-                    .classes("w-full")
-                    .bind_value(v3, "Permissions")
-                )
-                auth_type = (
-                    ui.select(label="Auth Alg", options=["SHA", "MD5"])
-                    .classes("w-full")
-                    .bind_value(v3, "AuthType")
-                )
-                auth_pass = (
-                    ui.input(label="Auth Passphrase", validation=passphraseValidation)
-                    .classes("w-full")
-                    .bind_value(v3, "AuthPassphrase")
-                ).props("debounce=1000")
-                priv_type = (
-                    ui.select(label="Priv Alg", options=["AES", "DES"])
-                    .classes("w-full")
-                    .bind_value(v3, "PrivType")
-                )
-                priv_pass = (
-                    ui.input(label="Auth Passphrase", validation=passphraseValidation)
-                    .classes("w-full")
-                    .bind_value(v3, "PrivPassphrase")
-                ).props("debounce=1000")
-                with ui.row().classes("items-center justify-between gap-4 w-full"):
+async def SetupNotifications():
+    await BridgeCall(
+        destination="org.freedesktop.DBus",
+        path="/org/freedesktop/DBus",
+        interface="org.freedesktop.DBus",
+        member="AddMatch",
+        signature="s",
+        body=["type='signal',member='Changed',interface='com.novus.ns.accounts'"],
+    )
 
-                    async def on_save_cb():
-                        if all(
-                            validate_group(
-                                [
-                                    version,
-                                    username,
-                                    permissions,
-                                    auth_type,
-                                    auth_pass,
-                                    priv_type,
-                                    priv_pass,
-                                ]
-                            )
-                        ):
-                            log.info(asdict(v3))
+    bridge = GetBridge()
 
-                            rsp = await BridgeCall(
-                                "com.novus.ns",
-                                "/com/novus/ns",
-                                "com.novus.ns.snmp",
-                                "CreateV3User",
-                                "a{ss}",
-                                [asdict(v3)],
-                            )
-                            rsp = rsp.body[0]
-                            # snmp = await GetSnmpInterface(AppBus)
-                            # rsp = await snmp.call_create_v3_user(asdict(v3))
-                            # rsp = await AddV3User(AppBus, asdict(v3))
-                            log.info(rsp)
-                            await v3table.refresh()
-                            createV3Dialog.close()
-                        else:
-                            ui.notify("Please correct the errors", type="negative")
-
-                    def on_cancel_cb():
-                        createV3Dialog.close()
-
-                    ui.button("save", on_click=on_save_cb).props(
-                        "flat color=accent align=left"
-                    )
-                    ui.button(icon="cancel", on_click=on_cancel_cb).props(
-                        "flat color=accent align=left"
-                    )
-
-    return createV3Dialog
+    bridge.add_message_handler(notification_handler)
 
 
 @ui.refreshable
@@ -148,7 +61,7 @@ async def v3table():
     )
 
     table.props(
-        f'visible-columns={"Username,Version,GroupName,AuthType,PrivType"}'
+        f'visible-columns={"Username,Version,EngineId,GroupName,AuthType,PrivType"}'
     )  # Only show these
 
     with table.add_slot("top-right"):
@@ -324,10 +237,39 @@ async def snmp_status():
     return status
 
 
+async def v2Traps():
+
+    addTrapDialog = await AddV2TrapDialog()
+
+    traps = await BridgeCall(
+        "com.novus.ns", "/com/novus/ns", "com.novus.ns.snmp", "ReadV2Traps", "", []
+    )
+
+    traps = traps.body[0]
+
+    v2TrapsTable = ui.table(
+        title="v2 Traps",
+        rows=traps,
+        column_defaults={
+            "align": "left",
+            "headerClasses": "uppercase text-primary",
+        },
+    ).classes("w-full")
+
+    with v2TrapsTable.add_slot("top-right"):
+
+        with ui.row():
+            ui.input("Search").bind_value(v2TrapsTable, "filter").props("dense")
+
+            ui.button(icon="add", on_click=addTrapDialog.open).props("dense")
+
+
 async def snmp_page():
 
     await snmp_status()
     await v2table()  # Only show these
+
+    await v2Traps()
     await v3table()
 
 

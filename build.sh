@@ -4,6 +4,7 @@ rm -rf dist/*
 ver="$(sed -n '1{s/^[^(]*(\([^)]*\)).*/\1/p;}' debian/changelog)"
 sed -i "s/^version = \".*\"$/version = \"$ver\"/" pyproject.toml
 
+sed -i "s/^var version string = \".*\"$/var version string = \"$ver\"/" src/ns2/backend/ns/cmd/version.go 
 dpkg-buildpackage -us -uc -b
 
 mv ../*.ddeb ../*.deb ../*.buildinfo ../*.changes dist/

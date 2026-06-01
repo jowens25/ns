@@ -34,10 +34,21 @@ class Group:
 
 @dataclass
 class V2Trap:
+    Version: Optional[str] = ""
     Community: Optional[str] = ""
-    DestIpVersion: Optional[str] = ""
-    DestIp: Optional[str] = ""
-    Port: Optional[int] = 162
+    Protocol: Optional[str] = ""
+    Host: Optional[str] = ""
+    Port: Optional[str] = ""
+
+    def from_dict(trapDict: dict):
+        user = V2User(
+            Version=trapDict.get("Version"),
+            Community=trapDict.get("Community"),
+            Protocol=trapDict.get("Protocol"),
+            Host=trapDict.get("Host"),
+            Port=trapDict.get("Port"),
+        )
+        return user
 
 
 @dataclass
@@ -57,6 +68,7 @@ class V3Trap:
 class V3User:
     Username: Optional[str] = ""
     Version: Optional[str] = "usm"
+    EngineId: Optional[str] = ""
     AuthType: Optional[str] = "SHA"
     AuthPassphrase: Optional[str] = ""
     PrivType: Optional[str] = "AES"
@@ -67,6 +79,7 @@ class V3User:
         user = V3User(
             UserName=userDict.get("Username"),
             Version=userDict.get("Version"),
+            EngineId=userDict.get("EngineId"),
             AuthType=userDict.get("AuthType"),
             AuthPassphrase=userDict.get("AuthPassphrase"),
             PrivType=userDict.get("PrivType"),

@@ -48,23 +48,19 @@ async def accounts_table():
         ui.notify(rsp.error_name)
         ui.label(rsp.error_name)
         return
-    accountsTable = (
-        ui.table(
-            title="Accounts",
-            columns=[
-                {"name": "Username", "label": "Username", "field": "Username"},
-                {"name": "Groups", "label": "Groups", "field": "Groups"},
-                {"name": "login", "label": "Login", "field": "login"},
-            ],
-            rows=rsp.body[0],
-            column_defaults={
-                "align": "left",
-                "headerClasses": "uppercase text-primary",
-            },
-        )
-        .classes("w-full")
-        .props("dense")
-    )
+    accountsTable = ui.table(
+        title="Accounts",
+        columns=[
+            {"name": "Username", "label": "Username", "field": "Username"},
+            {"name": "Groups", "label": "Groups", "field": "Groups"},
+            {"name": "login", "label": "Login", "field": "login"},
+        ],
+        rows=rsp.body[0],
+        column_defaults={
+            "align": "left",
+            "headerClasses": "uppercase text-primary",
+        },
+    ).props("dense")
     # accountsTable.props(f"visible-columns={'Username,Groups,login'}")  # Only show these
     accountsTable.add_slot(
         "header",
@@ -93,7 +89,8 @@ async def accounts_table():
             ui.notify(result)
 
     async def on_edit_cb(e):
-        with editUserDialog(e.args) as dialog:
+        username: str = e.args
+        with editUserDialog(username) as dialog:
             result = await dialog
             ui.notify(result)
 
@@ -122,14 +119,6 @@ async def accounts_table():
                 <q-btn flat round dense icon="more_vert" color="accent">
                     <q-menu auto-close>
                         <q-list style="min-width: 150px">
-
-                            <q-item clickable
-                                @click="$parent.$emit('edit-account', props.row.Username)">
-                                <q-item-section class="text-negative">
-                                    Edit account
-                                </q-item-section>
-                            </q-item>
-
                             <q-item clickable
                                 @click="$parent.$emit('delete-account', props.row.Username)">
                                 <q-item-section class="text-negative">
@@ -144,6 +133,13 @@ async def accounts_table():
         </q-tr>
         """,
     )
+
+    #     <q-item clickable
+    #     @click="$parent.$emit('edit-account', props.row.Username)">
+    #     <q-item-section class="text-negative">
+    #         Edit account
+    #     </q-item-section>
+    # </q-item>
 
 
 async def accounts_page():

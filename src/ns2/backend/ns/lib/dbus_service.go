@@ -96,6 +96,18 @@ func StartDbusServer() {
 				Name:       "com.novus.ns.snmp",
 				Methods:    introspect.Methods(snmp),
 				Properties: nil,
+				Signals: []introspect.Signal{
+					{
+						Name: "Changed",
+						Args: []introspect.Arg{
+							{
+								Name:      "result",
+								Type:      "s",
+								Direction: "out",
+							},
+						},
+					},
+				},
 			},
 			{
 				Name:       "com.novus.ns.pam",
@@ -107,7 +119,7 @@ func StartDbusServer() {
 				Methods: introspect.Methods(account),
 				Signals: []introspect.Signal{
 					{
-						Name: "ValidatePassword",
+						Name: "Changed",
 						Args: []introspect.Arg{
 							{
 								Name:      "result",

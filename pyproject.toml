@@ -1,6 +1,6 @@
 [project]
 name = "ns2"
-version = "2.0.17"
+version = "2.0.19"
 description = "ns2 is collection of tools to support Novus Power Products"
 readme = "README.md"
 requires-python = ">=3.12.3"
@@ -8,15 +8,11 @@ dependencies = [
 
     "dbus-next>=0.2.3",
     "nicegui>=3.8.0",
-    "numpy>=2.4.2",
-    "pam>=0.2.0",
-    "plotly>=6.5.2",
+    "systemd-python",
     "pyinstaller>=6.19.0",
-    "requests>=2.34.0",
     "setuptools>=82.0.0",
-    "six>=1.17.0",
-    "systemd-python>=235",
-    "typer>=0.24.1",
+
+
 ]
 
 

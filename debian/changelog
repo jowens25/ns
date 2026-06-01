@@ -1,4 +1,4 @@
-ns-admin (2.0.17) UNRELEASED; urgency=medium
+ns-admin (2.0.19) UNRELEASED; urgency=medium
   [ jowens ]
   * pkg name
   * restructed a bit, added go utils
@@ -6,8 +6,10 @@ ns-admin (2.0.17) UNRELEASED; urgency=medium
   * logs, service override
   * service file install issues
   * test
+  * continue testing deb
+  * tz init 
 
- -- jowens <jowens@jowens>  Mon, 01 Jun 2026 10:59:19 -0500
+ -- jowens <jowens@jowens>  Mon, 01 Jun 2026 17:28:55 +0000
 
 ns2-dev (2.0.8) UNRELEASED; urgency=medium
 

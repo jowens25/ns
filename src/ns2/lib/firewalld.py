@@ -72,7 +72,7 @@ async def zoneAddService(zoneName: str, serviceName: str):
         signature="ssi",
         body=[zoneName, serviceName, 0],
     )
-    return rsp.body[0]
+    return rsp.body
 
 
 async def zoneConfigRemoveService(zonePath: str, serviceName: str):
@@ -97,7 +97,7 @@ async def zoneConfigAddService(zonePath: str, serviceName: str):
         signature="s",
         body=[serviceName],
     )
-    return rsp.body[0]
+    return rsp.body
 
 
 async def AddSource(zoneName: str, source: str):

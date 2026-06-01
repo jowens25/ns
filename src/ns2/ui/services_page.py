@@ -30,7 +30,9 @@ def MakeServicesDict(servs):
             "ns.service",
             "snmpd.service",
             "ns-agent.service",
-            "nginx.service" "firewalld.service" "NetworkManager.service",
+            "nginx.service",
+            "firewalld.service",
+            "NetworkManager.service",
         ]:
 
             services.append(
@@ -53,13 +55,22 @@ async def services_page():
     serviceUnits = MakeServicesDict(await ListUnits())
     # log.info(serviceUnits)
 
-    ui.table(
-        title="Services",
-        rows=serviceUnits,
-        column_defaults={
-            "align": "left",
-            "headerClasses": "uppercase text-primary",
-        },
-    ).classes(
-        "w-full"
+    servicesTable = (
+        ui.table(
+            title="Services",
+            rows=serviceUnits,
+            column_defaults={
+                "align": "left",
+                "headerClasses": "uppercase text-primary",
+            },
+        )
+        .classes("w-full")
+        .props("flat")
     )  # Add wrap-cells
+
+    with servicesTable.add_slot("body-cell-Sub State"):
+        with servicesTable.cell("Sub State"):
+            ui.badge().props("""
+                :color="props.value == 'running' ? 'green' : 'red'"
+                :label="props.value"
+            """)

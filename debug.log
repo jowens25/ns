@@ -1,156 +1,47 @@
 app starting
-/
-/services
-/services
-/services
-app starting
-/
-app starting
-/
-/_nicegui/auto/static/e01c095c4fa5173c7fec87f528e7c827/NOVUS_LOGO.svg
-/
-app starting
-/
-/_nicegui/3.12.1/static/fonts.css
-/_nicegui/3.12.1/static/quasar.unimportant.prod.css
-/_nicegui/3.12.1/static/quasar.important.prod.css
-/_nicegui/3.12.1/static/nicegui.css
-/_nicegui/3.12.1/static/vue.esm-browser.prod.js
-/_nicegui/3.12.1/components/d83b968be92f2298cdf51c6b6a69eddb/colors.js
-/_nicegui/3.12.1/components/d83b968be92f2298cdf51c6b6a69eddb/dark_mode.js
-/_nicegui/3.12.1/components/ee9ee677a76fcde13eeaa5a3f3361f44/query.js
-/_nicegui/3.12.1/components/021279085771a33600a0507abe82af15/header.js
-/_nicegui/3.12.1/components/021279085771a33600a0507abe82af15/image.js
-/_nicegui/3.12.1/components/1711f67cbf87861edc8fd862488b57da/timer.js
-/_nicegui/3.12.1/components/1b1f11353c12bfbdc890db05205a4dbf/sub_pages.js
-/_nicegui/3.12.1/static/socket.io.min.js
-/_nicegui/3.12.1/static/tailwindcss.min.js
-/_nicegui/3.12.1/static/quasar.umd.prod.js
-/_nicegui/3.12.1/static/dompurify.mjs
-/_nicegui/3.12.1/static/nicegui.js
-/_nicegui/3.12.1/static/lang/en-US.umd.prod.js
-/_nicegui/3.12.1/static/fonts/2474057f3040a08c.woff2
-/_nicegui/3.12.1/static/fonts/5f5fa57fb07d7e44.woff2
-/_nicegui/3.12.1/static/fonts/0c19a63c7528cc1a.woff2
-app starting
-/
-app starting
-/
-app starting
-/
-app starting
-/
-/_nicegui/3.12.1/components/2fcf8218d8b9a19806942c6cf997787b/colors.js
-/_nicegui/3.12.1/components/52966c1c9a47b8f7736eb78e42c65306/dark_mode.js
-/_nicegui/3.12.1/components/f999c9a06ba3019d9b69e1ce6f238079/query.js
-/_nicegui/3.12.1/components/fa55f6316a42351fb36925f38ef77931/header.js
-/_nicegui/3.12.1/components/bbde04e81e75c08c3b41cba9bfc629d0/image.js
-/_nicegui/3.12.1/components/9dc9a3920562b7c03b5b615c23035f00/timer.js
-/_nicegui/3.12.1/components/944494a608e3333aced95c099e0fae44/sub_pages.js
-/_nicegui/auto/static/9e0000c605ac289c321dadfc2a1a82a5/NOVUS_LOGO.svg
-app starting
-app starting
-/
-/_nicegui/auto/static/e01c095c4fa5173c7fec87f528e7c827/NOVUS_LOGO.svg
-/login
-LOGIN PAGE LOADED
-/_nicegui/3.12.1/components/d83b968be92f2298cdf51c6b6a69eddb/dialog.js
-/_nicegui/3.12.1/components/021279085771a33600a0507abe82af15/input.js
-app starting
-/
-end of middleware with /
-/login
-unrestricted
 LOGIN PAGE LOADED
 making bridge for: jowens
-[3948887]
-app starting
-/
-end of middleware with /
-/login
-unrestricted
+[158771]
+new bridge connected
+[158790]
+try login general store updated
+check auth: general store cleared
 LOGIN PAGE LOADED
 making bridge for: jowens
-[3949336]
-app starting
-/
-end of middleware with /
-/login
-unrestricted
-LOGIN PAGE LOADED
-making bridge for: jowens
-[3950789]
+[158867]
 new bridge connected
-[3950805]
+[158880]
 try login general store updated
-/
-/_nicegui/3.12.1/components/b3999f57088f56d69ee3a9bb3d513df1/refreshable.js
-/_nicegui/3.12.1/components/758a6583cce1c6b42affe9ef0aa92800/select.js
-/_nicegui/3.12.1/components/1711f67cbf87861edc8fd862488b57da/table.js
-/_nicegui/3.12.1/static/utils/dynamic_properties.js
-/_nicegui/3.12.1/components/21a7df8339de52e931cb330c747aee72/xterm.js
-/_nicegui/3.12.1/esm/5b978b36d60ebef915707c48890affd5/index.js
-/_nicegui/3.12.1/static/utils/resources.js
-/_nicegui/3.12.1/resources/5b978b36d60ebef915707c48890affd5/xterm.css
-logout cb general cleared
-/login
-unrestricted
-LOGIN PAGE LOADED
-making bridge for: novus123
-[3951728]
-new bridge connected
-[3951742]
-try login general store updated
-/
-/_nicegui/3.12.1/components/4c3a53dd5c0decdfda24eabf25c832c5/log.js
-logout cb general cleared
-/login
-unrestricted
-LOGIN PAGE LOADED
-making bridge for: jowens
-[3954302]
-new bridge connected
-[3954323]
-try login general store updated
-/
-['AddAdmin']
-NETWORK PAGE
-firewalld.service is active: active
-/_nicegui/3.12.1/components/4c3a53dd5c0decdfda24eabf25c832c5/link.js
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-logout cb general cleared
-/login
-unrestricted
-LOGIN PAGE LOADED
-making bridge for: novus123
-[3955997]
-new bridge connected
-[3956010]
-try login general store updated
-/
+check auth: general store cleared
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+snmpd.service is active: active
+[{'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup'}]
 NETWORK PAGE
 firewalld.service is active: active
 IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-[{'address': <dbus_next.signature.Variant ('s', 10.1.10.205)>, 'prefix': <dbus_next.signature.Variant ('u', 32)>}, {'address': <dbus_next.signature.Variant ('s', 10.1.10.205)>, 'prefix': <dbus_next.signature.Variant ('u', 24)>}]
-[{'address': <dbus_next.signature.Variant ('s', 10.1.10.205)>, 'prefix': <dbus_next.signature.Variant ('u', 32)>}, {'address': <dbus_next.signature.Variant ('s', 10.1.10.205)>, 'prefix': <dbus_next.signature.Variant ('u', 24)>}]
-ip address list
-ip address list
-ip address list
 NETWORK PAGE
 firewalld.service is active: active
 IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-firewalld.service is active: active
-firewalld.service is active: active
-logout cb general cleared
-/login
-unrestricted
 LOGIN PAGE LOADED
 making bridge for: jowens
-[3956994]
+[160454]
 new bridge connected
-[3957006]
+[160462]
 try login general store updated
-/
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+app starting
+LOGIN PAGE LOADED
+making bridge for: jowens
+[174219]
+new bridge connected
+[174229]
+try login general store updated
+check auth: general store cleared
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
 NETWORK PAGE
 firewalld.service is active: active
 IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
@@ -159,807 +50,152 @@ firewalld.service is active: active
 {'short': <dbus_next.signature.Variant ('s', Public)>, 'description': <dbus_next.signature.Variant ('s', For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.)>, 'target': <dbus_next.signature.Variant ('s', default)>, 'services': <dbus_next.signature.Variant ('as', ['ssh', 'https', 'snmp'])>, 'masquerade': <dbus_next.signature.Variant ('b', False)>, 'icmp_block_inversion': <dbus_next.signature.Variant ('b', False)>, 'forward': <dbus_next.signature.Variant ('b', True)>, 'ingress_priority': <dbus_next.signature.Variant ('i', 0)>, 'egress_priority': <dbus_next.signature.Variant ('i', 0)>}
 ZONE SETTINGS 2
 ['enp3s0']
-/
-end of middleware with /
-/login
-unrestricted
+[{'Service': 'snmptrap', 'UDP': '162', 'TCP': '162', 'Description': 'SNMP traps enable an agent to notify the management station of significant events by way of an unsolicited SNMP message.'}]
+add snmptrap to public
+/org/fedoraproject/FirewallD1/config/zone/8
+app starting
 LOGIN PAGE LOADED
-/_nicegui/3.12.1/static/fonts.css
-static
-/_nicegui/3.12.1/static/quasar.unimportant.prod.css
-static
-/_nicegui/3.12.1/static/quasar.important.prod.css
-static
-/_nicegui/3.12.1/static/nicegui.css
-static
-/_nicegui/3.12.1/static/vue.esm-browser.prod.js
-static
-/_nicegui/3.12.1/components/d83b968be92f2298cdf51c6b6a69eddb/colors.js
-static
-/_nicegui/3.12.1/components/d83b968be92f2298cdf51c6b6a69eddb/dark_mode.js
-static
-/_nicegui/3.12.1/components/ee9ee677a76fcde13eeaa5a3f3361f44/query.js
-static
-/_nicegui/3.12.1/components/d83b968be92f2298cdf51c6b6a69eddb/dialog.js
-static
-/_nicegui/3.12.1/components/021279085771a33600a0507abe82af15/image.js
-static
-/_nicegui/3.12.1/components/021279085771a33600a0507abe82af15/input.js
-static
-/_nicegui/3.12.1/static/socket.io.min.js
-static
-/_nicegui/3.12.1/static/tailwindcss.min.js
-static
-/_nicegui/3.12.1/static/quasar.umd.prod.js
-static
-/_nicegui/3.12.1/static/nicegui.js
-static
-/_nicegui/3.12.1/static/lang/en-US.umd.prod.js
-static
-/_nicegui/3.12.1/static/dompurify.mjs
-static
-/_nicegui/3.12.1/static/fonts/2474057f3040a08c.woff2
-static
-/_nicegui/3.12.1/static/fonts/5f5fa57fb07d7e44.woff2
-static
-/_nicegui/3.12.1/static/fonts/0c19a63c7528cc1a.woff2
-static
-/_nicegui/auto/static/e01c095c4fa5173c7fec87f528e7c827/NOVUS_LOGO.svg
-static
-/favicon.ico
-unrestricted
-making bridge for: jowens
-[3957824]
-new bridge connected
-[3957834]
-try login general store updated
-/
-/_nicegui/3.12.1/components/021279085771a33600a0507abe82af15/header.js
-/_nicegui/3.12.1/components/1711f67cbf87861edc8fd862488b57da/timer.js
-/_nicegui/3.12.1/components/1b1f11353c12bfbdc890db05205a4dbf/sub_pages.js
-logout cb general cleared
-/login
-unrestricted
-LOGIN PAGE LOADED
-making bridge for: novus123
-[3958184]
-new bridge connected
-[3958205]
-try login general store updated
-/
-/networking/firewall
-end of middleware with /networking/firewall
-/login
-unrestricted
 LOGIN PAGE LOADED
 making bridge for: jowens
-[3958626]
+[184986]
 new bridge connected
-[3958640]
+[185007]
 try login general store updated
-/
 NETWORK PAGE
 firewalld.service is active: active
-/_nicegui/3.12.1/components/b3999f57088f56d69ee3a9bb3d513df1/refreshable.js
-static
 IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-/_nicegui/3.12.1/components/4c3a53dd5c0decdfda24eabf25c832c5/link.js
-static
-/_nicegui/3.12.1/components/1711f67cbf87861edc8fd862488b57da/table.js
-static
-/_nicegui/3.12.1/static/utils/dynamic_properties.js
-static
-/_nicegui/3.12.1/components/758a6583cce1c6b42affe9ef0aa92800/select.js
-static
-/_nicegui/3.12.1/components/4c3a53dd5c0decdfda24eabf25c832c5/log.js
-static
-/_nicegui/3.12.1/components/21a7df8339de52e931cb330c747aee72/xterm.js
-static
-/_nicegui/3.12.1/esm/5b978b36d60ebef915707c48890affd5/index.js
-static
-/_nicegui/3.12.1/static/utils/resources.js
-static
-/_nicegui/3.12.1/resources/5b978b36d60ebef915707c48890affd5/xterm.css
-static
+firewalld.service is active: active
+firewalld.service is active: active
+{'short': <dbus_next.signature.Variant ('s', Public)>, 'description': <dbus_next.signature.Variant ('s', For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.)>, 'target': <dbus_next.signature.Variant ('s', default)>, 'services': <dbus_next.signature.Variant ('as', ['ssh', 'https', 'snmp', 'snmptrap'])>, 'masquerade': <dbus_next.signature.Variant ('b', False)>, 'icmp_block_inversion': <dbus_next.signature.Variant ('b', False)>, 'forward': <dbus_next.signature.Variant ('b', True)>, 'ingress_priority': <dbus_next.signature.Variant ('i', 0)>, 'egress_priority': <dbus_next.signature.Variant ('i', 0)>}
+ZONE SETTINGS 2
+['enp3s0']
+firewalld.service is active: active
+firewalld.service is active: active
+{'short': <dbus_next.signature.Variant ('s', Public)>, 'description': <dbus_next.signature.Variant ('s', For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.)>, 'target': <dbus_next.signature.Variant ('s', default)>, 'services': <dbus_next.signature.Variant ('as', ['ssh', 'https', 'snmp', 'snmptrap'])>, 'masquerade': <dbus_next.signature.Variant ('b', False)>, 'icmp_block_inversion': <dbus_next.signature.Variant ('b', False)>, 'forward': <dbus_next.signature.Variant ('b', True)>, 'ingress_priority': <dbus_next.signature.Variant ('i', 0)>, 'egress_priority': <dbus_next.signature.Variant ('i', 0)>}
+ZONE SETTINGS 2
+['enp3s0']
+[{'Service': 'snmp', 'UDP': '161', 'TCP': '161', 'Description': 'Simple Network Management Protocol is an "Internet-standard protocol for managing devices on IP networks". Enable this service if you run SNMP agent (server).'}]
+add snmp to public
+/org/fedoraproject/FirewallD1/config/zone/8
+['ALREADY_ENABLED: snmp']
+app starting
+LOGIN PAGE LOADED
+LOGIN PAGE LOADED
+making bridge for: jowens
+[187172]
+new bridge connected
+[187185]
+try login general store updated
 snmpd.service is active: active
-[{'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default'}]
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+{'Username': 'JACOBOWENS', 'Version': 'usm', 'AuthType': 'SHA', 'AuthPassphrase': 'JACOBOWENS', 'PrivType': 'AES', 'PrivPassphrase': 'JACOBOWENS', 'Permissions': 'rwprivgroup'}
+added v3 user
 logout cb general cleared
-/login
-unrestricted
 LOGIN PAGE LOADED
-/accounts
-end of middleware with /accounts
-/login
-unrestricted
 LOGIN PAGE LOADED
-/
-end of middleware with /
-/login
-unrestricted
+app starting
 LOGIN PAGE LOADED
-/login
-unrestricted
 LOGIN PAGE LOADED
-making bridge for: novus123
-[3959334]
+making bridge for: jowens
+[227031]
 new bridge connected
-[3959347]
+[227046]
 try login general store updated
-/
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-/networking
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-/networking
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-/networking
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-/networking
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-/networking
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-making bridge for: jowens
-[3959899]
-new bridge connected
-[3959909]
-try login general store updated
-/
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-/networking
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-/favicon.ico
-/networking
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-/favicon.ico
-/networking
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-/favicon.ico
-/networking
-end of middleware with /networking
-/login
-unrestricted
-LOGIN PAGE LOADED
-app starting
-app starting
-/
-end of middleware with /
-/login
-unrestricted
-LOGIN PAGE LOADED
-making bridge for: jowens
-['The name com.novus.ns was not provided by any .service files']
-org.freedesktop.DBus.Error.ServiceUnknown
-making bridge for: jowens
-[4001122]
-/login
-unrestricted
-LOGIN PAGE LOADED
-/_nicegui/auto/static/e01c095c4fa5173c7fec87f528e7c827/NOVUS_LOGO.svg
-static
-making bridge for: jowens
-[4001356]
-app starting
-/
-end of middleware with /
-/login
-unrestricted
-LOGIN PAGE LOADED
-/login
-unrestricted
-LOGIN PAGE LOADED
-making bridge for: jowens
-[4001648]
-making bridge for: jowens
-[4002608]
-new bridge connected
-[4002623]
-try login general store updated
-/
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-/logs
-/logs
-logout cb general cleared
-/login
-unrestricted
-LOGIN PAGE LOADED
-app starting
-/login
-unrestricted
-LOGIN PAGE LOADED
-/
-end of middleware with /
-/login
-unrestricted
-LOGIN PAGE LOADED
-app starting
-/
-end of middleware with /
-/login
-unrestricted
-LOGIN PAGE LOADED
-/login
-unrestricted
-LOGIN PAGE LOADED
-making bridge for: jowens
-[4022084]
-new bridge connected
-[4022093]
-try login general store updated
-/
-app starting
-/
-/
-NETWORK PAGE
-logout cb general cleared
-/login
-unrestricted
-LOGIN PAGE LOADED
-making bridge for: jowens
-[4025019]
-new bridge connected
-[4025037]
-try login general store updated
-/
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-/networking
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-/networking
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-/networking
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-/logs
 snmpd.service is active: active
 [{'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup'}]
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-/networking
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-/networking
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-/
-end of middleware with /
-/login
-unrestricted
-LOGIN PAGE LOADED
-/_nicegui/3.12.1/static/fonts.css
-static
-/_nicegui/3.12.1/static/quasar.unimportant.prod.css
-static
-/_nicegui/3.12.1/static/quasar.important.prod.css
-static
-/_nicegui/3.12.1/static/nicegui.css
-static
-/_nicegui/3.12.1/static/vue.esm-browser.prod.js
-static
-/_nicegui/3.12.1/components/d83b968be92f2298cdf51c6b6a69eddb/colors.js
-static
-/_nicegui/3.12.1/components/d83b968be92f2298cdf51c6b6a69eddb/dark_mode.js
-static
-/_nicegui/3.12.1/components/ee9ee677a76fcde13eeaa5a3f3361f44/query.js
-static
-/_nicegui/3.12.1/components/d83b968be92f2298cdf51c6b6a69eddb/dialog.js
-static
-/_nicegui/3.12.1/components/021279085771a33600a0507abe82af15/image.js
-static
-/_nicegui/3.12.1/components/021279085771a33600a0507abe82af15/input.js
-static
-/_nicegui/3.12.1/static/dompurify.mjs
-static
-/_nicegui/3.12.1/static/socket.io.min.js
-static
-/_nicegui/3.12.1/static/tailwindcss.min.js
-static
-/_nicegui/3.12.1/static/quasar.umd.prod.js
-static
-/_nicegui/3.12.1/static/nicegui.js
-static
-/_nicegui/3.12.1/static/lang/en-US.umd.prod.js
-static
-/_nicegui_ws/socket.io/
-end of middleware with /_nicegui_ws/socket.io/
-/_nicegui/3.12.1/static/fonts/2474057f3040a08c.woff2
-static
-/_nicegui/3.12.1/static/fonts/5f5fa57fb07d7e44.woff2
-static
-/_nicegui/3.12.1/static/fonts/0c19a63c7528cc1a.woff2
-static
-/login
-unrestricted
-LOGIN PAGE LOADED
-/_nicegui_ws/socket.io/
-end of middleware with /_nicegui_ws/socket.io/
-/login
-unrestricted
-LOGIN PAGE LOADED
-/
-end of middleware with /
-/login
-unrestricted
-LOGIN PAGE LOADED
-/_nicegui/3.12.1/static/fonts.css
-static
-/_nicegui/3.12.1/static/quasar.unimportant.prod.css
-static
-/_nicegui/3.12.1/static/quasar.important.prod.css
-static
-/_nicegui/3.12.1/static/nicegui.css
-static
-/_nicegui/3.12.1/static/vue.esm-browser.prod.js
-static
-/_nicegui/3.12.1/components/d83b968be92f2298cdf51c6b6a69eddb/colors.js
-static
-/_nicegui/3.12.1/components/d83b968be92f2298cdf51c6b6a69eddb/dark_mode.js
-static
-/_nicegui/3.12.1/components/ee9ee677a76fcde13eeaa5a3f3361f44/query.js
-static
-/_nicegui/3.12.1/components/d83b968be92f2298cdf51c6b6a69eddb/dialog.js
-static
-/_nicegui/3.12.1/components/021279085771a33600a0507abe82af15/image.js
-static
-/_nicegui/3.12.1/components/021279085771a33600a0507abe82af15/input.js
-static
-/_nicegui/3.12.1/static/socket.io.min.js
-static
-/_nicegui/3.12.1/static/tailwindcss.min.js
-static
-/_nicegui/3.12.1/static/quasar.umd.prod.js
-static
-/_nicegui/3.12.1/static/nicegui.js
-static
-/_nicegui/3.12.1/static/lang/en-US.umd.prod.js
-static
-/_nicegui/3.12.1/static/dompurify.mjs
-static
-/_nicegui/3.12.1/static/fonts/2474057f3040a08c.woff2
-static
-/_nicegui/3.12.1/static/fonts/5f5fa57fb07d7e44.woff2
-static
-/_nicegui/3.12.1/static/fonts/0c19a63c7528cc1a.woff2
-static
-/_nicegui/auto/static/e01c095c4fa5173c7fec87f528e7c827/NOVUS_LOGO.svg
-static
-/favicon.ico
-unrestricted
-making bridge for: jowens
-[4026579]
-new bridge connected
-[4026594]
-try login general store updated
-/
-/_nicegui/3.12.1/components/021279085771a33600a0507abe82af15/header.js
-/_nicegui/3.12.1/components/1711f67cbf87861edc8fd862488b57da/timer.js
-/_nicegui/3.12.1/components/1b1f11353c12bfbdc890db05205a4dbf/sub_pages.js
-/networking
-end of middleware with /networking
-/login
-unrestricted
-LOGIN PAGE LOADED
-NETWORK PAGE
-firewalld.service is active: active
-/_nicegui/3.12.1/components/b3999f57088f56d69ee3a9bb3d513df1/refreshable.js
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-/_nicegui/3.12.1/components/4c3a53dd5c0decdfda24eabf25c832c5/link.js
-/_nicegui/3.12.1/components/1711f67cbf87861edc8fd862488b57da/table.js
-/_nicegui/3.12.1/static/utils/dynamic_properties.js
-/networking
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-/favicon.ico
-/networking
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-/favicon.ico
-/networking
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-/favicon.ico
 app starting
-LOGIN PAGE LOADED
-LOGIN PAGE LOADED
-NETWORK PAGE
-auth check
-uid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-guid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-auth check
-uid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-guid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-auth check
-uid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-guid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-auth check
-uid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-guid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-auth check
-uid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-guid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-making bridge for: jowens
-[4028280]
-auth check
-uid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-guid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-new bridge connected
-[4028295]
-try login general store updated
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-check auth: general store cleared
-uid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: None
-auth check
-uid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-guid: None
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: None
-auth check
-uid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-guid: None
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: None
-auth check
-uid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-guid: None
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: None
-auth check
-uid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-guid: None
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: None
-auth check
-uid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-guid: None
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: None
-auth check
-uid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-guid: None
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: None
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-auth check
-uid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-guid: None
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: None
-auth check
-uid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-guid: None
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: None
-auth check
-uid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-guid: None
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: None
-auth check
-uid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-guid: None
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: None
-auth check
-uid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-guid: None
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: None
-auth check
-uid: a2fcaf63-e5f9-4db6-aaca-ff3041e61974
-guid: None
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: None
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: None
-LOGIN PAGE LOADED
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: None
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: None
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: None
-making bridge for: jowens
-[4028860]
-new bridge connected
-[4028875]
-try login general store updated
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-NETWORK PAGE
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
-auth check
-uid: c312c327-68b7-40cb-b043-f9a3286635be
-guid: c312c327-68b7-40cb-b043-f9a3286635be
 app starting
-NETWORK PAGE
-LOGIN PAGE LOADED
-LOGIN PAGE LOADED
-LOGIN PAGE LOADED
-LOGIN PAGE LOADED
+logout cb general cleared
 LOGIN PAGE LOADED
 making bridge for: jowens
-[4030180]
+[229464]
 new bridge connected
-[4030197]
+[229488]
+try login general store updated
+snmpd.service is active: active
+[{'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus'}]
+app starting
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[230310]
+new bridge connected
+[230326]
 try login general store updated
 snmpd.service is active: active
 [{'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default'}]
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-NETWORK PAGE
-NETWORK PAGE
-logout cb general cleared
-LOGIN PAGE LOADED
 app starting
-LOGIN PAGE LOADED
-LOGIN PAGE LOADED
-app starting
-LOGIN PAGE LOADED
-making bridge for: jowens
-[4042587]
-new bridge connected
-[4042608]
-try login general store updated
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-NETWORK PAGE
-firewalld.service is active: active
-IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
-app starting
-LOGIN PAGE LOADED
-app starting
-LOGIN PAGE LOADED
-app starting
-LOGIN PAGE LOADED
-app starting
-app starting
-app starting
-app starting
-app starting
-app starting
-app starting
-app starting
-app starting
-app starting
-app starting
-app starting
-app starting
-app starting
-app starting
-app starting
-app starting
-app starting
-app starting
-app starting
-app starting
-app starting
-app starting
-app starting
-app starting
-timezone change -> UTC
-app starting
-timezone change -> Universal
-timezone change -> America/Chicago
-app starting
-timezone change -> UTC
-NETWORK PAGE
 logout cb general cleared
 LOGIN PAGE LOADED
 making bridge for: jowens
-[4114239]
+[233469]
 new bridge connected
-[4114251]
+[233491]
 try login general store updated
-app starting
-timezone change -> US/Central
-app starting
-timezone change -> US/Eastern
-app starting
-timezone change -> US/Indiana-Starke
+snmpd.service is active: active
+[{'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c'}]
 app starting
 app starting
-timezone change -> UTC
-timezone change -> US/Mountain
-timezone change -> America/Chicago
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[236319]
+new bridge connected
+[236333]
+try login general store updated
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+snmpd.service is active: active
+[{'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c'}]
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+LOGIN PAGE LOADED
+app starting
+app starting
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[281124]
+new bridge connected
+[281137]
+try login general store updated
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+app starting
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[284453]
+new bridge connected
+[284466]
+try login general store updated
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
 app starting
 app starting
 app starting
-timezone change -> America/Chihuahua
-timezone change -> UTC
+logout cb general cleared
+LOGIN PAGE LOADED
+LOGIN PAGE LOADED
+making bridge for: jowens
+[285597]
+new bridge connected
+[285614]
+try login general store updated
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+snmpd.service is active: active
+[{'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c'}]
 app starting
+logout cb general cleared
+LOGIN PAGE LOADED
+LOGIN PAGE LOADED
+making bridge for: jowens
+[324974]
+new bridge connected
+[324987]
+try login general store updated
+CALL delete DBUS
+['Remove']

@@ -20,11 +20,46 @@ class User:
     Group: Optional[str] = "admin"
 
 
-def editUserDialog():
+def editUserDialog(username):
+    editUser = User(Username=username)
     with ui.dialog() as dialog:
         with ui.card().classes("w-full max-h-[90vh] overflow-y-auto"):
             ui.label("Edit user").classes("text-h5")
-            ui.button("close", on_click=dialog.close)
+            user = ui.input("username", validation=usernameValidation).bind_value(
+                editUser, "Username"
+            )
+
+            def mustMatch(v):
+                if not v == p1.value:
+                    return "passwords must match"
+                else:
+                    return None
+
+            p1 = ui.input("password", validation=validatePass)
+
+            p2 = ui.input("repeat password", validation=mustMatch).bind_value_to(
+                editUser, "Password"
+            )
+
+            ui.select(["admin", "user"]).bind_value(editUser, "Group")
+
+            async def on_save_cb():
+                if all(validate_group([p1, p2, user])):
+
+                    rsp = await EditUser(editUser)
+
+                    if rsp.error_name is not None:
+                        ui.notify(rsp.body[0])
+                    else:
+                        ui.notify(rsp, type="positive")
+                        dialog.close()
+
+                else:
+                    ui.notify("Please correct the errors", type="negative")
+
+            with ui.row():
+                ui.button("Add", on_click=on_save_cb)
+                ui.button("Cancel", on_click=dialog.close)
 
     return dialog
 
@@ -151,6 +186,10 @@ async def AddUser(u: User) -> Message:
             "ss",
             [u.Username, u.Password],
         )
+
+
+async def EditUser(u: User) -> Message:
+    pass
 
 
 def validate_group(group: list):

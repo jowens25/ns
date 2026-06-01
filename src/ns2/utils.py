@@ -41,3 +41,7 @@ async def runAsyncCmdShell(cmd: str) -> tuple[str, str]:
     )
     stdout, stderr = await process.communicate()
     return stdout.decode(), stderr.decode()
+
+
+def validate_group(group: list):
+    return [x.validate() for x in group]
