@@ -199,3 +199,1437 @@ new bridge connected
 try login general store updated
 CALL delete DBUS
 ['Remove']
+app starting
+logout cb general cleared
+LOGIN PAGE LOADED
+LOGIN PAGE LOADED
+making bridge for: jowens
+['The name com.novus.ns was not provided by any .service files']
+org.freedesktop.DBus.Error.ServiceUnknown
+making bridge for: jowens
+['The name com.novus.ns was not provided by any .service files']
+org.freedesktop.DBus.Error.ServiceUnknown
+making bridge for: jowens
+[1073975]
+new bridge connected
+[1073986]
+try login general store updated
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1094963]
+new bridge connected
+[1094984]
+try login general store updated
+snmpd.service is active: active
+[{'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup'}]
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1096578]
+new bridge connected
+[1096600]
+try login general store updated
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+snmpd.service is active: active
+[{'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default'}]
+logout cb general cleared
+LOGIN PAGE LOADED
+app starting
+LOGIN PAGE LOADED
+LOGIN PAGE LOADED
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1148595]
+new bridge connected
+[1148608]
+try login general store updated
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+app starting
+logout cb general cleared
+LOGIN PAGE LOADED
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1303339]
+new bridge connected
+[1303358]
+try login general store updated
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1331316]
+new bridge connected
+[1331333]
+try login general store updated
+snmpd.service is active: active
+[{'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus'}]
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1333097]
+new bridge connected
+[1333115]
+try login general store updated
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1340025]
+new bridge connected
+[1340041]
+try login general store updated
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+app starting
+LOGIN PAGE LOADED
+app starting
+logout cb general cleared
+LOGIN PAGE LOADED
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1343109]
+new bridge connected
+[1343126]
+try login general store updated
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1345883]
+new bridge connected
+[1345917]
+try login general store updated
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+snmpd.service is active: active
+[{'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c'}]
+app starting
+LOGIN PAGE LOADED
+LOGIN PAGE LOADED
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1347821]
+new bridge connected
+[1347846]
+try login general store updated
+snmpd.service is active: active
+[{'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c'}]
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1350832]
+new bridge connected
+[1350849]
+try login general store updated
+snmpd.service is active: active
+[{'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c'}]
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1354716]
+new bridge connected
+[1354743]
+try login general store updated
+snmpd.service is active: active
+[{'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus'}]
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1358595]
+new bridge connected
+[1358612]
+try login general store updated
+snmpd.service is active: active
+[{'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus'}]
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1361527]
+new bridge connected
+[1361546]
+try login general store updated
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1366975]
+new bridge connected
+[1367000]
+try login general store updated
+snmpd.service is active: active
+[{'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c'}]
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+firewalld.service is active: active
+firewalld.service is active: active
+{'short': <dbus_next.signature.Variant ('s', Public)>, 'description': <dbus_next.signature.Variant ('s', For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.)>, 'target': <dbus_next.signature.Variant ('s', default)>, 'services': <dbus_next.signature.Variant ('as', ['ssh', 'https', 'snmp', 'snmptrap'])>, 'masquerade': <dbus_next.signature.Variant ('b', False)>, 'icmp_block_inversion': <dbus_next.signature.Variant ('b', False)>, 'forward': <dbus_next.signature.Variant ('b', True)>, 'ingress_priority': <dbus_next.signature.Variant ('i', 0)>, 'egress_priority': <dbus_next.signature.Variant ('i', 0)>}
+ZONE SETTINGS 2
+['enp3s0']
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+{'Username': 'JACOBOWENS', 'Version': 'usm', 'EngineId': '', 'AuthType': 'MD5', 'AuthPassphrase': 'JACOBOWENS', 'PrivType': 'DES', 'PrivPassphrase': 'JACOBOWENS', 'Permissions': 'rwprivgroup'}
+added v3 user
+snmpd.service is active: active
+[{'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c'}]
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1371836]
+new bridge connected
+[1371860]
+try login general store updated
+snmpd.service is active: active
+[{'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c'}]
+{'Version': '', 'Username': 'JACOBOWENS', 'EngineId': '0x80001f8880763ab306454c176a00000000', 'Permissions': 'rwprivgroup', 'AuthType': 'MD5', 'PrivType': 'DES', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}
+Unknown / invalid method 'CreateV3Trap'
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+snmpd.service is active: active
+[{'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup'}]
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+{'Username': 'JACOBOWENS', 'Version': 'usm', 'EngineId': '', 'AuthType': 'SHA', 'AuthPassphrase': 'JACOBOWENS', 'PrivType': 'AES', 'PrivPassphrase': 'JACOBOWENS', 'Permissions': 'rwprivgroup'}
+added v3 user
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1543206]
+new bridge connected
+[1543226]
+try login general store updated
+snmpd.service is active: active
+[{'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c'}]
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+LOGIN PAGE LOADED
+app starting
+LOGIN PAGE LOADED
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1545838]
+new bridge connected
+[1545847]
+try login general store updated
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1546787]
+new bridge connected
+[1546800]
+try login general store updated
+snmpd.service is active: active
+[{'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus'}]
+<dbus_next.message.Message object at 0x7a87cc723bc0>
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1548138]
+new bridge connected
+[1548158]
+try login general store updated
+snmpd.service is active: active
+[{'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus'}]
+v2 traps: Unknown / invalid method 'ReadV2Traps'
+app starting
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1550268]
+new bridge connected
+[1550286]
+try login general store updated
+snmpd.service is active: active
+[{'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+['V2 user added']
+[{'Community': 'novus1', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_1'}, {'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+v2 traps: [{'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus'}]
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1551819]
+new bridge connected
+[1551835]
+try login general store updated
+snmpd.service is active: active
+[{'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_1', 'Community': 'novus1'}, {'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c'}]
+v2 traps: [{'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp'}]
+['V2 user added']
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+[{'Community': 'jacob', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_2'}, {'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_1', 'Community': 'novus1', 'Version': 'v2c'}, {'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1553047]
+new bridge connected
+[1553068]
+try login general store updated
+snmpd.service is active: active
+[{'Community': 'jacob', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_2'}, {'SecurityName': 'comuser_1', 'Community': 'novus1', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default'}, {'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c'}]
+v2 traps: [{'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus'}]
+['V2 user added']
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+[{'Community': 'novus3', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_3'}, {'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_2', 'Community': 'jacob', 'Version': 'v2c'}, {'Community': 'novus1', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_1'}, {'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+snmpd.service is active: active
+[{'Community': 'novus3', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_3'}, {'Community': 'jacob', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_2'}, {'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_1', 'Community': 'novus1'}, {'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup'}]
+v2 traps: [{'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp'}]
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1556568]
+new bridge connected
+[1556583]
+try login general store updated
+snmpd.service is active: active
+[{'Community': 'novus3', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_3'}, {'Community': 'jacob', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_2'}, {'SecurityName': 'comuser_1', 'Community': 'novus1', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default'}, {'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus'}]
+v2 traps: [{'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus'}]
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1560003]
+new bridge connected
+[1560015]
+try login general store updated
+snmpd.service is active: active
+[{'Community': 'novus3', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_3'}, {'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_2', 'Community': 'jacob', 'Version': 'v2c'}, {'Community': 'novus1', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_1'}, {'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1561722]
+new bridge connected
+[1561739]
+try login general store updated
+snmpd.service is active: active
+[{'Community': 'novus3', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_3'}, {'Community': 'jacob', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_2'}, {'Community': 'novus1', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_1'}, {'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default'}]
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+app starting
+logout cb general cleared
+LOGIN PAGE LOADED
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1567588]
+new bridge connected
+[1567605]
+try login general store updated
+snmpd.service is active: active
+[{'SecurityName': 'comuser_3', 'Community': 'novus3', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default'}, {'Source': 'default', 'SecurityName': 'comuser_2', 'Community': 'jacob', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup'}, {'Community': 'novus1', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_1'}, {'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus'}]
+v2 traps: [{'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp'}]
+timezone change -> UTC
+timezone change -> America/Chicago
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1646092]
+new bridge connected
+[1646111]
+try login general store updated
+del user
+['Remove']
+['AddUser']
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+app starting
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1675180]
+new bridge connected
+[1675196]
+try login general store updated
+snmpd.service is active: active
+[{'Source': 'default', 'SecurityName': 'comuser_3', 'Community': 'novus3', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup'}, {'Source': 'default', 'SecurityName': 'comuser_2', 'Community': 'jacob', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup'}, {'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_1', 'Community': 'novus1', 'Version': 'v2c'}, {'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default'}]
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+snmpd.service is active: active
+[{'Community': 'novus3', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_3'}, {'Community': 'jacob', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_2'}, {'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_1', 'Community': 'novus1'}, {'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c'}]
+v2 traps: [{'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus'}]
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+snmpd.service is active: active
+[{'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_3', 'Community': 'novus3'}, {'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_2', 'Community': 'jacob'}, {'SecurityName': 'comuser_1', 'Community': 'novus1', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default'}, {'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0', 'Community': 'novus'}]
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+app starting
+logout cb general cleared
+LOGIN PAGE LOADED
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1683427]
+new bridge connected
+[1683439]
+try login general store updated
+snmpd.service is active: active
+[{'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_3', 'Community': 'novus3', 'Version': 'v2c'}, {'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_2', 'Community': 'jacob'}, {'Community': 'novus1', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_1'}, {'SecurityName': 'comuser_0', 'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default'}]
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+snmpd.service is active: active
+[{'Source': 'default', 'SecurityName': 'comuser_3', 'Community': 'novus3', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup'}, {'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_2', 'Community': 'jacob'}, {'SecurityName': 'comuser_1', 'Community': 'novus1', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default'}, {'Community': 'novus', 'Version': 'v2c', 'Permissions': 'rwnoauthgroup', 'Source': 'default', 'SecurityName': 'comuser_0'}]
+v2 traps: [{'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c'}]
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1693795]
+new bridge connected
+[1693829]
+try login general store updated
+snmpd.service is active: active
+app starting
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1696236]
+new bridge connected
+[1696253]
+try login general store updated
+snmpd.service is active: active
+v2 traps: [{'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp'}]
+app starting
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1697224]
+new bridge connected
+[1697240]
+try login general store updated
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+app starting
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1698489]
+new bridge connected
+[1698506]
+try login general store updated
+snmpd.service is active: active
+v2 traps: [{'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139'}]
+logout cb general cleared
+LOGIN PAGE LOADED
+app starting
+LOGIN PAGE LOADED
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1702151]
+new bridge connected
+[1702160]
+try login general store updated
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1705955]
+new bridge connected
+[1705976]
+try login general store updated
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+app starting
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1708981]
+new bridge connected
+[1709000]
+try login general store updated
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+app starting
+logout cb general cleared
+LOGIN PAGE LOADED
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1713367]
+new bridge connected
+[1713391]
+try login general store updated
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+app starting
+LOGIN PAGE LOADED
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1719243]
+new bridge connected
+[1719260]
+try login general store updated
+snmpd.service is active: active
+v2 traps: [{'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus'}]
+app starting
+app starting
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1720352]
+new bridge connected
+[1720366]
+try login general store updated
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+app starting
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1721587]
+new bridge connected
+[1721602]
+try login general store updated
+snmpd.service is active: active
+v2 traps: [{'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139'}]
+app starting
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1723909]
+new bridge connected
+[1723929]
+try login general store updated
+snmpd.service is active: active
+v2 traps: [{'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp'}]
+app starting
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1725273]
+new bridge connected
+[1725289]
+try login general store updated
+snmpd.service is active: active
+v2 traps: [{'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139'}]
+del user
+['V2 user removed']
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+{'Version': '', 'Username': 'JACOBOWENS', 'EngineId': '0x80001f8880763ab306454c176a00000000', 'Permissions': 'rwprivgroup', 'AuthType': 'SHA', 'PrivType': 'AES', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}
+Message recipient disconnected from message bus without replying
+app starting
+app starting
+logout cb general cleared
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1735810]
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1736020]
+new bridge connected
+[1736040]
+try login general store updated
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1741591]
+new bridge connected
+[1741616]
+snmpd.service is active: active
+v2 traps: [{'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus'}]
+making bridge for: jowens
+[1741667]
+new bridge connected
+[1741690]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+snmpd.service is active: active
+v2 traps: [{'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus'}]
+making bridge for: jowens
+[1742710]
+new bridge connected
+[1742753]
+making bridge for: jowens
+[1742779]
+new bridge connected
+[1742790]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1743201]
+new bridge connected
+[1743229]
+making bridge for: jowens
+[1743296]
+new bridge connected
+[1743311]
+snmpd.service is active: active
+v2 traps: [{'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus'}]
+making bridge for: jowens
+LOGIN PAGE LOADED
+making bridge for: jowens
+making bridge for: jowens
+[1744316]
+[1744317]
+[1744330]
+making bridge for: jowens
+[1744342]
+new bridge connected
+new bridge connected
+new bridge connected
+[1744360]
+[1744361]
+new bridge connected
+[1744364]
+[1744385]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1745096]
+new bridge connected
+[1745129]
+making bridge for: jowens
+[1745208]
+new bridge connected
+[1745218]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+LOGIN PAGE LOADED
+making bridge for: jowens
+[1746134]
+[1746135]
+making bridge for: jowens
+[1746153]
+making bridge for: jowens
+[1746164]
+new bridge connected
+new bridge connected
+new bridge connected
+[1746191]
+[1746192]
+new bridge connected
+[1746197]
+[1746213]
+snmpd.service is active: active
+v2 traps: [{'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp'}]
+making bridge for: jowens
+[1746846]
+new bridge connected
+[1746866]
+making bridge for: jowens
+[1746875]
+new bridge connected
+[1746894]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+snmpd.service is active: active
+v2 traps: [{'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c'}]
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+making bridge for: jowens
+[1748168]
+making bridge for: jowens
+[1748188]
+new bridge connected
+[1748199]
+new bridge connected
+[1748220]
+snmpd.service is active: active
+v2 traps: [{'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139'}]
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+snmpd.service is active: active
+v2 traps: [{'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c'}]
+making bridge for: jowens
+[1750460]
+new bridge connected
+[1750483]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1750510]
+new bridge connected
+[1750521]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1751231]
+new bridge connected
+[1751254]
+snmpd.service is active: active
+v2 traps: [{'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c'}]
+making bridge for: jowens
+[1751282]
+new bridge connected
+[1751361]
+snmpd.service is active: active
+v2 traps: [{'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp'}]
+making bridge for: jowens
+[1752189]
+new bridge connected
+[1752204]
+making bridge for: jowens
+[1752220]
+new bridge connected
+[1752236]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1755302]
+new bridge connected
+[1755314]
+making bridge for: jowens
+[1755330]
+new bridge connected
+[1755349]
+snmpd.service is active: active
+v2 traps: [{'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c'}]
+snmpd.service is active: active
+v2 traps: [{'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus'}]
+making bridge for: jowens
+[1756559]
+new bridge connected
+[1756592]
+snmpd.service is active: active
+v2 traps: [{'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp'}]
+making bridge for: jowens
+[1756609]
+new bridge connected
+[1756621]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+del user
+['V2 user updated']
+v2 traps: [{'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus'}]
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1759070]
+new bridge connected
+[1759083]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1759106]
+new bridge connected
+[1759118]
+snmpd.service is active: active
+v2 traps: [{'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp'}]
+making bridge for: jowens
+[1761335]
+new bridge connected
+[1761347]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1762518]
+new bridge connected
+[1762532]
+snmpd.service is active: active
+v2 traps: [{'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139'}]
+making bridge for: jowens
+[1763478]
+new bridge connected
+[1763489]
+snmpd.service is active: active
+v2 traps: [{'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus'}]
+making bridge for: jowens
+[1767878]
+new bridge connected
+[1767899]
+snmpd.service is active: active
+v2 traps: [{'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp'}]
+making bridge for: jowens
+[1769153]
+new bridge connected
+[1769168]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1770679]
+new bridge connected
+[1770692]
+snmpd.service is active: active
+v2 traps: [{'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139'}]
+making bridge for: jowens
+[1772215]
+new bridge connected
+[1772230]
+snmpd.service is active: active
+v2 traps: [{'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus'}]
+making bridge for: jowens
+[1772618]
+new bridge connected
+[1772640]
+snmpd.service is active: active
+v2 traps: [{'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c'}]
+making bridge for: jowens
+[1773321]
+new bridge connected
+[1773345]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+snmpd.service is active: active
+snmpd.service is active: active
+making bridge for: jowens
+[1774903]
+new bridge connected
+[1774927]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1775527]
+new bridge connected
+[1775703]
+snmpd.service is active: active
+v2 traps: [{'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c'}]
+making bridge for: jowens
+[1776141]
+new bridge connected
+[1776160]
+snmpd.service is active: active
+v2 traps: [{'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp'}]
+making bridge for: jowens
+[1776218]
+new bridge connected
+[1776237]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+snmpd.service is active: active
+{'id': 246730, 'job_path': '/org/freedesktop/systemd1/job/246730', 'unit': 'snmpd.service', 'method': 'stop', 'result': 'done'}
+snmpd.service is active: inactive
+snmpd.service is active: inactive
+v2 traps: [{'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp'}]
+snmpd.service is active: inactive
+{'id': 246731, 'job_path': '/org/freedesktop/systemd1/job/246731', 'unit': 'snmpd.service', 'method': 'start', 'result': 'done'}
+snmpd.service is active: active
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+firewalld.service is active: active
+{'id': 246825, 'job_path': '/org/freedesktop/systemd1/job/246825', 'unit': 'firewalld.service', 'method': 'stop', 'result': 'done'}
+firewalld.service is active: inactive
+NETWORK PAGE
+firewalld.service is active: inactive
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+firewalld.service is active: inactive
+{'id': 246826, 'job_path': '/org/freedesktop/systemd1/job/246826', 'unit': 'firewalld.service', 'method': 'start', 'result': 'done'}
+firewalld.service is active: active
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+[{'address': <dbus_next.signature.Variant ('s', 10.1.10.205)>, 'prefix': <dbus_next.signature.Variant ('u', 32)>}, {'address': <dbus_next.signature.Variant ('s', 10.1.10.205)>, 'prefix': <dbus_next.signature.Variant ('u', 24)>}]
+[{'address': <dbus_next.signature.Variant ('s', 10.1.10.205)>, 'prefix': <dbus_next.signature.Variant ('u', 32)>}, {'address': <dbus_next.signature.Variant ('s', 10.1.10.205)>, 'prefix': <dbus_next.signature.Variant ('u', 24)>}]
+ip address list
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1779270]
+new bridge connected
+[1779286]
+snmpd.service is active: active
+v2 traps: [{'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp'}]
+making bridge for: jowens
+[1780408]
+new bridge connected
+[1780420]
+snmpd.service is active: active
+v2 traps: [{'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c'}]
+making bridge for: jowens
+[1781513]
+new bridge connected
+[1781530]
+snmpd.service is active: active
+v2 traps: [{'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139'}]
+del user
+del user
+making bridge for: jowens
+[1783730]
+new bridge connected
+[1783755]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1785063]
+new bridge connected
+[1785082]
+snmpd.service is active: active
+v2 traps: [{'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c'}]
+making bridge for: jowens
+[1786009]
+new bridge connected
+[1786027]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1787025]
+new bridge connected
+[1787046]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1788600]
+new bridge connected
+[1788622]
+snmpd.service is active: active
+v2 traps: [{'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c'}]
+snmpd.service is active: active
+snmpd.service is active: active
+making bridge for: jowens
+[1791257]
+new bridge connected
+[1791280]
+snmpd.service is active: active
+v2 traps: [{'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp'}]
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+NETWORK PAGE
+firewalld.service is active: active
+IP 4 CONFIG PATH: /org/freedesktop/NetworkManager/IP4Config/2
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+snmpd.service is active: active
+v2 traps: [{'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus'}]
+making bridge for: jowens
+[1794595]
+new bridge connected
+[1794613]
+making bridge for: jowens
+[1795075]
+new bridge connected
+[1795088]
+making bridge for: jowens
+[1795310]
+new bridge connected
+[1795322]
+making bridge for: jowens
+[1799235]
+new bridge connected
+[1799247]
+making bridge for: jowens
+[1801002]
+new bridge connected
+[1801020]
+making bridge for: jowens
+[1802311]
+new bridge connected
+[1802327]
+making bridge for: jowens
+[1803362]
+new bridge connected
+[1803391]
+making bridge for: jowens
+[1807110]
+new bridge connected
+[1807124]
+making bridge for: jowens
+[1808902]
+new bridge connected
+[1808915]
+making bridge for: jowens
+[1810365]
+new bridge connected
+[1810383]
+making bridge for: jowens
+[1811639]
+new bridge connected
+[1811652]
+making bridge for: jowens
+[1812701]
+new bridge connected
+[1812712]
+making bridge for: jowens
+[1814305]
+new bridge connected
+[1814325]
+making bridge for: jowens
+[1815580]
+new bridge connected
+[1815604]
+['SetPasswordPolicy']
+['SetPasswordPolicy']
+making bridge for: jowens
+[1818980]
+new bridge connected
+[1818995]
+del user
+making bridge for: jowens
+[1820524]
+new bridge connected
+[1820544]
+del user
+making bridge for: jowens
+[1821881]
+new bridge connected
+[1821892]
+del user
+del user
+making bridge for: jowens
+[1826180]
+new bridge connected
+[1826195]
+making bridge for: jowens
+[1827368]
+new bridge connected
+[1827393]
+making bridge for: jowens
+[1828731]
+new bridge connected
+[1828743]
+making bridge for: jowens
+[1829557]
+new bridge connected
+[1829746]
+making bridge for: jowens
+[1831414]
+new bridge connected
+[1831439]
+making bridge for: jowens
+[1832128]
+new bridge connected
+[1832269]
+making bridge for: jowens
+[1833539]
+new bridge connected
+[1833551]
+making bridge for: jowens
+[1835039]
+new bridge connected
+[1835055]
+making bridge for: jowens
+[1837436]
+new bridge connected
+[1837455]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+del user
+['AddAdmin']
+snmpd.service is active: active
+v2 traps: [{'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139'}]
+making bridge for: jowens
+[1843324]
+new bridge connected
+[1843342]
+snmpd.service is active: active
+v2 traps: [{'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c'}]
+making bridge for: jowens
+[1844959]
+new bridge connected
+[1844975]
+snmpd.service is active: active
+v2 traps: [{'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus'}]
+del user
+['V2 user added']
+v2 traps: [{'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp'}]
+del user
+del user
+making bridge for: jowens
+[1849974]
+new bridge connected
+[1849989]
+snmpd.service is active: active
+v2 traps: [{'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c'}]
+making bridge for: jowens
+[1851436]
+new bridge connected
+[1851459]
+snmpd.service is active: active
+v2 traps: [{'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp'}]
+making bridge for: jowens
+[1852921]
+new bridge connected
+[1852940]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1854297]
+new bridge connected
+[1854313]
+snmpd.service is active: active
+v2 traps: [{'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c'}]
+del user
+making bridge for: jowens
+[1856949]
+new bridge connected
+[1856971]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1858560]
+new bridge connected
+[1858574]
+snmpd.service is active: active
+v2 traps: [{'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus'}]
+making bridge for: jowens
+[1859972]
+new bridge connected
+[1859987]
+snmpd.service is active: active
+v2 traps: [{'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp'}]
+making bridge for: jowens
+[1861462]
+new bridge connected
+[1861487]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1862195]
+new bridge connected
+[1862215]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1863604]
+new bridge connected
+[1863635]
+snmpd.service is active: active
+v2 traps: [{'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp'}]
+making bridge for: jowens
+[1865110]
+new bridge connected
+[1865126]
+snmpd.service is active: active
+v2 traps: [{'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus'}]
+making bridge for: jowens
+[1866912]
+new bridge connected
+[1866924]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1868601]
+new bridge connected
+[1868614]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1870113]
+new bridge connected
+[1870131]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1871739]
+new bridge connected
+[1871759]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+del user
+making bridge for: jowens
+[1873975]
+new bridge connected
+[1874002]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1876395]
+new bridge connected
+[1876408]
+snmpd.service is active: active
+v2 traps: [{'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp'}]
+making bridge for: jowens
+[1877878]
+new bridge connected
+[1877894]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1878041]
+new bridge connected
+[1878193]
+snmpd.service is active: active
+v2 traps: [{'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus'}]
+del user
+making bridge for: jowens
+[1879866]
+new bridge connected
+[1879883]
+snmpd.service is active: active
+v2 traps: [{'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139'}]
+making bridge for: jowens
+[1881711]
+new bridge connected
+[1881736]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1883259]
+new bridge connected
+[1883275]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+del user
+del user
+['V2 user updated']
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+del user
+['V2 user updated']
+v2 traps: [{'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c'}]
+making bridge for: jowens
+[1888476]
+new bridge connected
+[1888492]
+snmpd.service is active: active
+v2 traps: [{'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139'}]
+making bridge for: jowens
+[1888780]
+new bridge connected
+[1888927]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1890648]
+new bridge connected
+[1890665]
+making bridge for: jowens
+[1892501]
+new bridge connected
+[1892522]
+making bridge for: jowens
+[1892817]
+new bridge connected
+[1892825]
+making bridge for: jowens
+making bridge for: jowens
+[1895299]
+[1895303]
+new bridge connected
+new bridge connected
+[1895328]
+[1895329]
+making bridge for: jowens
+making bridge for: jowens
+[1899596]
+[1899597]
+new bridge connected
+new bridge connected
+[1899627]
+[1899626]
+making bridge for: jowens
+[1901529]
+new bridge connected
+[1901553]
+making bridge for: jowens
+[1901862]
+making bridge for: jowens
+[1901867]
+new bridge connected
+[1901880]
+new bridge connected
+[1901890]
+making bridge for: jowens
+[1903341]
+new bridge connected
+[1903352]
+making bridge for: jowens
+[1903390]
+making bridge for: jowens
+[1903395]
+new bridge connected
+[1903413]
+new bridge connected
+[1903429]
+making bridge for: jowens
+making bridge for: jowens
+[1911759]
+[1911762]
+new bridge connected
+new bridge connected
+[1911787]
+[1911788]
+making bridge for: jowens
+[1911817]
+new bridge connected
+[1911836]
+making bridge for: jowens
+[1913704]
+making bridge for: jowens
+[1913715]
+new bridge connected
+new bridge connected
+[1913732]
+[1913735]
+snmpd.service is active: active
+v2 traps: [{'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus'}]
+making bridge for: jowens
+[1913778]
+new bridge connected
+[1914063]
+making bridge for: jowens
+making bridge for: jowens
+[1916121]
+[1916124]
+new bridge connected
+new bridge connected
+[1916149]
+[1916150]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1916195]
+new bridge connected
+[1916395]
+making bridge for: jowens
+[1919832]
+new bridge connected
+[1919854]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+making bridge for: jowens
+[1919878]
+new bridge connected
+[1919942]
+making bridge for: jowens
+[1920007]
+new bridge connected
+[1920210]
+making bridge for: jowens
+making bridge for: jowens
+[1921943]
+[1921942]
+new bridge connected
+new bridge connected
+[1921969]
+[1921970]
+making bridge for: jowens
+[1922000]
+new bridge connected
+[1922012]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+del user
+['V2 user removed']
+snmpd.service is active: active
+v2 traps: [{'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus'}]
+making bridge for: jowens
+[1927924]
+new bridge connected
+[1927939]
+snmpd.service is active: active
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+del user
+['V2 user removed']
+snmpd.service is active: active
+v2 traps: [{'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp'}]
+making bridge for: jowens
+[1933866]
+new bridge connected
+[1933882]
+snmpd.service is active: active
+v2 traps: [{'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus'}]
+['V2 user added']
+v2 traps: [{'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus', 'Protocol': 'udp'}]
+['V2 user added']
+v2 traps: [{'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162', 'Version': '2c', 'Community': 'novus'}]
+['V2 user added']
+v2 traps: [{'Version': '2c', 'Community': 'novus', 'Protocol': 'udp', 'Host': '10.1.10.139', 'Port': '162'}]
+del user
+['V2 user removed']
+making bridge for: jowens
+[1943576]
+new bridge connected
+[1943595]
+making bridge for: jowens
+[1945839]
+new bridge connected
+[1945851]
+making bridge for: jowens
+[1948050]
+new bridge connected
+[1948062]
+making bridge for: jowens
+[1949825]
+new bridge connected
+[1950016]
+making bridge for: jowens
+[1951068]
+new bridge connected
+[1951104]
+making bridge for: jowens
+[1951516]
+new bridge connected
+[1951530]
+making bridge for: jowens
+[1953280]
+new bridge connected
+[1953296]

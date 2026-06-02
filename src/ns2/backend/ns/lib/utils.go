@@ -65,3 +65,15 @@ func HasAll(line string, elements []string) bool {
 	}
 	return true
 }
+
+func getString(dict map[string]string, key string) string {
+
+	v, ok := dict[key]
+
+	if !ok {
+		return ""
+	}
+
+	return v
+
+}

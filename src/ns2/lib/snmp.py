@@ -53,15 +53,28 @@ class V2Trap:
 
 @dataclass
 class V3Trap:
-    User: Optional[str] = ""
-    DestIpVersion: Optional[str] = ""
-    DestIp: Optional[str] = ""
-    Port: Optional[int] = 162
+    Version: Optional[str] = ""
+    Username: Optional[str] = ""
     EngineId: Optional[str] = ""
+    Permissions: Optional[str] = ""
     AuthType: Optional[str] = ""
-    AuthPass: Optional[str] = ""
     PrivType: Optional[str] = ""
-    PrivPass: Optional[str] = ""
+    Protocol: Optional[str] = ""
+    Host: Optional[str] = ""
+    Port: Optional[str] = ""
+
+    def from_dict(trapDict: dict):
+        return V3Trap(
+            Version=trapDict.get("Version"),
+            Username=trapDict.get("Username"),
+            EngineId=trapDict.get("EngineId"),
+            Permissions=trapDict.get("Permissions"),
+            AuthType=trapDict.get("AuthType"),
+            PrivType=trapDict.get("PrivType"),
+            Protocol=trapDict.get("Protocol"),
+            Host=trapDict.get("Host"),
+            Port=trapDict.get("Port"),
+        )
 
 
 @dataclass
@@ -94,7 +107,7 @@ class V2User:
     Community: str = ""
     Version: str = "v2c"
     Permissions: str = "rwnoauthgroup"
-    Source: str = ""
+    Source: str = "default"
     SecurityName: str = ""
 
     def from_dict(userDict: dict):

@@ -50,23 +50,19 @@ def MakeServicesDict(servs):
     # return [asdict(SystemdUnit(s)) for s in services]
 
 
-async def services_page():
+async def root_system_page():
 
     serviceUnits = MakeServicesDict(await ListUnits())
     # log.info(serviceUnits)
 
-    servicesTable = (
-        ui.table(
-            title="Services",
-            rows=serviceUnits,
-            column_defaults={
-                "align": "left",
-                "headerClasses": "uppercase text-primary",
-            },
-        )
-        .classes("w-full")
-        .props("flat")
-    )  # Add wrap-cells
+    servicesTable = ui.table(
+        title="Services",
+        rows=serviceUnits,
+        column_defaults={
+            "align": "left",
+            "headerClasses": "uppercase text-primary",
+        },
+    ).props("flat dense")
 
     with servicesTable.add_slot("body-cell-Sub State"):
         with servicesTable.cell("Sub State"):

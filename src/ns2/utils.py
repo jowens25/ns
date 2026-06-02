@@ -45,3 +45,23 @@ async def runAsyncCmdShell(cmd: str) -> tuple[str, str]:
 
 def validate_group(group: list):
     return [x.validate() for x in group]
+
+
+def make_col_of(l: str) -> dict:
+    return {"name": l, "label": l, "field": l}
+
+
+def make_action_col() -> dict:
+    return {"name": "action", "label": "", "align": "center"}
+
+
+def add_header_slot(tab):
+    return tab.add_slot(
+        "header",
+        r"""
+          <q-tr :props="props">
+             <q-th v-for="col in props.cols" :key="col.name" :props="props"> {{ col.label }} </q-th>
+              <q-th auto-width />
+          </q-tr>
+      """,
+    )

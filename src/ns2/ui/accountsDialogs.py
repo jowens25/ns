@@ -25,8 +25,10 @@ def editUserDialog(username):
     with ui.dialog() as dialog:
         with ui.card().classes("w-full max-h-[90vh] overflow-y-auto"):
             ui.label("Edit user").classes("text-h5")
-            user = ui.input("username", validation=usernameValidation).bind_value(
-                editUser, "Username"
+            user = (
+                ui.input("username", validation=usernameValidation)
+                .bind_value(editUser, "Username")
+                .props("dense")
             )
 
             def mustMatch(v):
@@ -35,13 +37,15 @@ def editUserDialog(username):
                 else:
                     return None
 
-            p1 = ui.input("password", validation=validatePass)
+            p1 = ui.input("password", validation=validatePass).props("dense")
 
-            p2 = ui.input("repeat password", validation=mustMatch).bind_value_to(
-                editUser, "Password"
+            p2 = (
+                ui.input("repeat password", validation=mustMatch)
+                .bind_value_to(editUser, "Password")
+                .props("dense")
             )
 
-            ui.select(["admin", "user"]).bind_value(editUser, "Group")
+            ui.select(["admin", "user"]).bind_value(editUser, "Group").props("dense")
 
             async def on_save_cb():
                 if all(validate_group([p1, p2, user])):
@@ -86,12 +90,12 @@ async def editPolicyDialog():
         with ui.card().classes("w-full max-h-[90vh] overflow-y-auto"):
             ui.label("Edit Password Policy").classes("text-h5")
 
-            ui.input("max length").bind_value(policy, "max")
-            ui.input("min length").bind_value(policy, "min")
-            ui.checkbox("require upper").bind_value(policy, "upper")
-            ui.checkbox("require lower").bind_value(policy, "lower")
-            ui.checkbox("require symbol").bind_value(policy, "symbol")
-            ui.checkbox("require digit").bind_value(policy, "digit")
+            ui.input("max length").bind_value(policy, "max").props("dense")
+            ui.input("min length").bind_value(policy, "min").props("dense")
+            ui.checkbox("require upper").bind_value(policy, "upper").props("dense")
+            ui.checkbox("require lower").bind_value(policy, "lower").props("dense")
+            ui.checkbox("require symbol").bind_value(policy, "symbol").props("dense")
+            ui.checkbox("require digit").bind_value(policy, "digit").props("dense")
 
             async def on_save_cb():
                 newPolicy = {
@@ -124,14 +128,14 @@ async def editPolicyDialog():
 def deleteUserDialog(username: str):
 
     with ui.dialog() as dialog:
+
         with ui.card().classes("w-full max-h-[90vh] overflow-y-auto"):
             ui.label(f"Delete Account").classes("text-h5")
-            ui.label(f"Are you sure you want to delete {username}")
+            ui.label(f"Are you sure you want to delete {username}?")
             with ui.row():
-                ui.button("Cancel", on_click=dialog.close())
+                ui.button("Cancel", on_click=dialog.close)
 
                 async def on_delete_cb():
-                    log.info("CALL delete DBUS")
                     rsp = await BridgeCall(
                         "com.novus.ns",
                         "/com/novus/ns",

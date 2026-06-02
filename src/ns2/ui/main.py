@@ -10,18 +10,17 @@ from zoneinfo import ZoneInfo
 from multiprocessing import freeze_support
 from ns2.ui.login import logout_cb
 
-# from ns2.ui.logs_page import logs_page, log_page
-from ns2.ui.accounts_page import accounts_page, accounts_user_page
+from ns2.ui.accounts_page import accounts_page
 
 from ns2.ui.networking_page import network_page, interface_page
 from ns2.ui.terminal import terminal_page
 from ns2.ui.theme import init_colors
 from ns2.ui.home_page import home_page
-from ns2.ui.snmp_page import snmp_page, snmp_user_page
-from ns2.ui.services_page import services_page
+from ns2.ui.snmp_page import snmp_page
+from ns2.ui.system_page import root_system_page
 
 from ns2.lib.timedate1 import CallListTimezones, CallGetTimezone, CallSetTimezone
-
+from ns2.lib.bridge import SetupBridge
 from ns2.ui.firewalld_page import firewall_page
 from ns2.utils import ASSETS_DIR, log
 
@@ -104,7 +103,6 @@ async def Clock():
 
 
 @ui.page("/")
-@ui.page("/overview")
 @ui.page("/networking")
 @ui.page("/networking/firewall")
 @ui.page("/networking/{interface_name}")
@@ -112,11 +110,11 @@ async def Clock():
 @ui.page("/logs/{log}")
 @ui.page("/services")
 @ui.page("/snmp")
-@ui.page("/snmp/{version}/{user}")
 @ui.page("/terminal")
 @ui.page("/accounts")
 @ui.page("/accounts/{user}")
 async def controlPanel():
+    await SetupBridge("jowens")
     current_tz = await CallGetTimezone()
 
     app.storage.general.update({"tz": current_tz})
@@ -136,7 +134,7 @@ async def controlPanel():
     with ui.left_drawer(bordered=True).classes("bg-dark") as left_drawer:
         ui.separator()
         ui.button(
-            "Overview",
+            "System",
             on_click=lambda: ui.navigate.to("/"),
         ).props(
             "flat color=white align=left"
@@ -153,12 +151,12 @@ async def controlPanel():
         # ).props(
         #    "flat color=white align=left"
         # ).classes("full-width")
-        ui.button(
-            "Services",
-            on_click=lambda: ui.navigate.to("/services"),
-        ).props(
-            "flat color=white align=left"
-        ).classes("full-width")
+        # ui.button(
+        #    "Services",
+        #    on_click=lambda: ui.navigate.to("/services"),
+        # ).props(
+        #    "flat color=white align=left"
+        # ).classes("full-width")
         ui.button(
             "Terminal",
             on_click=lambda: ui.navigate.to("/terminal"),
@@ -190,21 +188,21 @@ async def controlPanel():
         ui.label(version("ns2"))
     ui.sub_pages(
         {
-            "/": home_page,
+            "/": root_system_page,
             "/networking": network_page,
             "/networking/firewall": firewall_page,
             "/networking/{interface_name}": interface_page,
             # "/logs": logs_page,
             # "/logs/{log}": log_page,
             "/snmp": snmp_page,
-            "/snmp/{version}/{user}": snmp_user_page,
             "/accounts": accounts_page,
-            "/accounts/{user}": accounts_user_page,
             "/terminal": terminal_page,
-            "/services": services_page,
             #'/tests': tests_page
         }
     ).classes("w-full")
+
+
+production = False
 
 
 def main():
@@ -220,5 +218,14 @@ def main():
     )
 
 
-if __name__ == "__main__":
+if __name__ == "__main__" and production:
     main()
+else:
+
+    ui.run(
+        port=8000,
+        reload=True,
+        storage_secret="your-secret-key",
+        title="Novus Configuration Tool",
+        favicon=str(ASSETS_DIR / "favicon.png"),
+    )

@@ -9,14 +9,84 @@ import (
 // SnmpInterface implements the com.novus.ns.snmp interface
 type SnmpInterface struct{ conn *dbus.Conn }
 
-func (s *SnmpInterface) Reset(sender dbus.Sender, message dbus.Message) (string, *dbus.Error) {
+// get, create, modify, remove
+// ===============================================================================================================================
+// v2 users ======================================================================================================================
+// ===============================================================================================================================
+
+func (s *SnmpInterface) GetV2Users() ([]map[string]string, *dbus.Error) {
+
+	users := []map[string]string{}
+	v2s, err := ReadV2Users()
+
+	if err != nil {
+		return nil, &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+	}
+
+	for _, u := range v2s {
+		users = append(users, u.ToDict())
+	}
+
+	return users, nil
+}
+
+func (s *SnmpInterface) GetV2UserByCommunity(community string) (map[string]string, *dbus.Error) {
+
+	u, err := ReadV2UserByCommunity(community)
+
+	if err != nil {
+		return nil, &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+	}
+
+	return u.ToDict(), nil
+}
+
+func (s *SnmpInterface) CreateV2User(sender dbus.Sender, message dbus.Message, v2Dict map[string]string) (string, *dbus.Error) {
+
+	GetUserInfoFromSender(s.conn, sender)
 
 	isAuthorized := CheckAuthorization(sender, GetActionId(message))
 
 	if isAuthorized {
+		u := v2User{}
 
-		err := ResetSnmpd()
+		u.FromDict(v2Dict)
+		err := AddV2User(u)
+		if err != nil {
+			return "", &dbus.Error{
+				Name: "org.freedesktop.DBus.Error",
+				Body: []any{err.Error()},
+			}
+		}
+		err = s.conn.Emit("/com/novus/ns", "com.novus.ns.snmp.Changed", "V2 user added")
+		if err != nil {
+			log.Println(err.Error())
+		}
 
+		return "user created", nil
+	}
+
+	return "", &dbus.Error{
+		Name: "org.freedesktop.DBus.Error.AccessDenied",
+		Body: []any{"Not authorized to create v2 user"},
+	}
+
+}
+
+func (s *SnmpInterface) ModifyV2User(sender dbus.Sender, message dbus.Message, v2Dict map[string]string) (string, *dbus.Error) {
+
+	isAuthorized := CheckAuthorization(sender, GetActionId(message))
+
+	if isAuthorized {
+		u := v2User{}
+		u.FromDict(v2Dict)
+		err := EditV2User(u)
 		if err != nil {
 			return "", &dbus.Error{
 				Name: "org.freedesktop.DBus.Error",
@@ -24,23 +94,203 @@ func (s *SnmpInterface) Reset(sender dbus.Sender, message dbus.Message) (string,
 			}
 		}
 
-		err = s.conn.Emit("/com/novus/ns", "com.novus.ns.snmp.Changed", "Snmp Reset")
+		err = s.conn.Emit("/com/novus/ns", "com.novus.ns.snmp.Changed", "V2 user updated")
 		if err != nil {
 			log.Println(err.Error())
 		}
 
-		return "reset complete", nil
+		return "user updated", nil
+	}
+
+	return "", &dbus.Error{
+		Name: "org.freedesktop.DBus.Error.AccessDenied",
+		Body: []any{"Not authorized to modify v2 user"},
+	}
+
+}
+
+func (s *SnmpInterface) RemoveV2User(sender dbus.Sender, message dbus.Message, v2Dict map[string]string) (string, *dbus.Error) {
+
+	isAuthorized := CheckAuthorization(sender, GetActionId(message))
+
+	if isAuthorized {
+		u := v2User{}
+		u.FromDict(v2Dict)
+		err := DeleteV2User(u)
+		if err != nil {
+			return "", &dbus.Error{
+				Name: "org.freedesktop.DBus.Error",
+				Body: []any{err.Error()},
+			}
+		}
+
+		err = s.conn.Emit("/com/novus/ns", "com.novus.ns.snmp.Changed", "V2 user removed")
+		if err != nil {
+			log.Println(err.Error())
+		}
+		return "user removed", nil
 
 	}
 
 	return "", &dbus.Error{
 		Name: "org.freedesktop.DBus.Error.AccessDenied",
-		Body: []any{"Not authorized to reset snmp"},
+		Body: []any{"Not authorized to remove v2 user"},
 	}
 
 }
 
-// CreateV3User creates a V3 user
+// get, create, modify, remove
+// ===============================================================================================================================
+// v2 traps ======================================================================================================================
+// ===============================================================================================================================
+
+func (s *SnmpInterface) GetV2Traps() ([]map[string]string, *dbus.Error) {
+
+	traplist := []map[string]string{}
+	traps, err := ReadV2Traps()
+
+	if err != nil {
+		return nil, &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+	}
+
+	for _, u := range traps {
+		traplist = append(traplist, u.ToDict())
+	}
+
+	return traplist, nil
+}
+
+func (s *SnmpInterface) CreateV2Trap(sender dbus.Sender, message dbus.Message, trap map[string]string) (string, *dbus.Error) {
+
+	isAuthorized := CheckAuthorization(sender, GetActionId(message))
+
+	if isAuthorized {
+		var newTrap v2Trap
+		newTrap.FromDict(trap)
+		err := AddV2Trap(newTrap)
+		if err != nil {
+			return "", &dbus.Error{
+				Name: "org.freedesktop.DBus.Error",
+				Body: []any{err.Error()},
+			}
+		}
+
+		err = s.conn.Emit("/com/novus/ns", "com.novus.ns.snmp.Changed", "Added v2 Trap")
+		if err != nil {
+			log.Println(err.Error())
+		}
+
+		return "added v2 trap", nil
+	}
+
+	return "", &dbus.Error{
+		Name: "org.freedesktop.DBus.Error.AccessDenied",
+		Body: []any{"Not authorized to create v3 trap"},
+	}
+
+}
+
+func (s *SnmpInterface) ModifyV2Trap(sender dbus.Sender, message dbus.Message, trap map[string]string) (string, *dbus.Error) {
+
+	isAuthorized := CheckAuthorization(sender, GetActionId(message))
+
+	if isAuthorized {
+		u := v2Trap{}
+		u.FromDict(trap)
+		err := EditV2Trap(u)
+		if err != nil {
+			return "", &dbus.Error{
+				Name: "org.freedesktop.DBus.Error",
+				Body: []any{err.Error()},
+			}
+		}
+
+		err = s.conn.Emit("/com/novus/ns", "com.novus.ns.snmp.Changed", "V2 trap updated")
+		if err != nil {
+			log.Println(err.Error())
+		}
+
+		return "trap updated", nil
+	}
+
+	return "", &dbus.Error{
+		Name: "org.freedesktop.DBus.Error.AccessDenied",
+		Body: []any{"Not authorized to modify v2 trap"},
+	}
+
+}
+
+func (s *SnmpInterface) RemoveV2Trap(sender dbus.Sender, message dbus.Message, trap map[string]string) (string, *dbus.Error) {
+
+	isAuthorized := CheckAuthorization(sender, GetActionId(message))
+
+	if isAuthorized {
+		t := v2Trap{}
+		t.FromDict(trap)
+		err := DeleteV2Trap(t)
+		if err != nil {
+			return "", &dbus.Error{
+				Name: "org.freedesktop.DBus.Error",
+				Body: []any{err.Error()},
+			}
+		}
+
+		err = s.conn.Emit("/com/novus/ns", "com.novus.ns.snmp.Changed", "V2 trap removed")
+		if err != nil {
+			log.Println(err.Error())
+		}
+		return "v2 trap removed", nil
+
+	}
+
+	return "", &dbus.Error{
+		Name: "org.freedesktop.DBus.Error.AccessDenied",
+		Body: []any{"Not authorized to remove v2 trap"},
+	}
+
+}
+
+// get, create, modify, remove
+// ===============================================================================================================================
+// v3 users ======================================================================================================================
+// ===============================================================================================================================
+
+func (s *SnmpInterface) GetV3Users() ([]map[string]string, *dbus.Error) {
+
+	users := []map[string]string{}
+	v3s, err := ReadV3Users()
+
+	if err != nil {
+		return nil, &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+	}
+
+	for _, u := range v3s {
+		users = append(users, u.ToDict())
+	}
+
+	return users, nil
+}
+
+func (s *SnmpInterface) GetV3UserByUsername(username string) (map[string]string, *dbus.Error) {
+
+	u, err := ReadV3UserByUsername(username)
+
+	if err != nil {
+		return nil, &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+	}
+
+	return u.ToDict(), nil
+}
+
 func (s *SnmpInterface) CreateV3User(sender dbus.Sender, message dbus.Message, v3 map[string]string) (string, *dbus.Error) {
 
 	isAuthorized := CheckAuthorization(sender, GetActionId(message))
@@ -71,89 +321,6 @@ func (s *SnmpInterface) CreateV3User(sender dbus.Sender, message dbus.Message, v
 
 }
 
-// GetV3UserByUsername returns a V3 user by username
-func (s *SnmpInterface) GetV3UserByUsername(username string) (map[string]string, *dbus.Error) {
-
-	u, err := ReadV3UserByUsername(username)
-
-	if err != nil {
-		return nil, &dbus.Error{
-			Name: "org.freedesktop.DBus.Error",
-			Body: []any{err.Error()},
-		}
-	}
-
-	return u.ToDict(), nil
-}
-
-// GetV3Users returns all V3 users
-func (s *SnmpInterface) GetV3Users() ([]map[string]string, *dbus.Error) {
-
-	users := []map[string]string{}
-	v3s, err := ReadV3Users()
-
-	if err != nil {
-		return nil, &dbus.Error{
-			Name: "org.freedesktop.DBus.Error",
-			Body: []any{err.Error()},
-		}
-	}
-
-	for _, u := range v3s {
-		users = append(users, u.ToDict())
-	}
-
-	return users, nil
-
-	//return ReadV3Users(), nil
-}
-
-func (s *SnmpInterface) ReadV2Traps() ([]map[string]string, *dbus.Error) {
-	trapsList := []map[string]string{}
-	traps, err := _readV2TrapsFromFile()
-
-	if err != nil {
-		return nil, &dbus.Error{
-			Name: "org.freedesktop.DBus.Error",
-			Body: []any{err.Error()},
-		}
-	}
-
-	for _, trap := range traps {
-		trapsList = append(trapsList, trap.ToDict())
-	}
-
-	return trapsList, nil
-}
-
-func (s *SnmpInterface) WriteV2Trap(sender dbus.Sender, message dbus.Message, trap map[string]string) *dbus.Error {
-	isAuthorized := CheckAuthorization(sender, GetActionId(message))
-
-	if isAuthorized {
-		var newTrap v2Trap
-		newTrap.FromDict(trap)
-		err := _writeV2TrapsToFile(newTrap)
-		if err != nil {
-			return &dbus.Error{
-				Name: "org.freedesktop.DBus.Error",
-				Body: []any{err.Error()},
-			}
-		}
-
-		err = s.conn.Emit("/com/novus/ns", "com.novus.ns.snmp.Changed", "Add v2 trap")
-		if err != nil {
-			log.Println(err.Error())
-		}
-
-	}
-
-	return &dbus.Error{
-		Name: "org.freedesktop.DBus.Error.AccessDenied",
-		Body: []any{"Not authorized to add v2 traps"},
-	}
-}
-
-// ModifyV3User modifies a V3 user
 func (s *SnmpInterface) ModifyV3User(sender dbus.Sender, message dbus.Message, initv3, finv3 map[string]string) (string, *dbus.Error) {
 
 	isAuthorized := CheckAuthorization(sender, GetActionId(message))
@@ -217,43 +384,15 @@ func (s *SnmpInterface) RemoveV3User(sender dbus.Sender, message dbus.Message, v
 
 }
 
-// CreateV2User creates a V2 user
-func (s *SnmpInterface) CreateV2User(sender dbus.Sender, message dbus.Message, v2Dict map[string]string) (string, *dbus.Error) {
+// get, create, modify, delete
+// ===============================================================================================================================
+// v3 traps ======================================================================================================================
+// ===============================================================================================================================
 
-	GetUserInfoFromSender(s.conn, sender)
+func (s *SnmpInterface) GetV3Traps() ([]map[string]string, *dbus.Error) {
 
-	isAuthorized := CheckAuthorization(sender, GetActionId(message))
-
-	if isAuthorized {
-		u := v2User{}
-
-		u.FromDict(v2Dict)
-		err := AddV2User(u)
-		if err != nil {
-			return "", &dbus.Error{
-				Name: "org.freedesktop.DBus.Error",
-				Body: []any{err.Error()},
-			}
-		}
-		err = s.conn.Emit("/com/novus/ns", "com.novus.ns.snmp.Changed", "V2 user added")
-		if err != nil {
-			log.Println(err.Error())
-		}
-
-		return "user created", nil
-	}
-
-	return "", &dbus.Error{
-		Name: "org.freedesktop.DBus.Error.AccessDenied",
-		Body: []any{"Not authorized to create v2 user"},
-	}
-
-}
-
-// GetV2UserByCommunity returns a V2 user by community
-func (s *SnmpInterface) GetV2UserByCommunity(community string) (map[string]string, *dbus.Error) {
-
-	u, err := ReadV2UserByCommunity(community)
+	traplist := []map[string]string{}
+	traps, err := ReadV3Traps()
 
 	if err != nil {
 		return nil, &dbus.Error{
@@ -262,38 +401,21 @@ func (s *SnmpInterface) GetV2UserByCommunity(community string) (map[string]strin
 		}
 	}
 
-	return u.ToDict(), nil
-}
-
-// GetV2Users returns all V2 users
-func (s *SnmpInterface) GetV2Users() ([]map[string]string, *dbus.Error) {
-
-	users := []map[string]string{}
-	v2s, err := ReadV2Users()
-
-	if err != nil {
-		return nil, &dbus.Error{
-			Name: "org.freedesktop.DBus.Error",
-			Body: []any{err.Error()},
-		}
+	for _, u := range traps {
+		traplist = append(traplist, u.ToDict())
 	}
 
-	for _, u := range v2s {
-		users = append(users, u.ToDict())
-	}
-
-	return users, nil
+	return traplist, nil
 }
 
-// ModifyV2User modifies a V2 user
-func (s *SnmpInterface) ModifyV2User(sender dbus.Sender, message dbus.Message, v2Dict map[string]string) (string, *dbus.Error) {
+func (s *SnmpInterface) CreateV3Trap(sender dbus.Sender, message dbus.Message, trap map[string]string) (string, *dbus.Error) {
 
 	isAuthorized := CheckAuthorization(sender, GetActionId(message))
 
 	if isAuthorized {
-		u := v2User{}
-		u.FromDict(v2Dict)
-		err := EditV2User(u)
+		var newTrap v3Trap
+		newTrap.FromDict(trap)
+		err := AddV3Trap(newTrap)
 		if err != nil {
 			return "", &dbus.Error{
 				Name: "org.freedesktop.DBus.Error",
@@ -301,30 +423,30 @@ func (s *SnmpInterface) ModifyV2User(sender dbus.Sender, message dbus.Message, v
 			}
 		}
 
-		err = s.conn.Emit("/com/novus/ns", "com.novus.ns.snmp.Changed", "V2 user updated")
+		err = s.conn.Emit("/com/novus/ns", "com.novus.ns.snmp.Changed", "Added v3 Trap")
 		if err != nil {
 			log.Println(err.Error())
 		}
 
-		return "user updated", nil
+		return "added v3 trap", nil
 	}
 
 	return "", &dbus.Error{
 		Name: "org.freedesktop.DBus.Error.AccessDenied",
-		Body: []any{"Not authorized to modify v2 user"},
+		Body: []any{"Not authorized to create v3 trap"},
 	}
 
 }
 
-// RemoveV2User removes a V2 user
-func (s *SnmpInterface) RemoveV2User(sender dbus.Sender, message dbus.Message, v2Dict map[string]string) (string, *dbus.Error) {
+func (s *SnmpInterface) ModifyV3Trap(sender dbus.Sender, message dbus.Message, init, final map[string]string) (string, *dbus.Error) {
 
 	isAuthorized := CheckAuthorization(sender, GetActionId(message))
 
 	if isAuthorized {
-		u := v2User{}
-		u.FromDict(v2Dict)
-		err := DeleteV2User(u)
+		var initialTrap, finalTrap v3Trap
+		initialTrap.FromDict(init)
+		finalTrap.FromDict(final)
+		err := EditV3Trap(initialTrap, finalTrap)
 		if err != nil {
 			return "", &dbus.Error{
 				Name: "org.freedesktop.DBus.Error",
@@ -332,17 +454,81 @@ func (s *SnmpInterface) RemoveV2User(sender dbus.Sender, message dbus.Message, v
 			}
 		}
 
-		err = s.conn.Emit("/com/novus/ns", "com.novus.ns.snmp.Changed", "V2 user removed")
+		err = s.conn.Emit("/com/novus/ns", "com.novus.ns.snmp.Changed", "Trap updated")
 		if err != nil {
 			log.Println(err.Error())
 		}
+
+		return "trap updated", nil
+	}
+
+	return "", &dbus.Error{
+		Name: "org.freedesktop.DBus.Error.AccessDenied",
+		Body: []any{"Not authorized to modify v3 trap"},
+	}
+
+}
+
+// RemoveV3User removes a V3 user
+func (s *SnmpInterface) RemoveV3Trap(sender dbus.Sender, message dbus.Message, trap map[string]string) (string, *dbus.Error) {
+
+	isAuthorized := CheckAuthorization(sender, GetActionId(message))
+
+	if isAuthorized {
+		t := v3Trap{}
+
+		t.FromDict(trap)
+		err := DeleteV3Trap(t)
+		if err != nil {
+			return "", &dbus.Error{
+				Name: "org.freedesktop.DBus.Error",
+				Body: []any{err.Error()},
+			}
+
+		}
+
+		err = s.conn.Emit("/com/novus/ns", "com.novus.ns.snmp.Changed", "User removed")
+		if err != nil {
+			log.Println(err.Error())
+		}
+
 		return "user removed", nil
+	}
+
+	return "", &dbus.Error{
+		Name: "org.freedesktop.DBus.Error.AccessDenied",
+		Body: []any{"Not authorized to remove v3 user"},
+	}
+
+}
+
+func (s *SnmpInterface) Reset(sender dbus.Sender, message dbus.Message) (string, *dbus.Error) {
+
+	isAuthorized := CheckAuthorization(sender, GetActionId(message))
+
+	if isAuthorized {
+
+		err := ResetSnmpd()
+
+		if err != nil {
+			return "", &dbus.Error{
+				Name: "org.freedesktop.DBus.Error",
+				Body: []any{err.Error()},
+			}
+		}
+
+		err = s.conn.Emit("/com/novus/ns", "com.novus.ns.snmp.Changed", "Snmp Reset")
+		if err != nil {
+			log.Println(err.Error())
+		}
+
+		return "reset complete", nil
 
 	}
 
 	return "", &dbus.Error{
 		Name: "org.freedesktop.DBus.Error.AccessDenied",
-		Body: []any{"Not authorized to remove v2 user"},
+		Body: []any{"Not authorized to reset snmp"},
 	}
 
 }

@@ -36,8 +36,10 @@ async def try_login(_username: str, _password: str) -> None:
 
 
 @ui.page("/login")
-def login_page():
+async def login_page():
     log.info("LOGIN PAGE LOADED")
+
+    await SetupBridge("jowens")
 
     init_colors()
     with ui.dialog() as support_dialog, ui.card():
