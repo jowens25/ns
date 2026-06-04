@@ -1,3 +1,5 @@
+import asyncio
+
 from nicegui import ui
 from dbus_next import Message
 from ns2.utils import log, make_col_of, make_action_col
@@ -6,8 +8,7 @@ from ns2.lib.accounts import GetUsers, SystemAccount
 from ns2.lib.bridge import GetBridge, BridgeCall
 from ns2.ui.accountsDialogs import (
     addUserDialog,
-    deleteUserDialog,
-    editUserDialog,
+    editDeleteUserDialog,
     editPolicyDialog,
 )
 
@@ -15,6 +16,7 @@ from ns2.ui.accountsDialogs import (
 def notification_handler(msg: Message):
     if msg.interface == "com.novus.ns.accounts" and msg.member == "Changed":
         log.info(msg.body)
+        asyncio.sleep(0.25)
         accounts_table.refresh()
         return True
 
@@ -47,20 +49,31 @@ async def accounts_table():
         ui.notify(rsp.error_name)
         ui.label(rsp.error_name)
         return
-    tab = ui.table(
-        title="Accounts",
-        columns=[
-            make_col_of("Username"),
-            make_col_of("Groups"),
-            make_col_of("login"),
-            make_action_col(),
-        ],
-        rows=rsp.body[0],
-        column_defaults={
-            "align": "left",
-            "headerClasses": "uppercase text-primary",
-        },
-    ).props("flat dense")
+    tab = (
+        ui.table(
+            title="Accounts",
+            columns=[
+                make_col_of("Username"),
+                make_col_of("Group"),
+                make_col_of("Login"),
+                make_action_col(),
+            ],
+            rows=rsp.body[0],
+            column_defaults={
+                "align": "left",
+                "headerClasses": "uppercase text-primary",
+            },
+        )
+        .classes("w-full")
+        .props("flat dense")
+    )
+
+    with tab.add_slot("body-cell-Group"):
+        with tab.cell("Group"):
+            ui.badge().props("""
+                :color="props.value == 'admin' ? 'green' : 'grey'"
+                :label="props.value"
+            """)
 
     with tab.add_slot("top-right"):
         with ui.row():
@@ -74,10 +87,10 @@ async def accounts_table():
 
     async def on_delete_cb(e):
         username: str = e.args
-        dialog = await deleteUserDialog(username)
-        log.info("del user")
+        dialog = await editDeleteUserDialog(username)
         result = await dialog
-        ui.notify(result)
+        if result:
+            ui.notify(result)
 
     tab.on("delete-account", on_delete_cb)
 

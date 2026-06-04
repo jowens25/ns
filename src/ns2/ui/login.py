@@ -19,10 +19,19 @@ async def logout_cb():
 
 async def try_login(_username: str, _password: str) -> None:
 
-    auth = await CallPamAuthenticate(_username, _password)
+    rsp = await CallPamAuthenticate(_username, _password)
+
+    if rsp.error_name is not None:
+        auth = False
+    else:
+        auth = rsp
 
     if auth:
         activeUser = await SetupBridge(_username)
+        if activeUser != _username:
+            ui.notify("active != _user")
+            return
+        print(activeUser)
         if not app.storage.user.get("uid"):
             app.storage.user.update({"uid": str(uuid.uuid4())})
 
@@ -38,8 +47,6 @@ async def try_login(_username: str, _password: str) -> None:
 @ui.page("/login")
 async def login_page():
     log.info("LOGIN PAGE LOADED")
-
-    await SetupBridge("jowens")
 
     init_colors()
     with ui.dialog() as support_dialog, ui.card():

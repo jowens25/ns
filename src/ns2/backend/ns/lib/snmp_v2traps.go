@@ -2,7 +2,6 @@ package lib
 
 import (
 	"fmt"
-	"log"
 	"slices"
 	"strings"
 )
@@ -98,6 +97,33 @@ func _writeV2TrapToFile(trap v2Trap) error {
 
 }
 
+func _deleteV2TrapFromConfig(trap v2Trap) error {
+
+	_props := []string{
+		trap.Version,
+		trap.Community,
+		trap.Protocol,
+		trap.Host,
+		trap.Port}
+
+	lines, err := GetFileLines(SNMP_CONF_FILE)
+	if err != nil {
+		return err
+	}
+
+	for idx, line := range lines {
+		if strings.HasPrefix(line, "trapsess") && HasAll(line, _props) {
+			lines = slices.Delete(lines, idx, idx+1)
+		}
+	}
+
+	err = SetFileLines(SNMP_CONF_FILE, lines)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func ReadV2Traps() ([]v2Trap, error) {
 	traps, err := _readV2TrapsFromFile()
 	if err != nil {
@@ -133,25 +159,16 @@ func ReadV2TrapByCommunity(community string) (*v2Trap, error) {
 }
 
 // edits by community name
-func EditV2Trap(trap v2Trap) error {
-
-	existingTrap, err := ReadV2TrapByCommunity(trap.Community)
-	if err != nil {
-		return err
-	}
-
-	if existingTrap == nil {
-		return fmt.Errorf("no trap found by community")
-	}
+func EditV2Trap(initTrap, finalTrap v2Trap) error {
 
 	if err := _stopUnit("snmpd.service"); err != nil {
 		return err
 	}
-	if err := DeleteV2Trap(*existingTrap); err != nil {
+	if err := _deleteV2TrapFromConfig(initTrap); err != nil {
 		return err
 	}
 
-	if err := _writeV2TrapToFile(trap); err != nil {
+	if err := _writeV2TrapToFile(finalTrap); err != nil {
 		return err
 	}
 	if err := _startUnit("snmpd.service"); err != nil {
@@ -166,34 +183,11 @@ func DeleteV2Trap(trap v2Trap) error {
 	if err := _stopUnit("snmpd.service"); err != nil {
 		return err
 	}
-	_trap := []string{trap.Version,
-		trap.Community,
-		trap.Protocol,
-		trap.Host,
-		trap.Port}
-
-	log.Println("Delete v2 trap")
-	lines, err := GetFileLines(SNMP_CONF_FILE)
-	if err != nil {
+	if err := _deleteV2TrapFromConfig(trap); err != nil {
 		return err
 	}
-
-	for idx, line := range lines {
-
-		if strings.HasPrefix(line, "trapsess") && HasAll(line, _trap) {
-			lines = slices.Delete(lines, idx, idx+1)
-
-		}
-
-	}
-
-	if err := SetFileLines(SNMP_CONF_FILE, lines); err != nil {
-		return err
-	}
-
 	if err := _startUnit("snmpd.service"); err != nil {
 		return err
 	}
-
 	return nil
 }

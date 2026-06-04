@@ -15,15 +15,17 @@ from dbus_next import Message
 from ns2.lib.bridge import BridgeCall, GetBridge
 from ns2.lib.systemd1 import isActive, SystemdStop, SystemdStart
 
-from ns2.lib.snmp import V3User, V2User
+from ns2.lib.snmp import are_you_sure_you_want_to
 
 from ns2.ui.snmpDialogs import (
-    create_v3_user_dialog,
-    createV2UserDialog,
+    AddV3UserDialog,
+    AddV2UserDialog,
     AddV2TrapDialog,
     AddV3TrapDialog,
-    edit_delete_v2_user_card,
-    edit_delete_v3_user_card,
+    editDeleteV2User,
+    editDeleteV3User,
+    editDeleteV2Trap,
+    editDeleteV3Trap,
 )
 
 
@@ -75,7 +77,7 @@ async def snmp_status():
                         f"{action}", on_click=lambda: dialog.submit(action)
                     ).props("flat color=accent align=left")
 
-            result = await dialog
+            result = await are_you_sure_you_want_to(f"{action} snmp?")
             active = await isActive("snmpd.service")
 
             if result == "enable" and not active:
@@ -120,7 +122,9 @@ async def snmp_status():
                 ui.button("Reset SNMPD Config", on_click=snmp_reset_cb).props("flat")
                 ui.button(
                     "Download MIB",
-                    on_click=lambda: ui.download.file(str(ASSETS_DIR / "NOVUS.mib")),
+                    on_click=lambda: ui.download.file(
+                        str(ASSETS_DIR / "NOVUS-SECURE-MIB_REV1.3.mib")
+                    ),
                 ).props("flat")
 
     return status
@@ -135,7 +139,7 @@ async def v2UserTable():
 
     v2Users = v2Users.body[0]
 
-    dialog = await createV2UserDialog()
+    dialog = await AddV2UserDialog()
 
     tab = (
         ui.table(
@@ -163,11 +167,10 @@ async def v2UserTable():
             ui.button(icon="add", on_click=dialog.open).props("dense flat")
 
     async def on_delete_cb(e):
-        username: str = e.args
-        dialog = await edit_delete_v2_user_card(username)
-        log.info("del user")
+        dialog = await editDeleteV2User(e.args)
         result = await dialog
-        ui.notify(result)
+        if result:
+            ui.notify(result)
 
     with tab.add_slot("body-cell-action"):
         with tab.cell().props("align=right"):
@@ -183,13 +186,13 @@ async def v2TrapsTable():
 
     dialog = await AddV2TrapDialog()
 
-    traps = await BridgeCall(
+    rsp = await BridgeCall(
         "com.novus.ns", "/com/novus/ns", "com.novus.ns.snmp", "GetV2Traps", "", []
     )
 
-    log.info(f"v2 traps: {traps.body[0]}")
+    traps = rsp.body[0]
 
-    traps = traps.body[0]
+    log.info(f"v2 traps: {traps}")
 
     tab = (
         ui.table(
@@ -218,11 +221,10 @@ async def v2TrapsTable():
             ui.button(icon="add", on_click=dialog.open).props("dense flat")
 
     async def on_delete_cb(e):
-        username: str = e.args
-        dialog = await edit_delete_v2_user_card(username)
-        log.info("del user")
+        dialog = await editDeleteV2Trap(e.args)
         result = await dialog
-        ui.notify(result)
+        if result:
+            ui.notify(result)
 
     with tab.add_slot("body-cell-action"):
         with tab.cell().props("align=right"):
@@ -242,7 +244,7 @@ async def v3UserTable():
 
     v3Users = v3Users.body[0]
 
-    dialog = await create_v3_user_dialog()
+    dialog = await AddV3UserDialog()
 
     tab = (
         ui.table(
@@ -265,23 +267,15 @@ async def v3UserTable():
         .classes("w-full")
     )
 
-    tab.add_slot(
-        f"body-cell-Username",
-        f""" <q-td :props="props">
-                   <a :href="'/snmp/v3/'+ props.row.Username" class="text-accent cursor-pointer hover:underline"> {{{{ props.value }}}} </a>
-                   </q-td> """,
-    )
-
     with tab.add_slot("top-right"):
         with ui.row():
             ui.input("Search").bind_value(tab, "filter").props("dense")
             ui.button(icon="add", on_click=dialog.open).props("dense flat")
 
     async def on_delete_cb(e):
-        username: str = e.args
-        async with edit_delete_v3_user_card(username) as dialog:
-            log.info("del v3 user")
-            result = await dialog
+        dialog = await editDeleteV3User(e.args)
+        result = await dialog
+        if result:
             ui.notify(result)
 
     with tab.add_slot("body-cell-action"):
@@ -298,11 +292,17 @@ async def v3TrapsTable():
 
     dialog = await AddV3TrapDialog()
 
-    traps = await BridgeCall(
+    rsp = await BridgeCall(
         "com.novus.ns", "/com/novus/ns", "com.novus.ns.snmp", "GetV3Traps", "", []
     )
 
-    traps = traps.body[0]
+    if rsp.error_name is not None:
+        ui.notify(rsp.body[0])
+        return
+
+    traps = rsp.body[0]
+
+    log.info(f"got v3 traps {traps}")
 
     tab = (
         ui.table(
@@ -311,7 +311,6 @@ async def v3TrapsTable():
             columns=[
                 make_col_of("Username"),
                 make_col_of("EngineId"),
-                # make_col_of("Permissions"),
                 make_col_of("AuthType"),
                 make_col_of("PrivType"),
                 make_col_of("Protocol"),
@@ -334,10 +333,9 @@ async def v3TrapsTable():
             ui.button(icon="add", on_click=dialog.open).props("dense flat")
 
     async def on_delete_cb(e):
-        username: str = e.args
-        async with edit_delete_v3_user_card(username) as dialog:
-            log.info("del v3 user")
-            result = await dialog
+        dialog = await editDeleteV3Trap(e.args)
+        result = await dialog
+        if result:
             ui.notify(result)
 
     with tab.add_slot("body-cell-action"):

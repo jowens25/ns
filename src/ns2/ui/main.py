@@ -20,7 +20,6 @@ from ns2.ui.snmp_page import snmp_page
 from ns2.ui.system_page import root_system_page
 
 from ns2.lib.timedate1 import CallListTimezones, CallGetTimezone, CallSetTimezone
-from ns2.lib.bridge import SetupBridge
 from ns2.ui.firewalld_page import firewall_page
 from ns2.utils import ASSETS_DIR, log
 
@@ -114,7 +113,7 @@ async def Clock():
 @ui.page("/accounts")
 @ui.page("/accounts/{user}")
 async def controlPanel():
-    await SetupBridge("jowens")
+
     current_tz = await CallGetTimezone()
 
     app.storage.general.update({"tz": current_tz})

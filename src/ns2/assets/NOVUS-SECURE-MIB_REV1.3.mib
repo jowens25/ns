@@ -1,0 +1,1114 @@
+--****************************************************************
+--  Module  : NOVUS-SECURE-REG.mib
+--  Date    : 1/21/2018
+--  Authors : Bryan Wilcutt, Jacob Owens
+--  Purpose : Primary MIB definition for Novus Secure radio.
+--
+--  Copyright (c) 2026 Novus Power Products
+--  All Rights Reserved
+--****************************************************************
+
+NOVUS-SECURE-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+    MODULE-COMPLIANCE, OBJECT-GROUP
+        FROM SNMPv2-CONF
+    MODULE-IDENTITY, NOTIFICATION-TYPE, OBJECT-IDENTITY, OBJECT-TYPE, 
+    Unsigned32, enterprises
+        FROM SNMPv2-SMI
+    DisplayString, TEXTUAL-CONVENTION
+        FROM SNMPv2-TC;
+novusRadios MODULE-IDENTITY
+    LAST-UPDATED "202603180101Z"
+    ORGANIZATION 
+        "Novus"
+    CONTACT-INFO 
+        "Postal: Novus Power Products
+         21101 MO-78
+         Independence, MO 64057
+         Tel:    (866) 313-9401
+         Fax:    (816) 895-2537
+         Email:  support@novuspower.com
+         Web:    https://novuspower.com/"
+    DESCRIPTION 
+        "Novus Power's Secure MIB."
+    REVISION    "202603180101Z"
+    DESCRIPTION 
+        "Rev 1.3 - Novus Power Objects"
+    ::= { enterprises 9183 }
+
+--******************************************************************************
+-- Tree definition
+--..............................................................................
+
+nd2310 OBJECT IDENTIFIER
+    ::= { novusRadios 1 }
+
+nd2310Objs OBJECT IDENTIFIER
+    ::= { nd2310 1 }
+
+nsFaultsObjs OBJECT IDENTIFIER
+    ::= { nd2310Objs 1 }
+
+--******************************************************************************
+-- nsFaultBytesObjs Objects [enterprises.9183.1.1.1.x]
+--..............................................................................
+
+nsFaultGPS1Lock OBJECT-TYPE
+    SYNTAX      INTEGER { valid(0), notvalid(1) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "GPS 1 Lock Status."
+    ::= { nsFaultsObjs 1 }
+
+nsFaultGPS2Lock OBJECT-TYPE
+    SYNTAX      INTEGER { valid(0), notvalid(1) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "GPS 1 Lock Status."
+    ::= { nsFaultsObjs 2 }
+
+nsFaultSatView1 OBJECT-TYPE
+    SYNTAX      Unsigned32 (0..32)
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Number of satellites in view 1, greater of GPS or GNSS count."
+    ::= { nsFaultsObjs 3 }
+
+nsFaultSatView2 OBJECT-TYPE
+    SYNTAX      Unsigned32 (0..32)
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Number of satellites in view 2, greater of GPS or GNSS count."
+    ::= { nsFaultsObjs 4 }
+
+nsFaultChannelBytes OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel fault bytes (0X0000...0XFFFF)."
+    ::= { nsFaultsObjs 5 }
+
+nsFaultPowerSupplyByte OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Power Supply Fault Byte (0x00...0xFF)."
+    ::= { nsFaultsObjs 6 }
+
+nsFaultErrMsgByte OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Error Msg (0X00...0XFF)."
+    ::= { nsFaultsObjs 7 }
+
+nsFaultAnt1Stat OBJECT-TYPE
+    SYNTAX      INTEGER { ok(0), error(1) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Antenna 1 Status."
+    ::= { nsFaultsObjs 8 }
+
+nsFaultAnt2Stat OBJECT-TYPE
+    SYNTAX      INTEGER { ok(0), error(1) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Antenna 2 Status."
+    ::= { nsFaultsObjs 9 }
+
+
+--******************************************************************************
+-- nsChannelObjs Objects [enterprises.9183.1.1.2.x]
+--..............................................................................
+
+nsChannelObjs OBJECT IDENTIFIER
+    ::= { nd2310Objs 2 }
+
+nsChannel1Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 1 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 1 }
+
+nsChannel2Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 2 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 2 }
+
+nsChannel3Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 3 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 3 }
+
+nsChannel4Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 4 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 4 }
+
+nsChannel5Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 5 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 5 }
+
+nsChannel6Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 6 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 6 }
+
+nsChannel7Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 7 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 7 }
+
+nsChannel8Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 8 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 8 }
+
+nsChannel9Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 9 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 9 }
+
+nsChannel10Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 10 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 10 }
+
+nsChannel11Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 11 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 11 }
+
+nsChannel12Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 12 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 12 }
+
+nsChannel13Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 13 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 13 }
+
+nsChannel14Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 14 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 14 }
+
+nsChannel15Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 15 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 15 }
+
+nsChannel16Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 16 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 16 }
+
+nsChannel17Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 17 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 17 }
+
+nsChannel18Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 18 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 18 }
+
+nsChannel19Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 19 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 19 }
+
+nsChannel20Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 20 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 20 }
+
+nsChannel21Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 21 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 21 }
+
+nsChannel22Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 22 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 22 }
+
+nsChannel23Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 23 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 23 }
+
+nsChannel24Vrms OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel 24 Vrms 0.00 to 3.30 [V]."
+    ::= { nsChannelObjs 24 }
+    
+
+--******************************************************************************
+-- nsStatusPSObjs Objects [enterprises.9183.1.1.3.x]
+--...........................................................................
+
+nsStatusPSObjs OBJECT IDENTIFIER
+    ::= { nd2310Objs 3 }
+
+nsPS1Status OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Power Supply 1 level (-30.0 to 30.0 V)."
+    ::= { nsStatusPSObjs 1 }
+
+nsPS2Status OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Power Supply 2 level (-30.0 to 30.0 V)."
+    ::= { nsStatusPSObjs 2 }
+
+nsPS3Status OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Power Supply 3 level (-30.0 to 30.0 V)."
+    ::= { nsStatusPSObjs 3 }
+
+nsPS4Status OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Power Supply 4 level (-30.0 to 30.0 V)."
+    ::= { nsStatusPSObjs 4 }
+
+nsPS5Status OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Power Supply 5 level (-30.0 to 30.0 V)."
+    ::= { nsStatusPSObjs 5 }
+
+nsPS6Status OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Power Supply 6 level (-30.0 to 30.0 V)."
+    ::= { nsStatusPSObjs 6 }
+
+nsPS7Status OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Power Supply 7 level (-30.0 to 30.0 V)."
+    ::= { nsStatusPSObjs 7 }
+
+nsPS8Status OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Power Supply 8 level (-30.0 to 30.0 V)."
+    ::= { nsStatusPSObjs 8 }
+
+nsBITStatus OBJECT-TYPE
+    SYNTAX      INTEGER { ok(0), fail(1) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Built-in Test Result."
+    ::= { nsStatusPSObjs 9 }
+
+nsPSTemp OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Power supply temperature -40C to 99C."
+    ::= { nsStatusPSObjs 10 }
+
+--******************************************************************************
+-- nsSensorObjs Objects [enterprises.9183.1.1.4.x]
+--..............................................................................
+
+nsSensorObjs OBJECT IDENTIFIER
+    ::= { nd2310Objs 4 }
+
+nsSensorPotentiometer OBJECT-TYPE
+    SYNTAX      Unsigned32 (0..63)
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Sensor Potentiometer 0...63."
+    ::= { nsSensorObjs 1 }
+
+nsSensorFanPWM OBJECT-TYPE
+    SYNTAX      Unsigned32 (0..90)
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "FAN Sensor PWM (0...90)."
+    ::= { nsSensorObjs 2 }
+
+nsSensorTemperature OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Sensor Temperature (-40C to 120C)."
+    ::= { nsSensorObjs 3 }
+
+--******************************************************************************
+-- nsSysObjs Objects [enterprises.9183.1.1.5.x]
+--..............................................................................
+
+nsSysObjs OBJECT IDENTIFIER
+    ::= { nd2310Objs 5 }
+
+nsSysIdentifier OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "$GPNVS Identifier."
+    ::= { nsSysObjs 1 }
+
+nsSysActivePCBAssy OBJECT-TYPE
+    SYNTAX      Unsigned32 (0..1)
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Active PCB Assembly (0...1)."
+    ::= { nsSysObjs 2 }
+
+nsSysGNSSLock OBJECT-TYPE
+    SYNTAX      INTEGER { locked(0), unlocked(1) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "GNSS Lock."
+    ::= { nsSysObjs 3 }
+
+nsSysInputErr OBJECT-TYPE
+    SYNTAX      INTEGER { ok(0), errora(1), errorb(2) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Input Error Type."
+    ::= { nsSysObjs 4 }
+
+nsSysChanStatusWord OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel Status Word (0x0000...0x7FFF)."
+    ::= { nsSysObjs 5 }
+
+nsSysPriPSStatus OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Primary Power Supply Status (0X00...0XFF)."
+    ::= { nsSysObjs 6 }
+
+nsSysSecPSStatus OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Secondary Power Supply Status (0X00...0XFF)."
+    ::= { nsSysObjs 7 }
+
+nsSysActivePCBStatus OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Active PCB Status (0X00...0XFF)."
+    ::= { nsSysObjs 8 }
+
+nsSysChksumStatus OBJECT-TYPE
+    SYNTAX      Unsigned32 (0..999)
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Checksum Status (0...999)."
+    ::= { nsSysObjs 9 }
+
+nsSysChanFaultBin OBJECT-TYPE
+    SYNTAX      Unsigned32 (0..32767)
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Channel Fault Bin (0...32767)."
+    ::= { nsSysObjs 10 }
+
+nsSysPriPCBAmpStatus OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Primary PCB Amp Status (0X0000...0X7FFF)."
+    ::= { nsSysObjs 11 }
+
+nsSysBkupPCBAmpStatus OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Backup PCB AMP Status (0X0000...0X7FFF)."
+    ::= { nsSysObjs 12 }
+
+nsSysGPSLock OBJECT-TYPE
+    SYNTAX      INTEGER { valid(0), notvalid(1) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "GPS Lock Status."
+    ::= { nsSysObjs 13 }
+
+nsSysSatView OBJECT-TYPE
+    SYNTAX      Unsigned32 (0..16)
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Number of satellites in view.  Greater of GPS or
+         GNSS count."
+    ::= { nsSysObjs 14 }
+
+nsSysErrorByte OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Error Byte (0X00...0XFF)."
+    ::= { nsSysObjs 15 }
+
+nsSysFreqDiff OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Frequency Differential (-999...+999)."
+    ::= { nsSysObjs 16 }
+
+nsSysPPSDiff OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "PPS Differential (-999...+999)."
+    ::= { nsSysObjs 17 }
+
+nsSysFreqCorSlice OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Frequency Correction Slice (-999...+999) DAC bits, per second."
+    ::= { nsSysObjs 18 }
+
+nsSysDACValue OBJECT-TYPE
+    SYNTAX      Unsigned32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "DAC Value representation of n x 1/(2^20)."
+    ::= { nsSysObjs 19 }
+
+nsSysPS1VDC OBJECT-TYPE
+    SYNTAX      Unsigned32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Power Supply 1 Vdc."
+    ::= { nsSysObjs 20 }
+
+nsSysPS2VDC OBJECT-TYPE
+    SYNTAX      Unsigned32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Power Supply 2 Vdc."
+    ::= { nsSysObjs 21 }
+
+--******************************************************************************
+-- nsEventsObjs Objects [enterprises.9183.1.1.6.x]
+--..............................................................................
+
+nsEventObjs OBJECT IDENTIFIER
+    ::= { nd2310Objs 6 }
+
+nsEventDiscCounter OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), disctosyn(1) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Event Discipline Counter."
+    ::= { nsEventObjs 1 }
+
+nsEventUserEnabled OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), on(1) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "User Enabled."
+    ::= { nsEventObjs 2 }
+
+nsEventSysEnabled OBJECT-TYPE
+    SYNTAX      INTEGER { disabled(0), enabled(1) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "System Event Status."
+    ::= { nsEventObjs 3 }
+
+nsEventGPSLock OBJECT-TYPE
+    SYNTAX      INTEGER { nolock(0), lock(1) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "GPS Lock Status."
+    ::= { nsEventObjs 4 }
+
+nsEventRAMIndex OBJECT-TYPE
+    SYNTAX      Unsigned32 (0..99)
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Current count of events in RAM (0...99)."
+    ::= { nsEventObjs 5 }
+
+nsEventTimeAlignment OBJECT-TYPE
+    SYNTAX      INTEGER { rtc(0), gps(1), ls(2) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Time alignment."
+    ::= { nsEventObjs 6 }
+
+nsEventEstAccuracy OBJECT-TYPE
+    SYNTAX      Unsigned32 (0..999999)
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Estimated Accuracy (0 ns ... 999999 ns)."
+    ::= { nsEventObjs 7 }
+
+nsEventEdgeDetDir OBJECT-TYPE
+    SYNTAX      INTEGER { falling(0), rising(1) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Edge dection direction (falling edge or rising edge)."
+    ::= { nsEventObjs 8 }
+
+--******************************************************************************
+-- nsMeasureObjs Objects [enterprises.9183.1.1.7.x]
+--..............................................................................
+
+nsMeasureObjs OBJECT IDENTIFIER
+    ::= { nd2310Objs 7 }
+
+nsMeasureFreq OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Measured Frequency 9999900.000 to 10000100.000."
+    ::= { nsMeasureObjs 1 }
+
+nsMeasureDAC OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "DAC Value in [V]"
+    ::= { nsMeasureObjs 2 }
+
+nsMeasureAnt OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Antenna Voltage in [V]"
+    ::= { nsMeasureObjs 3 }
+
+nsMeasureRMSOutput OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Output Voltage in [Vrms]"
+    ::= { nsMeasureObjs 4 }
+
+nsMeasureTemp OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Temperature -40 to 120 [C]."
+    ::= { nsMeasureObjs 5 }
+
+nsMeasureHeaterTemp OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Heater Set Temperature -40 to 120 [C]."
+    ::= { nsMeasureObjs 6 }
+
+--******************************************************************************
+-- nsPPSObjs Objects [enterprises.9183.1.1.8.x]
+--..............................................................................
+
+nsPPSObjs OBJECT IDENTIFIER
+    ::= { nd2310Objs 8 }
+
+nsPPSStability OBJECT-TYPE
+    SYNTAX      INTEGER { disabled(0), enabled(1) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "PPS Stability."
+    ::= { nsPPSObjs 1 }
+
+nsPPSDiscGPS OBJECT-TYPE
+    SYNTAX      INTEGER { off(0), activesync(1) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "PPS Discipline to GPS."
+    ::= { nsPPSObjs 2 }
+
+nsPPSOutputType OBJECT-TYPE
+    SYNTAX      INTEGER { synthetic(0), gps(1) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Discipline Counter."
+    ::= { nsPPSObjs 3 }
+
+nsPPSDifference OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "PPS Difference (-999 ... +999) clock cycles."
+    ::= { nsPPSObjs 4 }
+
+nsPPSCalFactor OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "PPS Pull Calibration Factor (0.1 ... 10.0)."
+    ::= { nsPPSObjs 5 }
+
+nsPPSTimeCalFactor OBJECT-TYPE
+    SYNTAX      Unsigned32 (0..9)
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "PPS Time Calibration Factor (0...9)."
+    ::= { nsPPSObjs 6 }
+
+nsPPSFreqVar OBJECT-TYPE
+    SYNTAX      Unsigned32 (0..999)
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "PPS Frequency Variance (0...999)."
+    ::= { nsPPSObjs 7 }
+
+--******************************************************************************
+-- nsControl Objects [enterprises.9183.1.1.9.x]
+--..............................................................................
+
+nsControl OBJECT IDENTIFIER
+	::= { nd2310Objs 9 }
+    
+nsCommand OBJECT-TYPE
+	SYNTAX		OCTET STRING 
+	MAX-ACCESS	read-write
+	STATUS		current
+	DESCRIPTION
+		"Send serial commands to the NS2316."
+        DEFVAL { " " }
+	::= { nsControl 1 }
+
+nsResult OBJECT-TYPE
+	SYNTAX		OCTET STRING 
+	MAX-ACCESS	read-only
+	STATUS		current
+	DESCRIPTION
+		"Last serial command result, reading clears result."
+	::= { nsControl 2 }
+	
+--******************************************************************************
+-- nsDiscipline Objects [enterprises.9183.1.1.10.x]
+--..............................................................................
+
+nsDiscObjs OBJECT IDENTIFIER
+    ::= { nd2310Objs 10 }
+
+nsDiscPrioritySource OBJECT-TYPE
+    SYNTAX      INTEGER { gnss(0), rfinput(1), opticalinput(2) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Priority Discipline Source."
+    ::= { nsDiscObjs 1 }
+	
+nsDiscCurrentSource OBJECT-TYPE
+    SYNTAX      INTEGER { gnss(0), rfinput(1), opticalinput(2), holdover(3) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Current Discipline Source."
+    ::= { nsDiscObjs 2 }
+
+nsDiscGNSSLock OBJECT-TYPE
+    SYNTAX      Unsigned32 (0..3)
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "GNSS Lock 0=unlocked, 3=fully locked."
+    ::= { nsDiscObjs 3 }
+	
+nsDiscRFPresent OBJECT-TYPE
+    SYNTAX      INTEGER { none(0), rfpresent(1) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "RF input: 0=none, 1=RF present."
+    ::= { nsDiscObjs 4 }
+
+nsDiscOpticalPresent OBJECT-TYPE
+    SYNTAX      INTEGER { none(0), opticalpresent(1) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Optical input: 0=none, 1=Optical present."
+    ::= { nsDiscObjs 5 }
+	
+nsDiscLoopLock OBJECT-TYPE
+    SYNTAX      INTEGER { loopacquringlock(0), looplocked(1) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Loop lock status."
+    ::= { nsDiscObjs 6 }
+	
+	
+	
+--******************************************************************************
+-- nsHoldover Objects [enterprises.9183.1.1.11.x]
+--..............................................................................
+
+nsHoldoverObjs OBJECT IDENTIFIER
+    ::= { nd2310Objs 11 }
+
+nsWarmupRemaining OBJECT-TYPE
+    SYNTAX      Unsigned32 (0..99999)
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Remaining warmup time in seconds."
+    ::= { nsHoldoverObjs 1 }
+	
+nsWarmupComplete OBJECT-TYPE
+    SYNTAX      INTEGER { warmupinprogress(0), warmupcomplete(1) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Warmup completed."
+    ::= { nsHoldoverObjs 2 }
+	
+nsHoldoverElapsed OBJECT-TYPE
+    SYNTAX      Unsigned32 (0..999999)
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Holdover elapsed time in seconds."
+    ::= { nsHoldoverObjs 3 }
+
+nsHoldoverValid OBJECT-TYPE
+    SYNTAX      INTEGER { holdovernotvalid(0), holdovervalid(1) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Holdover valid."
+    ::= { nsHoldoverObjs 4 }
+
+nsFrequencyValid OBJECT-TYPE
+    SYNTAX      INTEGER { frequencynotvalid(0), frequencyvalid(1) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Frequency valid."
+    ::= { nsHoldoverObjs 5 }	
+	
+nsHoldoverTemp OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Holdover current temperature (-40.0 to 99.0 C)."
+    ::= { nsHoldoverObjs 6 }	
+
+
+--******************************************************************************
+-- nsRubidium Objects [enterprises.9183.1.1.12.x]
+--..............................................................................
+
+nsRubidiumObjs OBJECT IDENTIFIER
+    ::= { nd2310Objs 12 }
+
+nsRbStatus OBJECT-TYPE
+    SYNTAX      INTEGER { fulllock(0), laserlock(5), heatinit(8) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Rb Status: 8=init,5=laserlock,0=full lock."
+    ::= { nsRubidiumObjs 1 }
+
+nsRbAlarm OBJECT-TYPE
+    SYNTAX      INTEGER { ok(0), mwsignal(1), lctemp(4), abctemp(5), lcabc(8), allalarm(9) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Rb Alarm: 0=ok, 1=mwsignal, 4=lctemp, 5=abctemp, 8=lcabc, 9=allalarm"
+    ::= { nsRubidiumObjs 2 }
+
+nsRbMode OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Rb Mode: (hex)"
+    ::= { nsRubidiumObjs 3 }
+	
+nsRbDiscStatus OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Rb Discipline Status: 0=Disc Wait, 1=Disc Good, 2=Holdover"
+    ::= { nsRubidiumObjs 4 }
+	
+nsRbHoldoverSource OBJECT-TYPE
+    SYNTAX      INTEGER { usinggnss(0),waitforstatechange(1),usingrb(2) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Rb Sourced as holdover: 0=Using GNSS, 1=Changing State, 2=Using Rb"
+    ::= { nsRubidiumObjs 5 }
+
+
+
+--******************************************************************************
+-- nsRubidium2 Objects [enterprises.9183.1.1.13.x]
+--..............................................................................
+
+nsRubidium2Objs OBJECT IDENTIFIER
+    ::= { nd2310Objs 13 }
+
+nsRb2Lock OBJECT-TYPE
+    SYNTAX      INTEGER { fulllock(1), unlocked(0) }
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Rb Lock: 0=init/unlocked,1=full lock."
+    ::= { nsRubidium2Objs 1 }
+
+nsRb2Status OBJECT-TYPE
+    SYNTAX      DisplayString
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION 
+        "Rb Status Word (hex)"
+    ::= { nsRubidium2Objs 2 }
+
+--nsRb2Steer OBJECT-TYPE
+--    SYNTAX      INTEGER { integer value }
+--    MAX-ACCESS  read-only
+--    STATUS      current
+--    DESCRIPTION 
+--        "Rb steer"
+--    ::= { nsRubidium2Objs 3 }
+
+
+
+--******************************************************************************
+-- Conformance Section [enterprises.9183.3.1.90.x]
+--..............................................................................
+
+nsConformance OBJECT IDENTIFIER
+    ::= { nd2310 90 }
+
+nsCompliances OBJECT IDENTIFIER
+    ::= { nsConformance 1 }
+
+nsGroups OBJECT IDENTIFIER
+    ::= { nsConformance 2 }
+
+nsObjectsGroup OBJECT-GROUP
+    OBJECTS     { nsFaultGPS1Lock, nsFaultGPS2Lock, nsFaultSatView1, 
+                  nsFaultSatView2, nsFaultChannelBytes, 
+                  nsFaultPowerSupplyByte, nsFaultErrMsgByte, 
+                  nsFaultAnt1Stat, nsFaultAnt2Stat, 
+                  
+                  nsChannel1Vrms, 
+                  nsChannel2Vrms, nsChannel3Vrms, nsChannel4Vrms, 
+                  nsChannel5Vrms, nsChannel6Vrms, nsChannel7Vrms, 
+                  nsChannel8Vrms, nsChannel9Vrms, nsChannel10Vrms, 
+                  nsChannel11Vrms, nsChannel12Vrms, nsChannel13Vrms, 
+                  nsChannel14Vrms, nsChannel15Vrms, nsChannel16Vrms, 
+                  nsChannel17Vrms, nsChannel18Vrms, nsChannel19Vrms, 
+                  nsChannel20Vrms, nsChannel21Vrms, nsChannel22Vrms, 
+                  nsChannel23Vrms, nsChannel24Vrms, 
+
+                  nsPS1Status, nsPS2Status, nsPS3Status, nsPS4Status, 
+                  nsPS5Status, nsPS6Status, nsPS7Status, nsPS8Status, 
+                  nsBITStatus, nsPSTemp, nsSensorPotentiometer, 
+                  nsSensorFanPWM, nsSensorTemperature, nsSysIdentifier, 
+                  nsSysActivePCBAssy, nsSysGNSSLock, nsSysInputErr, 
+                  nsSysChanStatusWord, nsSysPriPSStatus, 
+                  nsSysSecPSStatus, nsSysActivePCBStatus, 
+                  nsSysChksumStatus, nsSysChanFaultBin, 
+                  nsSysPriPCBAmpStatus, nsSysBkupPCBAmpStatus, 
+                  nsSysGPSLock, nsSysSatView, nsSysErrorByte, 
+                  nsSysFreqDiff, nsSysPPSDiff, nsSysFreqCorSlice, 
+                  nsSysDACValue, nsSysPS1VDC, nsSysPS2VDC, 
+
+                  nsEventDiscCounter, nsEventUserEnabled, 
+                  nsEventSysEnabled, nsEventGPSLock, nsEventRAMIndex, 
+                  nsEventTimeAlignment, nsEventEstAccuracy, 
+                  nsEventEdgeDetDir, 
+
+                  nsMeasureFreq, nsMeasureDAC, nsMeasureAnt, 
+                  nsMeasureRMSOutput, 
+                  nsMeasureTemp, nsMeasureHeaterTemp,
+
+                  nsPPSStability, nsPPSDiscGPS, nsPPSOutputType, 
+                  nsPPSDifference, nsPPSCalFactor, nsPPSTimeCalFactor, 
+                  nsPPSFreqVar, nsCommand, nsResult,
+
+				  nsDiscPrioritySource, nsDiscCurrentSource, nsDiscGNSSLock,
+				  nsDiscRFPresent, nsDiscOpticalPresent, nsDiscLoopLock,
+				  nsWarmupRemaining, nsWarmupComplete, nsHoldoverElapsed,
+				  nsHoldoverValid, nsFrequencyValid, nsHoldoverTemp,
+				  nsRbStatus, nsRbAlarm, nsRbMode, nsRbDiscStatus,
+				  nsRbHoldoverSource,
+				  
+                  nsRb2Lock, nsRb2Status
+
+				  }
+    STATUS      current
+    DESCRIPTION 
+        "The collection of objects for the Novus Secure MIB."
+    ::= { nsGroups 1 }
+
+nsCompliance MODULE-COMPLIANCE
+    STATUS      current
+    DESCRIPTION 
+        "The compliance statement for SNMP entities which implement 
+         the Novus Secure MIB"
+
+    MODULE      -- this module
+
+        MANDATORY-GROUPS        { nsObjectsGroup }
+
+    ::= { nsCompliances 1 }
+-- END  end of module NOVUS-SECURE-MIB.333
+END 

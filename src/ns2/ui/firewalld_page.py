@@ -24,6 +24,7 @@ from ns2.lib.firewalld import (
 
 from dbus_next.errors import DBusError
 from dbus_next.signature import Variant
+from ns2.lib.snmp import are_you_sure_you_want_to
 from ns2.lib.systemd1 import isActive, SystemdStart, SystemdStop
 from ns2.common import formatListToString, formatStringToList
 from ns2.lib.systemd1 import GetServiceState
@@ -435,25 +436,11 @@ async def zone_list():
                                 ).props("color=accent align=left")
 
                                 async def delete_zone_cb(e, z=zoneName):
-                                    with ui.dialog() as dialog, ui.card():
-                                        ui.label(
-                                            f"Are you sure you want to delete the {z} zone?"
-                                        )
-                                        with ui.row():
-                                            ui.button(
-                                                "Cancel",
-                                                on_click=lambda: dialog.submit(
-                                                    "Cancel"
-                                                ),
-                                            ).props("flat color=accent align=left")
-                                            ui.button(
-                                                "Delete",
-                                                on_click=lambda: dialog.submit(
-                                                    "Delete"
-                                                ),
-                                            ).props("flat color=accent align=left")
-                                    result = await dialog
-                                    if result == "Delete":
+
+                                    result = await are_you_sure_you_want_to(
+                                        f"delete the {z} zone?"
+                                    )
+                                    if result:
                                         await RemoveZone(z)
                                     await firewall_status.refresh()
                                     await zone_list.refresh()

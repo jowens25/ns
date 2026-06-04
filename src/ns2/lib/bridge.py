@@ -1,5 +1,7 @@
 import asyncio
-
+import os
+import sys
+from nicegui import app
 
 from dbus_next import Message
 from dbus_next.constants import BusType
@@ -20,7 +22,9 @@ async def SetupBridge(_username: str) -> str:
     if currentBridge is not None:
         await CleanupBridge()
 
-    await CallMakeBridge(_username)
+    rsp = await CallMakeBridge(_username)
+    if rsp.error_name is not None:
+        return rsp.body[0]
     await asyncio.sleep(0.25)
     bus = MessageBus(bus_address="tcp:host=localhost,port=3000")
     await bus.connect()
@@ -81,6 +85,7 @@ async def BridgeCall(
 ) -> Message:
     """Connect to proxy bus, make call return response"""
     b = GetBridge()
+
     rsp = await b.call(
         Message(
             destination=destination,
@@ -115,9 +120,9 @@ async def BusCall(
     return rsp
 
 
-async def CallPamAuthenticate(username, password) -> bool:
+async def CallPamAuthenticate(username, password) -> Message:
 
-    rsp = await BusCall(
+    return await BusCall(
         destination="com.novus.ns",
         path="/com/novus/ns",
         interface="com.novus.ns.pam",
@@ -125,8 +130,6 @@ async def CallPamAuthenticate(username, password) -> bool:
         signature="ss",
         body=[username, password],
     )
-
-    return rsp.body[0]
 
 
 async def GetBridgePid():
@@ -169,6 +172,7 @@ async def CallCloseBridge():
 
 
 async def CallCloseTerminal():
+    log.info("call close terminal......?")
     rsp = await BusCall(
         destination="com.novus.ns",
         path="/com/novus/ns",
@@ -181,10 +185,8 @@ async def CallCloseTerminal():
     return rsp
 
 
-async def CallMakeBridge(username: str) -> int:
+async def CallMakeBridge(username: str) -> Message:
     """returns pid of bridge"""
-
-    log.info("making bridge for: " + username)
 
     rsp = await BusCall(
         destination="com.novus.ns",
@@ -195,13 +197,10 @@ async def CallMakeBridge(username: str) -> int:
         body=[username],
     )
 
-    log.info(rsp.body)
-
     if rsp.error_name is not None:
-        log.info(rsp.error_name)
-        return rsp.error_name
+        log.info("failed to make bridge for: " + username)
 
-    return int(rsp.body[0])
+    return rsp
 
 
 async def CallMakeTerminal(username: str) -> int:

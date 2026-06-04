@@ -1,9 +1,6 @@
 package lib
 
 import (
-	"fmt"
-	"log"
-
 	"github.com/godbus/dbus/v5"
 	"github.com/msteinert/pam"
 )
@@ -25,17 +22,22 @@ func (p *PamInterface) Authenticate(user string, password string) (bool, *dbus.E
 	})
 
 	if err != nil {
-		log.Println("pam failed")
-		return false, nil
+		return false, &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
 	}
+
 	defer t.CloseSession(pam.Silent)
 
-	if err = t.Authenticate(0); err != nil {
-		fmt.Println("invalid cred")
-		return false, nil
-	}
+	err = t.Authenticate(0)
+	if err != nil {
+		return false, &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
 
-	fmt.Println("authentication succeeded")
+	}
 
 	return true, nil
 

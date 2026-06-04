@@ -1,8 +1,9 @@
+import asyncio
 from typing import Optional
 
 from nicegui import ui, binding
 
-from ns2.lib.bridge import BridgeCall
+from ns2.lib.bridge import BridgeCall, CallPamAuthenticate
 
 from dbus_next.signature import Variant
 from dbus_next import Message
@@ -18,18 +19,34 @@ class User:
     Password: Optional[str] = ""
     PasswordRules: Optional[str] = ""
     Group: Optional[str] = "admin"
+    Login: Optional[str] = ""
 
 
-def editUserDialog(username):
-    editUser = User(Username=username)
-    with ui.dialog() as dialog:
-        with ui.card().classes("w-full max-h-[90vh] overflow-y-auto"):
+async def editDeleteUserDialog(username):
+    log.info("editDeleteUserDialog")
+    rsp = await BridgeCall(
+        "com.novus.ns",
+        "/com/novus/ns",
+        "com.novus.ns.accounts",
+        "GetUserByUsername",
+        "s",
+        [username],
+    )
+
+    if len(rsp.body) == 0:
+        return
+    user = User(**rsp.body[0])
+    with ui.dialog() as dialog, ui.card().classes("w-full").props("flat"):
+        with ui.column().classes("w-full"):
             ui.label("Edit user").classes("text-h5")
-            user = (
+
+            userfield = (
                 ui.input("username", validation=usernameValidation)
-                .bind_value(editUser, "Username")
+                .bind_value(user, "Username")
+                .classes("w-full")
                 .props("dense")
             )
+            userfield.disable()
 
             def mustMatch(v):
                 if not v == p1.value:
@@ -37,35 +54,77 @@ def editUserDialog(username):
                 else:
                     return None
 
-            p1 = ui.input("password", validation=validatePass).props("dense")
-
-            p2 = (
-                ui.input("repeat password", validation=mustMatch)
-                .bind_value_to(editUser, "Password")
+            p1 = (
+                ui.input(
+                    "password",
+                    validation=validatePass,
+                    password=True,
+                    password_toggle_button=True,
+                )
+                .classes("w-full")
                 .props("dense")
             )
 
-            ui.select(["admin", "user"]).bind_value(editUser, "Group").props("dense")
+            p2 = (
+                ui.input(
+                    "repeat password",
+                    validation=mustMatch,
+                    password=True,
+                    password_toggle_button=True,
+                )
+                .bind_value_to(user, "Password")
+                .classes("w-full")
+                .props("dense")
+            )
 
-            async def on_save_cb():
-                if all(validate_group([p1, p2, user])):
+            group = (
+                ui.select(["admin", "user"])
+                .bind_value(user, "Group")
+                .classes("w-full")
+                .props("dense")
+            )
 
-                    rsp = await EditUser(editUser)
+            group.disable()
 
+            with ui.row().classes("items-center justify-between gap-4 w-full"):
+
+                async def on_save_cb():
+                    if not all(validate_group([p1, p2, userfield])):
+                        ui.notify("Please correct the errors", type="negative")
+
+                    else:
+                        rsp = await EditUser(user)
+
+                        if rsp.error_name is not None:
+                            ui.notify(rsp.body[0])
+                        else:
+                            ui.notify(rsp, type="positive")
+                            dialog.close()
+
+                async def on_delete_cb():
+                    rsp = await BridgeCall(
+                        "com.novus.ns",
+                        "/com/novus/ns",
+                        "com.novus.ns.accounts",
+                        "Remove",
+                        "s",
+                        [username],
+                    )
                     if rsp.error_name is not None:
                         ui.notify(rsp.body[0])
-                    else:
-                        ui.notify(rsp, type="positive")
-                        dialog.close()
 
-                else:
-                    ui.notify("Please correct the errors", type="negative")
+                    dialog.submit(f"DELETED!!! {username} RESULTS")
 
-            with ui.row():
-                ui.button("Add", on_click=on_save_cb)
-                ui.button("Cancel", on_click=dialog.close)
-
+                with ui.row():
+                    ui.button("save", on_click=on_save_cb).props("flat")
+                    ui.button("cancel", on_click=dialog.close).props("flat")
+                ui.button(icon="delete", on_click=on_delete_cb).props("flat")
     return dialog
+
+
+passwordValidation = {
+    "Max is limited to 24 or less characaters": lambda value: 24 >= int(value),
+}
 
 
 async def editPolicyDialog():
@@ -90,66 +149,59 @@ async def editPolicyDialog():
         with ui.card().classes("w-full max-h-[90vh] overflow-y-auto"):
             ui.label("Edit Password Policy").classes("text-h5")
 
-            ui.input("max length").bind_value(policy, "max").props("dense")
-            ui.input("min length").bind_value(policy, "min").props("dense")
+            def MaxGreaterThanMin(v):
+                if v == "":
+                    return "min must not be 0"
+                if max.value == "":
+                    return "max must not be 0"
+                if int(v) < 5:
+                    return "min must be great than 5"
+                if int(max.value) < int(v):
+                    return "max must be greater than min"
+                else:
+                    return None
+
+            max = (
+                ui.input("max length", validation=passwordValidation)
+                .bind_value(policy, "max")
+                .props("dense")
+            )
+            min = (
+                ui.input("min length", validation=MaxGreaterThanMin)
+                .bind_value(policy, "min")
+                .props("dense")
+            )
+
             ui.checkbox("require upper").bind_value(policy, "upper").props("dense")
             ui.checkbox("require lower").bind_value(policy, "lower").props("dense")
             ui.checkbox("require symbol").bind_value(policy, "symbol").props("dense")
             ui.checkbox("require digit").bind_value(policy, "digit").props("dense")
 
             async def on_save_cb():
-                newPolicy = {
-                    "max": Variant("u", policy["max"]),
-                    "min": Variant("u", policy["min"]),
-                    "upper": Variant("b", policy["upper"]),
-                    "lower": Variant("b", policy["lower"]),
-                    "symbol": Variant("b", policy["symbol"]),
-                    "digit": Variant("b", policy["digit"]),
-                }
-                rsp = await BridgeCall(
-                    "com.novus.ns",
-                    "/com/novus/ns",
-                    "com.novus.ns.accounts",
-                    "SetPasswordPolicy",
-                    "a{sv}",
-                    [newPolicy],
-                )
-                if rsp.error_name is not None:
-                    ui.notify(rsp.body[0])
-                    dialog.close()
-
-            with ui.row():
-                ui.button("save", on_click=on_save_cb)
-                ui.button("close", on_click=dialog.close)
-
-    return dialog
-
-
-def deleteUserDialog(username: str):
-
-    with ui.dialog() as dialog:
-
-        with ui.card().classes("w-full max-h-[90vh] overflow-y-auto"):
-            ui.label(f"Delete Account").classes("text-h5")
-            ui.label(f"Are you sure you want to delete {username}?")
-            with ui.row():
-                ui.button("Cancel", on_click=dialog.close)
-
-                async def on_delete_cb():
+                if all(validate_group([min, max])):
+                    newPolicy = {
+                        "max": Variant("u", int(policy["max"])),
+                        "min": Variant("u", int(policy["min"])),
+                        "upper": Variant("b", policy["upper"]),
+                        "lower": Variant("b", policy["lower"]),
+                        "symbol": Variant("b", policy["symbol"]),
+                        "digit": Variant("b", policy["digit"]),
+                    }
                     rsp = await BridgeCall(
                         "com.novus.ns",
                         "/com/novus/ns",
                         "com.novus.ns.accounts",
-                        "Remove",
-                        "s",
-                        [username],
+                        "SetPasswordPolicy",
+                        "a{sv}",
+                        [newPolicy],
                     )
                     if rsp.error_name is not None:
                         ui.notify(rsp.body[0])
+                        dialog.close()
 
-                    dialog.submit(f"DELETED!!! {username} RESULTS")
-
-                ui.button("Delete", on_click=on_delete_cb)
+            with ui.row():
+                ui.button("save", on_click=on_save_cb)
+                ui.button("close", on_click=dialog.close)
 
     return dialog
 
@@ -193,7 +245,14 @@ async def AddUser(u: User) -> Message:
 
 
 async def EditUser(u: User) -> Message:
-    pass
+    return await BridgeCall(
+        "com.novus.ns",
+        "/com/novus/ns",
+        "com.novus.ns.accounts",
+        "UpdatePassword",
+        "ss",
+        [u.Username, u.Password],
+    )
 
 
 def validate_group(group: list):
@@ -206,8 +265,11 @@ async def addUserDialog():
         with ui.card().classes("w-full max-h-[90vh] overflow-y-auto"):
             ui.label("Add user").classes("text-h5")
 
-            user = ui.input("username", validation=usernameValidation).bind_value(
-                newUser, "Username"
+            user = (
+                ui.input("username", validation=usernameValidation)
+                .bind_value(newUser, "Username")
+                .classes("w-full")
+                .props("dense")
             )
 
             def mustMatch(v):
@@ -216,13 +278,32 @@ async def addUserDialog():
                 else:
                     return None
 
-            p1 = ui.input("password", validation=validatePass)
-
-            p2 = ui.input("repeat password", validation=mustMatch).bind_value_to(
-                newUser, "Password"
+            p1 = (
+                ui.input(
+                    "password",
+                    validation=validatePass,
+                    password=True,
+                    password_toggle_button=True,
+                )
+                .classes("w-full")
+                .props("dense")
             )
 
-            ui.select(["admin", "user"]).bind_value(newUser, "Group")
+            p2 = (
+                ui.input(
+                    "repeat password",
+                    validation=mustMatch,
+                    password=True,
+                    password_toggle_button=True,
+                )
+                .bind_value_to(newUser, "Password")
+                .classes("w-full")
+                .props("dense")
+            )
+
+            ui.select(["admin", "user"]).bind_value(newUser, "Group").classes(
+                "w-full"
+            ).props("dense")
 
             async def on_save_cb():
                 if all(validate_group([p1, p2, user])):

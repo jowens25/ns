@@ -33,6 +33,22 @@ func NewBridgeInterface() *BridgeInterface {
 
 }
 
+//func FetchLogs(boot *int, since string, priority int, units []string) ([]string, error) {
+
+func (b *BridgeInterface) GetLogs(since string, priority int, units []string) ([]string, *dbus.Error) {
+
+	logs, err := FetchLogs(since, priority, units)
+
+	if err != nil {
+		return nil, &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+	}
+
+	return logs, nil
+}
+
 func (b *BridgeInterface) GetActiveUser(sender dbus.Sender) (string, *dbus.Error) {
 
 	u, err := GetUserInfoFromSender(b.conn, sender)

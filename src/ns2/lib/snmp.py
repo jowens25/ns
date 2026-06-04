@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Optional
+from nicegui import ui
 
 snmp_config_file = "/etc/snmp/snmpd.conf.d/novus-snmpd.conf"
 default_persistent_dir_path = "/var/lib/snmp"
@@ -34,11 +35,11 @@ class Group:
 
 @dataclass
 class V2Trap:
-    Version: Optional[str] = ""
+    Version: Optional[str] = "2c"
     Community: Optional[str] = ""
-    Protocol: Optional[str] = ""
+    Protocol: Optional[str] = "udp"
     Host: Optional[str] = ""
-    Port: Optional[str] = ""
+    Port: Optional[str] = "162"
 
     def from_dict(trapDict: dict):
         user = V2User(
@@ -53,22 +54,20 @@ class V2Trap:
 
 @dataclass
 class V3Trap:
-    Version: Optional[str] = ""
+    Version: Optional[str] = "3"
     Username: Optional[str] = ""
     EngineId: Optional[str] = ""
-    Permissions: Optional[str] = ""
-    AuthType: Optional[str] = ""
-    PrivType: Optional[str] = ""
-    Protocol: Optional[str] = ""
+    AuthType: Optional[str] = "SHA"
+    PrivType: Optional[str] = "AES"
+    Protocol: Optional[str] = "udp"
     Host: Optional[str] = ""
-    Port: Optional[str] = ""
+    Port: Optional[str] = "162"
 
     def from_dict(trapDict: dict):
         return V3Trap(
             Version=trapDict.get("Version"),
             Username=trapDict.get("Username"),
             EngineId=trapDict.get("EngineId"),
-            Permissions=trapDict.get("Permissions"),
             AuthType=trapDict.get("AuthType"),
             PrivType=trapDict.get("PrivType"),
             Protocol=trapDict.get("Protocol"),
@@ -119,3 +118,13 @@ class V2User:
             SecurityName=userDict.get("SecurityName"),
         )
         return user
+
+
+def are_you_sure_you_want_to(action_message: str) -> bool:
+    with ui.dialog() as dialog, ui.card().props("flat"):
+        ui.label(f"Are you sure you want to {action_message}?")
+
+        with ui.row():
+            ui.button("Yes", on_click=lambda: dialog.submit(True)).props("flat")
+            ui.button("No", on_click=lambda: dialog.submit(False)).props("flat")
+    return dialog

@@ -19,8 +19,14 @@ type Subject struct {
 	Details map[string]dbus.Variant `dbus:"subject_details"`
 }
 
+var DEBUG bool
+
 // returns true of IsAuthorized
 func CheckAuthorization(sender dbus.Sender, actionId string) bool {
+
+	if DEBUG {
+		return DEBUG
+	}
 
 	conn, err := dbus.SystemBus()
 	if err != nil {

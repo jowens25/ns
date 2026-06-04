@@ -20,28 +20,28 @@ type AccountInterface struct {
 
 func (a *AccountInterface) SetPasswordPolicy(policy map[string]any, sender dbus.Sender, message dbus.Message) *dbus.Error {
 
-	isAuthorized := CheckAuthorization(sender, GetActionId(message))
+	if isAuthorized := CheckAuthorization(sender, GetActionId(message)); !isAuthorized {
 
-	if isAuthorized {
-		err := SetPolicy(policy)
-		if err != nil {
-			return &dbus.Error{
-				Name: "org.freedesktop.DBus.Error",
-				Body: []any{err.Error()},
-			}
+		return &dbus.Error{
+			Name: "org.freedesktop.DBus.Error.AccessDenied",
+			Body: []any{"Not authorized to set password policy"},
+		}
 
-		}
-		err = a.conn.Emit("/com/novus/ns", "com.novus.ns.accounts.Changed", "SetPasswordPolicy")
-		if err != nil {
-			log.Println(err.Error())
-		}
-		return nil
 	}
 
-	return &dbus.Error{
-		Name: "org.freedesktop.DBus.Error.AccessDenied",
-		Body: []any{"Not authorized to set password policy"},
+	err := SetPolicy(policy)
+	if err != nil {
+		return &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+
 	}
+	err = a.conn.Emit("/com/novus/ns", "com.novus.ns.accounts.Changed", "SetPasswordPolicy")
+	if err != nil {
+		log.Println(err.Error())
+	}
+	return nil
 
 }
 
@@ -84,109 +84,106 @@ func (a *AccountInterface) ValidatePassword(password string) (bool, *dbus.Error)
 
 func (a *AccountInterface) AddUser(username string, password string, sender dbus.Sender, message dbus.Message) (string, *dbus.Error) {
 
-	isAuthorized := CheckAuthorization(sender, GetActionId(message))
+	if isAuthorized := CheckAuthorization(sender, GetActionId(message)); !isAuthorized {
 
-	if isAuthorized {
-		err := MakeNewUser(username, password)
-		if err != nil {
-			return "", &dbus.Error{
-				Name: "org.freedesktop.DBus.Error",
-				Body: []any{err.Error()},
-			}
-
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error.AccessDenied",
+			Body: []any{"Not authorized to add user"},
 		}
+	}
 
-		err = a.conn.Emit("/com/novus/ns", "com.novus.ns.accounts.Changed", "AddUser")
-		if err != nil {
-			log.Println(err.Error())
+	err := MakeNewUser(username, password)
+	if err != nil {
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
 		}
-
-		return fmt.Sprintf("added %s", username), nil
 
 	}
 
-	return "", &dbus.Error{
-		Name: "org.freedesktop.DBus.Error.AccessDenied",
-		Body: []any{"Not authorized to add user"},
+	err = a.conn.Emit("/com/novus/ns", "com.novus.ns.accounts.Changed", "AddUser")
+	if err != nil {
+		log.Println(err.Error())
 	}
+
+	return fmt.Sprintf("added %s", username), nil
 
 }
 
 func (a *AccountInterface) AddAdmin(username string, password string, sender dbus.Sender, message dbus.Message) (string, *dbus.Error) {
 
-	isAuthorized := CheckAuthorization(sender, GetActionId(message))
-
-	if isAuthorized {
-		err := MakeNewAdmin(username, password)
-		if err != nil {
-			return "", &dbus.Error{
-				Name: "org.freedesktop.DBus.Error",
-				Body: []any{err.Error()},
-			}
-
+	if isAuthorized := CheckAuthorization(sender, GetActionId(message)); !isAuthorized {
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error.AccessDenied",
+			Body: []any{"Not authorized to add admin"},
 		}
-		err = a.conn.Emit("/com/novus/ns", "com.novus.ns.accounts.Changed", "AddAdmin")
-		if err != nil {
-			log.Println(err.Error())
-		}
-
-		return fmt.Sprintf("added %s", username), nil
-
 	}
 
-	return "", &dbus.Error{
-		Name: "org.freedesktop.DBus.Error.AccessDenied",
-		Body: []any{"Not authorized to add admin"},
+	err := MakeNewAdmin(username, password)
+	if err != nil {
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+
 	}
+	err = a.conn.Emit("/com/novus/ns", "com.novus.ns.accounts.Changed", "AddAdmin")
+	if err != nil {
+		log.Println(err.Error())
+	}
+
+	return fmt.Sprintf("added %s", username), nil
 
 }
 
 func (a *AccountInterface) Remove(sender dbus.Sender, message dbus.Message, username string) (string, *dbus.Error) {
 
-	if isAuthorized := CheckAuthorization(sender, GetActionId(message)); isAuthorized {
+	if isAuthorized := CheckAuthorization(sender, GetActionId(message)); !isAuthorized {
 
-		numAdmins, err := GetNumberOfAdmins()
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error.AccessDenied",
+			Body: []any{"Not authorized to remove users"},
+		}
+
+	}
+
+	// not going to let us delete ourselves
+	isSender, err := TargetIsSender(username, a.conn, sender)
+	if err != nil {
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+
+	}
+
+	if isSender {
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{"cannot delete active account"},
+		}
+
+	}
+
+	numAdmins, err := GetNumberOfAdmins()
+	if err != nil {
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+
+	}
+
+	if isAdmin, err := IsAdmin(username); isAdmin {
+
 		if err != nil {
 			return "", &dbus.Error{
 				Name: "org.freedesktop.DBus.Error",
 				Body: []any{err.Error()},
 			}
-
 		}
 
-		if isAdmin, err := IsAdmin(username); isAdmin {
-
-			if err != nil {
-				return "", &dbus.Error{
-					Name: "org.freedesktop.DBus.Error",
-					Body: []any{err.Error()},
-				}
-			}
-
-			if numAdmins > 1 {
-				err = RemoveUser(username)
-				if err != nil {
-					return "", &dbus.Error{
-						Name: "org.freedesktop.DBus.Error",
-						Body: []any{err.Error()},
-					}
-
-				}
-				err = a.conn.Emit("/com/novus/ns", "com.novus.ns.accounts.Changed", "Remove")
-				if err != nil {
-					log.Println(err.Error())
-				}
-				return fmt.Sprintf("removed %s", username), nil
-
-			} else {
-				return "", &dbus.Error{
-					Name: "org.freedesktop.DBus.Error",
-					Body: []any{"cannot remove the last admin"},
-				}
-
-			}
-		} else {
-
+		if numAdmins > 1 {
 			err = RemoveUser(username)
 			if err != nil {
 				return "", &dbus.Error{
@@ -201,21 +198,38 @@ func (a *AccountInterface) Remove(sender dbus.Sender, message dbus.Message, user
 			}
 			return fmt.Sprintf("removed %s", username), nil
 
+		} else {
+			return "", &dbus.Error{
+				Name: "org.freedesktop.DBus.Error",
+				Body: []any{"cannot remove the last admin"},
+			}
+
 		}
+	} else {
+
+		err = RemoveUser(username)
+		if err != nil {
+			return "", &dbus.Error{
+				Name: "org.freedesktop.DBus.Error",
+				Body: []any{err.Error()},
+			}
+
+		}
+		err = a.conn.Emit("/com/novus/ns", "com.novus.ns.accounts.Changed", "Remove")
+		if err != nil {
+			log.Println(err.Error())
+		}
+		return fmt.Sprintf("removed %s", username), nil
 
 	}
 
-	return "", &dbus.Error{
-		Name: "org.freedesktop.DBus.Error.AccessDenied",
-		Body: []any{"Not authorized to remove users"},
-	}
 }
 
 func (a *AccountInterface) GetUsers() ([]map[string]string, *dbus.Error) {
 
-	log.Println("get Users")
+	users := []map[string]string{}
 
-	users, err := getUserAndAdmins()
+	usersAndAdmins, err := getUserAndAdmins()
 
 	if err != nil {
 
@@ -225,15 +239,78 @@ func (a *AccountInterface) GetUsers() ([]map[string]string, *dbus.Error) {
 		}
 	}
 
+	for _, u := range usersAndAdmins {
+		users = append(users, u.ToDict())
+	}
+
 	return users, nil
 
 }
 
-func (a *AccountInterface) UpdatePassword(username string, newpassword string, sender dbus.Sender, message dbus.Message) (string, *dbus.Error) {
+func (a *AccountInterface) GetUserByUsername(username string) (map[string]string, *dbus.Error) {
 
-	if isAuthorized := CheckAuthorization(sender, GetActionId(message)); isAuthorized {
+	u, err := ReadUserByUsername(username)
 
-		err := ChangePassword(username, newpassword)
+	if err != nil {
+		return nil, &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+	}
+
+	return u.ToDict(), nil
+
+}
+
+func (a *AccountInterface) UpdatePassword(targetUsername string, newpassword string, sender dbus.Sender, message dbus.Message) (string, *dbus.Error) {
+
+	caller, err := GetUserInfoFromSender(a.conn, sender)
+	if err != nil {
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+	}
+
+	callerUsername := caller.Username
+
+	if isAuthorized := CheckAuthorization(sender, GetActionId(message)); !isAuthorized {
+
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error.AccessDenied",
+			Body: []any{"Not authorized to update passwords"},
+		}
+	}
+
+	callerIsTarget, err := TargetIsSender(targetUsername, a.conn, sender)
+
+	if err != nil {
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+	}
+
+	targetIsAdmin, err := IsAdmin(targetUsername)
+	if err != nil {
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+	}
+
+	callerIsAdmin, err := IsAdmin(callerUsername)
+	if err != nil {
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+	}
+
+	// caller wants to change their own password
+	if callerIsTarget {
+
+		err = ChangePassword(targetUsername, newpassword)
 		if err != nil {
 			return "", &dbus.Error{
 				Name: "org.freedesktop.DBus.Error",
@@ -247,10 +324,31 @@ func (a *AccountInterface) UpdatePassword(username string, newpassword string, s
 		}
 		return "password updated", nil
 
+		// otherwise someone else wants to change it
+
+	} else if callerIsAdmin && !targetIsAdmin {
+
+		err = ChangePassword(targetUsername, newpassword)
+		if err != nil {
+			return "", &dbus.Error{
+				Name: "org.freedesktop.DBus.Error",
+				Body: []any{err.Error()},
+			}
+
+		}
+		err = a.conn.Emit("/com/novus/ns", "com.novus.ns.accounts.Changed", "UpdatePassword")
+		if err != nil {
+			log.Println(err.Error())
+		}
+		return "password updated", nil
+
+	} else {
+
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{"Not authorized to change this user's password"},
+		}
+
 	}
 
-	return "", &dbus.Error{
-		Name: "org.freedesktop.DBus.Error.AccessDenied",
-		Body: []any{"Not authorized to remove users"},
-	}
 }

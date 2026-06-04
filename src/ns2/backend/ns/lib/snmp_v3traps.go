@@ -7,15 +7,14 @@ import (
 )
 
 type v3Trap struct {
-	Version     string `json:"Version"`
-	Username    string `json:"Username"`
-	EngineId    string `json:"EngineId"`
-	Permissions string `json:"Permissions"`
-	AuthType    string `json:"AuthType"`
-	PrivType    string `json:"PrivType"`
-	Protocol    string `json:"Protocol"`
-	Host        string `json:"Host"`
-	Port        string `json:"Port"`
+	Version  string `json:"Version"`
+	Username string `json:"Username"`
+	EngineId string `json:"EngineId"`
+	AuthType string `json:"AuthType"`
+	PrivType string `json:"PrivType"`
+	Protocol string `json:"Protocol"`
+	Host     string `json:"Host"`
+	Port     string `json:"Port"`
 }
 
 func (trap *v3Trap) ToDict() map[string]string {
@@ -23,7 +22,6 @@ func (trap *v3Trap) ToDict() map[string]string {
 	res["Version"] = trap.Version
 	res["Username"] = trap.Username
 	res["EngineId"] = trap.EngineId
-	res["Permissions"] = trap.Permissions
 	res["AuthType"] = trap.AuthType
 	res["PrivType"] = trap.PrivType
 	res["Protocol"] = trap.Protocol
@@ -37,7 +35,6 @@ func (trap *v3Trap) FromDict(dict map[string]string) {
 	trap.Version = getString(dict, "Version")
 	trap.Username = getString(dict, "Username")
 	trap.EngineId = getString(dict, "EngineId")
-	trap.Permissions = getString(dict, "Permissions")
 	trap.AuthType = getString(dict, "AuthType")
 	trap.PrivType = getString(dict, "PrivType")
 	trap.Protocol = getString(dict, "Protocol")
@@ -59,20 +56,22 @@ func _readV3TrapsFromFile() ([]v3Trap, error) {
 
 		if strings.HasPrefix(line, "trapsess -v 3") {
 			fields := strings.Fields(line)
-			if len(fields) == 14 {
+			if len(fields) == 12 {
 				var trap v3Trap
 				trap.Version = fields[2]
 				trap.EngineId = fields[4]
 				trap.Username = fields[6]
-				trap.Permissions = fields[8]
-				trap.AuthType = fields[10]
-				trap.PrivType = fields[12]
+				//trap.Permissions = fields[8]
+				trap.AuthType = fields[8]
+				trap.PrivType = fields[10]
 
 				trap.Protocol = strings.Split(fields[len(fields)-1], ":")[0]
 				trap.Host = strings.Split(fields[len(fields)-1], ":")[1]
 				trap.Port = strings.Split(fields[len(fields)-1], ":")[2]
 
 				traps = append(traps, trap)
+			} else {
+				return nil, fmt.Errorf("missing fields")
 			}
 
 		}
@@ -100,7 +99,7 @@ func _writeV3TrapToFile(trap v3Trap) error {
 		lineCount++
 	}
 
-	newTrapLine := fmt.Sprintf("trapsess -v 3 -e %s -u %s -a %s %s:%s:%s", trap.EngineId, trap.Username, trap.AuthType, trap.PrivType, trap.Protocol, trap.Host, trap.Port)
+	newTrapLine := fmt.Sprintf("trapsess -v 3 -e %s -u %s -a %s -x %s %s:%s:%s", trap.EngineId, trap.Username, trap.AuthType, trap.PrivType, trap.Protocol, trap.Host, trap.Port)
 	if trapIndex < 0 {
 		lines = append(lines, []string{"#-------------------------------------------------------------------------------"}...)
 		lines = append(lines, []string{"#trapsess [SNMPCMD_ARGS] host"}...)
@@ -122,7 +121,6 @@ func _deleteV3TrapFromConfig(trap v3Trap) error {
 		trap.Version,
 		trap.Username,
 		trap.EngineId,
-		trap.Permissions,
 		trap.AuthType,
 		trap.PrivType,
 		trap.Protocol,
@@ -155,6 +153,19 @@ func ReadV3Traps() ([]v3Trap, error) {
 	}
 
 	return traps, nil
+}
+
+func ReadV3TrapByUsername(username string) (*v3Trap, error) {
+	traps, err := ReadV3Traps()
+	if err != nil {
+		return nil, err
+	}
+	for _, t := range traps {
+		if t.Username == username {
+			return &t, nil
+		}
+	}
+	return nil, fmt.Errorf("v3 user not found by username")
 }
 
 func AddV3Trap(trap v3Trap) error {

@@ -8,15 +8,23 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var isDebug bool
+
 func Export() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "export",
 		Short: "export interfaces on system bus",
 		RunE: func(cmd *cobra.Command, args []string) error {
+			if isDebug {
+				lib.DEBUG = true
+				fmt.Println("DEBUGGING NO AUTH CHECKS")
+			}
 			lib.StartDbusServer()
 			return nil
 		},
 	}
+	cmd.Flags().BoolVarP(&isDebug, "debug", "d", false, "ignore auth checks")
+
 	return cmd
 }
 

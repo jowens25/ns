@@ -11,13 +11,34 @@ import (
 	"github.com/godbus/dbus/v5"
 )
 
-var ADMIN_GROUP string = "nsadmin"
-var USER_GROUP string = "nsuser"
+var ADMIN_GROUP_NAME string = "nsadmin"
+var USER_GROUP_NAME string = "nsuser"
 
-type User struct {
+//var ADMIN_GROUP
+
+type MyUser struct {
 	Username string `json:"Username"`
 	Group    string `json:"Group"`
-	Last     string `json:"Last"`
+	Login    string `json:"Login"`
+}
+
+func (u *MyUser) FromDict(dict map[string]string) {
+
+	u.Username = getString(dict, "Username")
+	u.Group = getString(dict, "Group")
+	u.Login = getString(dict, "Login")
+
+}
+
+func (u *MyUser) ToDict() map[string]string {
+
+	res := map[string]string{}
+	res["Username"] = u.Username
+	res["Group"] = u.Group
+	res["Login"] = u.Login
+
+	return res
+
 }
 
 func RemoveUser(username string) error {
@@ -107,7 +128,12 @@ func IsAdmin(username string) (bool, error) {
 		return false, err
 	}
 
-	if slices.Contains(groups, ADMIN_GROUP) {
+	g, err := user.LookupGroup(ADMIN_GROUP_NAME)
+	if err != nil {
+		return false, err
+	}
+
+	if slices.Contains(groups, g.Gid) {
 		return true, nil
 	}
 	return false, nil
@@ -125,7 +151,12 @@ func IsUser(username string) (bool, error) {
 		return false, err
 	}
 
-	if slices.Contains(groups, USER_GROUP) {
+	g, err := user.LookupGroup(USER_GROUP_NAME)
+	if err != nil {
+		return false, err
+	}
+
+	if slices.Contains(groups, g.Gid) {
 		return true, nil
 	}
 	return false, nil
@@ -161,7 +192,7 @@ func getAdmins() ([]string, error) {
 		return []string{}, err
 	}
 	for _, line := range lines {
-		if strings.HasPrefix(line, ADMIN_GROUP) {
+		if strings.HasPrefix(line, ADMIN_GROUP_NAME) {
 			fields := strings.Split(line, ":")
 			if len(fields[3]) > 0 {
 				return strings.Split(strings.Trim(fields[3], "\n"), ","), nil
@@ -179,7 +210,7 @@ func getUsers() ([]string, error) {
 		return nil, err
 	}
 	for _, line := range lines {
-		if strings.HasPrefix(line, USER_GROUP) {
+		if strings.HasPrefix(line, USER_GROUP_NAME) {
 			fields := strings.Split(line, ":")
 
 			if len(fields[3]) > 0 {
@@ -192,7 +223,7 @@ func getUsers() ([]string, error) {
 	return nil, err
 }
 
-func getUserAndAdmins() ([]map[string]string, error) {
+func getUserAndAdmins() ([]MyUser, error) {
 	users, err := getUsers()
 	if err != nil {
 		return nil, err
@@ -202,7 +233,7 @@ func getUserAndAdmins() ([]map[string]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	allUsers := []map[string]string{}
+	var allUsers []MyUser
 
 	if len(admins) > 0 {
 
@@ -218,7 +249,7 @@ func getUserAndAdmins() ([]map[string]string, error) {
 				return allUsers, err
 			}
 
-			allUsers = append(allUsers, map[string]string{"Groups": "admin", "Username": a, "login": ll})
+			allUsers = append(allUsers, MyUser{Group: "admin", Username: a, Login: ll})
 		}
 	}
 
@@ -232,12 +263,31 @@ func getUserAndAdmins() ([]map[string]string, error) {
 				return allUsers, err
 			}
 
-			allUsers = append(allUsers, map[string]string{"Groups": "user", "Username": u, "login": ll})
+			allUsers = append(allUsers, MyUser{Group: "user", Username: u, Login: ll})
 
 		}
 	}
 
 	return allUsers, nil
+}
+
+func ReadUserByUsername(username string) (*MyUser, error) {
+
+	users, err := getUserAndAdmins()
+
+	if err != nil {
+		return nil, err
+	}
+
+	for _, u := range users {
+
+		if u.Username == username {
+			return &u, nil
+		}
+	}
+
+	return nil, fmt.Errorf("user not found")
+
 }
 
 func ListAccounts() {
@@ -295,5 +345,25 @@ func GetLastLogin(username string) (string, error) {
 	}
 
 	return "", fmt.Errorf("invalid path object")
+
+}
+
+func TargetIsSender(target string, conn *dbus.Conn, sender dbus.Sender) (bool, error) {
+
+	sendingUser, err := GetUserInfoFromSender(conn, sender)
+
+	if err != nil {
+		return false, err
+	}
+
+	targetUser, err := user.Lookup(target)
+
+	if err != nil {
+		return false, err
+	}
+
+	//log.Printf("TARGET: %s SENDING: %s RESULT: %b", targetUser.Uid, sendingUser.Uid, targetUser.Uid == sendingUser.Uid)
+
+	return targetUser.Uid == sendingUser.Uid, nil
 
 }

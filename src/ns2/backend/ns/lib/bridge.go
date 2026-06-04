@@ -107,7 +107,7 @@ func proxyConn(client net.Conn) {
 	client.Write([]byte(okLine)) // send real OK back
 	readLine(client)             // BEGIN
 
-	fmt.Printf("listening to %d on %s\n", uid, client.LocalAddr().String())
+	log.Printf("listening to %d on %s\n", uid, client.LocalAddr().String())
 
 	errc := make(chan error, 2)
 	go func() { _, err := io.Copy(dbusSocket, client); errc <- err }()

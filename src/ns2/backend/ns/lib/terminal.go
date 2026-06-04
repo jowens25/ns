@@ -1,7 +1,6 @@
 package lib
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -27,7 +26,6 @@ func CallMakeTerminal(username string) (int, error) {
 		"ns",
 		"term",
 	)
-	fmt.Println("cmd term called")
 
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -37,8 +35,6 @@ func CallMakeTerminal(username string) (int, error) {
 		return -1, err
 	}
 
-	fmt.Println("start called")
-
 	return cmd.Process.Pid, nil
 }
 
@@ -47,10 +43,7 @@ var terminalSocketPath string = "/tmp/terminal.sock"
 func StartTerminalProxy() error {
 	log.Println("starting terminal proxy...")
 
-	err := os.Remove(terminalSocketPath)
-	if !errors.Is(err, os.ErrNotExist) {
-		return err
-	}
+	os.Remove(terminalSocketPath)
 
 	listener, err := net.Listen("unix", terminalSocketPath)
 	if err != nil {
@@ -68,9 +61,13 @@ func StartTerminalProxy() error {
 			conn, err := listener.Accept()
 			if err != nil {
 				log.Printf("accept error: %v", err)
-				return
+				continue
 			}
-			go handleConnection(conn)
+			go func() {
+				if err := handleConnection(conn); err != nil {
+					log.Printf("connection error: %v", err)
+				}
+			}()
 		}
 	}()
 
@@ -84,25 +81,30 @@ func StartTerminalProxy() error {
 
 }
 
-func handleConnection(conn net.Conn) {
-	c := exec.Command("bash", "-i", "-l")
+func handleConnection(conn net.Conn) error {
+	cmd := exec.Command("bash", "-i", "-l")
 
-	if homeDir, err := os.UserHomeDir(); err == nil {
-		c.Dir = homeDir
+	// cmd.SysProcAttr = &syscall.SysProcAttr{
+	// 	Setsid: true, // new session, isolates signals from parent
+	// }
+
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return err
 	}
+	cmd.Dir = homeDir
 
 	// Start the command with a pty.
-	ptmx, err := pty.Start(c)
+	ptmx, err := pty.Start(cmd)
 	if err != nil {
-		return
+		return err
 	}
 
 	defer func() {
 		ptmx.Close()
-		c.Process.Kill()
-		c.Wait()
+		//cmd.Process.Kill()
+		//cmd.Wait()
 		conn.Close()
-		os.Remove(terminalSocketPath)
 	}()
 
 	errc := make(chan error, 2)
@@ -111,5 +113,6 @@ func handleConnection(conn net.Conn) {
 	<-errc
 
 	log.Println("shutting down terminal proxy conn...")
+	return nil
 
 }
