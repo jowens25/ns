@@ -203,7 +203,7 @@ async def root_system_page():
         prioritySelector = (
             ui.select(
                 options=list(PRIORITY_OPTIONS.keys()),
-                value="Warning (4)",
+                value="Info (6)",
                 label="Priority",
             )
             .classes("w-40")
@@ -225,7 +225,7 @@ async def root_system_page():
     async def download_logs_cb():
         logs = await GatherLogs()
         content = "\n".join(logs)
-        ui.download.content(content)
+        ui.download.content(content, filename="logs.txt")
 
     async def fetch_logs_cb():
         uilog.clear()

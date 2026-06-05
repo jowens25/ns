@@ -175,7 +175,7 @@ func (s *SnmpInterface) CreateV2Trap(sender dbus.Sender, message dbus.Message, t
 	if isAuthorized := CheckAuthorization(sender, GetActionId(message)); !isAuthorized {
 		return "", &dbus.Error{
 			Name: "org.freedesktop.DBus.Error.AccessDenied",
-			Body: []any{"Not authorized to create v3 trap"},
+			Body: []any{"Not authorized to create v2 trap"},
 		}
 	}
 
@@ -499,7 +499,7 @@ func (s *SnmpInterface) RemoveV3Trap(sender dbus.Sender, message dbus.Message, t
 
 	}
 
-	err = s.conn.Emit("/com/novus/ns", "com.novus.ns.snmp.Changed", "User removed")
+	err = s.conn.Emit("/com/novus/ns", "com.novus.ns.snmp.Changed", "V3 trap removed")
 	if err != nil {
 		log.Println(err.Error())
 	}

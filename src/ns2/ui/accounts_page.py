@@ -55,7 +55,7 @@ async def accounts_table():
             columns=[
                 make_col_of("Username"),
                 make_col_of("Group"),
-                make_col_of("Login"),
+                make_col_of("Login", label="Remote Login"),
                 make_action_col(),
             ],
             rows=rsp.body[0],

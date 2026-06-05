@@ -13,7 +13,7 @@ from ns2.utils import (
 )
 from dbus_next import Message
 from ns2.lib.bridge import BridgeCall, GetBridge
-from ns2.lib.systemd1 import isActive, SystemdStop, SystemdStart
+from ns2.lib.systemd1 import isActive, SystemdStop, SystemdStart, SystemdRestart
 
 from ns2.lib.snmp import are_you_sure_you_want_to
 
@@ -35,6 +35,8 @@ async def handleNotifications():
     v2TrapsTable.refresh()
     v3UserTable.refresh()
     v3TrapsTable.refresh()
+    snmp_state.refresh()
+    snmp_status.refresh()
 
 
 def notification_handler(msg: Message):
@@ -60,45 +62,43 @@ async def SetupSnmpNotifications():
 
 
 @ui.refreshable
+async def snmp_state():
+    snmpState = await isActive("snmpd.service")
+    snmpStatus = "Enabled" if snmpState else "Disabled"
+
+    async def snmp_switch_cb(e):
+        action = "enable" if e.sender.value else "disable"
+        with ui.dialog() as dialog, ui.card():
+            ui.label(f"Are you sure you want to {action} snmpd?")
+            with ui.row():
+                ui.button("Cancel", on_click=lambda: dialog.submit("Cancel")).props(
+                    "flat"
+                )
+                ui.button(f"{action}", on_click=lambda: dialog.submit(action)).props(
+                    "flat"
+                )
+        result = await dialog
+        active = (await isActive("snmpd.service")).get("state", False)
+        if result == "enable" and not active:
+            await SystemdStart("snmpd.service")
+        if result == "disable" and active:
+            await SystemdStop("snmpd.service")
+        await snmp_state.refresh()
+
+    ui.switch(f"Status: {snmpStatus}").on("click", lambda e: snmp_switch_cb(e)).props(
+        "flat dense"
+    ).bind_value(snmpState, "state")
+
+
+@ui.refreshable
 async def snmp_status():
 
     with ui.column() as status:
         ui.label("SNMP").classes("text-h5")
 
-        async def snmp_switch_cb(e):
-            action = "enable" if e.sender.value else "disable"
-            with ui.dialog() as dialog, ui.card():
-                ui.label(f"Are you sure you want to {action} snmp?")
-                with ui.row():
-                    ui.button("Cancel", on_click=lambda: dialog.submit("Cancel")).props(
-                        "flat color=accent align=left"
-                    )
-                    ui.button(
-                        f"{action}", on_click=lambda: dialog.submit(action)
-                    ).props("flat color=accent align=left")
-
-            result = await are_you_sure_you_want_to(f"{action} snmp?")
-            active = await isActive("snmpd.service")
-
-            if result == "enable" and not active:
-                await SystemdStart("snmpd.service")
-
-            if result == "disable" and active:
-                await SystemdStop("snmpd.service")
-
-            e.sender.value = await isActive("snmpd.service")
-
         async def snmp_reset_cb(e):
-            with ui.dialog() as dialog, ui.card().props("flat"):
-                ui.label("Are you sure you want to reset snmp?")
-                with ui.row():
-                    ui.button("Cancel", on_click=lambda: dialog.submit("Cancel")).props(
-                        "flat color=accent align=left"
-                    )
-                    ui.button("Reset", on_click=lambda: dialog.submit("reset")).props(
-                        "flat color=accent align=left"
-                    )
-            if await dialog == "reset":
+            result = await are_you_sure_you_want_to("reset the snmp config?")
+            if result:
 
                 rsp = await BridgeCall(
                     "com.novus.ns",
@@ -113,19 +113,31 @@ async def snmp_status():
 
         with ui.card().classes("w-full").props("flat"):
             with ui.row().classes("items-center").props("dense"):
-                snmp_service_switch = (
-                    ui.switch("SNMPD Status")
-                    .on("click", lambda e: snmp_switch_cb(e))
-                    .props("flat")
-                )
-                snmp_service_switch.value = await isActive("snmpd.service")
-                ui.button("Reset SNMPD Config", on_click=snmp_reset_cb).props("flat")
+
+                await snmp_state()
+
+                # async def snmp_cb(action):
+                #    res = await are_you_sure_you_want_to(f"{action} snmpd?")
+                #    if res:
+                #        match action:
+                #            case "stop":
+                #                await SystemdStop("snmpd.service")
+                #            case "start":
+                #                await SystemdStart("snmpd.service")
+                #            case "restart":
+                #                await SystemdRestart("snmpd.service")
+                #    snmp_state.refresh()
+
                 ui.button(
                     "Download MIB",
                     on_click=lambda: ui.download.file(
                         str(ASSETS_DIR / "NOVUS-SECURE-MIB_REV1.3.mib")
                     ),
                 ).props("flat")
+                # ui.button("start snmpd", on_click=lambda e: snmp_cb("start")).props("flat")
+                # ui.button("stop snmpd", on_click=lambda e: snmp_cb("stop")).props("flat")
+                ui.button("Reset SNMPD Config", on_click=snmp_reset_cb).props("flat")
+                # ui.button("restart snmpd", on_click=lambda e: snmp_cb("restart")).props("flat")
 
     return status
 

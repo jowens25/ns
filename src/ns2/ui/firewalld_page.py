@@ -63,7 +63,7 @@ async def firewall_status(on_network_page: bool):
                                 f"{action}", on_click=lambda: dialog.submit(action)
                             ).props("flat color=accent align=left")
                     result = await dialog
-                    active = await isActive("firewalld.service")
+                    active = (await isActive("firewalld.service")).get("state", False)
                     if result == "enable" and not active:
                         await SystemdStart("firewalld.service")
                     if result == "disable" and active:
@@ -74,8 +74,8 @@ async def firewall_status(on_network_page: bool):
                 ui.switch(f"Status: {firewallInfo.Status}").on(
                     "click", lambda e: fire_switch_cb(e)
                 ).props("flat color=accent align=left dense").bind_value(
-                    firewallInfo, "Enable"
-                ).bind_text
+                    firewallInfo.Enable, "state"
+                )
 
             if on_network_page:
                 ui.button(

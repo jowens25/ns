@@ -1,4 +1,5 @@
 import asyncio
+import inspect
 from typing import Optional
 
 from nicegui import ui, binding
@@ -10,7 +11,7 @@ from dbus_next import Message
 
 from ns2.utils import log
 
-from ns2.lib.accounts import ValidatePassword
+from ns2.lib.accounts import ValidatePassword, UserExists
 
 
 @binding.bindable_dataclass
@@ -41,7 +42,7 @@ async def editDeleteUserDialog(username):
             ui.label("Edit user").classes("text-h5")
 
             userfield = (
-                ui.input("username", validation=usernameValidation)
+                ui.input("username")
                 .bind_value(user, "Username")
                 .classes("w-full")
                 .props("dense")
@@ -89,7 +90,7 @@ async def editDeleteUserDialog(username):
             with ui.row().classes("items-center justify-between gap-4 w-full"):
 
                 async def on_save_cb():
-                    if not all(validate_group([p1, p2, userfield])):
+                    if not all(await validate_group([p1, p2, userfield])):
                         ui.notify("Please correct the errors", type="negative")
 
                     else:
@@ -178,7 +179,7 @@ async def editPolicyDialog():
             ui.checkbox("require digit").bind_value(policy, "digit").props("dense")
 
             async def on_save_cb():
-                if all(validate_group([min, max])):
+                if all(await validate_group([min, max])):
                     newPolicy = {
                         "max": Variant("u", int(policy["max"])),
                         "min": Variant("u", int(policy["min"])),
@@ -206,10 +207,10 @@ async def editPolicyDialog():
     return dialog
 
 
-usernameValidation = {
-    "Username must be at least 5 characters": lambda value: len(value) >= 5,
-    "Username must be 24 or less characaters": lambda value: 24 >= len(value),
-}
+#usernameValidation = {
+#    "Username must be at least 5 characters": lambda value: len(value) >= 5,
+#    "Username must be 24 or less characaters": lambda value: 24 >= len(value),
+#}
 
 
 async def validatePass(value):
@@ -218,6 +219,21 @@ async def validatePass(value):
         return rsp.body[0]
     else:
         return None
+
+async def validateUser(value):
+    
+    if len(value) < 5:
+        return "Username must be at least 5 characters"
+    
+    if 24 < len(value):
+        return "Username must be 24 or less characters"
+    
+    rsp = await UserExists(value)
+    if rsp.error_name is not None:
+        return rsp.body[0]
+    
+    
+    return None
 
 
 async def AddUser(u: User) -> Message:
@@ -255,8 +271,20 @@ async def EditUser(u: User) -> Message:
     )
 
 
-def validate_group(group: list):
-    return [x.validate(return_result=False) for x in group]
+#async def validate_group(group: list):
+#    return [x.validate(return_result=False) for x in group]
+
+
+async def validate_group(group: list):
+    results = []
+    for x in group:
+        if inspect.iscoroutinefunction(x.validation):
+            x.validate(return_result=False)  # triggers UI error display
+            error = await x.validation(x.value)  # get actual result
+            results.append(error is None)
+        else:
+            results.append(x.validate())
+    return results
 
 
 async def addUserDialog():
@@ -266,7 +294,7 @@ async def addUserDialog():
             ui.label("Add user").classes("text-h5")
 
             user = (
-                ui.input("username", validation=usernameValidation)
+                ui.input("username", validation=validateUser)
                 .bind_value(newUser, "Username")
                 .classes("w-full")
                 .props("dense")
@@ -306,7 +334,7 @@ async def addUserDialog():
             ).props("dense")
 
             async def on_save_cb():
-                if all(validate_group([p1, p2, user])):
+                if all(await validate_group([p1, p2, user])):
 
                     rsp = await AddUser(newUser)
 

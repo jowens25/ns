@@ -22,7 +22,7 @@ polkit.addRule(function(action, subject) {
     }
 
     // PAM authentication is allowed for all authenticated users
-    if (action.id == "com.novus.ns.pam.authenticate") {
+    if (action.id == "com.novus.ns.pam.Authenticate") {
         if (subject.active) {
             return polkit.Result.YES;
         }

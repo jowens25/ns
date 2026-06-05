@@ -51,3 +51,16 @@ async def ValidatePassword(password: str) -> Message:
     )
 
     return rsp
+
+
+async def UserExists(username: str) -> Message:
+    rsp = await BridgeCall(
+        destination="com.novus.ns",
+        path="/com/novus/ns",
+        interface="com.novus.ns.accounts",
+        member="UserExists",
+        signature="s",
+        body=[username],
+    )
+
+    return rsp

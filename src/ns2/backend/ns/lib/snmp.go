@@ -112,7 +112,19 @@ func _deletePersistentDir() error {
 }
 
 func _overwriteWithDefaultSnmpConf() error {
-	return runCmd("cp", "./configs/snmpd.conf", SNMP_CONF_FILE)
+
+	defaultConfigLines, err := GetEmbeddedConfigLines("snmpd.conf")
+	if err != nil {
+		return err
+	}
+
+	err = SetFileLines(SNMP_CONF_FILE, defaultConfigLines)
+	if err != nil {
+		return err
+	}
+	return nil
+	//return runCmd("cp", "./configs/snmpd.conf", SNMP_CONF_FILE)
+
 }
 
 // stops cleans and restarts snmpd

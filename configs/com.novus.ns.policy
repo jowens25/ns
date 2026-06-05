@@ -78,6 +78,68 @@
     </defaults>
   </action>
 
+  <!-- SNMP V2 Trap Actions -->
+  <action id="com.novus.ns.snmp.CreateV2Trap">
+    <description>Create SNMP v2 trap</description>
+    <message>Authentication is required to create SNMP v2 trap</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
+  <action id="com.novus.ns.snmp.ModifyV2Trap">
+    <description>Modify SNMP v2 trap</description>
+    <message>Authentication is required to modify SNMP v2 trap</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
+  <action id="com.novus.ns.snmp.RemoveV2Trap">
+    <description>Remove SNMP v2 trap</description>
+    <message>Authentication is required to remove SNMP v2 trap</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
+  <!-- SNMP V3 Trap Actions -->
+  <action id="com.novus.ns.snmp.CreateV3Trap">
+    <description>Create SNMP v3 trap</description>
+    <message>Authentication is required to create SNMP v3 trap</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
+  <action id="com.novus.ns.snmp.ModifyV3Trap">
+    <description>Modify SNMP v3 trap</description>
+    <message>Authentication is required to modify SNMP v3 trap</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
+  <action id="com.novus.ns.snmp.RemoveV3Trap">
+    <description>Remove SNMP v3 trap</description>
+    <message>Authentication is required to remove SNMP v3 trap</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
   <!-- Account Management Actions -->
   <action id="com.novus.ns.accounts.AddAdmin">
     <description>Add system admin</description>
@@ -110,7 +172,7 @@
   </action>
 
   <action id="com.novus.ns.accounts.UpdatePassword">
-    <description>UpdatePassword system users</description>
+    <description>Update system user password</description>
     <message>Authentication is required to update system user password</message>
     <defaults>
       <allow_any>no</allow_any>
@@ -120,7 +182,7 @@
   </action>
 
   <action id="com.novus.ns.accounts.SetPasswordPolicy">
-    <description>Set system password Policy</description>
+    <description>Set system password policy</description>
     <message>Authentication is required to update system password policy</message>
     <defaults>
       <allow_any>no</allow_any>

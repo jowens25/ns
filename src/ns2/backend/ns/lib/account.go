@@ -2,6 +2,7 @@ package lib
 
 import (
 	"fmt"
+	"log"
 	"os/user"
 	"slices"
 	"strconv"
@@ -339,7 +340,7 @@ func GetLastLogin(username string) (string, error) {
 
 		tm := time.Unix(int64(ts64), 0)
 
-		fmt.Println(ts64)
+		log.Println(ts64)
 
 		return fmt.Sprintf(tm.Format("2006-01-02 15:04:05")), nil
 	}
@@ -347,6 +348,61 @@ func GetLastLogin(username string) (string, error) {
 	return "", fmt.Errorf("invalid path object")
 
 }
+
+// func RecordLogin(username string) error {
+// 	u, err := user.Lookup(username)
+// 	if err != nil {
+// 		return fmt.Errorf("user.Lookup: %w", err)
+// 	}
+
+// 	uid, _ := strconv.ParseUint(u.Uid, 10, 32)
+// 	gid, _ := strconv.ParseUint(u.Gid, 10, 32)
+
+// 	conn, err := dbus.SystemBus()
+// 	if err != nil {
+// 		return fmt.Errorf("dbus.SystemBus: %w", err)
+// 	}
+// 	defer conn.Close()
+
+// 	obj := conn.Object("org.freedesktop.login1", "/org/freedesktop/login1")
+
+// 	// seat, vtnr, display can be empty for a headless/service session
+// 	call := obj.Call(
+// 		"org.freedesktop.login1.Manager.CreateSession",
+// 		0,
+// 		uint32(uid),       // uid
+// 		uint32(0),         // pid (0 = caller)
+// 		"ns",             // service name  ← your app
+// 		"unspecified",     // type: "tty", "x11", "wayland", "unspecified"
+// 		"user",            // class: "user", "greeter", "lock-screen"
+// 		"",                // desktop
+// 		"",                // seat id
+// 		uint32(0),         // vtnr
+// 		"",                // tty
+// 		"",                // display
+// 		false,             // remote
+// 		"",                // remote user
+// 		"",                // remote host
+// 		[][]interface{}{}, // properties (empty slice)
+// 	)
+
+// 	if call.Err != nil {
+// 		return fmt.Errorf("CreateSession: %w", call.Err)
+// 	}
+
+// 	// pull out the session id and path from the response
+// 	var sessionId string
+// 	var sessionPath dbus.ObjectPath
+// 	if err := call.Store(&sessionId, &sessionPath); err != nil {
+// 		return fmt.Errorf("Store: %w", err)
+// 	}
+
+// 	// immediately terminate it — logind has already stamped the timestamp
+// 	sessionObj := conn.Object("org.freedesktop.login1", sessionPath)
+// 	sessionObj.Call("org.freedesktop.login1.Session.Terminate", 0)
+
+// 	return nil
+// }
 
 func TargetIsSender(target string, conn *dbus.Conn, sender dbus.Sender) (bool, error) {
 

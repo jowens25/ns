@@ -82,6 +82,31 @@ func (a *AccountInterface) ValidatePassword(password string) (bool, *dbus.Error)
 
 }
 
+func (a *AccountInterface) UserExists(username string) *dbus.Error {
+
+	usersAndAdmins, err := getUserAndAdmins()
+
+	if err != nil {
+
+		return &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+	}
+
+	for _, u := range usersAndAdmins {
+		if u.Username == username {
+			return &dbus.Error{
+				Name: "org.freedesktop.DBus.Error",
+				Body: []any{"User exists"},
+			}
+		}
+	}
+
+	return nil
+
+}
+
 func (a *AccountInterface) AddUser(username string, password string, sender dbus.Sender, message dbus.Message) (string, *dbus.Error) {
 
 	if isAuthorized := CheckAuthorization(sender, GetActionId(message)); !isAuthorized {

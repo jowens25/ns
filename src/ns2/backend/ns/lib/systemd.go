@@ -27,7 +27,7 @@ func _stopUnit(unit string) error {
 		return fmt.Errorf("stop %s result: %s", unit, result)
 	}
 
-	log.Debug().Msgf("stopped %s successfully", unit)
+	log.Printf("stopped %s successfully\n", unit)
 	return nil
 }
 

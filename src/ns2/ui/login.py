@@ -22,6 +22,7 @@ async def try_login(_username: str, _password: str) -> None:
     rsp = await CallPamAuthenticate(_username, _password)
 
     if rsp.error_name is not None:
+        ui.notify(rsp.body[0])
         auth = False
     else:
         auth = rsp

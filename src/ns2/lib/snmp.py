@@ -122,7 +122,7 @@ class V2User:
 
 def are_you_sure_you_want_to(action_message: str) -> bool:
     with ui.dialog() as dialog, ui.card().props("flat"):
-        ui.label(f"Are you sure you want to {action_message}?")
+        ui.label(f"Are you sure you want to {action_message}")
 
         with ui.row():
             ui.button("Yes", on_click=lambda: dialog.submit(True)).props("flat")

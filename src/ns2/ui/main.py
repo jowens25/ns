@@ -102,16 +102,12 @@ async def Clock():
 
 
 @ui.page("/")
-@ui.page("/networking")
-@ui.page("/networking/firewall")
-@ui.page("/networking/{interface_name}")
-@ui.page("/logs")
-@ui.page("/logs/{log}")
-@ui.page("/services")
+@ui.page("/network")
+@ui.page("/network/firewall")
+@ui.page("/network/{interface_name}")
 @ui.page("/snmp")
 @ui.page("/terminal")
 @ui.page("/accounts")
-@ui.page("/accounts/{user}")
 async def controlPanel():
 
     current_tz = await CallGetTimezone()
@@ -132,48 +128,24 @@ async def controlPanel():
 
     with ui.left_drawer(bordered=True).classes("bg-dark") as left_drawer:
         ui.separator()
-        ui.button(
-            "System",
-            on_click=lambda: ui.navigate.to("/"),
-        ).props(
-            "flat color=white align=left"
-        ).classes("full-width")
-        ui.button(
-            "Networking",
-            on_click=lambda: ui.navigate.to("/networking"),
-        ).props(
-            "flat color=white align=left"
-        ).classes("full-width")
-        # ui.button(
-        #    "Logs",
-        #    on_click=lambda: ui.navigate.to("/logs"),
-        # ).props(
-        #    "flat color=white align=left"
-        # ).classes("full-width")
-        # ui.button(
-        #    "Services",
-        #    on_click=lambda: ui.navigate.to("/services"),
-        # ).props(
-        #    "flat color=white align=left"
-        # ).classes("full-width")
-        ui.button(
-            "Terminal",
-            on_click=lambda: ui.navigate.to("/terminal"),
-        ).props(
-            "flat color=white align=left"
-        ).classes("full-width")
-        ui.button(
-            "SNMP",
-            on_click=lambda: ui.navigate.to("/snmp"),
-        ).props(
-            "flat color=white align=left"
-        ).classes("full-width")
-        ui.button(
-            "Accounts",
-            on_click=lambda: ui.navigate.to("/accounts"),
-        ).props(
-            "flat color=white align=left"
-        ).classes("full-width")
+        btnps = "flat color=white align=left"
+
+        ui.button("System", on_click=lambda: ui.navigate.to("/")).props(btnps).classes(
+            "w-full"
+        )
+        ui.button("Network", on_click=lambda: ui.navigate.to("/network")).props(
+            btnps
+        ).classes("w-full")
+        ui.button("SNMP", on_click=lambda: ui.navigate.to("/snmp")).props(
+            btnps
+        ).classes("w-full")
+        ui.button("Accounts", on_click=lambda: ui.navigate.to("/accounts")).props(
+            btnps
+        ).classes("w-full")
+        ui.button("Terminal", on_click=lambda: ui.navigate.to("/terminal")).props(
+            btnps
+        ).classes("w-full")
+
         ui.separator()
 
         ui.button(
@@ -188,20 +160,17 @@ async def controlPanel():
     ui.sub_pages(
         {
             "/": root_system_page,
-            "/networking": network_page,
-            "/networking/firewall": firewall_page,
-            "/networking/{interface_name}": interface_page,
-            # "/logs": logs_page,
-            # "/logs/{log}": log_page,
+            "/network": network_page,
+            "/network/firewall": firewall_page,
+            "/network/{interface_name}": interface_page,
             "/snmp": snmp_page,
             "/accounts": accounts_page,
             "/terminal": terminal_page,
-            #'/tests': tests_page
         }
     ).classes("w-full")
 
 
-production = False
+production = True
 
 
 def main():
@@ -219,12 +188,12 @@ def main():
 
 if __name__ == "__main__" and production:
     main()
-else:
+# else:
 
-    ui.run(
-        port=8000,
-        reload=True,
-        storage_secret="your-secret-key",
-        title="Novus Configuration Tool",
-        favicon=str(ASSETS_DIR / "favicon.png"),
-    )
+#     ui.run(
+#         port=8000,
+#         reload=True,
+#         storage_secret="your-secret-key",
+#         title="Novus Configuration Tool",
+#         favicon=str(ASSETS_DIR / "favicon.png"),
+#     )

@@ -151,10 +151,14 @@ async def GetServiceState(service: str) -> str:
     return props.get("ActiveState", Variant("s", "StateNotFound")).value
 
 
-async def isActive(service: str) -> bool:
+async def isActive(service: str) -> dict:
+    """gets service state dict -> {state: state-bool}"""
     state = await GetServiceState(service)
     log.info(f"{service} is active: {state}")
     if state == "active":
-        return True
+        return {"state": True}
     else:
-        return False
+        return {"state": False}
+    
+    
+
