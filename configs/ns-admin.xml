@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>ns-admin</short>
+  <description>ns-admin lets you setup and configure your server.</description>
+  <port protocol="tcp" port="8000"/>
+</service>

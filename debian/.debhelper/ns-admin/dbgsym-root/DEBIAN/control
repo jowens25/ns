@@ -1,13 +1,13 @@
 Package: ns-admin-dbgsym
 Package-Type: ddeb
 Source: ns-admin
-Version: 2.0.21
+Version: 2.0.22
 Auto-Built-Package: debug-symbols
 Architecture: amd64
 Maintainer: Jacob Owens <jowens@novuspower.com>
 Installed-Size: 3599
-Depends: ns-admin (= 2.0.21)
+Depends: ns-admin (= 2.0.22)
 Section: debug
 Priority: optional
 Description: debug symbols for ns-admin
-Build-Ids: 595523b7bdb053e4369b0aea70456f02d0c6aa25
+Build-Ids: 213b458b1938e25b47388bcef4aa8cb433dc936e

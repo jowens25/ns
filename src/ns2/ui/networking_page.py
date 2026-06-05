@@ -52,7 +52,7 @@ async def network_page():
             "body-cell-name",
             """
                 <q-td :props="props">
-                    <a :href="'/networking/' + props.row.name" 
+                    <a :href="'/network/' + props.row.name" 
                        class="text-accent cursor-pointer hover:underline"
                        >
                         {{ props.value }}
@@ -75,7 +75,7 @@ async def interface_card(interface: InterfaceData):
 
     with ui.card().props("flat"):
         with ui.row():
-            ui.link("Networking", "/networking").classes("text-accent")
+            ui.link("Networking", "/network").classes("text-accent")
             ui.label(">")
             ui.label(interface.Name)
             ui.label(interface.Active)

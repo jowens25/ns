@@ -48,7 +48,7 @@ async def firewall_status(on_network_page: bool):
                 ui.label("Firewall").classes("text-h6")
                 if on_network_page:
                     ui.link(
-                        f"{numActiveZones} active zones", "/networking/firewall"
+                        f"{numActiveZones} active zones", "/network/firewall"
                     ).classes("text-accent")
 
                 async def fire_switch_cb(e):
@@ -80,7 +80,7 @@ async def firewall_status(on_network_page: bool):
             if on_network_page:
                 ui.button(
                     "Edit rules and zones",
-                    on_click=lambda e: ui.navigate.to("/networking/firewall"),
+                    on_click=lambda e: ui.navigate.to("/network/firewall"),
                 ).props("flat color=accent align=left dense")
 
             else:
@@ -469,7 +469,7 @@ async def getAllServices(zoneInfo: ZoneInfo):
 async def firewall_page():
     with ui.card():
         with ui.row():
-            ui.link("Networking", "/networking").classes("text-accent")
+            ui.link("Networking", "/network").classes("text-accent")
             ui.label(">")
             ui.label("firewall")
         await firewall_status(False)

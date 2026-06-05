@@ -1,0 +1,12 @@
+setup: small device tree change to make uart work
+setup: disavice
+setup: disable systemd-nbled variscite-bt seretworkd
+note: ns-admin 2.0.10 is broken... remove... will need to test going from ns2 to ns-admin
+
+
+=================================================================================================================
+added to post install -> groups: missing nsadmin and nsusers
+fixed paths           -> firewalld: networking path is wrong / missing
+added to makefile     -> systemd: Interactive authenticated required - probably missing 10-systemd1.rules
+added chmod           -> permissions: ns exe is available on all users
+added to makefile     -> systemd: snmp: disable seemed to have no effect, enabled shows when disabled even though switch shows correct state

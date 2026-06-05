@@ -3,7 +3,7 @@ from PyInstaller.utils.hooks import collect_all
 
 datas = [('src/ns2/assets', 'ns2/assets')]
 binaries = []
-hiddenimports = ['dbus_next', 'pam', 'plotly', 'systemd']
+hiddenimports = ['dbus_next', 'pam', 'systemd']
 tmp_ret = collect_all('nicegui')
 datas += tmp_ret[0]; binaries += tmp_ret[1]; hiddenimports += tmp_ret[2]
 

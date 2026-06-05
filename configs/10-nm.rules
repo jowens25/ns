@@ -1,0 +1,12 @@
+polkit.addRule(function(action, subject) {
+    if (
+        action.id === "org.freedesktop.NetworkManager.settings.modify.system" ||
+        action.id === "org.freedesktop.NetworkManager.network-control"
+    ) {
+        if (subject.isInGroup("nsadmin")) {
+            return polkit.Result.YES;
+        }
+
+        return polkit.Result.NO;
+    }
+});
