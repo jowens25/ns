@@ -1,19 +1,13 @@
+
 =================================================================================================================
+OPEN ISSUES
 =================================================================================================================
 setup: small device tree change to make uart work, in one note docs
-setup: disable systemd-networkd so that the /proc/net file only has 1 address
-setup: disable variscite-bt
-note: ns-admin 2.0.10 is broken... remove... will need to test going from ns2 to ns-admin
-
-firewalld: Service Switch does not indicate error for nsuser
-firewalld: Add zone dialog does not indicate error or close 
-
-network manager: editing ipv4 shows two errors when editing dns servers (adding 8.8.8.8)
 
 ns exe permissions: user1234 in nsuser was still able to be executed.... part of the problem is they need it.... may add polkit check to ns
-pages: missing a sub page on logout.... 
-login: the session was not terminated as expected when logging on with a different user... 
+
 =================================================================================================================
+PATCHES
 =================================================================================================================
 added to post install                            -> groups: missing nsadmin and nsusers
 fixed paths                                      -> firewalld: networking path is wrong / missing
@@ -22,3 +16,15 @@ added chmod                                      -> permissions: ns exe is avail
 added to makefile                                -> systemd: snmp: disable seemed to have no effect, enabled shows when disabled even though switch shows correct state
 added exception to python Systemd Stop and Start -> snmp: the enable / disable error is not getting passed back to the scrreen when a simple user
 i think this is false, no fix needed             -> network manager: nsuser was able to edit the ip address... ???? not sure if this is true needs more testing
+updated to one error, added canOpenFunc          -> network manager: editing ipv4 shows two errors when editing dns servers (adding 8.8.8.8)
+removed broken package                           -> note: ns-admin 2.0.10 is broken... remove... will need to test going from ns2 to ns-admin
+added disable command to ns-admin post install   -> setup: disable systemd-networkd so that the /proc/net file only has 1 address
+added disable command to ns-serial pre install   -> setup: disable variscite-bt
+passed error back up from systemstop and start   -> firewalld: Service Switch does not indicate error for nsuser
+added isAdmin block to the zone navigation...    -> firewalld: Add zone dialog does not indicate error or close when normal user
+fixed a some calls making session ids            -> login: the session was not terminated as expected when logging on with a different user... 
+
+=================================================================================================================
+EXCEPTIONS
+=================================================================================================================
+pages: missing a sub page on logout.... 

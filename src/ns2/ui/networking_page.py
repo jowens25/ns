@@ -154,7 +154,6 @@ async def edit_ip_connection(version: str, id: InterfaceData):
     if not CanOpen:
         ui.notify("must be an admin to edit network settings", type="warning")
         return
-
     connection_path = await GetNmProp(
         id.act_con_path, "Connection.Active", "Connection"
     )
@@ -368,11 +367,13 @@ async def edit_ip_connection(version: str, id: InterfaceData):
                             rsp = await ConnectionUpdate2(
                                 connection_path, _settings, 0x1, {}
                             )
-                            if rsp:
-                                ui.notify(rsp, type="negative")
+
+                            if rsp.error_name is not None:
+                                ui.notify(f"{rsp.body[0]}", type="warning")
+                            else:
+                                ui.notify("Updated network settings", type="positive")
+
                             rsp = await DeviceReapply(id.dev_path, _settings, 0, 0)
-                            if rsp:
-                                ui.notify(rsp, type="positive")
 
                             dialog.close()
 

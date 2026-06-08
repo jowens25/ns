@@ -3,7 +3,7 @@ from typing import Optional
 from nicegui import binding
 
 from dbus_next.signature import Variant
-
+from dbus_next import Message
 from ns2.common import formatListToString
 
 from ns2.lib.bridge import BridgeCall
@@ -114,8 +114,10 @@ async def GetDevices():
     return rsp.body[0]
 
 
-async def ConnectionUpdate2(settings_path: str, settings: dict, flags: int, args: dict):
-    rsp = await BridgeCall(
+async def ConnectionUpdate2(
+    settings_path: str, settings: dict, flags: int, args: dict
+) -> Message:
+    return await BridgeCall(
         destination="org.freedesktop.NetworkManager",
         path=settings_path,
         interface="org.freedesktop.NetworkManager.Settings.Connection",
@@ -123,11 +125,12 @@ async def ConnectionUpdate2(settings_path: str, settings: dict, flags: int, args
         signature="a{sa{sv}}ua{sv}",
         body=[settings, flags, args],
     )
-    return rsp.body[0]
 
 
-async def DeviceReapply(device_path: str, connection: dict, flags: int, args: int):
-    rsp = await BridgeCall(
+async def DeviceReapply(
+    device_path: str, connection: dict, flags: int, args: int
+) -> Message:
+    return await BridgeCall(
         destination="org.freedesktop.NetworkManager",
         path=device_path,
         interface="org.freedesktop.NetworkManager.Device",
@@ -135,10 +138,6 @@ async def DeviceReapply(device_path: str, connection: dict, flags: int, args: in
         signature="a{sa{sv}}tu",
         body=[connection, flags, args],
     )
-    if len(rsp.body) > 0:
-        return rsp.body[0]
-    else:
-        return None
 
 
 async def GetAppliedConnection(device_path: str, flags: int):

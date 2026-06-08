@@ -41,6 +41,10 @@ case "$1" in
 
         echo "Reloaded nginx"
 
+
+        systemctl disable systemd-networkd
+        echo "disabled systemd-networkd"
+
         ;;
     
     abort-upgrade|abort-remove|abort-deconfigure)

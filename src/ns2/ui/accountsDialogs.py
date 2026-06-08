@@ -2,9 +2,9 @@ import asyncio
 import inspect
 from typing import Optional
 
-from nicegui import ui, binding
+from nicegui import ui, binding, app
 
-from ns2.lib.bridge import BridgeCall, CallPamAuthenticate
+from ns2.lib.bridge import BridgeCall, CallPamAuthenticate, CanOpenDialog
 
 from dbus_next.signature import Variant
 from dbus_next import Message
@@ -114,7 +114,7 @@ async def editDeleteUserDialog(username):
                     if rsp.error_name is not None:
                         ui.notify(rsp.body[0])
 
-                    dialog.submit(f"DELETED!!! {username} RESULTS")
+                    # dialog.submit(f"DELETED!!! {username} RESULTS")
 
                 with ui.row():
                     ui.button("save", on_click=on_save_cb).props("flat")
@@ -129,6 +129,7 @@ passwordValidation = {
 
 
 async def editPolicyDialog():
+
     policy = {}
     rsp = await BridgeCall(
         "com.novus.ns",
@@ -198,7 +199,8 @@ async def editPolicyDialog():
                     )
                     if rsp.error_name is not None:
                         ui.notify(rsp.body[0])
-                        dialog.close()
+
+                dialog.close()
 
             with ui.row():
                 ui.button("save", on_click=on_save_cb)
@@ -207,10 +209,10 @@ async def editPolicyDialog():
     return dialog
 
 
-#usernameValidation = {
+# usernameValidation = {
 #    "Username must be at least 5 characters": lambda value: len(value) >= 5,
 #    "Username must be 24 or less characaters": lambda value: 24 >= len(value),
-#}
+# }
 
 
 async def validatePass(value):
@@ -220,19 +222,19 @@ async def validatePass(value):
     else:
         return None
 
+
 async def validateUser(value):
-    
+
     if len(value) < 5:
         return "Username must be at least 5 characters"
-    
+
     if 24 < len(value):
         return "Username must be 24 or less characters"
-    
+
     rsp = await UserExists(value)
     if rsp.error_name is not None:
         return rsp.body[0]
-    
-    
+
     return None
 
 
@@ -271,7 +273,7 @@ async def EditUser(u: User) -> Message:
     )
 
 
-#async def validate_group(group: list):
+# async def validate_group(group: list):
 #    return [x.validate(return_result=False) for x in group]
 
 

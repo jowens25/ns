@@ -1,4 +1,5 @@
-from nicegui import ui
+from nicegui import ui, app
+from ns2.lib.bridge import CanOpenDialog
 from ns2.lib.firewalld import (
     FirewallInfo,
     ZoneInfo,
@@ -90,6 +91,15 @@ async def firewall_status(on_network_page: bool):
             else:
 
                 async def open_dialog():
+                    u = app.storage.general.get("activeUser", "error")
+                    rsp = await CanOpenDialog(u)
+                    if rsp.error_name is not None:
+                        ui.notify(rsp.body[0], type="negative")
+                        return
+                    CanOpen = rsp.body[0]
+                    if not CanOpen:
+                        ui.notify("must be an admin to add a new zone", type="warning")
+                        return
                     zoneDialog = await addZoneDialog()
                     log.info("dialog created then opened")
                     zoneDialog.open()
@@ -122,11 +132,11 @@ async def removeServiceFromZone(zoneName: str, serviceName: str):
 
     log.info(f"remove {serviceName} from {zoneName}")
     res = await zoneRemoveService(zoneName, serviceName)
-    log.info("res1: ", res)
+    log.info(f"res1: {res}")
     p = await GetZoneByName(zoneName)
-    log.info(p)
+    log.info(f"zone path: {p}")
     res = await zoneConfigRemoveService(p, serviceName)
-    log.info(res)
+    log.info(f"zone config remove service rsp: {res}")
     return f"removed {serviceName} from {zoneName}"
 
 
@@ -135,11 +145,11 @@ async def addServiceToZone(zoneName: str, serviceName: str):
     try:
         log.info(f"add {serviceName} to {zoneName}")
         res = await zoneAddService(zoneName, serviceName)
-        log.info("res1: ", res)
+        log.info(f"res1: {res}")
         p = await GetZoneByName(zoneName)
-        log.info(p)
+        log.info(f"zone path: {p}")
         res = await zoneConfigAddService(p, serviceName)
-        log.info(res)
+        log.info(f"zone config add service rsp: {res}")
 
     except DBusError as e:
         return e
@@ -227,11 +237,13 @@ async def addZoneDialog():
             ui.label("Add zone").classes("text-h5")
 
             with ui.row():
-                ui.label("Trust level")
+                ui.label("Trust level").classes("text-h6")
                 zone_description = ui.label()
 
             with ui.column():
-                zoneSelection = ui.radio(await GetSelectableZones()).props("dense")
+                zoneSelection = ui.radio(
+                    await GetSelectableZones(), value="external"
+                ).props("dense")
                 zone_description.bind_text_from(
                     zoneSelection, "value", backward=lambda e: zoneDescriptionMap[e]
                 )
@@ -242,10 +254,7 @@ async def addZoneDialog():
                 interfaces = {}
                 selected_interfaces = []
                 for i in await GetAvailableInterfaces():
-                    log.info(i)
-                    ui.checkbox(i).props(
-                        "flat color=accent align=left dense"
-                    ).bind_value(interfaces, i)
+                    ui.checkbox(i).props("flat dense").bind_value(interfaces, i)
 
             with ui.row():
 
@@ -274,11 +283,11 @@ async def addZoneDialog():
                         selected_interfaces.append(c)
                 if addressSelection.value == "Range":
                     addresses = formatStringToList(addr.value)
-                log.info("addresses: ", addresses)
+                log.info(f"addresses: {addresses}")
 
-                log.info("add zone....")
-                await AddZone(zoneSelection.value, selected_interfaces, addresses)
-
+                rsp = await AddZone(zoneSelection.value, selected_interfaces, addresses)
+                if rsp.error_name is not None:
+                    ui.notify(rsp.body[0], type="negative")
                 dialog.close()
                 zone_list.refresh()
 
@@ -408,12 +417,12 @@ async def zone_list():
                 zonePath = await GetZoneByName(zoneName)
                 settings = await GetSettings2(zonePath)
 
-                log.info(settings)
+                # log.info(settings)
 
                 settings = await GetZoneSettings2(zoneName)
                 # log.info("other ", other_settings)
                 log.info("ZONE SETTINGS 2")
-                print(settings)
+                # print(settings)
                 interfaces = settings.get(
                     "interfaces", Variant("as", ["default"])
                 ).value
@@ -445,7 +454,9 @@ async def zone_list():
                                         f"delete the {z} zone?"
                                     )
                                     if result:
-                                        await RemoveZone(z)
+                                        rsp = await RemoveZone(z)
+                                        if rsp.error_name is not None:
+                                            ui.notify(rsp.body[0], type="negative")
                                     await firewall_status.refresh()
                                     await zone_list.refresh()
 
@@ -471,6 +482,18 @@ async def getAllServices(zoneInfo: ZoneInfo):
 
 
 async def firewall_page():
+
+    u = app.storage.general.get("activeUser", "error")
+    rsp = await CanOpenDialog(u)
+    if rsp.error_name is not None:
+        ui.notify(rsp.body[0], type="negative")
+        return
+    CanOpen = rsp.body[0]
+    if not CanOpen:
+        ui.notify("must be an admin to edit zones and rules", type="warning")
+        ui.navigate.back()
+        return
+
     with ui.card():
         with ui.row():
             ui.link("Networking", "/network").classes("text-accent")

@@ -180,7 +180,7 @@ async def editDeleteV2User(community):
                         f"delete {v2User.Community}"
                     )
                     if result:
-                        await BridgeCall(
+                        rsp = await BridgeCall(
                             "com.novus.ns",
                             "/com/novus/ns",
                             "com.novus.ns.snmp",
@@ -188,8 +188,8 @@ async def editDeleteV2User(community):
                             "a{ss}",
                             [asdict(v2User)],
                         )
-
-                        ui.notify(f"{v2User.Community} deleted")
+                        ui.notify(rsp.body[0])
+                        dialog.close()
                     else:
                         dialog.close()
 

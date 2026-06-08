@@ -2,7 +2,7 @@ from dataclasses import field
 
 from typing import Optional
 from nicegui import binding
-
+from dbus_next import Message
 from ns2.lib.networking import GetInterfaces
 
 from ns2.common import formatListToString
@@ -323,9 +323,9 @@ async def GetZoneByName(name):
     return rsp.body[0]
 
 
-async def Update2(zonePath: str, settings: dict):
+async def Update2(zonePath: str, settings: dict) -> Message:
 
-    rsp = await BridgeCall(
+    return await BridgeCall(
         destination="org.fedoraproject.FirewallD1",
         path=zonePath,
         interface="org.fedoraproject.FirewallD1.config.zone",
@@ -333,9 +333,6 @@ async def Update2(zonePath: str, settings: dict):
         signature="a{sv}",
         body=[settings],
     )
-
-    if len(rsp.body) > 0:
-        return rsp.body[0]
 
 
 def getZoneInfo(name: str, zone: dict) -> dict:
@@ -346,7 +343,7 @@ def getZoneInfo(name: str, zone: dict) -> dict:
     return {"name": name, "interfaces": interfaces, "sources": sources}
 
 
-async def AddZone(zoneName: str, interfaces: list[str], sources: list[str]):
+async def AddZone(zoneName: str, interfaces: list[str], sources: list[str]) -> Message:
     zp = await GetZoneByName(zoneName)
 
     for interface in interfaces:
@@ -360,10 +357,10 @@ async def AddZone(zoneName: str, interfaces: list[str], sources: list[str]):
         "sources": Variant("as", sources),
     }
 
-    await Update2(zp, settings)
+    return await Update2(zp, settings)
 
 
-async def RemoveZone(zoneName: str):
+async def RemoveZone(zoneName: str) -> Message:
 
     zp = await GetZoneByName(zoneName)
     settings = await GetZoneSettings2(zoneName)
@@ -378,7 +375,7 @@ async def RemoveZone(zoneName: str):
     if settings.get("interfaces") is not None:
         del settings["interfaces"]
 
-    await Update2(zp, settings)
+    return await Update2(zp, settings)
 
 
 async def getServicesInfo():

@@ -179,7 +179,10 @@ def MakeServicesDict(servs):
     return services
 
 
+# @ui.page("/")
 async def root_system_page():
+
+    # await controlPanel()
 
     ui.label("Services").classes("text-h5")
 

@@ -7,7 +7,6 @@ StartLimitBurst=2
 [Service]
 Type=simple
 ExecStart=/usr/bin/ns-admin
-
 Restart=always
 RestartSec=5s      
 

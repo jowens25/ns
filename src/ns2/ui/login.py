@@ -9,12 +9,17 @@ from ns2.utils import log
 
 
 async def logout_cb():
-    ui.navigate.to("/login")
+
     app.storage.general.clear()
+    app.storage.user.clear()
+
     log.info("logout cb general cleared")
+
     rsp = await CleanupBridge()
     if rsp:
         log.info("log out cleanup", rsp.body[0])
+
+    ui.navigate.to("/login")
 
 
 async def try_login(_username: str, _password: str) -> None:
@@ -33,10 +38,9 @@ async def try_login(_username: str, _password: str) -> None:
             ui.notify("active != _user")
             return
         print(activeUser)
-        if not app.storage.user.get("uid"):
-            app.storage.user.update({"uid": str(uuid.uuid4())})
 
-        uid = app.storage.user.get("uid")
+        uid = str(uuid.uuid4())
+        app.storage.user.update({"uid": uid})
         log.info("try login general store updated")
         app.storage.general.update({"activeUser": activeUser, "uid": uid})
         ui.navigate.to("/")

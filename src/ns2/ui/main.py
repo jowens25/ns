@@ -18,7 +18,7 @@ from ns2.ui.theme import init_colors
 from ns2.ui.home_page import home_page
 from ns2.ui.snmp_page import snmp_page
 from ns2.ui.system_page import root_system_page
-
+from ns2.lib.bridge import BRIDGE
 from ns2.lib.timedate1 import CallListTimezones, CallGetTimezone, CallSetTimezone
 from ns2.ui.firewalld_page import firewall_page
 from ns2.utils import ASSETS_DIR, log
@@ -31,19 +31,29 @@ unrestricted_page_routes = {
 
 async def check_auth():
 
-    # log.info("auth check")
     uid = app.storage.user.get("uid", None)
     guid = app.storage.general.get("uid", None)
 
-    if guid and guid != uid:
-        app.storage.general.clear()
-        log.info("check auth: general store cleared")
+    # Server restarted (general wiped) or never logged in
+    if guid is None:
+        app.storage.user.clear()
         ui.navigate.to("/login")
-    elif guid is None and uid is None:
-        log.info("loggd out????")
+        return
 
-    # log.info(f"uid: {uid}")
-    # log.info(f"guid: {guid}")
+    # This session was evicted by a newer login
+    if uid != guid:
+        log.info(f"Session {uid} evicted — current valid session is {guid}")
+        app.storage.user.clear()
+        ui.navigate.to("/login")
+
+    # if BRIDGE is None:
+    #    ui.navigate.to("/login")
+
+    #    app.storage.user.clear()
+    #    app.storage.general.clear()
+
+    print(uid)
+    print(guid)
 
 
 #'''
@@ -108,7 +118,7 @@ async def Clock():
 @ui.page("/snmp")
 @ui.page("/terminal")
 @ui.page("/accounts")
-async def controlPanel(widget_page):
+async def controlPanel():
 
     current_tz = await CallGetTimezone()
 
@@ -158,28 +168,28 @@ async def controlPanel(widget_page):
     with ui.footer().classes("bg-dark"):
         ui.label(version("ns2"))
 
-    widget_page()
+    # widget_page()
 
-    # ui.sub_pages(
-    #    {
-    #        "/": root_system_page,
-    #        "/network": network_page,
-    #        "/network/firewall": firewall_page,
-    #        "/network/{interface_name}": interface_page,
-    #        "/snmp": snmp_page,
-    #        "/accounts": accounts_page,
-    #        "/terminal": terminal_page,
-    #    }
-    # ).classes("w-full")
+    ui.sub_pages(
+        {
+            "/": root_system_page,
+            "/network": network_page,
+            "/network/firewall": firewall_page,
+            "/network/{interface_name}": interface_page,
+            "/snmp": snmp_page,
+            "/accounts": accounts_page,
+            "/terminal": terminal_page,
+        }
+    ).classes("w-full")
 
 
-controlPanel(root_system_page)
-controlPanel(network_page)
-controlPanel(firewall_page)
-controlPanel(interface_page)
-controlPanel(snmp_page)
-controlPanel(accounts_page)
-controlPanel(terminal_page)
+# controlPanel(root_system_page)
+# controlPanel(network_page)
+# controlPanel(firewall_page)
+# controlPanel(interface_page)
+# controlPanel(snmp_page)
+# controlPanel(accounts_page)
+# controlPanel(terminal_page)
 
 
 production = True
