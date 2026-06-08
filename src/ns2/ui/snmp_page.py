@@ -80,9 +80,13 @@ async def snmp_state():
         result = await dialog
         active = (await isActive("snmpd.service")).get("state", False)
         if result == "enable" and not active:
-            await SystemdStart("snmpd.service")
+            err = await SystemdStart("snmpd.service")
+            if err:
+                ui.notify(err, type="warning")
         if result == "disable" and active:
-            await SystemdStop("snmpd.service")
+            err = await SystemdStop("snmpd.service")
+            if err:
+                ui.notify(err, type="warning")
         await snmp_state.refresh()
 
     ui.switch(f"Status: {snmpStatus}").on("click", lambda e: snmp_switch_cb(e)).props(
@@ -115,18 +119,6 @@ async def snmp_status():
             with ui.row().classes("items-center").props("dense"):
 
                 await snmp_state()
-
-                # async def snmp_cb(action):
-                #    res = await are_you_sure_you_want_to(f"{action} snmpd?")
-                #    if res:
-                #        match action:
-                #            case "stop":
-                #                await SystemdStop("snmpd.service")
-                #            case "start":
-                #                await SystemdStart("snmpd.service")
-                #            case "restart":
-                #                await SystemdRestart("snmpd.service")
-                #    snmp_state.refresh()
 
                 ui.button(
                     "Download MIB",

@@ -8,7 +8,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from multiprocessing import freeze_support
-from ns2.ui.login import logout_cb
+from ns2.ui.login import logout_cb, login_page
 
 from ns2.ui.accounts_page import accounts_page
 
@@ -38,7 +38,7 @@ async def check_auth():
     if guid and guid != uid:
         app.storage.general.clear()
         log.info("check auth: general store cleared")
-        ui.navigate.to("/")
+        ui.navigate.to("/login")
     elif guid is None and uid is None:
         log.info("loggd out????")
 
@@ -108,7 +108,7 @@ async def Clock():
 @ui.page("/snmp")
 @ui.page("/terminal")
 @ui.page("/accounts")
-async def controlPanel():
+async def controlPanel(widget_page):
 
     current_tz = await CallGetTimezone()
 
@@ -157,17 +157,29 @@ async def controlPanel():
     # Footer
     with ui.footer().classes("bg-dark"):
         ui.label(version("ns2"))
-    ui.sub_pages(
-        {
-            "/": root_system_page,
-            "/network": network_page,
-            "/network/firewall": firewall_page,
-            "/network/{interface_name}": interface_page,
-            "/snmp": snmp_page,
-            "/accounts": accounts_page,
-            "/terminal": terminal_page,
-        }
-    ).classes("w-full")
+
+    widget_page()
+
+    # ui.sub_pages(
+    #    {
+    #        "/": root_system_page,
+    #        "/network": network_page,
+    #        "/network/firewall": firewall_page,
+    #        "/network/{interface_name}": interface_page,
+    #        "/snmp": snmp_page,
+    #        "/accounts": accounts_page,
+    #        "/terminal": terminal_page,
+    #    }
+    # ).classes("w-full")
+
+
+controlPanel(root_system_page)
+controlPanel(network_page)
+controlPanel(firewall_page)
+controlPanel(interface_page)
+controlPanel(snmp_page)
+controlPanel(accounts_page)
+controlPanel(terminal_page)
 
 
 production = True

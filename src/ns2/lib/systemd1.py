@@ -2,6 +2,7 @@ import asyncio
 from dbus_next.signature import Variant
 from ns2.lib.bridge import BridgeCall, GetBridge
 from ns2.utils import log
+import dbus_next.errors
 
 
 async def ListUnits() -> str:
@@ -51,6 +52,9 @@ async def SystemdStart(service: str):
         job = await systemd.call_start_unit(service, "replace")
         log.info(await job_future)
 
+    except dbus_next.errors.DBusError as e:
+        return e
+
     finally:
         systemd.off_job_removed(on_job_removed)
 
@@ -77,6 +81,9 @@ async def SystemdStop(service: str):
     try:
         job = await systemd.call_stop_unit(service, "replace")
         log.info(await job_future)
+
+    except dbus_next.errors.DBusError as e:
+        return e
     #
     finally:
         systemd.off_job_removed(on_job_removed)
@@ -159,6 +166,3 @@ async def isActive(service: str) -> dict:
         return {"state": True}
     else:
         return {"state": False}
-    
-    
-

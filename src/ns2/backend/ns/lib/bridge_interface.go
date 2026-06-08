@@ -61,6 +61,20 @@ func (b *BridgeInterface) GetActiveUser(sender dbus.Sender) (string, *dbus.Error
 	return u.Username, nil
 }
 
+func (b *BridgeInterface) IsUserAdmin(username string) (bool, *dbus.Error) {
+
+	isAdmin, err := IsAdmin(username)
+
+	if err != nil {
+		return false, &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+	}
+
+	return isAdmin, nil
+}
+
 func (b *BridgeInterface) Make(username string) (int, *dbus.Error) {
 
 	b.propsLock.RLock()

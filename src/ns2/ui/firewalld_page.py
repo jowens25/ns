@@ -65,9 +65,13 @@ async def firewall_status(on_network_page: bool):
                     result = await dialog
                     active = (await isActive("firewalld.service")).get("state", False)
                     if result == "enable" and not active:
-                        await SystemdStart("firewalld.service")
+                        err = await SystemdStart("firewalld.service")
+                        if err:
+                            ui.notify(err, type="warning")
                     if result == "disable" and active:
-                        await SystemdStop("firewalld.service")
+                        err = await SystemdStop("firewalld.service")
+                        if err:
+                            ui.notify(err, type="warning")
                     await firewall_status.refresh()
                     await zone_list.refresh()
 

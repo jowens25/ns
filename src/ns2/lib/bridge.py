@@ -80,6 +80,18 @@ async def CheckBridge(username: str) -> bool:
     return username == await GetActiveUser()
 
 
+async def CanOpenDialog(username) -> Message:
+
+    return await BridgeCall(
+        destination="com.novus.ns",
+        path="/com/novus/ns",
+        interface="com.novus.ns.bridge",
+        member="IsUserAdmin",
+        signature="s",
+        body=[username],
+    )
+
+
 async def BridgeCall(
     destination: str, path: str, interface: str, member: str, signature: str, body
 ) -> Message:

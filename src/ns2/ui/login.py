@@ -45,6 +45,7 @@ async def try_login(_username: str, _password: str) -> None:
         ui.notify("Invalid username or password", color="negative")
 
 
+# @ui.page("/{_:path}")
 @ui.page("/login")
 async def login_page():
     log.info("LOGIN PAGE LOADED")

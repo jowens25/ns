@@ -1,4 +1,5 @@
-from nicegui import ui
+from nicegui import ui, app
+from ns2.lib.bridge import CanOpenDialog
 from ns2.lib.networking import (
     GetInterfacesAndAddresses,
     InterfaceData,
@@ -143,6 +144,16 @@ async def interface_page(interface_name: str):
 
 
 async def edit_ip_connection(version: str, id: InterfaceData):
+
+    u = app.storage.general.get("activeUser", "error")
+    rsp = await CanOpenDialog(u)
+    if rsp.error_name is not None:
+        ui.notify(rsp.body[0])
+        return
+    CanOpen = rsp.body[0]
+    if not CanOpen:
+        ui.notify("must be an admin to edit network settings", type="warning")
+        return
 
     connection_path = await GetNmProp(
         id.act_con_path, "Connection.Active", "Connection"
