@@ -2,9 +2,10 @@
 =================================================================================================================
 OPEN ISSUES
 =================================================================================================================
-setup: small device tree change to make uart work, in one note docs
+06/08: setup: running sudo apt update and sudo apt upgrade -y in image at start up
 
-ns exe permissions: user1234 in nsuser was still able to be executed.... part of the problem is they need it.... may add polkit check to ns
+setup: small device tree change to make uart work, in one note docs
+ns exe permissions: user1234 in nsuser was still able to be executed.... part of the problem is they need it.... may add polkit check to ns?
 
 =================================================================================================================
 PATCHES

@@ -1,4 +1,4 @@
-ns-admin (2.0.23) UNRELEASED; urgency=medium
+ns-admin (2.0.24) UNRELEASED; urgency=medium
   [ jowens ]
   * pkg name
   * restructed a bit, added go utils
@@ -14,8 +14,9 @@ ns-admin (2.0.23) UNRELEASED; urgency=medium
   * more ui, excluding pam issue 
   * initial fix ups. missing rules. updated permissions
   * first round of testing and fix ups done
+  * removed systemd-networkd from scripts 
 
- -- jowens <jowens@jowens>  Mon, 08 Jun 2026 14:22:29 -0500
+ -- jowens <jowens@jowens>  Tue, 09 Jun 2026 09:57:37 -0500
 
 ns2-dev (2.0.8) UNRELEASED; urgency=medium
 
