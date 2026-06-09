@@ -7,6 +7,6 @@ Standards-Version: 4.6.0
 
 Package: ns-admin
 Architecture: amd64 arm64
-Depends: ${shlibs:Depends}, ${misc:Depends}, openssl, polkitd
+Depends: ${shlibs:Depends}, ${misc:Depends}, openssl
 Pre-Depends: firewalld, network-manager, nginx
 Description: Configuration tool

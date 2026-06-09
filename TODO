@@ -2,7 +2,14 @@
 =================================================================================================================
 OPEN ISSUES
 =================================================================================================================
-06/08: setup: running sudo apt update and sudo apt upgrade -y in image at start up
+
+login: logging in does not remove other logged in users
+setup: no initial users are created in the scripts
+storage: the general storage, used for checking if users can open something, was not in the correct state because of the login issue ^^^^^
+
+
+
+setup note: running sudo apt update and sudo apt upgrade -y in image at start up
 
 setup: small device tree change to make uart work, in one note docs
 ns exe permissions: user1234 in nsuser was still able to be executed.... part of the problem is they need it.... may add polkit check to ns?

@@ -3,18 +3,18 @@ Description=Dbus api for ns-admin
 After=network.target
 StartLimitIntervalSec=30
 StartLimitBurst=2
+StartLimitAction=none
 
 [Service]
 Type=simple
 ExecStart=/usr/bin/ns dbus export
-
-Restart=always
+Restart=on-failure
 RestartSec=5s
+RestartPreventExitStatus=1
 
 StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=ns
-
 
 [Install]
 WantedBy=multi-user.target

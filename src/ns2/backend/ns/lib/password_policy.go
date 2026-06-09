@@ -3,6 +3,7 @@ package lib
 import (
 	"fmt"
 	"log"
+	"os"
 	"unicode"
 
 	"github.com/spf13/viper"
@@ -33,11 +34,14 @@ func SetupNsConfig() {
 
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+			os.MkdirAll("/etc/ns", 0755)
 			if err := viper.SafeWriteConfig(); err != nil {
-				log.Fatalf("Error creating config file: %s", err)
+				log.Printf("Error creating config file: %s", err)
+				return
 			}
 		} else {
-			log.Fatalf("Error reading config file: %s", err)
+			log.Printf("Error reading config file: %s", err)
+			return
 		}
 	}
 
