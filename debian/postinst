@@ -1,12 +1,12 @@
 #!/bin/bash
-set -e
+set -ex
 
 case "$1" in
     configure)
 
-        groupadd nsadmin
-        groupadd nsuser
-        echo "added groups"
+
+        getent group nsadmin >/dev/null 2>&1 || groupadd nsadmin
+        getent group nsuser  >/dev/null 2>&1 || groupadd nsuser
 
         firewall-cmd --permanent --zone=public --add-service=ssh 2>/dev/null || true
         firewall-cmd --permanent --zone=public --add-service=snmptrap 2>/dev/null || true
