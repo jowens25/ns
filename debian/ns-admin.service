@@ -1,7 +1,6 @@
 [Unit]
 Description=UI for ns2
-After=network.target ns.service
-Requires=ns.service
+After=network.target
 StartLimitIntervalSec=30
 StartLimitBurst=2
 StartLimitAction=none

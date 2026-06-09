@@ -28,7 +28,7 @@ case "$1" in
         	-keyout /etc/nginx/ssl/selfsigned.key \
         	-out /etc/nginx/ssl/selfsigned.crt \
         	-subj "/C=US/ST=Missouri/L=Independence/O=ns2/CN=var"
-	fi
+	    fi
 
         echo "Generated self-signed cert"
 
