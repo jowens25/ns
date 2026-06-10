@@ -3,7 +3,6 @@ Description=UI for ns2
 After=network.target
 StartLimitIntervalSec=30
 StartLimitBurst=2
-StartLimitAction=none
 
 [Service]
 Type=simple
@@ -17,3 +16,5 @@ SyslogIdentifier=ns-admin
 
 [Install]
 WantedBy=multi-user.target
+
+
