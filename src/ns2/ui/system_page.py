@@ -74,10 +74,17 @@ PRIORITY_OPTIONS = {
     "Debug (7)": 7,
 }
 
+Units = None
+
+
+async def LoadSystemUnits():
+    global Units
+    Units = await ListUnits()
+
 
 async def serviceSelectionTable():
-
-    allServices = MakeServicesDict(await ListUnits())
+    global Units
+    allServices = MakeServicesDict(Units)
     with ui.column().classes("w-full"):
         with ui.scroll_area().classes("w-full"):
             services_table = (

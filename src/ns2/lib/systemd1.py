@@ -1,13 +1,13 @@
 import asyncio
 from dbus_next.signature import Variant
-from ns2.lib.bridge import BridgeCall, GetBridge
+from ns2.lib.bridge import BridgeCall, BusCall, GetBridge
 from ns2.utils import log
 import dbus_next.errors
 
 
 async def ListUnits() -> str:
 
-    rsp = await BridgeCall(
+    rsp = await BusCall(
         destination="org.freedesktop.systemd1",
         path="/org/freedesktop/systemd1",
         interface="org.freedesktop.systemd1.Manager",

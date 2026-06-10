@@ -3,11 +3,12 @@
 OPEN ISSUES
 =================================================================================================================
 
+
 login: logging in does not remove other logged in users
 setup: no initial users are created in the scripts
 storage: the general storage, used for checking if users can open something, was not in the correct state because of the login issue ^^^^^
-
-
+login: when logging in from another pc the user on the other pc was logged out
+serial: on reboot the baud rate of the serial port was reset
 
 setup note: running sudo apt update and sudo apt upgrade -y in image at start up
 
@@ -31,7 +32,12 @@ added disable command to ns-serial pre install   -> setup: disable variscite-bt
 passed error back up from systemstop and start   -> firewalld: Service Switch does not indicate error for nsuser
 added isAdmin block to the zone navigation...    -> firewalld: Add zone dialog does not indicate error or close when normal user
 fixed a some calls making session ids            -> login: the session was not terminated as expected when logging on with a different user... 
+attempted to cache these                         -> firewalld page: list loads slowly see about pulling in list before hand
+attempted to cache these                         -> system page: list loads slowly see about pulling in list before hand
 
+removed some of the dependences from the package -> boot loop: found that I incorrectly setup the services to wait for each other
+removed some of the dependences from the package -> boot loop: found that installing network manager caused a reboot. 
+removed some of the dependences from the package -> boot loop: pre installing network manager, nginx and firewalld
 =================================================================================================================
 EXCEPTIONS
 =================================================================================================================

@@ -11,7 +11,7 @@ from dbus_next.signature import Variant
 from ns2.utils import log
 
 
-from ns2.lib.bridge import BridgeCall
+from ns2.lib.bridge import BridgeCall, BusCall
 
 
 @binding.bindable_dataclass
@@ -267,7 +267,7 @@ async def GetServiceSettings2(name: str) -> ServiceSetting:
 
     serviceSettings = ServiceSetting()
 
-    rsp = await BridgeCall(
+    rsp = await BusCall(
         destination="org.fedoraproject.FirewallD1",
         path="/org/fedoraproject/FirewallD1",
         interface="org.fedoraproject.FirewallD1",
@@ -381,7 +381,7 @@ async def RemoveZone(zoneName: str) -> Message:
 async def getServicesInfo():
     """all not just runtime"""
 
-    rsp = await BridgeCall(
+    rsp = await BusCall(
         destination="org.fedoraproject.FirewallD1",
         path="/org/fedoraproject/FirewallD1/config",
         interface="org.fedoraproject.FirewallD1.config",

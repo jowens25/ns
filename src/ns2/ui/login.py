@@ -10,10 +10,7 @@ from ns2.utils import log
 
 async def logout_cb():
 
-    app.storage.general.clear()
-    app.storage.user.clear()
-
-    log.info("logout cb general cleared")
+    app.storage.general.update({"activeUser": None, "activeId": None})
 
     rsp = await CleanupBridge()
     if rsp:
@@ -39,10 +36,15 @@ async def try_login(_username: str, _password: str) -> None:
             return
         print(activeUser)
 
-        uid = str(uuid.uuid4())
-        app.storage.user.update({"uid": uid})
+        bid = app.storage.browser.get("id", None)
+        if bid is None:
+            log.info("browser error")
+            return
         log.info("try login general store updated")
-        app.storage.general.update({"activeUser": activeUser, "uid": uid})
+        app.storage.general.update({"activeUser": activeUser, "activeId": bid})
+
+        print(activeUser)
+        print(bid)
         ui.navigate.to("/")
 
     else:

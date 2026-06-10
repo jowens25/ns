@@ -1,3 +1,5 @@
+import asyncio
+
 from nicegui import ui, app
 from ns2.lib.bridge import CanOpenDialog
 from ns2.lib.firewalld import (
@@ -157,9 +159,17 @@ async def addServiceToZone(zoneName: str, serviceName: str):
     return f"added {serviceName} to {zoneName}"
 
 
-async def serviceSelectionTable():
+serviceInfos = {}
 
-    services = formatServicesInRows(await getServicesInfo())
+
+async def LoadFirewalldServiceInfo():
+    global serviceInfos
+    serviceInfos = await getServicesInfo()
+
+
+async def serviceSelectionTable():
+    global serviceInfos
+    services = formatServicesInRows(serviceInfos)
 
     with ui.scroll_area().classes("w-full"):
         services_table = ui.table(

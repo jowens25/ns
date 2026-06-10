@@ -1,0 +1,7 @@
+
+systemctl disable variscite-bt.service
+
+apt install socat
+apt install ns-serial-mux ns-agent
+
+apt install 

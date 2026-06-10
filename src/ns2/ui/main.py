@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import asyncio
+
 from fastapi import Request
 from fastapi.responses import RedirectResponse
 from importlib.metadata import version
@@ -17,10 +19,10 @@ from ns2.ui.terminal import terminal_page
 from ns2.ui.theme import init_colors
 from ns2.ui.home_page import home_page
 from ns2.ui.snmp_page import snmp_page
-from ns2.ui.system_page import root_system_page
+from ns2.ui.system_page import LoadSystemUnits, root_system_page
 from ns2.lib.bridge import BRIDGE
 from ns2.lib.timedate1 import CallListTimezones, CallGetTimezone, CallSetTimezone
-from ns2.ui.firewalld_page import firewall_page
+from ns2.ui.firewalld_page import LoadFirewalldServiceInfo, firewall_page
 from ns2.utils import ASSETS_DIR, log
 
 unrestricted_page_routes = {
@@ -31,29 +33,21 @@ unrestricted_page_routes = {
 
 async def check_auth():
 
-    uid = app.storage.user.get("uid", None)
-    guid = app.storage.general.get("uid", None)
-
-    # Server restarted (general wiped) or never logged in
-    if guid is None:
-        app.storage.user.clear()
-        ui.navigate.to("/login")
-        return
-
-    # This session was evicted by a newer login
-    if uid != guid:
-        log.info(f"Session {uid} evicted — current valid session is {guid}")
-        app.storage.user.clear()
+    bid = app.storage.browser.get("id", None)
+    if bid is None:
+        log.info("bid error")
         ui.navigate.to("/login")
 
-    # if BRIDGE is None:
-    #    ui.navigate.to("/login")
+    activeId = app.storage.general.get("activeId", None)
+    if activeId is None:
+        log.info("active id error")
+        ui.navigate.to("/login")
 
-    #    app.storage.user.clear()
-    #    app.storage.general.clear()
+    if activeId != bid:
+        ui.navigate.to("/login")
 
-    print(uid)
-    print(guid)
+    # print(bid)
+    # print(activeId)
 
 
 #'''
@@ -64,11 +58,9 @@ async def auth_middleware(request: Request, call_next):
 
     path = request.url.path
 
-    # log.info(path)
-
-    uid = app.storage.user.get("uid")
-    guid = app.storage.general.get("uid")
-    if guid and uid == guid:
+    bid = app.storage.browser.get("id")
+    activeId = app.storage.general.get("activeId")
+    if activeId and bid == activeId:
         return await call_next(request)
 
     # Allow unrestricted routes
@@ -82,6 +74,8 @@ async def auth_middleware(request: Request, call_next):
         return await call_next(request)
 
     # log.info(f"end of middleware with {path}")
+
+    # log.info("middleware to login")
 
     return RedirectResponse("/login")
 
@@ -195,9 +189,20 @@ async def controlPanel():
 production = True
 
 
+async def LoadStatic():
+    await LoadFirewalldServiceInfo()
+    await LoadSystemUnits()
+    app.storage.general.update({"activeUser": None, "activeId": None})
+
+
+# app.on_startup(LoadStatic)
+
+
 def main():
     freeze_support()
     log.info("app starting")
+
+    asyncio.run(LoadStatic())
 
     ui.run(
         port=8000,
