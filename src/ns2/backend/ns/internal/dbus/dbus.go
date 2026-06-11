@@ -28,34 +28,6 @@ func Export() *cobra.Command {
 	return cmd
 }
 
-func TryClient() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "try",
-		Short: "try client ...",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			//lib.Userinit(0)
-			return nil
-		},
-	}
-	return cmd
-}
-
-func MakeConn() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "con",
-		Short: "make and store conn",
-		RunE: func(cmd *cobra.Command, args []string) error {
-
-			//lib.ConnectAs(args[0])
-
-			//lib.CreateConnection()
-
-			return nil
-		},
-	}
-	return cmd
-}
-
 func SeeActions() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "actions",
@@ -100,8 +72,7 @@ var Dbus = &cobra.Command{
 
 func init() {
 	Dbus.AddCommand(Export())
-	Dbus.AddCommand(TryClient())
-	Dbus.AddCommand(MakeConn())
+
 	Dbus.AddCommand(SeeActions())
 	Dbus.AddCommand(Test())
 }

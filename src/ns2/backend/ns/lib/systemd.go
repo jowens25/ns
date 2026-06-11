@@ -27,7 +27,7 @@ func _stopUnit(unit string) error {
 		return fmt.Errorf("stop %s result: %s", unit, result)
 	}
 
-	log.Printf("stopped %s successfully\n", unit)
+	log.Printf("stopped %s successfully", unit)
 	return nil
 }
 
@@ -49,7 +49,7 @@ func _startUnit(unit string) error {
 		return fmt.Errorf("start %s result: %s", unit, result)
 	}
 
-	log.Debug().Msgf("started %s successfully", unit)
+	log.Printf("started %s successfully", unit)
 	return nil
 }
 
@@ -93,21 +93,31 @@ func _getUnitStatus(unit string) (string, error) {
 ///////////////////////////////
 /// CLI END POINTS
 
-func Start(u string) string {
+func Start(u string) error {
 	err := _startUnit(u)
 	if err != nil {
-		return err.Error()
+		return err
 	}
-	return fmt.Sprintf("started: %s", u)
+	return nil
 }
 
-func Stop(u string) {
-	_stopUnit(u)
+func Stop(u string) error {
+	err := _stopUnit(u)
+
+	if err != nil {
+		return err
+	}
+	return nil
 
 }
 
-func Restart(u string) {
-	_restartUnit(u)
+func Restart(u string) error {
+	err := _restartUnit(u)
+
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func GetUnitStatus(u string) string {

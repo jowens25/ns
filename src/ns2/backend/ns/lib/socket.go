@@ -1,39 +1,52 @@
 package lib
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"log"
 	"net"
+	"os"
+	"os/signal"
 )
 
-func SocketListen() {
-	socketPath := "/var/lib/ns/serial.sock"
+func SocketListen(socketPath string) {
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer stop()
 
-	// Connect to the socket
 	conn, err := net.Dial("unix", socketPath)
 	if err != nil {
 		log.Fatal("dial error:", err)
 	}
 	defer conn.Close()
 
-	// Create a buffer to store incoming data
-	buf := make([]byte, 1024)
-
-	// 2. Loop continuously to read the stream
-	for {
-		n, err := conn.Read(buf)
-		if err != nil {
-			if err == io.EOF {
-				fmt.Println("Connection closed by the remote side.")
-				break
+	// Run the read loop in a goroutine
+	done := make(chan struct{})
+	go func() {
+		defer close(done)
+		buf := make([]byte, 1024)
+		for {
+			n, err := conn.Read(buf)
+			if err != nil {
+				if err == io.EOF {
+					fmt.Println("Connection closed by the remote side.")
+				} else {
+					log.Printf("Read error: %v\n", err)
+				}
+				return
 			}
-			log.Printf("Read error: %v\n", err)
-			break
+			fmt.Printf("%s", string(buf[:n]))
 		}
+	}()
 
-		// Process the data that was just read
-		data := buf[:n]
-		fmt.Printf("%s", string(data))
+	// Block until Ctrl+C or the read loop finishes
+	select {
+	case <-ctx.Done():
+		fmt.Println("\nInterrupted, closing connection...")
+		conn.Close() // unblocks conn.Read in the goroutine
+	case <-done:
+		// remote closed naturally
 	}
+
+	<-done
 }

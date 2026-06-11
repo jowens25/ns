@@ -1,35 +1,33 @@
 package socket
 
-import (
-	"github.com/jowens25/ns/ns/lib"
-	"github.com/spf13/cobra"
-)
+// import (
+// 	"github.com/jowens25/ns/ns/lib"
+// 	"github.com/spf13/cobra"
+// )
 
-func Listen() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "listen",
-		Short: "listen to our socket mux",
+// func Listen() *cobra.Command {
+// 	cmd := &cobra.Command{
+// 		Use:   "listen",
+// 		Short: "listen to socket mux",
+// 		Args:  cobra.ExactArgs(1),
+// 		RunE: func(cmd *cobra.Command, args []string) error {
 
-		RunE: func(cmd *cobra.Command, args []string) error {
+// 			lib.SocketListen(args[0])
 
-			lib.SocketListen()
+// 			return nil
+// 		},
+// 	}
 
-			return nil
-		},
-	}
+// 	return cmd
+// }
 
-	cmd.Flags().Bool("ws", false, "make ws bridge")
+// var Socket = &cobra.Command{
+// 	Use:   "socket",
+// 	Short: "mess 'round wit sockets",
+// }
 
-	return cmd
-}
+// func init() {
 
-var Socket = &cobra.Command{
-	Use:   "socket",
-	Short: "mess 'round wit sockets",
-}
+// 	Socket.AddCommand(Listen())
 
-func init() {
-
-	Socket.AddCommand(Listen())
-
-}
+// }

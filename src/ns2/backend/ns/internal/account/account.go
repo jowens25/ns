@@ -16,20 +16,30 @@ func Add() *cobra.Command {
 	var isAdmin bool
 
 	cmd := &cobra.Command{
-		Use:   "add",
+
+		Use:   "add <username> <password>",
 		Args:  cobra.ExactArgs(2),
 		Short: "add users or admins",
 		RunE: func(cmd *cobra.Command, args []string) error {
+			cmd.SilenceUsage = true
 			if isAdmin {
-				err := lib.MakeNewAdmin(args[0], args[1])
+				rsp, err := lib.Call("com.novus.ns", "/com/novus/ns", "com.novus.ns.accounts.AddAdmin", []any{args[0], args[1]})
+
 				if err != nil {
-					fmt.Println(err.Error())
+					return err
 				}
+
+				fmt.Println(rsp)
+
 			} else {
-				err := lib.MakeNewUser(args[0], args[1])
+				rsp, err := lib.Call("com.novus.ns", "/com/novus/ns", "com.novus.ns.accounts.AddUser", []any{args[0], args[1]})
+
 				if err != nil {
-					fmt.Println(err.Error())
+					return err
 				}
+
+				fmt.Println(rsp)
+
 			}
 			return nil
 		},
@@ -39,17 +49,20 @@ func Add() *cobra.Command {
 }
 
 func Remove() *cobra.Command {
+
 	cmd := &cobra.Command{
-		Use:   "remove",
+		Use:   "rm <username>",
 		Args:  cobra.ExactArgs(1),
 		Short: "remove users or admins",
 		RunE: func(cmd *cobra.Command, args []string) error {
+			cmd.SilenceUsage = true
+			rsp, err := lib.Call("com.novus.ns", "/com/novus/ns", "com.novus.ns.accounts.Remove", []any{args[0]})
 
-			fmt.Println("removing...")
-			err := lib.RemoveUser(args[0])
 			if err != nil {
-				fmt.Println(err.Error())
+				return err
 			}
+
+			fmt.Println(rsp)
 
 			return nil
 		},
@@ -62,7 +75,21 @@ func List() *cobra.Command {
 		Use:   "ls",
 		Short: "list accounts",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			lib.ListAccounts()
+			cmd.SilenceUsage = true
+			users, err := lib.Call("com.novus.ns", "/com/novus/ns", "com.novus.ns.accounts.GetUsers", nil)
+
+			if err != nil {
+				return err
+			}
+
+			for _, u := range users.([]map[string]string) {
+
+				username := u["Username"]
+				group := u["Group"]
+
+				fmt.Printf("%s:%s\n", group, username)
+			}
+
 			return nil
 		},
 	}

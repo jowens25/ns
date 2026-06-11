@@ -39,6 +39,6 @@ func Test() *cobra.Command {
 }
 
 func init() {
-	Snmp.AddCommand(Reset())
-	Snmp.AddCommand(Test())
+	//Snmp.AddCommand(Reset())
+	//Snmp.AddCommand(Test())
 }
