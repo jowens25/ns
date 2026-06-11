@@ -27,9 +27,10 @@ async def terminal_page():
             task.cancel()
             await asyncio.gather(task, return_exceptions=True)
 
-        if not writer.is_closing():
-            writer.close()
-            await writer.wait_closed()
+        if writer:
+            if not writer.is_closing():
+                writer.close()
+                await writer.wait_closed()
 
     # Fires when this client disconnects or navigates away
     app.on_disconnect(cleanup)

@@ -16,7 +16,7 @@ async def logout_cb():
     if rsp:
         log.info("log out cleanup", rsp.body[0])
 
-    ui.navigate.to("/login")
+    ui.navigate.reload()
 
 
 async def try_login(_username: str, _password: str) -> None:

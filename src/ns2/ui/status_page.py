@@ -448,9 +448,10 @@ async def root_status_page():
         if task and not task.done():
             task.cancel()
             await asyncio.gather(task, return_exceptions=True)
-        if not writer.is_closing():
-            writer.close()
-            await writer.wait_closed()
+        if writer:
+            if not writer.is_closing():
+                writer.close()
+                await writer.wait_closed()
         ui.notify("reload page to reconnect")
 
     app.on_disconnect(cleanup)
