@@ -169,14 +169,24 @@ def parseGps(string: str):
 
 def parseTime(string: str):
 
-    time_str = f"{int(string):06d}"
-    dt_obj = datetime.strptime(time_str, "%H%M%S")
-    return dt_obj.time()
+    try:
+
+        time_str = f"{int(string):06d}"
+        dt_obj = datetime.strptime(time_str, "%H%M%S")
+        return dt_obj.time()
+
+    except Exception as e:
+        log.info(e)
+        return string
 
 
 def parseDate(string: str):
-    dt_object = datetime.strptime(string, "%m%d%y")
-    return dt_object.date()
+    try:
+        dt_object = datetime.strptime(string, "%m%d%y")
+        return dt_object.date()
+    except Exception as e:
+        log.info(e)
+        return string
 
 
 def parseSats(string: str):
