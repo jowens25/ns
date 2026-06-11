@@ -390,12 +390,12 @@ async def root_status_page():
 
     ui.label("Status Strings").classes("text-h5")
     with ui.tabs().classes("w-full") as tabs:
-        fb = ui.tab("Fault Bytes")
-        ch1 = ui.tab("Channels 1-8")
-        ps = ui.tab("Power Supplies")
-        ch2 = ui.tab("Channels 9-16")
-        sen = ui.tab("Sensors")
-        stat = ui.tab("Status Bytes")
+        fb = ui.tab("Fault Bytes").bind_visibility_from(string1Map, "visible")
+        ch1 = ui.tab("Channels 1-8").bind_visibility_from(string2Map, "visible")
+        ps = ui.tab("Power Supplies").bind_visibility_from(string3Map, "visible")
+        ch2 = ui.tab("Channels 9-16").bind_visibility_from(string4Map, "visible")
+        sen = ui.tab("Sensors").bind_visibility_from(string5Map, "visible")
+        stat = ui.tab("Status Bytes").bind_visibility_from(string6Map, "visible")
     with ui.tab_panels(tabs, value=ch1).classes("w-full"):
         with ui.tab_panel(fb):
             StringViewer("Fault Bytes", string1Map)
