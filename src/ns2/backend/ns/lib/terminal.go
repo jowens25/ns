@@ -101,9 +101,9 @@ func handleConnection(conn net.Conn) error {
 	}
 
 	defer func() {
+		cmd.Process.Kill()
+		cmd.Wait()
 		ptmx.Close()
-		//cmd.Process.Kill()
-		//cmd.Wait()
 		conn.Close()
 	}()
 

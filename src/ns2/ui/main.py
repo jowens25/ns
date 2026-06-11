@@ -10,6 +10,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from multiprocessing import freeze_support
+from ns2.ui import status_page
 from ns2.ui.login import logout_cb, login_page
 
 from ns2.ui.accounts_page import accounts_page
@@ -17,9 +18,10 @@ from ns2.ui.accounts_page import accounts_page
 from ns2.ui.networking_page import network_page, interface_page
 from ns2.ui.terminal import terminal_page
 from ns2.ui.theme import init_colors
-from ns2.ui.home_page import home_page
 from ns2.ui.snmp_page import snmp_page
-from ns2.ui.system_page import LoadSystemUnits, root_system_page
+from ns2.ui.system_page import LoadSystemUnits, system_page
+from ns2.ui.status_page import root_status_page
+
 from ns2.lib.bridge import BRIDGE
 from ns2.lib.timedate1 import CallListTimezones, CallGetTimezone, CallSetTimezone
 from ns2.ui.firewalld_page import LoadFirewalldServiceInfo, firewall_page
@@ -131,24 +133,29 @@ async def controlPanel():
             await Clock()
 
     with ui.left_drawer(bordered=True).classes("bg-dark") as left_drawer:
+
+        def nav(p):
+            ui.navigate.to(p)
+            left_drawer.hide()
+
         ui.separator()
         btnps = "flat color=white align=left"
 
-        ui.button("System", on_click=lambda: ui.navigate.to("/")).props(btnps).classes(
+        ui.button("Status", on_click=lambda: nav("/")).props(btnps).classes("w-full")
+
+        ui.button("System", on_click=lambda: nav("/system")).props(btnps).classes(
             "w-full"
         )
-        ui.button("Network", on_click=lambda: ui.navigate.to("/network")).props(
-            btnps
-        ).classes("w-full")
-        ui.button("SNMP", on_click=lambda: ui.navigate.to("/snmp")).props(
-            btnps
-        ).classes("w-full")
-        ui.button("Accounts", on_click=lambda: ui.navigate.to("/accounts")).props(
-            btnps
-        ).classes("w-full")
-        ui.button("Terminal", on_click=lambda: ui.navigate.to("/terminal")).props(
-            btnps
-        ).classes("w-full")
+        ui.button("Network", on_click=lambda: nav("/network")).props(btnps).classes(
+            "w-full"
+        )
+        ui.button("SNMP", on_click=lambda: nav("/snmp")).props(btnps).classes("w-full")
+        ui.button("Accounts", on_click=lambda: nav("/accounts")).props(btnps).classes(
+            "w-full"
+        )
+        ui.button("Terminal", on_click=lambda: nav("/terminal")).props(btnps).classes(
+            "w-full"
+        )
 
         ui.separator()
 
@@ -166,7 +173,8 @@ async def controlPanel():
 
     ui.sub_pages(
         {
-            "/": root_system_page,
+            "/": root_status_page,
+            "/system": system_page,
             "/network": network_page,
             "/network/firewall": firewall_page,
             "/network/{interface_name}": interface_page,

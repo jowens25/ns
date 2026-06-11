@@ -17,7 +17,7 @@
 
 # from ns2.utils import log
 
-# socket_path = "/var/lib/ns/ns-serial-mux.sock"
+# socket_path = "/var/lib/ns/serial.sock"
 
 # socket_receive = Event()
 
@@ -78,7 +78,7 @@
 
 # async def read_write_socket(cmd: str) -> str:
 
-#     socket_path = "/var/lib/ns/ns-serial-mux.sock"
+#     socket_path = "/var/lib/ns/serial.sock"
 #     reader, writer = await asyncio.open_unix_connection(socket_path)
 
 #     read_task = asyncio.create_task(read_socket(reader, cmd))

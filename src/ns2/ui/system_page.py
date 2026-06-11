@@ -187,7 +187,7 @@ def MakeServicesDict(servs):
 
 
 # @ui.page("/")
-async def root_system_page():
+async def system_page():
 
     # await controlPanel()
 
@@ -196,7 +196,7 @@ async def root_system_page():
     serviceTable = await serviceSelectionTable()
 
     ui.separator()
-    ui.label("Logs").classes("text-h6")
+    ui.label("Logs").classes("text-h5")
 
     with ui.row().classes("items-end gap-4 w-full flex-wrap"):
 

@@ -4,6 +4,8 @@ OPEN ISSUES
 =================================================================================================================
 
 
+firewalld: found that if firewalld is disabled when frontend starts it fails because the dbus calls do not return correctly....
+
 setup: no initial users are created in the scripts
 
 setup note: running sudo apt update and sudo apt upgrade -y in image at start up

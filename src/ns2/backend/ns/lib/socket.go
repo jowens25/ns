@@ -8,7 +8,7 @@ import (
 )
 
 func SocketListen() {
-	socketPath := "/var/lib/ns/ns-serial-mux.sock"
+	socketPath := "/var/lib/ns/serial.sock"
 
 	// Connect to the socket
 	conn, err := net.Dial("unix", socketPath)

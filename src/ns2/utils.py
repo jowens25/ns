@@ -13,7 +13,7 @@ log = logging.getLogger("ns-admin")
 log.setLevel(logging.INFO)  # This is a FILTER, not a message level
 log.addHandler(journal.JournalHandler(SYSLOG_IDENTIFIER="ns-admin"))
 log.addHandler(logging.StreamHandler(sys.stdout))
-#log.addHandler(logging.FileHandler("debug.log"))
+# log.addHandler(logging.FileHandler("debug.log"))
 
 
 async def runCmd(args: list[str]) -> str:
@@ -47,7 +47,7 @@ def validate_group(group: list):
     return [x.validate() for x in group]
 
 
-def make_col_of(l: str, label:str|None = None) -> dict:
+def make_col_of(l: str, label: str | None = None) -> dict:
     if label:
         return {"name": l, "label": label, "field": l}
     return {"name": l, "label": l, "field": l}
