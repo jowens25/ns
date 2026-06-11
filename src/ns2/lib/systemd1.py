@@ -121,7 +121,7 @@ async def SystemdRestart(service: str):
 #
 #
 async def getUnitPath(service: str) -> str:
-    rsp = await BridgeCall(
+    rsp = await BusCall(
         destination="org.freedesktop.systemd1",
         path="/org/freedesktop/systemd1",
         interface="org.freedesktop.systemd1.Manager",
@@ -137,7 +137,7 @@ async def getUnitPath(service: str) -> str:
 
 async def getUnitProperties(unitPath: str) -> dict:
 
-    rsp = await BridgeCall(
+    rsp = await BusCall(
         destination="org.freedesktop.systemd1",
         path=unitPath,
         interface="org.freedesktop.DBus.Properties",

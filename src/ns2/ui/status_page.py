@@ -169,8 +169,10 @@ def parseGps(string: str):
 
 def parseTime(string: str):
 
-    try:
+    if string == "" or string == "":
+        return string
 
+    try:
         time_str = f"{int(string):06d}"
         dt_obj = datetime.strptime(time_str, "%H%M%S")
         return dt_obj.time()
@@ -181,6 +183,9 @@ def parseTime(string: str):
 
 
 def parseDate(string: str):
+
+    if string == "" or string == "":
+        return string
     try:
         dt_object = datetime.strptime(string, "%m%d%y")
         return dt_object.date()

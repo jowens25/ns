@@ -169,6 +169,8 @@ async def LoadFirewalldServiceInfo():
 
 async def serviceSelectionTable():
     global serviceInfos
+    if len(serviceInfos) == 0:
+        serviceInfos = await LoadFirewalldServiceInfo()
     services = formatServicesInRows(serviceInfos)
 
     with ui.scroll_area().classes("w-full"):

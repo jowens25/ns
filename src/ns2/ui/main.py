@@ -10,6 +10,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from multiprocessing import freeze_support
+from ns2.lib.systemd1 import isActive
 from ns2.ui import status_page
 from ns2.ui.login import logout_cb, login_page
 
@@ -198,7 +199,9 @@ production = True
 
 
 async def LoadStatic():
-    await LoadFirewalldServiceInfo()
+    active = await isActive("firewalld.service")
+    if active["state"]:
+        await LoadFirewalldServiceInfo()
     await LoadSystemUnits()
     app.storage.general.update({"activeUser": None, "activeId": None})
 
