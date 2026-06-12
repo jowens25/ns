@@ -1,7 +1,7 @@
 from nicegui import ui, app
 from ns2.ui.theme import init_colors
 from ns2.utils import ASSETS_DIR
-from ns2.lib.bridge import CallPamAuthenticate
+from ns2.lib.bridge import BusCall, CallPamAuthenticate
 from ns2.lib.bridge import SetupBridge, CleanupBridge
 import uuid
 
@@ -9,13 +9,8 @@ from ns2.utils import log
 
 
 async def logout_cb():
-
     app.storage.general.update({"activeUser": None, "activeId": None})
-
-    rsp = await CleanupBridge()
-    if rsp:
-        log.info("log out cleanup", rsp.body[0])
-
+    await CleanupBridge()
     ui.navigate.reload()
 
 
@@ -54,7 +49,23 @@ async def try_login(_username: str, _password: str) -> None:
 # @ui.page("/{_:path}")
 @ui.page("/login")
 async def login_page():
-    log.info("LOGIN PAGE LOADED")
+    # log.info("LOGIN PAGE LOADED")
+
+    async def reset_cb():
+        rsp = await BusCall(
+            destination="com.novus.ns",
+            path="/com/novus/ns",
+            interface="com.novus.ns.accounts",
+            member="SetupDefaultUser",
+            signature="",
+            body=[],
+        )
+
+        if rsp.error_name is not None:
+            ui.notify(rsp.body[0], type="warning")
+        elif len(rsp.body) > 0:
+            ui.notify(rsp.body[0], type="positive")
+        support_dialog.close()
 
     init_colors()
     with ui.dialog() as support_dialog, ui.card():
@@ -62,7 +73,11 @@ async def login_page():
         ui.label("novuspower.com")
         ui.label("(816) 836-7446")
         ui.label("support@novuspower.com")
-        ui.button("Close", on_click=support_dialog.close).classes("bg-secondary")
+        with ui.row():
+            ui.button("Close", on_click=support_dialog.close).classes("bg-secondary")
+            ui.button("Reset Default Account", on_click=reset_cb).classes(
+                "bg-secondary"
+            )
 
     with ui.column(align_items="center").classes("absolute-center gap-16"):
         ui.image(str(ASSETS_DIR / "NOVUS_LOGO.svg")).classes("w-128 max-w-128")

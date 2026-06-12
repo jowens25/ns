@@ -23,7 +23,7 @@ from ns2.ui.snmp_page import snmp_page
 from ns2.ui.system_page import LoadSystemUnits, system_page
 from ns2.ui.status_page import root_status_page
 
-from ns2.lib.bridge import BRIDGE
+from ns2.lib.bridge import GetBridge
 from ns2.lib.timedate1 import CallListTimezones, CallGetTimezone, CallSetTimezone
 from ns2.ui.firewalld_page import LoadFirewalldServiceInfo, firewall_page
 from ns2.utils import ASSETS_DIR, log
@@ -32,6 +32,13 @@ unrestricted_page_routes = {
     "/login",
     "/favicon.ico",
 }
+
+
+async def bridge_check():
+    b = GetBridge()
+    if b is None:
+        app.storage.general.update({"activeUser": None, "activeId": None})
+        ui.navigate.reload()
 
 
 async def check_auth():
@@ -122,6 +129,7 @@ async def controlPanel():
     app.storage.general.update({"tz": current_tz})
 
     ui.timer(1.0, check_auth)
+    ui.timer(2.0, bridge_check)
     ui.timer(1.0, dateLabel.refresh)
     init_colors()
     with ui.header().classes("items-center justify-between").classes("bg-dark"):

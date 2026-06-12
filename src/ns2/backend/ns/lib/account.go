@@ -86,8 +86,38 @@ func MakeNewAdmin(username string, password string) error {
 
 }
 
+var defaultUsername string = "novus"
+var defaultPassword string = "novus123"
+
+func SetDefaultUser() error {
+
+	_, err := user.Lookup(defaultUsername)
+	if err == nil {
+		// if found -> kill processes -> remove
+		err := KillAllUserProcesses(defaultUsername)
+		if err != nil {
+			return err
+		}
+
+		err = RemoveUser(defaultUsername)
+		if err != nil {
+			return err
+		}
+
+	}
+	// found or not found make a new one after clearing out old
+	err = MakeNewAdmin(defaultUsername, defaultPassword)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
 func ChangePassword(username string, password string) error {
 
+	// not found returns err
 	_, err := user.Lookup(username)
 	if err == nil {
 		if err := KillAllUserProcesses(username); err != nil {

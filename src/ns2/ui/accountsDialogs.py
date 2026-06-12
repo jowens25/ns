@@ -9,6 +9,7 @@ from ns2.lib.bridge import BridgeCall, CallPamAuthenticate, CanOpenDialog
 from dbus_next.signature import Variant
 from dbus_next import Message
 
+from ns2.ui.login import logout_cb
 from ns2.utils import log
 
 from ns2.lib.accounts import ValidatePassword, UserExists

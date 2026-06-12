@@ -41,13 +41,19 @@ async def SetupBridge(_username: str) -> str:
 
 async def CleanupBridge():
     global BRIDGE
-    if BRIDGE:
-        term = await GetTerminalPid()
-        if term > 0:
-            await CallCloseTerminal()
-        BRIDGE.disconnect()
-        await BRIDGE.wait_for_disconnect()
-        await CallCloseBridge()
+    try:
+        if BRIDGE:
+            term = await GetTerminalPid()
+            if term > 0:
+                await CallCloseTerminal()
+            BRIDGE.disconnect()
+            await BRIDGE.wait_for_disconnect()
+            await CallCloseBridge()
+
+    except EOFError as e:
+        log.info(e)
+
+    finally:
         BRIDGE = None
 
 
@@ -97,9 +103,8 @@ async def BridgeCall(
 ) -> Message:
     """Connect to proxy bus, make call return response"""
     b = GetBridge()
-
-    rsp = await b.call(
-        Message(
+    try:
+        msg = Message(
             destination=destination,
             path=path,
             interface=interface,
@@ -107,9 +112,17 @@ async def BridgeCall(
             signature=signature,
             body=body,
         )
-    )
+        rsp = await b.call(msg)
 
-    return rsp
+        return rsp
+    except EOFError as e:
+        log.info("EOFError: Bridge closed")
+
+        await CleanupBridge()
+
+        return Message.new_error(
+            msg, error_name=interface, error_text="no bridge response"
+        )
 
 
 async def BusCall(

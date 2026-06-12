@@ -171,6 +171,17 @@
     </defaults>
   </action>
 
+
+    <action id="com.novus.ns.accounts.SetupDefaultUser">
+    <description>Remove system users</description>
+    <message>Authentication is required to remove system user</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin</allow_active>
+    </defaults>
+  </action>
+
   <action id="com.novus.ns.accounts.UpdatePassword">
     <description>Update system user password</description>
     <message>Authentication is required to update system user password</message>

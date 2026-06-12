@@ -1,7 +1,45 @@
 
-systemctl disable variscite-bt.service
+=================================================================================================================
+SETUP INFO / PROCESS
+=================================================================================================================
+connect to variscite serial port
+touch ND2310
+hostname -I
 
-apt install socat
-apt install ns-serial-mux ns-agent
+uname -a: Linux imx8mn-var-som 6.6.52-var-lts-next-ge71e2277b289-dirty #1 SMP PREEMPT Tue Feb 17 10:52:56 CST 2026 aarch64 GNU/Linux
 
-apt install 
+
+ssh in to run:
+
+sudo systemctl disable variscite-bt.service
+sudo systemctl disable variscite-wifi.service
+#sudo reboot now
+
+#sudo apt install tuptime -- no issues
+
+sudo apt update
+sudo apt install network-manager
+sudo systemctl disable NetworkManager-wait-online.service
+#sudo reboot now
+sudo apt install nginx
+
+#sudo dpkg-reconfigure locales -> en_US.UTF-8 UTF-8 -> did not resolve the issue
+#sudo reboot now -- no issues.... amazing
+sudo apt install firewalld
+sudo apt install snmpd
+sudo dpkg -i ./ns-serial-mux_2.0.18_arm64.deb
+sudo dpkg -i ./ns-agent_2.0.11_arm64.deb
+sudo apt install socat
+socat - UNIX-CONNECT:/var/lib/ns/serial.sock -- worked...
+sudo reboot now -- no issues.....
+htop -- no issues
+sudo dpkg --no-act -i ns-admin_2.0.30_arm64.deb -- no issues
+sudo dpkg -i ns-admin_2.0.30_arm64.deb -- ssh session seemed to lock up. serial session available still. in serial, logged in and ran top. Saw that ns-serial was taking up a bunch but not crazy. ssh session still not back.... 
+access via https://10.1.10.154 was available. signed in via root and root. Still no ssh session back yet... but also no reboots yet.. ran control c in the ssh and got the session back????
+
+watched htop for a while... on the serial string status page of ns-admin
+clicked to system, network... rest of pages... while watching htop.. no issues yet. 
+
+sudo reboot now -- no issues yet
+ns account add admin admin -a -- makes admin account.... 
+logged in with admin and watched htop and status string page...

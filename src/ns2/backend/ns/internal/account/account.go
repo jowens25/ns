@@ -70,6 +70,27 @@ func Remove() *cobra.Command {
 	return cmd
 }
 
+func Reset() *cobra.Command {
+
+	cmd := &cobra.Command{
+		Use:   "reset",
+		Short: "resets the default user",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			cmd.SilenceUsage = true
+			rsp, err := lib.Call("com.novus.ns", "/com/novus/ns", "com.novus.ns.accounts.SetupDefaultUser", nil)
+
+			if err != nil {
+				return err
+			}
+
+			fmt.Println(rsp)
+
+			return nil
+		},
+	}
+	return cmd
+}
+
 func List() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "ls",
@@ -101,5 +122,6 @@ func init() {
 	Account.AddCommand(Add())
 	Account.AddCommand(Remove())
 	Account.AddCommand(List())
+	Account.AddCommand(Reset())
 
 }

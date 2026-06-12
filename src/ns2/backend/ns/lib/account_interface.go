@@ -161,6 +161,32 @@ func (a *AccountInterface) AddAdmin(username string, password string, sender dbu
 
 }
 
+func (a *AccountInterface) SetupDefaultUser(sender dbus.Sender, message dbus.Message) (string, *dbus.Error) {
+
+	if isAuthorized := CheckAuthorization(sender, GetActionId(message)); !isAuthorized {
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error.AccessDenied",
+			Body: []any{"Not authorized to setup default user"},
+		}
+	}
+
+	err := SetDefaultUser()
+	if err != nil {
+		return "", &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+
+	}
+	err = a.conn.Emit("/com/novus/ns", "com.novus.ns.accounts.Changed", "SetupDefaultUser")
+	if err != nil {
+		log.Println(err.Error())
+	}
+
+	return fmt.Sprintf("reset complete"), nil
+
+}
+
 func (a *AccountInterface) Remove(sender dbus.Sender, message dbus.Message, username string) (string, *dbus.Error) {
 
 	if isAuthorized := CheckAuthorization(sender, GetActionId(message)); !isAuthorized {

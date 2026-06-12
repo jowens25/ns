@@ -3,8 +3,6 @@
 OPEN ISSUES
 =================================================================================================================
 
-setup: no initial users are created in the scripts
-setup: small device tree change to make uart work, in one note docs
 
 =================================================================================================================
 PATCHES
@@ -37,7 +35,8 @@ addressed with default baud rate set             -> serial: on reboot the baud r
 checked firewalld before call                    -> firewalld: found that if firewalld is disabled when frontend starts it fails because the dbus calls do not return correctly....
 removed cli endpoints, ran others through polkit -> ns exe permissions: user1234 in nsuser was still able to be executed.... part of the problem is they need it.... may add polkit check to ns?
 calling ui.navigate.reload() instead of navigate -> pages: missing a sub page on logout.... 
-
+added to setup script                            -> setup: no initial users are created in the scripts
+change not needed if ble is not used. i think... -> setup: small device tree change to make uart work, in one note docs
 =================================================================================================================
 EXCEPTIONS
 =================================================================================================================
@@ -45,49 +44,3 @@ EXCEPTIONS
 
 
 
-
-=================================================================================================================
-SETUP INFO / PROCESS
-=================================================================================================================
-connect to variscite serial port
-touch ND2310
-hostname -I
-
-uname -a: Linux imx8mn-var-som 6.6.52-var-lts-next-ge71e2277b289-dirty #1 SMP PREEMPT Tue Feb 17 10:52:56 CST 2026 aarch64 GNU/Linux
-
-
-ssh in to run:
-
-sudo systemctl disable variscite-bt.service
-sudo systemctl disable variscite-wifi.service
-sudo reboot now -- no issues so far... 
-
-sudo apt install tuptime -- no issues
-
-sudo apt update -- no issues
-sudo apt install network-manager -- no issues
-sudo systemctl disable NetworkManager-wait-online.service -- no issues
-sudo reboot now -- no issues
-sudo apt install nginx -- no issues
-
-sudo dpkg-reconfigure locales -> en_US.UTF-8 UTF-8
-sudo reboot now -- no issues.... amazing
-sudo apt install firewalld -- no issues
-
-sudo apt install snmpd -- no issues
-sudo dpkg -i ./ns-serial-mux_2.0.18_arm64.deb
-sudo dpkg -i ./ns-agent_2.0.11_arm64.deb
-sudo apt install socat
-socat - UNIX-CONNECT:/var/lib/ns/serial.sock -- worked...
-sudo reboot now -- no issues.....
-htop -- no issues
-sudo dpkg --no-act -i ns-admin_2.0.30_arm64.deb -- no issues
-sudo dpkg -i ns-admin_2.0.30_arm64.deb -- ssh session seemed to lock up. serial session available still. in serial, logged in and ran top. Saw that ns-serial was taking up a bunch but not crazy. ssh session still not back.... 
-access via https://10.1.10.154 was available. signed in via root and root. Still no ssh session back yet... but also no reboots yet.. ran control c in the ssh and got the session back????
-
-watched htop for a while... on the serial string status page of ns-admin
-clicked to system, network... rest of pages... while watching htop.. no issues yet. 
-
-sudo reboot now -- no issues yet
-ns account add admin admin -a -- makes admin account.... 
-logged in with admin and watched htop and status string page...
