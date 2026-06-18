@@ -16,6 +16,8 @@ from ns2.ui.snmpCards import (
 async def AddV2UserDialog():
     v2 = V2User()
     with ui.dialog() as dialog, ui.card().classes("w-full"):
+        ui.label("Add v2 user").classes("text-h5")
+
         with ui.column().classes("w-full"):
             elements = await v2UserCardBody(v2)
             with ui.row().classes("items-center justify-between gap-4 w-full"):
@@ -79,6 +81,7 @@ async def AddV2TrapDialog():
 async def AddV3TrapDialog():
     newTrap = V3Trap()
     with ui.dialog() as dialog, ui.card().classes("w-full"):
+        ui.label("Add v3 trap").classes("text-h5")
 
         elements = await v3TrapCardBody(newTrap)
 
@@ -112,6 +115,8 @@ async def AddV3UserDialog():
     v3 = V3User()
 
     with ui.dialog() as dialog, ui.card().classes("w-full"):
+        ui.label("Add v3 User").classes("text-h5")
+
         with ui.column().classes("w-full"):
 
             elements = await v3UserCardBody(v3)
@@ -155,6 +160,8 @@ async def editDeleteV2User(community):
     user = user.body[0]
     v2User = V2User(**user)
     with ui.dialog() as dialog, ui.card().classes("w-full").props("flat"):
+        ui.label("Edit or delete v2 user").classes("text-h5")
+
         with ui.column().classes("w-full"):
             elements = await v2UserCardBody(v2User)
             with ui.row().classes("items-center justify-between gap-4 w-full"):
@@ -215,6 +222,9 @@ async def editDeleteV2Trap(community: str):
 
     log.info(f"a v2 trap: {finalTrap}")
     with ui.dialog() as dialog, ui.card().classes("w-full").props("flat"):
+
+        ui.label("Edit or delete v2 trap").classes("text-h5")
+
         with ui.column().classes("w-full"):
 
             elements = await v2TrapCardBody(finalTrap)
@@ -277,6 +287,7 @@ async def editDeleteV3User(username):
     initUser = V3User(**userData)
     finalUser = V3User(**userData)
     with ui.dialog() as dialog, ui.card().classes("w-full").props("flat"):
+        ui.label("Edit or delete v3 user").classes("text-h5")
 
         with ui.column().classes("w-full"):
 
@@ -340,6 +351,8 @@ async def editDeleteV3Trap(username: str):
 
     log.info(f"a v3 trap: {finalTrap}")
     with ui.dialog() as dialog, ui.card().classes("w-full").props("flat"):
+        ui.label("Edit or delete v3 trap").classes("text-h5")
+
         with ui.column().classes("w-full"):
 
             elements = await v3TrapCardBody(finalTrap)

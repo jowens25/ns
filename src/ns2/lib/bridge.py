@@ -98,6 +98,17 @@ async def CanOpenDialog(username) -> Message:
     )
 
 
+async def IsUserAdmin(username) -> Message:
+    return await BridgeCall(
+        destination="com.novus.ns",
+        path="/com/novus/ns",
+        interface="com.novus.ns.bridge",
+        member="IsUserAdmin",
+        signature="s",
+        body=[username],
+    )
+
+
 async def BridgeCall(
     destination: str, path: str, interface: str, member: str, signature: str, body
 ) -> Message:
@@ -120,9 +131,13 @@ async def BridgeCall(
 
         await CleanupBridge()
 
-        return Message.new_error(
+        err = Message.new_error(
             msg, error_name=interface, error_text="no bridge response"
         )
+        log.info(msg)
+        log.info(err.interface)
+        log.info(err.member)
+        return err
 
 
 async def BusCall(

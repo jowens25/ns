@@ -1,11 +1,11 @@
 import asyncio
 
-from nicegui import ui
+from nicegui import app, ui
 from dbus_next import Message
 from ns2.utils import log, make_col_of, make_action_col
 
 from ns2.lib.accounts import GetUsers, SystemAccount
-from ns2.lib.bridge import GetBridge, BridgeCall
+from ns2.lib.bridge import CanOpenDialog, GetBridge, BridgeCall, IsUserAdmin
 from ns2.ui.accountsDialogs import (
     addUserDialog,
     editDeleteUserDialog,
@@ -13,11 +13,15 @@ from ns2.ui.accountsDialogs import (
 )
 
 
+async def handleNotifications():
+    await asyncio.sleep(0.25)
+    accounts_table.refresh()
+
+
 def notification_handler(msg: Message):
     if msg.interface == "com.novus.ns.accounts" and msg.member == "Changed":
         log.info(msg.body)
-        asyncio.sleep(0.25)
-        accounts_table.refresh()
+        asyncio.ensure_future(handleNotifications())
         return True
 
 
@@ -88,9 +92,27 @@ async def accounts_table():
     async def on_delete_cb(e):
         username: str = e.args
         dialog = await editDeleteUserDialog(username)
-        result = await dialog
-        if result:
-            ui.notify(result)
+        activeUser = app.storage.general.get("activeUser", "error")
+
+        rsp = await IsUserAdmin(activeUser)
+        if rsp.error_name is not None:
+            ui.notify(rsp.body[0])
+            return
+        callerIsAdmin = rsp.body[0]
+
+        rsp = await IsUserAdmin(username)
+        if rsp.error_name is not None:
+            ui.notify(rsp.body[0])
+            return
+        targetIsAdmin = rsp.body[0]
+
+        if username == activeUser:
+            dialog.open()
+        elif callerIsAdmin and not targetIsAdmin:
+            dialog.open()
+        else:
+            ui.notify(f"not allowed to edit {username}'s password")
+            return
 
     tab.on("delete-account", on_delete_cb)
 

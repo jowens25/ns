@@ -22,68 +22,33 @@ from dbus_next.errors import DBusError
 
 from ns2.utils import log
 
-from ns2.ui.firewalld_page import firewall_status
+from ns2.ui.firewalld_page import firewall_card
 
 
 async def network_page():
 
-    log.info("NETWORK PAGE")
-
     with ui.column().classes("w-full"):
-        with ui.card().classes("w-full").props("flat"):
-            await firewall_status(True)
 
         interfaces = await GetInterfacesAndAddresses()
 
-        interface_table = (
-            ui.table(
-                title="Interfaces",
-                rows=interfaces,
-                # rows=[{'d':'v'}],
-                column_defaults={
-                    "align": "left",
-                    "headerClasses": "uppercase text-primary",
-                },
-            )
-            .classes("w-full")
-            .props("flat")
-        )
+        for i in interfaces:
 
-        interface_table.add_slot(
-            "body-cell-name",
-            """
-                <q-td :props="props">
-                    <a :href="'/network/' + props.row.name" 
-                       class="text-accent cursor-pointer hover:underline"
-                       >
-                        {{ props.value }}
-                    </a>
-                </q-td>
-            """,
-        )
-        interface_table.add_slot(
-            "body-cell-addresses",
-            """
-                <q-td :props="props" class="font-bold text-sm">
-                    {{ props.value }}
-                </q-td>
-            """,
-        )
+            await interface_card(await GetInterfaceData(i["name"]))
+
+        await firewall_card()
 
 
 @ui.refreshable
 async def interface_card(interface: InterfaceData):
 
     with ui.card().props("flat"):
-        with ui.row():
-            ui.link("Networking", "/network").classes("text-accent")
-            ui.label(">")
-            ui.label(interface.Name)
-            ui.label(interface.Active)
+        with ui.row().classes("w-full items-center justify-between"):
+            ui.label("Network").classes("text-h5")
 
-            with ui.row().classes("w-full items-center justify-between"):
-                ui.label().classes("text-h6").bind_text(interface, "Name")
-                ui.label().classes("text-h6").bind_text(interface, "HardwareAddress")
+            ui.label().classes("text-h5").bind_text(interface, "Name").props(
+                "font-bold"
+            )
+            ui.label().classes("text-h6").bind_text(interface, "HardwareAddress")
 
         ui.separator()
 
@@ -100,6 +65,7 @@ async def interface_card(interface: InterfaceData):
 
             with ui.row().classes("flex-1 gap-16"):
                 ui.label("IPv4").classes("font-bold w-8")
+                ui.label().bind_text_from(interface, "Ip4Gateway")
                 ui.label().bind_text_from(interface, "Ip4")
                 ui.label("Edit").classes(
                     "text-accent cursor-pointer hover:underline"
@@ -107,40 +73,12 @@ async def interface_card(interface: InterfaceData):
 
             with ui.row().classes("flex-1 gap-16"):
                 ui.label("IPv6").classes("font-bold w-8")
+                ui.label().bind_text_from(interface, "Ip6Gateway")
+
                 ui.label().bind_text_from(interface, "Ip6")
                 ui.label("Edit").classes(
                     "text-accent cursor-pointer hover:underline"
                 ).on("click", lambda: edit_ip_connection("ipv6", interface))
-
-
-async def interface_page(interface_name: str):
-
-    await GetDeviceByIpIface(interface_name)
-
-    # device = await GetDevice(AppBus, dev_path)
-
-    interface = await GetInterfaceData(interface_name)
-
-    await interface_card(interface)
-
-    async def state_changed_cb(u1, u2, u3):
-
-        log.info(u1, u2, u3)
-        # Re-fetch the interface data to get the new state
-        updated_interface = await GetInterfaceData(interface_name)
-
-        # Update the existing interface object's properties
-        # This will trigger the UI bindings to update automatically
-        interface.Status = updated_interface.Status
-        interface.StateString = updated_interface.StateString
-        interface.StateNumber = updated_interface.StateNumber
-        interface.Carrier = updated_interface.Carrier
-        interface.Active = updated_interface.Active
-        interface.Ip4 = updated_interface.Ip4
-        interface.Ip6 = updated_interface.Ip6
-        # Add any other properties that might change
-
-    # device.on_state_changed(state_changed_cb)
 
 
 async def edit_ip_connection(version: str, id: InterfaceData):

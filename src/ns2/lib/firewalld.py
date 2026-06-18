@@ -3,7 +3,7 @@ from dataclasses import field
 from typing import Optional
 from nicegui import binding
 from dbus_next import Message
-from ns2.lib.networking import GetInterfaces
+from ns2.lib.networking import GetWiredInterfaces
 
 from ns2.common import formatListToString
 
@@ -113,8 +113,8 @@ async def AddSource(zoneName: str, source: str):
         return rsp.body[0]
 
 
-async def RemoveSource(zoneName: str, source: str):
-    rsp = await BridgeCall(
+async def RemoveSource(zoneName: str, source: str) -> Message:
+    return await BridgeCall(
         destination="org.fedoraproject.FirewallD1",
         path="/org/fedoraproject/FirewallD1",
         interface="org.fedoraproject.FirewallD1.zone",
@@ -122,7 +122,6 @@ async def RemoveSource(zoneName: str, source: str):
         signature="ss",
         body=[zoneName, source],
     )
-    return rsp.body[0]
 
 
 async def AddInterface(zoneName: str, interfaceName: str):
@@ -137,8 +136,8 @@ async def AddInterface(zoneName: str, interfaceName: str):
     return rsp.body[0]
 
 
-async def RemoveInterface(zoneName: str, interfaceName: str):
-    rsp = await BridgeCall(
+async def RemoveInterface(zoneName: str, interfaceName: str) -> Message:
+    return await BridgeCall(
         destination="org.fedoraproject.FirewallD1",
         path="/org/fedoraproject/FirewallD1",
         interface="org.fedoraproject.FirewallD1.zone",
@@ -146,7 +145,6 @@ async def RemoveInterface(zoneName: str, interfaceName: str):
         signature="ss",
         body=[zoneName, interfaceName],
     )
-    return rsp.body[0]
 
 
 async def ListZones():
@@ -200,16 +198,29 @@ async def GetZones() -> list[ZoneInfo]:
 # internal
 
 
+async def RuntimeToPermanent():
+    await BridgeCall(
+        destination="org.fedoraproject.FirewallD1",
+        path="/org/fedoraproject/FirewallD1",
+        interface="org.fedoraproject.FirewallD1",
+        member="runtimeToPermanent",
+        signature="",
+        body=[],
+    )
+
+
 async def GetSelectableZones():
-    default_zones = ["public", "external", "dmz", "work", "home", "internal"]
+    default_zones = ["public", "external", "work", "home", "internal"]
+
     available_zones = []
     allzones = await GetZones()
-    actzones = await GetActiveZones()
-    for z in allzones:
-        log.info(z)
-        if (z in default_zones) and (z not in actzones):
-            available_zones.append(z)
 
+    # actzones = await GetActiveZones()
+    for z in allzones:
+        # log.info(z)
+        # if (z in default_zones) and (z not in actzones):
+        if z in default_zones:
+            available_zones.append(z)
     return available_zones
 
 
@@ -260,6 +271,7 @@ zoneDescriptionMap = {
     "work": "For use in work areas. You mostly trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.",
     "home": "For use in home areas. You mostly trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.",
     "internal": "For use on internal networks. You mostly trust the other computers on the networks to not harm your computer. Only selected incoming connections are accepted.",
+    "public": "For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.",
 }
 
 
@@ -295,18 +307,20 @@ async def GetServiceSettings2(name: str) -> ServiceSetting:
 
 async def GetAvailableInterfaces():
 
-    nm_interfaces = await GetInterfaces()
-    used_interfaces = []
-    az = await GetActiveZones()
-    for z in az:
-        zi = MakeZoneInfo(await GetZoneSettings2(z))
-        used_interfaces.extend(zi.Interfaces)
+    return await GetWiredInterfaces()
+    # used_interfaces = []
+    # az = await GetActiveZones()
+    # for z in az:
+    #    zi = MakeZoneInfo(await GetZoneSettings2(z))
+    #    used_interfaces.extend(zi.Interfaces)
 
-    for i in nm_interfaces:
-        if i in used_interfaces:
-            nm_interfaces.remove(i)
 
-    return nm_interfaces
+#
+# for i in nm_interfaces:
+#    if i in used_interfaces:
+#        nm_interfaces.remove(i)
+#
+# return nm_interfaces
 
 
 async def GetZoneByName(name):
@@ -360,6 +374,47 @@ async def AddZone(zoneName: str, interfaces: list[str], sources: list[str]) -> M
     return await Update2(zp, settings)
 
 
+async def ConfigureZone(
+    zone: str, interfaces: list[str], sources: list[str]
+) -> Message:
+
+    for i in interfaces:
+        rsp = await ChangeZoneOfInterface(zone, i)
+        if rsp.error_name is not None:
+            return rsp
+
+    for s in sources:
+        rsp = await ChangeZoneOfSource(zone, s)
+        if rsp.error_name is not None:
+            return rsp
+
+    await RuntimeToPermanent()
+
+
+async def ChangeZoneOfSource(zone: str, source: str) -> Message:
+    rsp = await BridgeCall(
+        destination="org.fedoraproject.FirewallD1",
+        path="/org/fedoraproject/FirewallD1",
+        interface="org.fedoraproject.FirewallD1.zone",
+        member="changeZoneOfSource",
+        signature="ss",
+        body=[zone, source],
+    )
+    return rsp
+
+
+async def ChangeZoneOfInterface(zone: str, interface: str) -> Message:
+    rsp = await BridgeCall(
+        destination="org.fedoraproject.FirewallD1",
+        path="/org/fedoraproject/FirewallD1",
+        interface="org.fedoraproject.FirewallD1.zone",
+        member="changeZoneOfInterface",
+        signature="ss",
+        body=[zone, interface],
+    )
+    return rsp
+
+
 async def RemoveZone(zoneName: str) -> Message:
 
     zp = await GetZoneByName(zoneName)
@@ -367,10 +422,14 @@ async def RemoveZone(zoneName: str) -> Message:
     zoneInfo = MakeZoneInfo(settings)
 
     for interface in zoneInfo.Interfaces:
-        log.info(await RemoveInterface(zoneName, interface))
+        rsp = await RemoveInterface(zoneName, interface)
+        if rsp.error_name is not None:
+            return rsp
 
     for source in zoneInfo.Sources:
-        log.info(await RemoveSource(zoneName, source))
+        rsp = await RemoveSource(zoneName, source)
+        if rsp.error_name is not None:
+            return rsp
 
     if settings.get("interfaces") is not None:
         del settings["interfaces"]

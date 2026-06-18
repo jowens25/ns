@@ -40,15 +40,15 @@ async def editDeleteUserDialog(username):
     user = User(**rsp.body[0])
     with ui.dialog() as dialog, ui.card().classes("w-full").props("flat"):
         with ui.column().classes("w-full"):
-            ui.label("Edit user").classes("text-h5")
+            ui.label("Update password").classes("text-h5")
 
-            userfield = (
-                ui.input("username")
-                .bind_value(user, "Username")
-                .classes("w-full")
-                .props("dense")
-            )
-            userfield.disable()
+            # userfield = (
+            #    ui.input("username")
+            #    .bind_value(user, "Username")
+            #    .classes("w-full")
+            #    .props("dense")
+            # )
+            # userfield.disable()
 
             def mustMatch(v):
                 if not v == p1.value:
@@ -58,7 +58,7 @@ async def editDeleteUserDialog(username):
 
             p1 = (
                 ui.input(
-                    "password",
+                    "new password",
                     validation=validatePass,
                     password=True,
                     password_toggle_button=True,
@@ -79,29 +79,31 @@ async def editDeleteUserDialog(username):
                 .props("dense")
             )
 
-            group = (
-                ui.select(["admin", "user"])
-                .bind_value(user, "Group")
-                .classes("w-full")
-                .props("dense")
-            )
-
-            group.disable()
+            # group = (
+            #    ui.select(["admin", "user"])
+            #    .bind_value(user, "Group")
+            #    .classes("w-full")
+            #    .props("dense")
+            # )
+            #
+            # group.disable()
 
             with ui.row().classes("items-center justify-between gap-4 w-full"):
 
                 async def on_save_cb():
-                    if not all(await validate_group([p1, p2, userfield])):
+                    if not all(await validate_group([p1, p2])):
                         ui.notify("Please correct the errors", type="negative")
 
                     else:
                         rsp = await EditUser(user)
 
                         if rsp.error_name is not None:
-                            ui.notify(rsp.body[0])
-                        else:
-                            ui.notify(rsp, type="positive")
-                            dialog.close()
+                            if not "bridge" in rsp.body[0]:
+                                ui.notify(rsp.body[0])
+                            else:
+                                ui.notify("User will be logged out", type="warning")
+
+                        dialog.close()
 
                 async def on_delete_cb():
                     rsp = await BridgeCall(

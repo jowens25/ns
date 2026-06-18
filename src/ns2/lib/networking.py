@@ -93,6 +93,8 @@ class InterfaceData:
     AutoConnect: Optional[bool] = False
     dev_path: Optional[str] = ""
     act_con_path: Optional[str] = ""
+    Ip4Gateway: Optional[str] = "--"
+    Ip6Gateway: Optional[str] = "--"
 
 
 # ====================================================================
@@ -303,6 +305,10 @@ async def GetInterfaceData(iface: str) -> InterfaceData:
         log.info(ip4AddressData)
         log.info(ip4AddressData)
         ip6AddressData = await GetNmProp(i.ip6_config_path, "IP6Config", "AddressData")
+
+        i.Ip4Gateway = await GetNmProp(i.ip4_config_path, "IP4Config", "Gateway")
+
+        i.Ip6Gateway = await GetNmProp(i.ip6_config_path, "IP6Config", "Gateway")
 
         i.Ip4 = addressDataToString(ip4AddressData)
         i.Ip6 = addressDataToString(ip6AddressData)
@@ -600,7 +606,7 @@ def isAutoconnect(settings: dict) -> bool:
     return settings["connection"]
 
 
-async def GetInterfaces() -> list:
+async def GetWiredInterfaces() -> list:
 
     interfaces = []
 

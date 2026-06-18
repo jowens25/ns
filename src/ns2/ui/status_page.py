@@ -367,6 +367,14 @@ def StringViewer(label: str, data: dict):
                 col.bind_visibility_from(data, key, backward=lambda v: v != "")
 
 
+string7 = {"value": None}
+
+
+def parseString7(string: str):
+    global string7
+    string7["value"] = string
+
+
 def ProcessStrings(string: str):
 
     if string.startswith("$GPNVS,1,"):
@@ -381,6 +389,9 @@ def ProcessStrings(string: str):
         parseString5(string)
     if string.startswith("$GPNVS,6,"):
         parseString6(string)
+
+    if string.startswith("$GPNVS,7,"):
+        parseString7(string)
 
     if string1Map[LastSeen] + 5.0 <= time.monotonic():
         string1Map[Visible] = False
@@ -401,9 +412,51 @@ def ProcessStrings(string: str):
         string6Map[Visible] = False
 
 
+async def read_socket():
+    try:
+        log.info("opening serial.sock")
+        reader, writer = await asyncio.open_unix_connection("/var/lib/ns/serial.sock")
+        while True:
+            data = await reader.readline()
+            if not data:
+                break
+            ProcessStrings(data.decode("utf-8", errors="ignore"))
+
+    except FileNotFoundError:
+        log.info("File Not Found Error: Serial socket not found.")
+    except asyncio.CancelledError:
+        log.info("asyncio.CancelledError - read_socket cancelled")
+        pass  # graceful shutdown
+
+    finally:
+
+        if writer:
+            if not writer.is_closing():
+                writer.close()
+                await writer.wait_closed()
+
+        log.info("cleaned up writer")
+    log.info("cleaned up serial socket task")
+
+
+SerialTask = None
+
+
 async def root_status_page():
+    global SerialTask
+
+    # log.info(SerialTask)
+    if not SerialTask:
+        SerialTask = asyncio.create_task(read_socket())
+
+    if SerialTask.done():
+        SerialTask = asyncio.create_task(read_socket())
+
+    # log.info(SerialTask.done())
 
     ui.label("Status Strings").classes("text-h5")
+    ui.label("string 7:")
+    ui.label().bind_text_from(string7, "value")
     with ui.tabs().classes("w-full").props("align=left") as tabs:
         ch1 = ui.tab("Channels 1-8").bind_visibility_from(string2Map, "visible")
         ch2 = ui.tab("Channels 9-16").bind_visibility_from(string4Map, "visible")
@@ -426,32 +479,12 @@ async def root_status_page():
         with ui.tab_panel(stat):
             StringViewer("Status Bytes", string6Map)
 
-    try:
-        reader, writer = await asyncio.open_unix_connection("/var/lib/ns/serial.sock")
-    except FileNotFoundError:
-        ui.notify("Serial socket not found.", type="warning")
-
-    async def read_socket():
-        try:
-            while True:
-                data = await reader.readline()
-                if not data:
-                    break
-                ProcessStrings(data.decode("utf-8", errors="ignore"))
-        except asyncio.CancelledError:
-            pass  # graceful shutdown
-
-    task = asyncio.get_event_loop().create_task(read_socket())
-
     async def cleanup():
-        log.info("string viewer cleaned up")
-        if task and not task.done():
-            task.cancel()
-            await asyncio.gather(task, return_exceptions=True)
-        if writer:
-            if not writer.is_closing():
-                writer.close()
-                await writer.wait_closed()
-        ui.notify("reload page to reconnect")
+        global SerialTask
+        if SerialTask and not SerialTask.done():
+            SerialTask.cancel()
+            await asyncio.gather(SerialTask, return_exceptions=True)
+
+        # ui.notify("reload page to reconnect")
 
     app.on_disconnect(cleanup)

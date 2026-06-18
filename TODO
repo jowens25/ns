@@ -3,7 +3,21 @@
 OPEN ISSUES
 =================================================================================================================
 
-add labels to snmp dialogs
+
+firewalld: add a label to show that they are allowed ports
+firewalld: 3 dot delete zone option not descriptive
+firewalld: public zone is not selectable once deleted on debian (considering just toggling active zone, instead of adding and removing zones)
+firewalld: cant add back public zone
+firewalld: users are unable to view zones - remove active zone number? make a table
+
+accounts: edit user - not clear that we are basicly only changing the password
+accounts: Make note of kickout on change password
+accounts: make it so users cant open an admins account dialog "editUserdialog"
+
+login: add "are you sure you want to" to reseting the default account
+
+add a factory "reset" that resets a few of the states of the programs...
+
 =================================================================================================================
 PATCHES
 =================================================================================================================
@@ -37,10 +51,18 @@ removed cli endpoints, ran others through polkit -> ns exe permissions: user1234
 calling ui.navigate.reload() instead of navigate -> pages: missing a sub page on logout.... 
 added to setup script                            -> setup: no initial users are created in the scripts
 change not needed if ble is not used. i think... -> setup: small device tree change to make uart work, in one note docs
+downloading snmp mib was blocked by edge browser -> resolved by downloading content instead of file
+add labels to snmp dialogs                       -> labels added to dialogs
+make a note about https "insecure page" warning  -> note added to manual
+asyncio.sleep() was not awaited....              -> added notification handler in accounts page
+
+string reader is cleaned up or not loading       -> restructed the root status page to better start and stop the socket reader
+
 =================================================================================================================
 EXCEPTIONS
 =================================================================================================================
 
+make way to show only interesting services        -> did not come up with a way to show a sub-set of the running services yet.
 
 
 

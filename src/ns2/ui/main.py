@@ -16,7 +16,7 @@ from ns2.ui.login import logout_cb, login_page
 
 from ns2.ui.accounts_page import accounts_page
 
-from ns2.ui.networking_page import network_page, interface_page
+from ns2.ui.networking_page import network_page
 from ns2.ui.terminal import terminal_page
 from ns2.ui.theme import init_colors
 from ns2.ui.snmp_page import snmp_page
@@ -25,7 +25,7 @@ from ns2.ui.status_page import root_status_page
 
 from ns2.lib.bridge import GetBridge
 from ns2.lib.timedate1 import CallListTimezones, CallGetTimezone, CallSetTimezone
-from ns2.ui.firewalld_page import LoadFirewalldServiceInfo, firewall_page
+from ns2.ui.firewalld_page import LoadFirewalldServiceInfo
 from ns2.utils import ASSETS_DIR, log
 
 unrestricted_page_routes = {
@@ -185,8 +185,8 @@ async def controlPanel():
             "/": root_status_page,
             "/system": system_page,
             "/network": network_page,
-            "/network/firewall": firewall_page,
-            "/network/{interface_name}": interface_page,
+            # "/network/firewall": firewall_page,
+            # "/network/{interface_name}": interface_page,
             "/snmp": snmp_page,
             "/accounts": accounts_page,
             "/terminal": terminal_page,

@@ -22,6 +22,7 @@ from ns2.lib.firewalld import (
     GetSettings2,
     GetServiceSettings2,
     RemoveZone,
+    ConfigureZone,
 )
 
 
@@ -36,79 +37,48 @@ from ns2.utils import log
 
 
 @ui.refreshable
-async def firewall_status(on_network_page: bool):
+async def firewall_status():
 
     firewallInfo = FirewallInfo()
     firewallInfo.Enable = await isActive("firewalld.service")
     firewallInfo.Status = (await GetServiceState("firewalld.service")).capitalize()
-    numActiveZones = 0
-    if firewallInfo.Enable:
-        numActiveZones = len(await GetActiveZones())
 
-    with ui.column().classes("w-full"):
-        with ui.row().classes("w-full items-center justify-between"):
-            with ui.row().classes("items-center"):
-                ui.label("Firewall").classes("text-h6")
-                if on_network_page:
-                    ui.link(
-                        f"{numActiveZones} active zones", "/network/firewall"
-                    ).classes("text-accent")
+    dialog = await configureZoneDialog()
 
-                async def fire_switch_cb(e):
-                    action = "enable" if e.sender.value else "disable"
-                    with ui.dialog() as dialog, ui.card():
-                        ui.label(f"Are you sure you want to {action} firewalld?")
-                        with ui.row():
-                            ui.button(
-                                "Cancel", on_click=lambda: dialog.submit("Cancel")
-                            ).props("flat color=accent align=left")
-                            ui.button(
-                                f"{action}", on_click=lambda: dialog.submit(action)
-                            ).props("flat color=accent align=left")
-                    result = await dialog
-                    active = (await isActive("firewalld.service")).get("state", False)
-                    if result == "enable" and not active:
-                        err = await SystemdStart("firewalld.service")
-                        if err:
-                            ui.notify(err, type="warning")
-                    if result == "disable" and active:
-                        err = await SystemdStop("firewalld.service")
-                        if err:
-                            ui.notify(err, type="warning")
-                    await firewall_status.refresh()
-                    await zone_list.refresh()
+    with ui.row().classes("w-full items-center justify-between"):
+        with ui.row().classes("items-center"):
+            ui.label("Firewall").classes("text-h5")
 
-                ui.switch(f"Status: {firewallInfo.Status}").on(
-                    "click", lambda e: fire_switch_cb(e)
-                ).props("flat color=accent align=left dense").bind_value(
-                    firewallInfo.Enable, "state"
-                )
+            async def fire_switch_cb(e):
+                action = "enable" if e.sender.value else "disable"
+                with ui.dialog() as dialog, ui.card():
+                    ui.label(f"Are you sure you want to {action} firewalld?")
+                    with ui.row():
+                        ui.button(
+                            "Cancel", on_click=lambda: dialog.submit("Cancel")
+                        ).props("flat color=accent align=left")
+                        ui.button(
+                            f"{action}", on_click=lambda: dialog.submit(action)
+                        ).props("flat color=accent align=left")
+                result = await dialog
+                active = (await isActive("firewalld.service")).get("state", False)
+                if result == "enable" and not active:
+                    err = await SystemdStart("firewalld.service")
+                    if err:
+                        ui.notify(err, type="warning")
+                if result == "disable" and active:
+                    err = await SystemdStop("firewalld.service")
+                    if err:
+                        ui.notify(err, type="warning")
+                await firewall_status.refresh()
 
-            if on_network_page:
-                ui.button(
-                    "Edit rules and zones",
-                    on_click=lambda e: ui.navigate.to("/network/firewall"),
-                ).props("flat color=accent align=left dense")
+            ui.switch(f"Status: {firewallInfo.Status}").on(
+                "click", lambda e: fire_switch_cb(e)
+            ).props("flat color=accent align=left dense").bind_value(
+                firewallInfo.Enable, "state"
+            )
 
-            else:
-
-                async def open_dialog():
-                    u = app.storage.general.get("activeUser", "error")
-                    rsp = await CanOpenDialog(u)
-                    if rsp.error_name is not None:
-                        ui.notify(rsp.body[0], type="negative")
-                        return
-                    CanOpen = rsp.body[0]
-                    if not CanOpen:
-                        ui.notify("must be an admin to add a new zone", type="warning")
-                        return
-                    zoneDialog = await addZoneDialog()
-                    log.info("dialog created then opened")
-                    zoneDialog.open()
-
-                ui.button("add new zone", on_click=open_dialog).props(
-                    "color=accent align=left"
-                )
+        ui.button("Configure firewall", on_click=dialog.open).props("color=accent")
 
 
 def InterfaceText(interfaces):
@@ -242,11 +212,11 @@ def validate_group(group: list):
     return [x.validate() for x in group]
 
 
-async def addZoneDialog():
+async def configureZoneDialog():
 
     with ui.dialog() as dialog:
         with ui.card().props("flat"):
-            ui.label("Add zone").classes("text-h5")
+            ui.label("Configure firewalld").classes("text-h5")
 
             with ui.row():
                 ui.label("Trust level").classes("text-h6")
@@ -297,19 +267,19 @@ async def addZoneDialog():
                     addresses = formatStringToList(addr.value)
                 log.info(f"addresses: {addresses}")
 
-                rsp = await AddZone(zoneSelection.value, selected_interfaces, addresses)
-                if rsp.error_name is not None:
-                    ui.notify(rsp.body[0], type="negative")
-                dialog.close()
+                rsp = await ConfigureZone(
+                    zoneSelection.value, selected_interfaces, addresses
+                )
+                # rsp = await AddZone(zoneSelection.value, selected_interfaces, addresses)
+                if rsp is not None:
+                    if rsp.error_name is not None:
+                        ui.notify(rsp.body[0], type="negative")
                 zone_list.refresh()
+                dialog.close()
 
             with ui.row():
-                ui.button("Add zone", on_click=on_save_cb).props(
-                    "color=accent align=left"
-                )
-                ui.button("Cancel", on_click=dialog.close).props(
-                    "flat color=accent align=left"
-                )
+                ui.button("Save", on_click=on_save_cb)
+                ui.button("Cancel", on_click=dialog.close).props("flat")
 
     return dialog
 
@@ -349,6 +319,7 @@ async def zoneServicesTable(zoneName: str):
     services = formatServicesInRows(await getAllServices(zoneInfo))
 
     service_table = ui.table(
+        title="Allowed services",
         rows=services,
         column_defaults={
             "align": "left",
@@ -396,7 +367,7 @@ async def zoneServicesTable(zoneName: str):
                         <q-item clickable
                             @click="$parent.$emit('remove-service', props.row.Service)">
                             <q-item-section class="text-negative">
-                                Delete
+                                Remove from zone
                             </q-item-section>
                         </q-item>
                     </q-list>
@@ -418,25 +389,30 @@ async def zoneServicesTable(zoneName: str):
     pass  # end of this...
 
 
+def are_you_sure(z):
+    with ui.dialog() as dialog, ui.card().props("flat"):
+        ui.label(f"Are you sure you want to remove {z}?")
+        with ui.row():
+            ui.button("Yes", on_click=lambda: dialog.submit(True)).props("flat")
+            ui.button("No", on_click=lambda: dialog.submit(False)).props("flat")
+        return dialog
+
+
 @ui.refreshable
 async def zone_list():
-    # firewallInfo = await get_firewall_info()
-    # await GetAllZones(AppBus)
+
+    ui.label("Active Zones: ").classes("text-h6")
+
     with ui.column():
         if await isActive("firewalld.service"):
             for zoneName in await GetActiveZones():
 
-                zonePath = await GetZoneByName(zoneName)
-                settings = await GetSettings2(zonePath)
-
-                # log.info(settings)
-
+                # zonePath = await GetZoneByName(zoneName)
+                # settings = await GetSettings2(zonePath)
                 settings = await GetZoneSettings2(zoneName)
-                # log.info("other ", other_settings)
                 log.info("ZONE SETTINGS 2")
-                # print(settings)
                 interfaces = settings.get(
-                    "interfaces", Variant("as", ["default"])
+                    "interfaces", Variant("as", ["fallback zone"])
                 ).value
                 sources = settings.get("sources", Variant("as", [])).value
 
@@ -460,22 +436,20 @@ async def zone_list():
                                     "add services", on_click=open_service_dialog
                                 ).props("color=accent align=left")
 
-                                async def delete_zone_cb(e, z=zoneName):
+                                async def remove_zone_cb(z=zoneName):
+                                    result = await are_you_sure(z)
 
-                                    result = await are_you_sure_you_want_to(
-                                        f"delete the {z} zone?"
-                                    )
                                     if result:
+
                                         rsp = await RemoveZone(z)
                                         if rsp.error_name is not None:
-                                            ui.notify(rsp.body[0], type="negative")
-                                    await firewall_status.refresh()
-                                    await zone_list.refresh()
+                                            ui.notify(rsp.body[0])
+                                        else:
+                                            ui.notify("zone removed", type="positive")
 
-                                with ui.dropdown_button(icon="more_vert").props(
-                                    "flat color=accent align=left"
-                                ):
-                                    ui.item("delete", on_click=delete_zone_cb)
+                                ui.button(
+                                    icon="more_vert", on_click=remove_zone_cb
+                                ).props("flat")
 
                     await zoneServicesTable(zoneName)
 
@@ -493,23 +467,12 @@ async def getAllServices(zoneInfo: ZoneInfo):
     return services
 
 
-async def firewall_page():
+async def firewall_card():
 
-    u = app.storage.general.get("activeUser", "error")
-    rsp = await CanOpenDialog(u)
-    if rsp.error_name is not None:
-        ui.notify(rsp.body[0], type="negative")
-        return
-    CanOpen = rsp.body[0]
-    if not CanOpen:
-        ui.notify("must be an admin to edit zones and rules", type="warning")
-        ui.navigate.back()
-        return
+    with ui.card().props("flat").classes("w-full"):
 
-    with ui.card():
-        with ui.row():
-            ui.link("Networking", "/network").classes("text-accent")
-            ui.label(">")
-            ui.label("firewall")
-        await firewall_status(False)
+        await firewall_status()
+
+        ui.separator()
+
         await zone_list()

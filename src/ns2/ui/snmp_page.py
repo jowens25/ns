@@ -122,14 +122,17 @@ async def snmp_status():
 
                 ui.button(
                     "Download MIB",
-                    on_click=lambda: ui.download.file(
-                        str(ASSETS_DIR / "NOVUS-SECURE-MIB_REV1.3.mib")
-                    ),
+                    on_click=lambda: download_mib_cb(),
                 ).props("flat")
-                # ui.button("start snmpd", on_click=lambda e: snmp_cb("start")).props("flat")
-                # ui.button("stop snmpd", on_click=lambda e: snmp_cb("stop")).props("flat")
+
+                async def download_mib_cb():
+                    with open(str(ASSETS_DIR / "NOVUS-SECURE-MIB_REV1.3.mib")) as f:
+                        content = f.read()
+                        ui.download.content(
+                            content, filename="NOVUS-SECURE-MIB_REV1.3.mib"
+                        )
+
                 ui.button("Reset SNMPD Config", on_click=snmp_reset_cb).props("flat")
-                # ui.button("restart snmpd", on_click=lambda e: snmp_cb("restart")).props("flat")
 
     return status
 
