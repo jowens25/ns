@@ -10,7 +10,6 @@ firewalld: public zone is not selectable once deleted on debian (considering jus
 firewalld: cant add back public zone
 firewalld: users are unable to view zones - remove active zone number? make a table
 
-accounts: edit user - not clear that we are basicly only changing the password
 accounts: Make note of kickout on change password
 accounts: make it so users cant open an admins account dialog "editUserdialog"
 
@@ -57,6 +56,7 @@ make a note about https "insecure page" warning  -> note added to manual
 asyncio.sleep() was not awaited....              -> added notification handler in accounts page
 
 string reader is cleaned up or not loading       -> restructed the root status page to better start and stop the socket reader
+accounts: edit user - not clear user only changing the password -> 
 
 =================================================================================================================
 EXCEPTIONS

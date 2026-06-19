@@ -212,7 +212,6 @@ async def CallCloseBridge():
 
 
 async def CallCloseTerminal():
-    log.info("call close terminal......?")
     rsp = await BusCall(
         destination="com.novus.ns",
         path="/com/novus/ns",
@@ -221,7 +220,6 @@ async def CallCloseTerminal():
         signature="",
         body=[],
     )
-
     return rsp
 
 

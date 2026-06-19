@@ -35,6 +35,7 @@ unrestricted_page_routes = {
 
 
 async def bridge_check():
+    log.info("bridge check")
     b = GetBridge()
     if b is None:
         app.storage.general.update({"activeUser": None, "activeId": None})
@@ -42,22 +43,24 @@ async def bridge_check():
 
 
 async def check_auth():
-
+    # log.info("check auth")
     bid = app.storage.browser.get("id", None)
+    log.info(bid)
     if bid is None:
         log.info("bid error")
         ui.navigate.to("/login")
+        return
 
     activeId = app.storage.general.get("activeId", None)
     if activeId is None:
-        log.info("active id error")
+        log.info("active id is none")
         ui.navigate.to("/login")
+        return
 
     if activeId != bid:
+        log.info("active id != bid")
         ui.navigate.to("/login")
-
-    # print(bid)
-    # print(activeId)
+        return
 
 
 #'''
@@ -80,45 +83,49 @@ async def auth_middleware(request: Request, call_next):
 
     # Allow static assets
     if path.startswith("/_nicegui/") or path.startswith("/static/"):
-        # log.info("static")
+
         return await call_next(request)
-
-    # log.info(f"end of middleware with {path}")
-
-    # log.info("middleware to login")
 
     return RedirectResponse("/login")
 
 
 @ui.refreshable
 def dateLabel():
-    tz = app.storage.general.get("tz", "UTC")
-
-    tzObj = ZoneInfo(tz)
-    ui.label(datetime.now().astimezone(tzObj).strftime("%m-%d-%Y %H:%M:%S")).classes(
-        "font-bold"
-    )
+    try:
+        tz = app.storage.general.get("tz", "UTC")
+        tzObj = ZoneInfo(tz)
+        ui.label(
+            datetime.now().astimezone(tzObj).strftime("%m-%d-%Y %H:%M:%S")
+        ).classes("font-bold")
+    except RuntimeError:
+        log.info("date label refresh without parent?")
+    finally:
+        pass
 
 
 async def Clock():
-    dateLabel()
+    try:
+        dateLabel()
 
-    async def SetTimeCb(e):
-        log.info(f"timezone change -> {e.value}")
-        await CallSetTimezone(e.value)
-        app.storage.general.update({"tz": e.value})
+        async def SetTimeCb(e):
+            log.info(f"timezone change -> {e.value}")
+            await CallSetTimezone(e.value)
+            app.storage.general.update({"tz": e.value})
 
-    tzs = await CallListTimezones()
-    current_tz = await CallGetTimezone()
-    ui.select(tzs, with_input=True, value=current_tz, on_change=SetTimeCb).props(
-        "dense"
-    )
+        tzs = await CallListTimezones()
+        current_tz = await CallGetTimezone()
+        ui.select(tzs, with_input=True, value=current_tz, on_change=SetTimeCb).props(
+            "dense"
+        )
+    except RuntimeError:
+        log.info("clock without parent?")
+    finally:
+        pass
 
 
 @ui.page("/")
 @ui.page("/network")
-@ui.page("/network/firewall")
-@ui.page("/network/{interface_name}")
+@ui.page("/system")
 @ui.page("/snmp")
 @ui.page("/terminal")
 @ui.page("/accounts")
@@ -130,7 +137,8 @@ async def controlPanel():
 
     ui.timer(1.0, check_auth)
     ui.timer(2.0, bridge_check)
-    ui.timer(1.0, dateLabel.refresh)
+    date_timer = ui.timer(1.0, dateLabel.refresh)
+
     init_colors()
     with ui.header().classes("items-center justify-between").classes("bg-dark"):
         ui.button(on_click=lambda: left_drawer.toggle(), icon="menu").props(

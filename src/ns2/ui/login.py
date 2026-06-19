@@ -4,7 +4,6 @@ from ns2.utils import ASSETS_DIR
 from ns2.lib.bridge import BusCall, CallPamAuthenticate
 from ns2.lib.bridge import SetupBridge, CleanupBridge
 import uuid
-
 from ns2.utils import log
 
 
@@ -12,6 +11,7 @@ async def logout_cb():
     app.storage.general.update({"activeUser": None, "activeId": None})
     await CleanupBridge()
     ui.navigate.reload()
+    ui.navigate.to("/login")
 
 
 async def try_login(_username: str, _password: str) -> None:

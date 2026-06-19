@@ -413,6 +413,7 @@ def ProcessStrings(string: str):
 
 
 async def read_socket():
+    writer = None
     try:
         log.info("opening serial.sock")
         reader, writer = await asyncio.open_unix_connection("/var/lib/ns/serial.sock")
@@ -424,9 +425,13 @@ async def read_socket():
 
     except FileNotFoundError:
         log.info("File Not Found Error: Serial socket not found.")
+        pass
     except asyncio.CancelledError:
         log.info("asyncio.CancelledError - read_socket cancelled")
-        pass  # graceful shutdown
+        pass
+    except Exception as e:
+        log.info(e)
+        pass
 
     finally:
 
@@ -434,9 +439,10 @@ async def read_socket():
             if not writer.is_closing():
                 writer.close()
                 await writer.wait_closed()
+                writer = None
 
-        log.info("cleaned up writer")
-    log.info("cleaned up serial socket task")
+            log.info("cleaned up writer")
+        log.info("cleaned up serial socket task")
 
 
 SerialTask = None
@@ -445,14 +451,10 @@ SerialTask = None
 async def root_status_page():
     global SerialTask
 
-    # log.info(SerialTask)
-    if not SerialTask:
-        SerialTask = asyncio.create_task(read_socket())
+    if SerialTask and SerialTask is not SerialTask.done():
+        SerialTask.cancel()
 
-    if SerialTask.done():
-        SerialTask = asyncio.create_task(read_socket())
-
-    # log.info(SerialTask.done())
+    SerialTask = asyncio.create_task(read_socket())
 
     ui.label("Status Strings").classes("text-h5")
     ui.label("string 7:")
@@ -479,12 +481,9 @@ async def root_status_page():
         with ui.tab_panel(stat):
             StringViewer("Status Bytes", string6Map)
 
-    async def cleanup():
+    def serial_connect_cb():
         global SerialTask
-        if SerialTask and not SerialTask.done():
-            SerialTask.cancel()
-            await asyncio.gather(SerialTask, return_exceptions=True)
+        if SerialTask is None or SerialTask.done():
+            SerialTask = asyncio.create_task(read_socket())
 
-        # ui.notify("reload page to reconnect")
-
-    app.on_disconnect(cleanup)
+    ui.timer(2.0, serial_connect_cb)
