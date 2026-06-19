@@ -20,12 +20,16 @@ from ns2.lib.networking import (
 from dbus_next.signature import Variant
 from dbus_next.errors import DBusError
 
+from ns2.ui.control_panel import controlPanel
 from ns2.utils import log
 
 from ns2.ui.firewalld_page import firewall_card
 
 
+@ui.page("/network")
 async def network_page():
+
+    await controlPanel()
 
     with ui.column().classes("w-full"):
 

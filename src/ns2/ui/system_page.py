@@ -4,6 +4,7 @@ from nicegui import ui
 
 from ns2.lib.bridge import BusCall
 from ns2.lib.systemd1 import ListUnits
+from ns2.ui.control_panel import controlPanel
 
 
 @dataclass
@@ -186,10 +187,10 @@ def MakeServicesDict(servs):
     return services
 
 
-# @ui.page("/")
+@ui.page("/system")
 async def system_page():
 
-    # await controlPanel()
+    await controlPanel()
 
     ui.label("Services").classes("text-h5")
 

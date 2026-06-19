@@ -3,6 +3,7 @@ import asyncio
 from nicegui import ui
 from dataclasses import asdict
 
+from ns2.ui.control_panel import controlPanel
 from ns2.utils import (
     ASSETS_DIR,
     log,
@@ -354,8 +355,9 @@ async def v3TrapsTable():
             ).props("dense")
 
 
+@ui.page("/snmp")
 async def snmp_page():
-
+    await controlPanel()
     await SetupSnmpNotifications()
 
     await snmp_status()

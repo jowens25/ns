@@ -3,64 +3,30 @@ import asyncio
 
 from fastapi import Request
 from fastapi.responses import RedirectResponse
-from importlib.metadata import version
 from nicegui import app, ui
 
-from datetime import datetime
-from zoneinfo import ZoneInfo
+from ns2.ui.control_panel import LoadTimeZones
+from ns2.utils import ASSETS_DIR, log
+
+from ns2.ui.login import login_page
+
+from ns2.ui.status_page import root_status_page
+from ns2.ui.system_page import system_page
+from ns2.ui.networking_page import network_page
+from ns2.ui.snmp_page import snmp_page
+from ns2.ui.accounts_page import accounts_page
+from ns2.ui.terminal import terminal_page
+
 
 from multiprocessing import freeze_support
 from ns2.lib.systemd1 import isActive
-from ns2.ui import status_page
-from ns2.ui.login import logout_cb, login_page
-
-from ns2.ui.accounts_page import accounts_page
-
-from ns2.ui.networking_page import network_page
-from ns2.ui.terminal import terminal_page
-from ns2.ui.theme import init_colors
-from ns2.ui.snmp_page import snmp_page
-from ns2.ui.system_page import LoadSystemUnits, system_page
-from ns2.ui.status_page import root_status_page
-
-from ns2.lib.bridge import GetBridge
-from ns2.lib.timedate1 import CallListTimezones, CallGetTimezone, CallSetTimezone
+from ns2.ui.system_page import LoadSystemUnits
 from ns2.ui.firewalld_page import LoadFirewalldServiceInfo
-from ns2.utils import ASSETS_DIR, log
 
 unrestricted_page_routes = {
     "/login",
     "/favicon.ico",
 }
-
-
-async def bridge_check():
-    log.info("bridge check")
-    b = GetBridge()
-    if b is None:
-        app.storage.general.update({"activeUser": None, "activeId": None})
-        ui.navigate.reload()
-
-
-async def check_auth():
-    # log.info("check auth")
-    bid = app.storage.browser.get("id", None)
-    log.info(bid)
-    if bid is None:
-        log.info("bid error")
-        ui.navigate.to("/login")
-        return
-
-    activeId = app.storage.general.get("activeId", None)
-    if activeId is None:
-        log.info("active id is none")
-        ui.navigate.to("/login")
-        return
-
-    if activeId != bid:
-        log.info("active id != bid")
-        ui.navigate.to("/login")
-        return
 
 
 #'''
@@ -72,8 +38,8 @@ async def auth_middleware(request: Request, call_next):
     path = request.url.path
 
     bid = app.storage.browser.get("id")
-    activeId = app.storage.general.get("activeId")
-    if activeId and bid == activeId:
+    activeId = app.storage.general.get("activeId", None)
+    if activeId is not None and bid == activeId:
         return await call_next(request)
 
     # Allow unrestricted routes
@@ -89,128 +55,6 @@ async def auth_middleware(request: Request, call_next):
     return RedirectResponse("/login")
 
 
-@ui.refreshable
-def dateLabel():
-    try:
-        tz = app.storage.general.get("tz", "UTC")
-        tzObj = ZoneInfo(tz)
-        ui.label(
-            datetime.now().astimezone(tzObj).strftime("%m-%d-%Y %H:%M:%S")
-        ).classes("font-bold")
-    except RuntimeError:
-        log.info("date label refresh without parent?")
-    finally:
-        pass
-
-
-async def Clock():
-    try:
-        dateLabel()
-
-        async def SetTimeCb(e):
-            log.info(f"timezone change -> {e.value}")
-            await CallSetTimezone(e.value)
-            app.storage.general.update({"tz": e.value})
-
-        tzs = await CallListTimezones()
-        current_tz = await CallGetTimezone()
-        ui.select(tzs, with_input=True, value=current_tz, on_change=SetTimeCb).props(
-            "dense"
-        )
-    except RuntimeError:
-        log.info("clock without parent?")
-    finally:
-        pass
-
-
-@ui.page("/")
-@ui.page("/network")
-@ui.page("/system")
-@ui.page("/snmp")
-@ui.page("/terminal")
-@ui.page("/accounts")
-async def controlPanel():
-
-    current_tz = await CallGetTimezone()
-
-    app.storage.general.update({"tz": current_tz})
-
-    ui.timer(1.0, check_auth)
-    ui.timer(2.0, bridge_check)
-    date_timer = ui.timer(1.0, dateLabel.refresh)
-
-    init_colors()
-    with ui.header().classes("items-center justify-between").classes("bg-dark"):
-        ui.button(on_click=lambda: left_drawer.toggle(), icon="menu").props(
-            "flat color=white"
-        )
-        ui.image(str(ASSETS_DIR / "NOVUS_LOGO.svg")).classes("w-48")
-        ui.label(f"Welcome {app.storage.general.get("activeUser","error")}!")
-        with ui.row().classes("items-center no-wrap"):
-            await Clock()
-
-    with ui.left_drawer(bordered=True).classes("bg-dark") as left_drawer:
-
-        def nav(p):
-            ui.navigate.to(p)
-            left_drawer.hide()
-
-        ui.separator()
-        btnps = "flat color=white align=left"
-
-        ui.button("Status", on_click=lambda: nav("/")).props(btnps).classes("w-full")
-
-        ui.button("System", on_click=lambda: nav("/system")).props(btnps).classes(
-            "w-full"
-        )
-        ui.button("Network", on_click=lambda: nav("/network")).props(btnps).classes(
-            "w-full"
-        )
-        ui.button("SNMP", on_click=lambda: nav("/snmp")).props(btnps).classes("w-full")
-        ui.button("Accounts", on_click=lambda: nav("/accounts")).props(btnps).classes(
-            "w-full"
-        )
-        ui.button("Terminal", on_click=lambda: nav("/terminal")).props(btnps).classes(
-            "w-full"
-        )
-
-        ui.separator()
-
-        ui.button(
-            "Logout",
-            on_click=logout_cb,
-        ).props(
-            "flat color=negative align=left"
-        ).classes("full-width")
-    # Footer
-    with ui.footer().classes("bg-dark"):
-        ui.label(version("ns2"))
-
-    # widget_page()
-
-    ui.sub_pages(
-        {
-            "/": root_status_page,
-            "/system": system_page,
-            "/network": network_page,
-            # "/network/firewall": firewall_page,
-            # "/network/{interface_name}": interface_page,
-            "/snmp": snmp_page,
-            "/accounts": accounts_page,
-            "/terminal": terminal_page,
-        }
-    ).classes("w-full")
-
-
-# controlPanel(root_system_page)
-# controlPanel(network_page)
-# controlPanel(firewall_page)
-# controlPanel(interface_page)
-# controlPanel(snmp_page)
-# controlPanel(accounts_page)
-# controlPanel(terminal_page)
-
-
 production = True
 
 
@@ -219,6 +63,7 @@ async def LoadStatic():
     if active["state"]:
         await LoadFirewalldServiceInfo()
     await LoadSystemUnits()
+    await LoadTimeZones()
     app.storage.general.update({"activeUser": None, "activeId": None})
 
 

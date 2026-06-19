@@ -2,6 +2,7 @@ import asyncio
 
 from nicegui import app, ui
 from dbus_next import Message
+from ns2.ui.control_panel import controlPanel
 from ns2.utils import log, make_col_of, make_action_col
 
 from ns2.lib.accounts import GetUsers, SystemAccount
@@ -125,8 +126,9 @@ async def accounts_table():
             ).props("dense align=right")
 
 
+@ui.page("/accounts")
 async def accounts_page():
     """user page content"""
-
+    await controlPanel()
     await SetupNotifications()
     await accounts_table()

@@ -2,7 +2,8 @@ import asyncio
 from datetime import datetime
 import time
 from ns2.utils import log
-from nicegui import ui, app
+from nicegui import ui
+from ns2.ui.control_panel import controlPanel
 
 LastSeen = "last"
 Visible = "visible"
@@ -448,8 +449,11 @@ async def read_socket():
 SerialTask = None
 
 
+@ui.page("/")
 async def root_status_page():
     global SerialTask
+
+    await controlPanel()
 
     if SerialTask and SerialTask is not SerialTask.done():
         SerialTask.cancel()
