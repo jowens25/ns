@@ -10,4 +10,4 @@ Depends: ns-admin (= 2.0.33)
 Section: debug
 Priority: optional
 Description: debug symbols for ns-admin
-Build-Ids: b99279cd13c2358b20c03d3bb19792f18489a412
+Build-Ids: 92b2f1a02dbdfc22da72973c03c2da9a5c09555a

@@ -5,8 +5,8 @@ from dbus_next import Message
 from ns2.ui.control_panel import controlPanel
 from ns2.utils import log, make_col_of, make_action_col
 
-from ns2.lib.accounts import GetUsers, SystemAccount
-from ns2.lib.bridge import CanOpenDialog, GetBridge, BridgeCall, IsUserAdmin
+from ns2.lib.accounts import GetUsers
+from ns2.lib.bridge import GetBridge, BridgeCall, IsUserAdmin
 from ns2.ui.accountsDialogs import (
     addUserDialog,
     editDeleteUserDialog,

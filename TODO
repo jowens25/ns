@@ -4,16 +4,8 @@ OPEN ISSUES
 =================================================================================================================
 
 
-firewalld: add a label to show that they are allowed ports
-firewalld: 3 dot delete zone option not descriptive
-firewalld: public zone is not selectable once deleted on debian (considering just toggling active zone, instead of adding and removing zones)
-firewalld: cant add back public zone
-firewalld: users are unable to view zones - remove active zone number? make a table
 
-accounts: Make note of kickout on change password
-accounts: make it so users cant open an admins account dialog "editUserdialog"
 
-login: add "are you sure you want to" to reseting the default account
 
 add a factory "reset" that resets a few of the states of the programs...
 
@@ -57,7 +49,15 @@ asyncio.sleep() was not awaited....              -> added notification handler i
 
 string reader is cleaned up or not loading       -> restructed the root status page to better start and stop the socket reader
 accounts: edit user - not clear user only changing the password -> 
+firewalld: add label showing rows are allowed ports -> added label
+firewalld: 3 dot delete zone option not descriptive -> updated zone delete to be zone unbind and updated the way zones work...
+firewalld: public zone is not selectable once deleted on debian (considering just toggling active zone, instead of adding and removing zones) -> reworked zones. no we unbind and set whatever zone we want to the interface
+firewalld: cant add back public zone -> fixed with zone rework
+firewalld: users are unable to view zones - remove active zone number? make a table -> updated to show data but not allowing users to update
+accounts: Make note of kickout on change password -> done
 
+accounts: make it so users cant open an admins account dialog "editUserdialog" -> done
+login: add "are you sure you want to" to reseting the default account -> done
 =================================================================================================================
 EXCEPTIONS
 =================================================================================================================

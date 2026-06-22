@@ -416,7 +416,7 @@ def ProcessStrings(string: str):
 async def read_socket():
     writer = None
     try:
-        log.info("opening serial.sock")
+        # log.info("opening serial.sock")
         reader, writer = await asyncio.open_unix_connection("/var/lib/ns/serial.sock")
         while True:
             data = await reader.readline()
@@ -442,8 +442,8 @@ async def read_socket():
                 await writer.wait_closed()
                 writer = None
 
-            log.info("cleaned up writer")
-        log.info("cleaned up serial socket task")
+            # log.info("cleaned up writer")
+        # log.info("cleaned up serial socket task")
 
 
 SerialTask = None

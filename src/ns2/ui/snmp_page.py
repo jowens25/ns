@@ -1,20 +1,17 @@
 import asyncio
 
 from nicegui import ui
-from dataclasses import asdict
 
 from ns2.ui.control_panel import controlPanel
 from ns2.utils import (
     ASSETS_DIR,
     log,
-    validate_group,
     make_col_of,
-    add_header_slot,
     make_action_col,
 )
 from dbus_next import Message
 from ns2.lib.bridge import BridgeCall, GetBridge
-from ns2.lib.systemd1 import isActive, SystemdStop, SystemdStart, SystemdRestart
+from ns2.lib.systemd1 import isActive, SystemdStop, SystemdStart
 
 from ns2.lib.snmp import are_you_sure_you_want_to
 

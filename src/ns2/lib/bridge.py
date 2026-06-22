@@ -1,7 +1,4 @@
 import asyncio
-import os
-import sys
-from nicegui import app
 
 from dbus_next import Message
 from dbus_next.constants import BusType
@@ -127,7 +124,7 @@ async def BridgeCall(
 
         return rsp
     except EOFError as e:
-        log.info("EOFError: Bridge closed")
+        log.info(f"EOFError: Bridge closed: {e}")
 
         await CleanupBridge()
 

@@ -3,7 +3,6 @@ from ns2.lib.bridge import CanOpenDialog
 from ns2.lib.networking import (
     GetInterfacesAndAddresses,
     InterfaceData,
-    GetDeviceByIpIface,
     GetNmProp,
     GetInterfaceData,
     GetSettings,

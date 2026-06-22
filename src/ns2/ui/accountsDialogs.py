@@ -1,15 +1,14 @@
-import asyncio
 import inspect
 from typing import Optional
 
-from nicegui import ui, binding, app
+from nicegui import ui, binding
 
-from ns2.lib.bridge import BridgeCall, CallPamAuthenticate, CanOpenDialog
+from ns2.lib.bridge import BridgeCall
 
 from dbus_next.signature import Variant
 from dbus_next import Message
 
-from ns2.ui.login import logout_cb
+
 from ns2.utils import log
 
 from ns2.lib.accounts import ValidatePassword, UserExists
@@ -41,7 +40,7 @@ async def editDeleteUserDialog(username):
     with ui.dialog() as dialog, ui.card().classes("w-full").props("flat"):
         with ui.column().classes("w-full"):
             ui.label("Update password").classes("text-h5")
-
+            ui.label("Note: Updating active account will trigger logout")
             # userfield = (
             #    ui.input("username")
             #    .bind_value(user, "Username")
@@ -98,7 +97,7 @@ async def editDeleteUserDialog(username):
                         rsp = await EditUser(user)
 
                         if rsp.error_name is not None:
-                            if not "bridge" in rsp.body[0]:
+                            if "bridge" not in rsp.body[0]:
                                 ui.notify(rsp.body[0])
                             else:
                                 ui.notify("User will be logged out", type="warning")
@@ -346,7 +345,7 @@ async def addUserDialog():
                     if rsp.error_name is not None:
                         ui.notify(rsp.body[0])
                     else:
-                        ui.notify(rsp, type="positive")
+                        ui.notify(rsp.body[0], type="positive")
                         dialog.close()
 
                 else:

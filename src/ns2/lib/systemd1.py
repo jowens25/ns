@@ -1,6 +1,6 @@
 import asyncio
 from dbus_next.signature import Variant
-from ns2.lib.bridge import BridgeCall, BusCall, GetBridge
+from ns2.lib.bridge import BusCall, GetBridge
 from ns2.utils import log
 import dbus_next.errors
 

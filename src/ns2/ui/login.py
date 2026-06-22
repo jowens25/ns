@@ -3,7 +3,6 @@ from ns2.ui.theme import init_colors
 from ns2.utils import ASSETS_DIR
 from ns2.lib.bridge import BusCall, CallPamAuthenticate
 from ns2.lib.bridge import SetupBridge, CleanupBridge
-import uuid
 from ns2.utils import log
 
 
@@ -46,29 +45,44 @@ async def try_login(_username: str, _password: str) -> None:
         ui.notify("Invalid username or password", color="negative")
 
 
+def are_you_sure_you_want_to(action_message: str) -> bool:
+    with ui.dialog() as dialog, ui.card().props("flat"):
+        ui.label(f"Are you sure you want to {action_message}")
+
+        with ui.row():
+            ui.button("Yes", on_click=lambda: dialog.submit(True)).props("flat")
+            ui.button("No", on_click=lambda: dialog.submit(False)).props("flat")
+    return dialog
+
+
 # @ui.page("/{_:path}")
 @ui.page("/login")
 async def login_page():
     # log.info("LOGIN PAGE LOADED")
 
     async def reset_cb():
-        rsp = await BusCall(
-            destination="com.novus.ns",
-            path="/com/novus/ns",
-            interface="com.novus.ns.accounts",
-            member="SetupDefaultUser",
-            signature="",
-            body=[],
-        )
 
-        if rsp.error_name is not None:
-            ui.notify(rsp.body[0], type="warning")
-        elif len(rsp.body) > 0:
-            ui.notify(rsp.body[0], type="positive")
-        support_dialog.close()
+        result = await are_you_sure_you_want_to("reset the default account?")
+        if result:
+            rsp = await BusCall(
+                destination="com.novus.ns",
+                path="/com/novus/ns",
+                interface="com.novus.ns.accounts",
+                member="SetupDefaultUser",
+                signature="",
+                body=[],
+            )
+
+            if rsp.error_name is not None:
+                ui.notify(rsp.body[0], type="warning")
+            elif len(rsp.body) > 0:
+                ui.notify(rsp.body[0], type="positive")
+            support_dialog.close()
+        else:
+            support_dialog.close()
 
     init_colors()
-    with ui.dialog() as support_dialog, ui.card():
+    with ui.dialog() as support_dialog, ui.card().props("flat"):
         ui.label("Novus Power Products").classes("text-h5")
         ui.label("novuspower.com")
         ui.label("(816) 836-7446")

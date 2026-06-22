@@ -9,7 +9,6 @@ from ns2.ui.control_panel import LoadTimeZones
 from ns2.utils import ASSETS_DIR, log
 
 from ns2.ui.login import login_page
-
 from ns2.ui.status_page import root_status_page
 from ns2.ui.system_page import system_page
 from ns2.ui.networking_page import network_page

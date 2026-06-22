@@ -1,12 +1,13 @@
-import asyncio
+from dbus_next import Message
 
 from nicegui import ui, app
-from ns2.lib.bridge import CanOpenDialog
+from ns2.lib.bridge import IsUserAdmin
 from ns2.lib.firewalld import (
     FirewallInfo,
+    GetDefaultAndBoundZones,
+    IsDefaultZone,
     ZoneInfo,
     zoneDescriptionMap,
-    GetActiveZones,
     zoneRemoveService,
     GetZoneByName,
     zoneConfigRemoveService,
@@ -16,19 +17,15 @@ from ns2.lib.firewalld import (
     getServicesInfo,
     GetSelectableZones,
     GetAvailableInterfaces,
-    AddZone,
     MakeZoneInfo,
     GetZoneSettings2,
-    GetSettings2,
     GetServiceSettings2,
     RemoveZone,
     ConfigureZone,
 )
 
 
-from dbus_next.errors import DBusError
 from dbus_next.signature import Variant
-from ns2.lib.snmp import are_you_sure_you_want_to
 from ns2.lib.systemd1 import isActive, SystemdStart, SystemdStop
 from ns2.common import formatListToString, formatStringToList
 from ns2.lib.systemd1 import GetServiceState
@@ -60,17 +57,21 @@ async def firewall_status():
                         ui.button(
                             f"{action}", on_click=lambda: dialog.submit(action)
                         ).props("flat color=accent align=left")
+
                 result = await dialog
+
                 active = (await isActive("firewalld.service")).get("state", False)
                 if result == "enable" and not active:
                     err = await SystemdStart("firewalld.service")
                     if err:
                         ui.notify(err, type="warning")
+                    firewall_status.refresh()
+
                 if result == "disable" and active:
                     err = await SystemdStop("firewalld.service")
                     if err:
                         ui.notify(err, type="warning")
-                await firewall_status.refresh()
+                    firewall_status.refresh()
 
             ui.switch(f"Status: {firewallInfo.Status}").on(
                 "click", lambda e: fire_switch_cb(e)
@@ -78,7 +79,7 @@ async def firewall_status():
                 firewallInfo.Enable, "state"
             )
 
-        ui.button("Configure firewall", on_click=dialog.open).props("color=accent")
+        ui.button("Configure firewall", on_click=dialog.open).props("flat")
 
 
 def InterfaceText(interfaces):
@@ -100,33 +101,42 @@ def AllowedAddressText(sources):
     return (l1, l2)
 
 
-async def removeServiceFromZone(zoneName: str, serviceName: str):
+async def removeServiceFromZone(zoneName: str, serviceName: str) -> Message:
 
     log.info(f"remove {serviceName} from {zoneName}")
-    res = await zoneRemoveService(zoneName, serviceName)
-    log.info(f"res1: {res}")
-    p = await GetZoneByName(zoneName)
-    log.info(f"zone path: {p}")
-    res = await zoneConfigRemoveService(p, serviceName)
-    log.info(f"zone config remove service rsp: {res}")
-    return f"removed {serviceName} from {zoneName}"
+
+    rsp = await zoneRemoveService(zoneName, serviceName)
+    if rsp.error_name is not None:
+        return rsp
+
+    rsp = await GetZoneByName(zoneName)
+    if rsp.error_name is not None:
+        return rsp
+    p = rsp.body[0]
+
+    rsp = await zoneConfigRemoveService(p, serviceName)
+    if rsp.error_name is not None:
+        return rsp
+    return rsp
 
 
-async def addServiceToZone(zoneName: str, serviceName: str):
+async def addServiceToZone(zoneName: str, serviceName: str) -> Message:
 
-    try:
-        log.info(f"add {serviceName} to {zoneName}")
-        res = await zoneAddService(zoneName, serviceName)
-        log.info(f"res1: {res}")
-        p = await GetZoneByName(zoneName)
-        log.info(f"zone path: {p}")
-        res = await zoneConfigAddService(p, serviceName)
-        log.info(f"zone config add service rsp: {res}")
+    log.info(f"add {serviceName} to {zoneName}")
+    rsp = await zoneAddService(zoneName, serviceName)
+    if rsp.error_name is not None:
+        return rsp
 
-    except DBusError as e:
-        return e
+    rsp = await GetZoneByName(zoneName)
+    if rsp.error_name is not None:
+        return rsp
+    p = rsp.body[0]
 
-    return f"added {serviceName} to {zoneName}"
+    rsp = await zoneConfigAddService(p, serviceName)
+    if rsp.error_name is not None:
+        return rsp
+
+    return rsp
 
 
 serviceInfos = {}
@@ -223,9 +233,7 @@ async def configureZoneDialog():
                 zone_description = ui.label()
 
             with ui.column():
-                zoneSelection = ui.radio(
-                    await GetSelectableZones(), value="external"
-                ).props("dense")
+                zoneSelection = ui.radio(await GetSelectableZones()).props("dense")
                 zone_description.bind_text_from(
                     zoneSelection, "value", backward=lambda e: zoneDescriptionMap[e]
                 )
@@ -260,9 +268,15 @@ async def configureZoneDialog():
 
             async def on_save_cb():
                 addresses = []
+                log.info(f"interfaces: {interfaces}")
+
                 for c, v in interfaces.items():
                     if v:
                         selected_interfaces.append(c)
+                if len(selected_interfaces) <= 0:
+                    ui.notify("Please select an interface to bind", type="warning")
+                    return
+
                 if addressSelection.value == "Range":
                     addresses = formatStringToList(addr.value)
                 log.info(f"addresses: {addresses}")
@@ -293,14 +307,30 @@ async def addServiceDialog(zoneName):
             tab = await serviceSelectionTable()
 
             async def on_add_cb():
+                activeUser = app.storage.general.get("activeUser", "error")
+
+                rsp = await IsUserAdmin(activeUser)
+                if rsp.error_name is not None:
+                    ui.notify(rsp.body[0])
+                    return
+
+                if not rsp.body[0]:
+                    ui.notify("must be an admin to add services")
+                    return
+
                 log.info(tab.selected)
                 for service in tab.selected:
                     serviceName = service["Service"]
                     rsp = await addServiceToZone(zoneName, serviceName)
+                    if rsp.error_name is not None:
+                        ui.notify(rsp.body[0], type="warning")
+                        return
+                    else:
+                        ui.notify(f"{serviceName} added to {zoneName}", type="positive")
                     await zoneServicesTable.refresh()
                 dialog.close()
 
-                ui.notify(rsp)
+                # ui.notify(rsp)
 
             with ui.row():
                 ui.button("Add", on_click=on_add_cb).props("color=accent align=left")
@@ -342,8 +372,12 @@ async def zoneServicesTable(zoneName: str):
 
     async def handle_remove_service(e, zone=zoneName):
         rsp = await removeServiceFromZone(zone, e.args)
+        if rsp.error_name is not None:
+            ui.notify(rsp.body[0], type="warning")
+            return
+        else:
+            ui.notify(f"{e.args} removed from {zone}")
         await zoneServicesTable.refresh()
-        ui.notify(rsp)
 
     service_table.on("remove-service", handle_remove_service)
 
@@ -364,7 +398,7 @@ async def zoneServicesTable(zoneName: str):
             <q-btn flat round dense icon="more_vert" color="accent">
                 <q-menu auto-close>
                     <q-list style="min-width: 150px">
-                        <q-item clickable
+                        <q-item clickable flat
                             @click="$parent.$emit('remove-service', props.row.Service)">
                             <q-item-section class="text-negative">
                                 Remove from zone
@@ -391,7 +425,7 @@ async def zoneServicesTable(zoneName: str):
 
 def are_you_sure(z):
     with ui.dialog() as dialog, ui.card().props("flat"):
-        ui.label(f"Are you sure you want to remove {z}?")
+        ui.label(f"Are you sure you want to unbind the {z} zone?")
         with ui.row():
             ui.button("Yes", on_click=lambda: dialog.submit(True)).props("flat")
             ui.button("No", on_click=lambda: dialog.submit(False)).props("flat")
@@ -401,24 +435,24 @@ def are_you_sure(z):
 @ui.refreshable
 async def zone_list():
 
-    ui.label("Active Zones: ").classes("text-h6")
+    ui.label("Default and Bound Zones: ").classes("text-h6")
 
     with ui.column():
         if await isActive("firewalld.service"):
-            for zoneName in await GetActiveZones():
+            for zoneName in await GetDefaultAndBoundZones():
 
-                # zonePath = await GetZoneByName(zoneName)
-                # settings = await GetSettings2(zonePath)
                 settings = await GetZoneSettings2(zoneName)
-                log.info("ZONE SETTINGS 2")
+                settings["isDefault"] = await IsDefaultZone(zoneName)
                 interfaces = settings.get(
-                    "interfaces", Variant("as", ["fallback zone"])
+                    "interfaces", Variant("as", ["unbound"])
                 ).value
                 sources = settings.get("sources", Variant("as", [])).value
 
                 with ui.card().classes("w-full").props("flat").classes("bg-secondary"):
                     with ui.column():
+
                         with ui.row().classes("w-full items-baseline justify-between"):
+
                             with ui.row().classes("items-baseline"):
                                 ui.label(f"{zoneName.capitalize()} zone")
                                 InterfaceText(interfaces)
@@ -434,22 +468,44 @@ async def zone_list():
 
                                 ui.button(
                                     "add services", on_click=open_service_dialog
-                                ).props("color=accent align=left")
+                                ).props("flat align=left")
 
                                 async def remove_zone_cb(z=zoneName):
+                                    activeUser = app.storage.general.get(
+                                        "activeUser", "error"
+                                    )
+
+                                    rsp = await IsUserAdmin(activeUser)
+                                    if rsp.error_name is not None:
+                                        ui.notify(rsp.body[0])
+                                        return
+
+                                    if not rsp.body[0]:
+                                        ui.notify("must be an admin to unbind a zone")
+                                        return
+
                                     result = await are_you_sure(z)
 
                                     if result:
 
                                         rsp = await RemoveZone(z)
                                         if rsp.error_name is not None:
-                                            ui.notify(rsp.body[0])
+                                            ui.notify(rsp.body[0], type="warning")
                                         else:
-                                            ui.notify("zone removed", type="positive")
+                                            ui.notify("zone unbound", type="positive")
 
-                                ui.button(
-                                    icon="more_vert", on_click=remove_zone_cb
-                                ).props("flat")
+                                ui.button("unbind", on_click=remove_zone_cb).props(
+                                    "flat"
+                                )
+
+                        with ui.row():
+                            ui.label("Default zone:").classes(
+                                "font-bold"
+                            ).bind_visibility_from(settings, "isDefault")
+
+                            ui.label(
+                                "If no other zone is bound to the interface then these rules apply"
+                            ).bind_visibility_from(settings, "isDefault")
 
                     await zoneServicesTable(zoneName)
 

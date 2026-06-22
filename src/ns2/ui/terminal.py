@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-from nicegui import events, ui, app
+from nicegui import events, ui
 import asyncio
 
 from ns2.ui.control_panel import controlPanel

@@ -47,10 +47,10 @@ def validate_group(group: list):
     return [x.validate() for x in group]
 
 
-def make_col_of(l: str, label: str | None = None) -> dict:
+def make_col_of(lab: str, label: str | None = None) -> dict:
     if label:
-        return {"name": l, "label": label, "field": l}
-    return {"name": l, "label": l, "field": l}
+        return {"name": lab, "label": label, "field": lab}
+    return {"name": lab, "label": lab, "field": lab}
 
 
 def make_action_col() -> dict:
