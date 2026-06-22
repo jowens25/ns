@@ -1,4 +1,4 @@
-ns-admin (2.0.33) UNRELEASED; urgency=medium
+ns-admin (2.0.35) UNRELEASED; urgency=medium
   [ jowens ]
   * pkg name
   * restructed a bit, added go utils
@@ -25,8 +25,10 @@ ns-admin (2.0.33) UNRELEASED; urgency=medium
   * reduced cli entry points
   * login issue resolved 
   * added default user
+  * added reset config cmd
+  * rev bump
 
- -- jowens <jowens@jowens>  Fri, 12 Jun 2026 15:21:14 -0500
+ -- jowens <jowens@jowens>  Mon, 22 Jun 2026 13:07:52 -0500
 
 ns2-dev (2.0.8) UNRELEASED; urgency=medium
 

@@ -47,3 +47,25 @@ func (p *PamInterface) Authenticate(username string, password string) (bool, *db
 	return true, nil
 
 }
+
+func (p *PamInterface) ResetDefaultConfig(sender dbus.Sender, message dbus.Message) *dbus.Error {
+
+	if isAuthorized := CheckAuthorization(sender, GetActionId(message)); !isAuthorized {
+		return &dbus.Error{
+			Name: "org.freedesktop.DBus.Error.AccessDenied",
+			Body: []any{"Not authorized to factory reset"},
+		}
+	}
+
+	err := FactoryReset()
+
+	if err != nil {
+		return &dbus.Error{
+			Name: "org.freedesktop.DBus.Error",
+			Body: []any{err.Error()},
+		}
+	}
+
+	return nil
+
+}

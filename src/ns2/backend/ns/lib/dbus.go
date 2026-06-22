@@ -28,6 +28,8 @@ func Call(destination string, path dbus.ObjectPath, method string, args []any) (
 
 	call := obj.Call(method, 0, args...)
 
+	fmt.Println(method)
+
 	err = call.Store(&result)
 	if err != nil {
 		return nil, err
@@ -36,6 +38,20 @@ func Call(destination string, path dbus.ObjectPath, method string, args []any) (
 
 }
 
+func CallReturnBody(destination string, path dbus.ObjectPath, method string, args []any) (any, error) {
+	conn, err := dbus.SystemBus()
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
+
+	obj := conn.Object(destination, path)
+
+	call := obj.Call(method, 0, args...)
+
+	return call.Body, nil
+
+}
 func MakeDbusCall(conn *dbus.Conn, call DbusCall) (any, any, error) {
 
 	var result any

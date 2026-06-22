@@ -27,4 +27,11 @@ polkit.addRule(function(action, subject) {
             return polkit.Result.YES;
         }
     }
+    
+    if (action.id == "com.novus.ns.pam.ResetDefaultConfig") {
+        if (subject.isInGroup("nsadmin")) {
+            return polkit.Result.YES;
+        }
+        return polkit.Result.NO;
+    }
 });
