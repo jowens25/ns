@@ -142,6 +142,15 @@ ChannelFaultBin = "Channel Fault Bin"
 PrimaryPCBAmpStatus = "Primary PCB Amp Status"
 BackupPCBAmpStatus = "Backup PCB Amp Status"
 
+
+SatsInView = "Satelites In View"
+ErrorByte = "Error Byte"
+FreqDiff = "Frequency Difference"
+PPSDiff = "PPS Difference"
+FreqCorrectionSlice = "Frequency Correction Slice"
+DACValue = "DAC Value"
+
+
 string6Map = {
     LastSeen: 0,
     Visible: False,
@@ -156,6 +165,22 @@ string6Map = {
     ChannelFaultBin: "",
     PrimaryPCBAmpStatus: "",
     BackupPCBAmpStatus: "",
+}
+
+string7Map = {
+    LastSeen: 0,
+    Visible: False,
+    Time: "",
+    Date: "",
+    GNSSLock: "",
+    SatsInView: "",
+    ErrorByte: "",
+    FreqDiff: "",
+    PPSDiff: "",
+    FreqCorrectionSlice: "",
+    DACValue: "",
+    Ps1: "",
+    Ps2: "",
 }
 
 
@@ -347,16 +372,35 @@ def parseString6(string: str):
         string6Map[BackupPCBAmpStatus] = fields[12]
 
 
+def parseString7(string: str):
+    string7Map[LastSeen] = time.monotonic()
+    string = string.split("*")[0]
+    fields = string.split(",")
+
+    if len(fields) >= 13:
+        string7Map[Visible] = True
+        string7Map[Time] = parseTime(fields[2])
+        string7Map[Date] = parseDate(fields[3])
+        string7Map[GNSSLock] = parseGps(fields[4])
+        string7Map[SatsInView] = parseSats(fields[5])
+        string7Map[ErrorByte] = fields[6]
+        string7Map[FreqDiff] = fields[7]
+        string7Map[PPSDiff] = fields[8]
+        string7Map[FreqCorrectionSlice] = fields[9]
+        string7Map[DACValue] = fields[10]
+        string7Map[Ps1] = fields[11]
+        string7Map[Ps2] = fields[12]
+
+
 def StringViewer(label: str, data: dict):
 
+    # print(data)
     with ui.card().props("flat").bind_visibility_from(data, "visible"):
 
         with ui.row().props("dense"):
-            # ui.label(label).classes("text-h6")
             for key, val in data.items():
                 if key in ["last", "visible"]:
                     continue
-
                 with (
                     ui.column(align_items="start")
                     .classes("gap-0")
@@ -366,14 +410,6 @@ def StringViewer(label: str, data: dict):
                     ui.label().bind_text_from(data, key).props("dense")
 
                 col.bind_visibility_from(data, key, backward=lambda v: v != "")
-
-
-string7 = {"value": None}
-
-
-def parseString7(string: str):
-    global string7
-    string7["value"] = string
 
 
 def ProcessStrings(string: str):
@@ -390,8 +426,8 @@ def ProcessStrings(string: str):
         parseString5(string)
     if string.startswith("$GPNVS,6,"):
         parseString6(string)
-
     if string.startswith("$GPNVS,7,"):
+        # print(string)
         parseString7(string)
 
     if string1Map[LastSeen] + 5.0 <= time.monotonic():
@@ -412,12 +448,16 @@ def ProcessStrings(string: str):
     if string6Map[LastSeen] + 5.0 <= time.monotonic():
         string6Map[Visible] = False
 
+    if string7Map[LastSeen] + 5.0 <= time.monotonic():
+        string7Map[Visible] = False
+
 
 async def read_socket():
     writer = None
     try:
-        # log.info("opening serial.sock")
-        reader, writer = await asyncio.open_unix_connection("/var/lib/ns/serial.sock")
+        log.info("opening serial.sock")
+        # reader, writer = await asyncio.open_unix_connection("/var/lib/ns/serial.sock")
+        reader, writer = await asyncio.open_connection(host="10.1.10.201", port="8080")
         while True:
             data = await reader.readline()
             if not data:
@@ -442,8 +482,8 @@ async def read_socket():
                 await writer.wait_closed()
                 writer = None
 
-            # log.info("cleaned up writer")
-        # log.info("cleaned up serial socket task")
+            log.info("cleaned up writer")
+        log.info("cleaned up serial socket task")
 
 
 SerialTask = None
@@ -461,15 +501,18 @@ async def root_status_page():
     SerialTask = asyncio.create_task(read_socket())
 
     ui.label("Status Strings").classes("text-h5")
-    ui.label("string 7:")
-    ui.label().bind_text_from(string7, "value")
+    # ui.label("string 7:")
+    # ui.label().bind_text_from(string7, "value")
     with ui.tabs().classes("w-full").props("align=left") as tabs:
         ch1 = ui.tab("Channels 1-8").bind_visibility_from(string2Map, "visible")
         ch2 = ui.tab("Channels 9-16").bind_visibility_from(string4Map, "visible")
         fb = ui.tab("Fault Bytes").bind_visibility_from(string1Map, "visible")
         ps = ui.tab("Power Supplies").bind_visibility_from(string3Map, "visible")
         sen = ui.tab("Sensors").bind_visibility_from(string5Map, "visible")
-        stat = ui.tab("Status Bytes").bind_visibility_from(string6Map, "visible")
+        stat = ui.tab("Status Bytes, Standard").bind_visibility_from(
+            string6Map, "visible"
+        )
+        statBytes = ui.tab("Status Bytes").bind_visibility_from(string7Map, "visible")
     with ui.tab_panels(tabs, value=ch1).classes("w-full"):
 
         with ui.tab_panel(ch1):
@@ -483,11 +526,14 @@ async def root_status_page():
         with ui.tab_panel(sen):
             StringViewer("Sensors", string5Map)
         with ui.tab_panel(stat):
-            StringViewer("Status Bytes", string6Map)
+            StringViewer("Status Bytes, Standard", string6Map)
+        with ui.tab_panel(statBytes):
+            StringViewer("Status Bytes", string7Map)
 
     def serial_connect_cb():
         global SerialTask
         if SerialTask is None or SerialTask.done():
+            log.info("created new reader")
             SerialTask = asyncio.create_task(read_socket())
 
     ui.timer(2.0, serial_connect_cb)
