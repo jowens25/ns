@@ -28,26 +28,24 @@
 #include "ftd2xx.h"
 #include "libft4222.h"
 
-
-
 static void showVersion(DWORD locationId)
 {
-    FT_STATUS            ftStatus;
-    FT_HANDLE            ftHandle = (FT_HANDLE)NULL;
-    FT4222_STATUS        ft4222Status;
-    FT4222_Version       ft4222Version;
+    FT_STATUS ftStatus;
+    FT_HANDLE ftHandle = (FT_HANDLE)NULL;
+    FT4222_STATUS ft4222Status;
+    FT4222_Version ft4222Version;
 
-    ftStatus = FT_OpenEx((PVOID)(uintptr_t)locationId, 
-                         FT_OPEN_BY_LOCATION, 
+    ftStatus = FT_OpenEx((PVOID)(uintptr_t)locationId,
+                         FT_OPEN_BY_LOCATION,
                          &ftHandle);
     if (ftStatus != FT_OK)
     {
-        printf("FT_OpenEx failed (error %d)\n", 
+        printf("FT_OpenEx failed (error %d)\n",
                (int)ftStatus);
         return;
     }
 
-    // Get version of library and chip.    
+    // Get version of library and chip.
     ft4222Status = FT4222_GetVersion(ftHandle,
                                      &ft4222Version);
     if (FT4222_OK != ft4222Status)
@@ -60,31 +58,42 @@ static void showVersion(DWORD locationId)
         printf("  Chip version: %08X, LibFT4222 version: %08X\n",
                (unsigned int)ft4222Version.chipVersion,
                (unsigned int)ft4222Version.dllVersion);
+
+        ft4222Status = FT4222_ChipReset(ftHandle);
+
+        if (FT4222_OK == ft4222Status)
+        {
+
+            printf("Chip has been reset");
+        }
+        else
+        {
+
+            printf("chip reset failed");
+        }
     }
 
     (void)FT_Close(ftHandle);
 }
 
-
-
-int main (void)
+int main(void)
 {
-    FT_STATUS                 ftStatus;
+    FT_STATUS ftStatus;
     FT_DEVICE_LIST_INFO_NODE *devInfo = NULL;
-    DWORD                     numDevs = 0;
-    int                       i;
-    int                       retCode = 0;
-    int                       found4222 = 0;
-    
+    DWORD numDevs = 0;
+    int i;
+    int retCode = 0;
+    int found4222 = 0;
+
     ftStatus = FT_CreateDeviceInfoList(&numDevs);
-    if (ftStatus != FT_OK) 
+    if (ftStatus != FT_OK)
     {
-        printf("FT_CreateDeviceInfoList failed (error code %d)\n", 
+        printf("FT_CreateDeviceInfoList failed (error code %d)\n",
                (int)ftStatus);
         retCode = -10;
         goto exit;
     }
-    
+
     if (numDevs == 0)
     {
         printf("No devices connected.\n");
@@ -101,7 +110,7 @@ int main (void)
         retCode = -30;
         goto exit;
     }
-    
+
     /* Populate the list of info nodes */
     ftStatus = FT_GetDeviceInfoList(devInfo, &numDevs);
     if (ftStatus != FT_OK)
@@ -112,16 +121,16 @@ int main (void)
         goto exit;
     }
 
-    for (i = 0; i < (int)numDevs; i++) 
+    for (i = 0; i < (int)numDevs; i++)
     {
-        if (devInfo[i].Type == FT_DEVICE_4222H_0  ||
+        if (devInfo[i].Type == FT_DEVICE_4222H_0 ||
             devInfo[i].Type == FT_DEVICE_4222H_1_2)
         {
             // In mode 0, the FT4222H presents two interfaces: A and B.
             // In modes 1 and 2, it presents four interfaces: A, B, C and D.
 
             size_t descLen = strlen(devInfo[i].Description);
-            
+
             if ('A' == devInfo[i].Description[descLen - 1])
             {
                 // Interface A may be configured as an I2C master.
@@ -135,13 +144,13 @@ int main (void)
                 // Interface B, C or D.
                 // No need to repeat version info of same chip.
             }
-            
+
             found4222++;
         }
-         
+
         if (devInfo[i].Type == FT_DEVICE_4222H_3)
         {
-            // In mode 3, the FT4222H presents a single interface.  
+            // In mode 3, the FT4222H presents a single interface.
             printf("\nDevice %d: '%s'\n",
                    i,
                    devInfo[i].Description);
