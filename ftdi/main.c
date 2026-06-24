@@ -58,6 +58,19 @@ static void showVersion(DWORD locationId)
         printf("  Chip version: %08X, LibFT4222 version: %08X\n",
                (unsigned int)ft4222Version.chipVersion,
                (unsigned int)ft4222Version.dllVersion);
+
+        ft4222Status = FT4222_ChipReset(ftHandle);
+
+        if (FT4222_OK == ft4222Status)
+        {
+
+            printf("Chip has been reset");
+        }
+        else
+        {
+
+            printf("chip reset failed");
+        }
     }
 
     (void)FT_Close(ftHandle);
