@@ -1,0 +1,42 @@
+
+Added host mode to USB.
+
+gpiochip0: GPIOs 0-31, parent: platform/30200000.gpio, 30200000.gpio:
+gpio-0   (                    |spi0 CS0            ) out hi ACTIVE LOW
+gpio-1   (                    |lpc4078_rst         ) out lo 
+gpio-3   (                    |pendown             ) in  hi ACTIVE LOW
+gpio-6   (                    |lpc4337_rst         ) out lo 
+gpio-7   (                    |mux_sel_0           ) out hi 
+gpio-8   (                    |lpc812ext_isp       ) out lo 
+gpio-9   (                    |PHY reset           ) out hi ACTIVE LOW
+gpio-10  (                    |cd                  ) in  lo ACTIVE LOW
+gpio-11  (                    |lpc4337_isp         ) out lo 
+gpio-12  (                    |lpc4078_isp         ) out lo 
+gpio-13  (                    |mux_sel_2           ) out hi 
+gpio-14  (                    |fpga_por            ) out lo 
+gpio-15  (                    |fpgapwr_en          ) out lo
+
+gpiochip1: GPIOs 32-63, parent: platform/30210000.gpio, 30210000.gpio:
+gpio-41  (                    |regulator-eth-phy   ) out hi 
+gpio-42  (                    |reset               ) out lo ACTIVE LOW
+gpio-43  (                    |enable              ) out hi 
+gpio-51  (                    |spi0 CS1            ) out hi ACTIVE LOW
+gpio-52  (                    |reset               ) out lo ACTIVE LOW
+
+gpiochip2: GPIOs 64-95, parent: platform/30220000.gpio, 30220000.gpio:
+
+gpiochip3: GPIOs 96-127, parent: platform/30230000.gpio, 30230000.gpio:
+gpio-118 (                    |regulator-usdhc2    ) out lo 
+gpio-124 (                    |lpc812rb_isp        ) out lo
+
+gpiochip4: GPIOs 128-159, parent: platform/30240000.gpio, 30240000.gpio:
+gpio-130 (                    |lpc812ext_rst       ) out lo 
+gpio-142 (                    |scl                 ) out lo 
+gpio-143 (                    |sda                 ) in  lo 
+gpio-144 (                    |scl                 ) out lo 
+gpio-145 (                    |sda                 ) in  lo 
+gpio-146 (                    |scl                 ) out lo 
+gpio-147 (                    |sda                 ) in  lo 
+gpio-148 (                    |scl                 ) out lo 
+gpio-149 (                    |sda                 ) in  lo 
+gpio-152 (                    |lpc812rb_rst        ) out lo 

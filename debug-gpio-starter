@@ -1,0 +1,28 @@
+gpiochip0: GPIOs 0-31, parent: platform/30200000.gpio, 30200000.gpio:
+gpio-0   (                    |spi0 CS1            ) out hi ACTIVE LOW
+gpio-3   (                    |pendown             ) in  hi ACTIVE LOW
+gpio-9   (                    |PHY reset           ) out hi ACTIVE LOW
+gpio-10  (                    |cd                  ) in  lo ACTIVE LOW
+gpio-14  (                    |spi0 CS0            ) out hi ACTIVE LOW
+
+gpiochip1: GPIOs 32-63, parent: platform/30210000.gpio, 30210000.gpio:
+gpio-41  (                    |regulator-eth-phy   ) out hi 
+gpio-43  (                    |enable              ) out hi 
+gpio-44  (                    |microchip,rx-int    ) in  lo ACTIVE LOW
+gpio-51  (                    |spi0 CS2            ) out hi ACTIVE LOW
+
+gpiochip2: GPIOs 64-95, parent: platform/30220000.gpio, 30220000.gpio:
+
+gpiochip3: GPIOs 96-127, parent: platform/30230000.gpio, 30230000.gpio:
+gpio-118 (                    |regulator-usdhc2    ) out lo 
+
+gpiochip4: GPIOs 128-159, parent: platform/30240000.gpio, 30240000.gpio:
+gpio-142 (                    |scl                 ) out lo 
+gpio-143 (                    |sda                 ) in  lo 
+gpio-144 (                    |scl                 ) out lo 
+gpio-145 (                    |sda                 ) in  lo 
+gpio-146 (                    |scl                 ) out lo 
+gpio-147 (                    |sda                 ) in  lo 
+gpio-148 (                    |scl                 ) out lo 
+gpio-149 (                    |sda                 ) in  lo 
+root@imx8mn-var-som:~# 
