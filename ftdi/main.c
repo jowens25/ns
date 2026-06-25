@@ -148,12 +148,12 @@ int main(int argc, char *argv[])
 
     if (strncmp("read", argv[1], 4) == 0)
     {
-        f = fopen(argv[2], "rb");
+        f = fopen(argv[2], "wb");
         read = 1;
     }
     else if (strncmp("write", argv[1], 5) == 0)
     {
-        f = fopen(argv[2], "wb");
+        f = fopen(argv[2], "rb");
         write = 1;
     }
     else
