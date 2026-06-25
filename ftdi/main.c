@@ -1,169 +1,187 @@
-/* Minimal program to link to LibFT4222.
- * Displays library and chip version numbers.
- *
- * Windows instructions:
- *  1. Copy ftd2xx.h and ftd2xx.lib from driver package to current directory.
- *  2. Build with MSVC:   cl i2cm.c LibFT4222.lib ftd2xx.lib
- *       or
- *     Build with MinGW:  gcc i2cm.c LibFT4222.lib ftd2xx.lib
- *  3. get-version.exe
- *
- * Linux instructions:
- *  1. Ensure libft4222.so is in the library search path (e.g. /usr/local/lib)
- *  2. Ensure libft4222.h, ftd2xx.h and WinTypes.h are in the Include search
- *     path (e.g. /usr/local/include).
- *  3. cc get-version.c -lft4222 -Wl,-rpath,/usr/local/lib
- *  4. sudo ./a.out
- *
- * Mac instructions:
- *  1. Ensure libft4222.dylib is in the library search path (e.g. /usr/local/lib)
- *  2. Ensure libft4222.h, ftd2xx.h and WinTypes.h are in the Include search
- *     path (e.g. /usr/local/include).
- *  3. cc get-version.c -lft4222 -Wl,-L/usr/local/lib
- *  4. ./a.out
- */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "ftd2xx.h"
 #include "libft4222.h"
+#include <stdbool.h>
 
-static void showVersion(DWORD locationId)
+#define SLAVE_SELECT(x) (1 << (x))
+
+int configureSpi(DWORD locationId, FT_HANDLE *ftHandle)
 {
+
+    int success = 0;
     FT_STATUS ftStatus;
-    FT_HANDLE ftHandle = (FT_HANDLE)NULL;
     FT4222_STATUS ft4222Status;
     FT4222_Version ft4222Version;
+    uint8 address;
 
     ftStatus = FT_OpenEx((PVOID)(uintptr_t)locationId,
                          FT_OPEN_BY_LOCATION,
-                         &ftHandle);
+                         ftHandle);
     if (ftStatus != FT_OK)
     {
         printf("FT_OpenEx failed (error %d)\n",
                (int)ftStatus);
-        return;
+        return -1;
     }
 
-    // Get version of library and chip.
     ft4222Status = FT4222_GetVersion(ftHandle,
                                      &ft4222Version);
     if (FT4222_OK != ft4222Status)
     {
         printf("FT4222_GetVersion failed (error %d)\n",
                (int)ft4222Status);
+        return -2;
     }
-    else
+
+    printf("Chip version: %08X, LibFT4222 version: %08X\n",
+           (unsigned int)ft4222Version.chipVersion,
+           (unsigned int)ft4222Version.dllVersion);
+
+    // Configure the FT4222 as an SPI Master.
+    ft4222Status = FT4222_SPIMaster_Init(
+        ftHandle,
+        SPI_IO_SINGLE,    // 1 channel
+        CLK_DIV_32,       // 60 MHz / 32 == 1.875 MHz
+        CLK_IDLE_LOW,     // clock idles at logic 0
+        CLK_LEADING,      // data captured on rising edge
+        SLAVE_SELECT(0)); // Use SS0O for slave-select
+    if (FT4222_OK != ft4222Status)
     {
-        printf("  Chip version: %08X, LibFT4222 version: %08X\n",
-               (unsigned int)ft4222Version.chipVersion,
-               (unsigned int)ft4222Version.dllVersion);
-
-        ft4222Status = FT4222_ChipReset(ftHandle);
-
-        if (FT4222_OK == ft4222Status)
-        {
-
-            printf("Chip has been reset");
-        }
-        else
-        {
-
-            printf("chip reset failed");
-        }
+        printf("FT4222_SPIMaster_Init failed (error %d)\n",
+               (int)ft4222Status);
+        return -3;
     }
 
-    (void)FT_Close(ftHandle);
+    ft4222Status = FT4222_SPI_SetDrivingStrength(ftHandle,
+                                                 DS_8MA,
+                                                 DS_8MA,
+                                                 DS_8MA);
+    if (FT4222_OK != ft4222Status)
+    {
+        printf("FT4222_SPI_SetDrivingStrength failed (error %d)\n",
+               (int)ft4222Status);
+        return -4;
+    }
+    return 0;
 }
-
 int main(void)
 {
+
     FT_STATUS ftStatus;
     FT_DEVICE_LIST_INFO_NODE *devInfo = NULL;
     DWORD numDevs = 0;
-    int i;
-    int retCode = 0;
-    int found4222 = 0;
+
+    int err = 0;
 
     ftStatus = FT_CreateDeviceInfoList(&numDevs);
+
     if (ftStatus != FT_OK)
     {
-        printf("FT_CreateDeviceInfoList failed (error code %d)\n",
-               (int)ftStatus);
-        retCode = -10;
-        goto exit;
+        printf("FT_CreateDeviceInfoList failed (error code %d)\n", (int)ftStatus);
+        return -1;
     }
 
     if (numDevs == 0)
     {
         printf("No devices connected.\n");
-        retCode = -20;
-        goto exit;
+        return -2;
     }
 
-    /* Allocate storage */
-    devInfo = calloc((size_t)numDevs,
-                     sizeof(FT_DEVICE_LIST_INFO_NODE));
+    devInfo = calloc((size_t)numDevs, sizeof(FT_DEVICE_LIST_INFO_NODE));
+
     if (devInfo == NULL)
     {
-        printf("Allocation failure.\n");
-        retCode = -30;
-        goto exit;
+        printf("allocation failure.\n");
+        return -3;
     }
 
-    /* Populate the list of info nodes */
+    // =======================
+
     ftStatus = FT_GetDeviceInfoList(devInfo, &numDevs);
     if (ftStatus != FT_OK)
     {
         printf("FT_GetDeviceInfoList failed (error code %d)\n",
                (int)ftStatus);
-        retCode = -40;
-        goto exit;
+        if (devInfo != NULL)
+        {
+            free(devInfo);
+            devInfo = NULL;
+        }
+        return -4;
     }
 
-    for (i = 0; i < (int)numDevs; i++)
+    for (int i = 0; i < (int)numDevs; i++)
     {
-        if (devInfo[i].Type == FT_DEVICE_4222H_0 ||
-            devInfo[i].Type == FT_DEVICE_4222H_1_2)
-        {
-            // In mode 0, the FT4222H presents two interfaces: A and B.
-            // In modes 1 and 2, it presents four interfaces: A, B, C and D.
-
-            size_t descLen = strlen(devInfo[i].Description);
-
-            if ('A' == devInfo[i].Description[descLen - 1])
-            {
-                // Interface A may be configured as an I2C master.
-                printf("\nDevice %d: '%s'\n",
-                       i,
-                       devInfo[i].Description);
-                showVersion(devInfo[i].LocId);
-            }
-            else
-            {
-                // Interface B, C or D.
-                // No need to repeat version info of same chip.
-            }
-
-            found4222++;
-        }
-
         if (devInfo[i].Type == FT_DEVICE_4222H_3)
         {
-            // In mode 3, the FT4222H presents a single interface.
-            printf("\nDevice %d: '%s'\n",
-                   i,
-                   devInfo[i].Description);
-            showVersion(devInfo[i].LocId);
+            printf("\nDevice %d is FT4222H in mode 3 (single Master or Slave):\n", i);
+            printf("0x%08x  %s  %s\n", (unsigned int)devInfo[i].ID, devInfo[i].SerialNumber, devInfo[i].Description);
 
-            found4222++;
+            FT_HANDLE ftHandle = (FT_HANDLE)NULL;
+
+            err = configureSpi(devInfo[i].LocId, &ftHandle);
+            if (err != 0)
+            {
+
+                if (devInfo != NULL)
+                {
+                    free(devInfo);
+                    devInfo = NULL;
+                }
+
+                if (ftHandle != NULL)
+                {
+                    FT4222_UnInitialize(ftHandle);
+                }
+
+                return err;
+            }
+
+            uint8_t recvData[64000];
+            uint16_t sizeTransferred;
+
+            ftStatus = FT4222_SPIMaster_SingleRead(ftHandle, &recvData[0], 64000, &sizeTransferred, true);
+
+            if (ftStatus != FT_OK)
+            {
+
+                if (devInfo != NULL)
+                {
+                    free(devInfo);
+                    devInfo = NULL;
+                }
+
+                if (ftHandle != NULL)
+                {
+                    FT4222_UnInitialize(ftHandle);
+                }
+
+                return -5;
+            }
+
+            for (int i = 0; i < 64000; i++)
+            {
+
+                printf(" %d ", recvData[i]);
+
+                if (i % 8 == 0)
+                {
+                    printf("\n");
+                }
+            }
+
+            break;
         }
     }
 
-    if (found4222 == 0)
-        printf("No FT4222H detected.\n");
+    if (devInfo != NULL)
+    {
+        free(devInfo);
+        devInfo = NULL;
+    }
 
-exit:
-    free(devInfo);
-    return retCode;
+    return err;
 }
