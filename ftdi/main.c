@@ -8,33 +8,24 @@
 
 #define SLAVE_SELECT(x) (1 << (x))
 
-// DWORD getNumberOfDevices()
-// {
-
-//     DWORD numDevs = 0;
-
-//     FT_STATUS ftStatus = FT_CreateDeviceInfoList(&numDevs);
-
-//     if (ftStatus != FT_OK)
-//     {
-//         printf("FT_CreateDeviceInfoList failed (error code %d)\n", (int)ftStatus);
-//         return -1;
-//     }
-
-//     if (numDevs == 0)
-//     {
-//         printf("No devices connected.\n");
-//         return -2;
-//     }
-
-//         return (uint8_t)numDevs;
-// }
-
-// assumes there is only 1 device available
 int getDeviceLocationId()
 {
     FT_DEVICE_LIST_INFO_NODE *devInfo = NULL;
     DWORD numDevs = 0;
+
+    FT_STATUS ftStatus = FT_CreateDeviceInfoList(&numDevs);
+
+    if (ftStatus != FT_OK)
+    {
+        printf("FT_CreateDeviceInfoList failed (error code %d)\n", (int)ftStatus);
+        return -1;
+    }
+
+    if (numDevs == 0)
+    {
+        printf("No devices connected.\n");
+        return -2;
+    }
 
     devInfo = calloc((size_t)1, sizeof(FT_DEVICE_LIST_INFO_NODE));
 
@@ -44,7 +35,7 @@ int getDeviceLocationId()
         return -3;
     }
 
-    FT_STATUS ftStatus = FT_GetDeviceInfoList(devInfo, &numDevs);
+    ftStatus = FT_GetDeviceInfoList(devInfo, &numDevs);
     if (ftStatus != FT_OK)
     {
         printf("FT_GetDeviceInfoList failed (error code %d)\n",
@@ -144,15 +135,6 @@ int configureDevice(int devLocId, FT_HANDLE *ftHandle)
 
 int main(void)
 {
-
-    // int numDevs = getNumberOfDevices();
-
-    // if (numDevs <= 0)
-    // {
-    //     perror("getNumberOfDevices failed");
-    //     printf("err: %d", numDevs);
-    //     return -1;
-    // }
 
     int deviceLocationId = getDeviceLocationId();
 
