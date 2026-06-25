@@ -132,8 +132,41 @@ int configureDevice(int devLocId, FT_HANDLE *ftHandle)
     return 0;
 }
 
-int main(void)
+int main(int argc, char *argv[])
 {
+
+    if (argc < 3)
+    {
+
+        fprintf(stderr, "usage: %s <operation> <file>\n", argv[0]);
+        return -1;
+    }
+
+    FILE *f;
+
+    int read, write = 0;
+
+    if (strncmp("read", argv[1], 4) == 0)
+    {
+        f = fopen(argv[2], "rb");
+        read = 1;
+    }
+    else if (strncmp("write", argv[1], 5) == 0)
+    {
+        f = fopen(argv[2], "wb");
+        write = 1;
+    }
+    else
+    {
+        printf("operation not supported\n");
+        return -2;
+    }
+
+    if (!f)
+    {
+        printf("failed to open file\n");
+        return -2;
+    }
 
     int deviceLocationId = getDeviceLocationId();
 
@@ -141,7 +174,7 @@ int main(void)
     {
         perror("getDeviceLocationId failed");
         printf("err: %d", deviceLocationId);
-        return -2;
+        return -3;
     }
 
     FT_HANDLE ftHandle = (FT_HANDLE)NULL;
@@ -154,13 +187,67 @@ int main(void)
         printf("err: %d", err);
 
         FT4222_UnInitialize(ftHandle);
-        return -3;
+        return -4;
     }
 
-    // uint8_t recvData[64000];
-    // uint16_t sizeTransferred;
-    //
-    // FT4222_STATUS ftStatus = FT4222_SPIMaster_SingleRead(ftHandle, &recvData[0], 64000, &sizeTransferred, true);
+    uint8_t chunk[4096];
+    uint16_t sizeTransferred;
+
+    FT4222_STATUS ftStatus;
+
+    size_t n = 0;
+    size_t m = 0;
+
+    if (read == 1)
+    {
+
+        while (sizeTransferred != 0)
+        {
+
+            ftStatus = FT4222_SPIMaster_SingleRead(ftHandle, &chunk[0], sizeof(chunk), &sizeTransferred, true);
+
+            if (ftStatus != FT_OK)
+            {
+                printf("FT4222_SPIMaster_SingleRead failed\n");
+                break;
+            }
+
+            m = fwrite(chunk, sizeof(chunk[0]), sizeTransferred, f);
+
+            if (m != sizeTransferred)
+            {
+
+                printf("fwrite failed\n");
+                break;
+            }
+        }
+    }
+
+    if (write == 1)
+    {
+
+        while (n != 0)
+        {
+            n = fread(chunk, sizeof(chunk[0]), sizeof(chunk), f);
+
+            ftStatus = FT4222_SPIMaster_SingleWrite(ftHandle, &chunk[0], sizeof(chunk), &sizeTransferred, true);
+
+            if (n != sizeTransferred)
+            {
+
+                printf("fwrite failed\n");
+                break;
+            }
+
+            if (ftStatus != FT_OK)
+            {
+                printf("FT4222_SPIMaster_SingleRead failed\n");
+                break;
+            }
+        }
+    }
+
+    fclose(f);
 
     FT4222_UnInitialize(ftHandle);
 

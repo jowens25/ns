@@ -1,0 +1,3 @@
+We need to read the FPGA flash: ns-prog read dump.bin
+we need to write the FPGA flash: ns-prog write in.bin
+we need to erase the FPGA flash: ns-prog erase

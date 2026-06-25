@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-int main(void)
+int temp(void)
 {
     FILE *in = fopen("NOVUS_REFDESIGN.bin", "rb");
 

@@ -12,7 +12,7 @@ int getDeviceInfo(FT_DEVICE_LIST_INFO_NODE *devIfn)
 {
 }
 
-int main(void)
+int other(void)
 {
 
     FT_STATUS ftStatus;
