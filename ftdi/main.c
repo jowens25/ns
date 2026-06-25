@@ -55,7 +55,7 @@ int getDeviceLocationId()
             printf("\nDevice %d is FT4222H in mode 3 (single Master or Slave):\n", i);
             printf("0x%08x  %s  %s\n", (unsigned int)devInfo[i].ID, devInfo[i].SerialNumber, devInfo[i].Description);
 
-            uint8_t deviceLocationId = (uint8_t)devInfo->LocId;
+            int deviceLocationId = devInfo->LocId;
 
             if (devInfo != NULL)
             {
