@@ -105,7 +105,7 @@ int configureDevice(int devLocId, FT_HANDLE *ftHandle)
 
     // Configure the FT4222 as an SPI Master.
     ft4222Status = FT4222_SPIMaster_Init(
-        ftHandle,
+        *ftHandle,
         SPI_IO_SINGLE,    // 1 channel
         CLK_DIV_32,       // 60 MHz / 32 == 1.875 MHz
         CLK_IDLE_LOW,     // clock idles at logic 0
@@ -118,7 +118,7 @@ int configureDevice(int devLocId, FT_HANDLE *ftHandle)
         return -3;
     }
 
-    ft4222Status = FT4222_SPI_SetDrivingStrength(ftHandle,
+    ft4222Status = FT4222_SPI_SetDrivingStrength(*ftHandle,
                                                  DS_8MA,
                                                  DS_8MA,
                                                  DS_8MA);
