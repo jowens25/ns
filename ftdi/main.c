@@ -8,65 +8,6 @@
 
 #define SLAVE_SELECT(x) (1 << (x))
 
-int configureSpi(DWORD locationId, FT_HANDLE *ftHandle)
-{
-
-    int success = 0;
-    FT_STATUS ftStatus;
-    FT4222_STATUS ft4222Status;
-    FT4222_Version ft4222Version;
-    uint8 address;
-
-    ftStatus = FT_OpenEx((PVOID)(uintptr_t)locationId,
-                         FT_OPEN_BY_LOCATION,
-                         ftHandle);
-    if (ftStatus != FT_OK)
-    {
-        printf("FT_OpenEx failed (error %d)\n",
-               (int)ftStatus);
-        return -1;
-    }
-
-    ft4222Status = FT4222_GetVersion(&ftHandle,
-                                     &ft4222Version);
-    if (FT4222_OK != ft4222Status)
-    {
-        printf("FT4222_GetVersion failed (error %d)\n",
-               (int)ft4222Status);
-        return -2;
-    }
-
-    printf("Chip version: %08X, LibFT4222 version: %08X\n",
-           (unsigned int)ft4222Version.chipVersion,
-           (unsigned int)ft4222Version.dllVersion);
-
-    // Configure the FT4222 as an SPI Master.
-    ft4222Status = FT4222_SPIMaster_Init(
-        ftHandle,
-        SPI_IO_SINGLE,    // 1 channel
-        CLK_DIV_32,       // 60 MHz / 32 == 1.875 MHz
-        CLK_IDLE_LOW,     // clock idles at logic 0
-        CLK_LEADING,      // data captured on rising edge
-        SLAVE_SELECT(0)); // Use SS0O for slave-select
-    if (FT4222_OK != ft4222Status)
-    {
-        printf("FT4222_SPIMaster_Init failed (error %d)\n",
-               (int)ft4222Status);
-        return -3;
-    }
-
-    ft4222Status = FT4222_SPI_SetDrivingStrength(ftHandle,
-                                                 DS_8MA,
-                                                 DS_8MA,
-                                                 DS_8MA);
-    if (FT4222_OK != ft4222Status)
-    {
-        printf("FT4222_SPI_SetDrivingStrength failed (error %d)\n",
-               (int)ft4222Status);
-        return -4;
-    }
-    return 0;
-}
 int main(void)
 {
 
@@ -122,7 +63,61 @@ int main(void)
 
             FT_HANDLE ftHandle = (FT_HANDLE)NULL;
 
-            err = configureSpi(devInfo[i].LocId, &ftHandle);
+            // int success = 0;
+            FT_STATUS ftStatus;
+            FT4222_STATUS ft4222Status;
+            FT4222_Version ft4222Version;
+            // uint8 address;
+
+            ftStatus = FT_OpenEx((PVOID)(uintptr_t)devInfo->LocId,
+                                 FT_OPEN_BY_LOCATION,
+                                 &ftHandle);
+            if (ftStatus != FT_OK)
+            {
+                printf("FT_OpenEx failed (error %d)\n",
+                       (int)ftStatus);
+                return -1;
+            }
+
+            ft4222Status = FT4222_GetVersion(ftHandle,
+                                             &ft4222Version);
+            if (FT4222_OK != ft4222Status)
+            {
+                printf("FT4222_GetVersion failed (error %d)\n",
+                       (int)ft4222Status);
+                return -2;
+            }
+
+            printf("Chip version: %08X, LibFT4222 version: %08X\n",
+                   (unsigned int)ft4222Version.chipVersion,
+                   (unsigned int)ft4222Version.dllVersion);
+
+            // Configure the FT4222 as an SPI Master.
+            ft4222Status = FT4222_SPIMaster_Init(
+                ftHandle,
+                SPI_IO_SINGLE,    // 1 channel
+                CLK_DIV_32,       // 60 MHz / 32 == 1.875 MHz
+                CLK_IDLE_LOW,     // clock idles at logic 0
+                CLK_LEADING,      // data captured on rising edge
+                SLAVE_SELECT(0)); // Use SS0O for slave-select
+            if (FT4222_OK != ft4222Status)
+            {
+                printf("FT4222_SPIMaster_Init failed (error %d)\n",
+                       (int)ft4222Status);
+                return -3;
+            }
+
+            ft4222Status = FT4222_SPI_SetDrivingStrength(ftHandle,
+                                                         DS_8MA,
+                                                         DS_8MA,
+                                                         DS_8MA);
+            if (FT4222_OK != ft4222Status)
+            {
+                printf("FT4222_SPI_SetDrivingStrength failed (error %d)\n",
+                       (int)ft4222Status);
+                return -4;
+            }
+
             if (err != 0)
             {
 
