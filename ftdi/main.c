@@ -191,6 +191,11 @@ int main(int argc, char *argv[])
     }
 
     uint8_t chunk[4096];
+    chunk[0] = 0x13;
+    chunk[1] = 0x00;
+    chunk[2] = 0x00;
+    chunk[3] = 0x00;
+    chunk[4] = 0x00;
     uint16_t sizeTransferred = 1;
 
     FT4222_STATUS ftStatus;
@@ -203,14 +208,14 @@ int main(int argc, char *argv[])
 
         printf("reading from flash...\n");
 
-        while (sizeTransferred != 0)
+        for (int i = 0; i <= 64000000; i++)
         {
 
-            ftStatus = FT4222_SPIMaster_SingleRead(ftHandle, &chunk[0], sizeof(chunk), &sizeTransferred, true);
+            ftStatus = FT4222_SPIMaster_SingleReadWrite(ftHandle, &chunk[0], &chunk[0], sizeof(chunk), &sizeTransferred, true);
 
             if (ftStatus != FT_OK)
             {
-                printf("FT4222_SPIMaster_SingleRead failed\n");
+                printf("FT4222_SPIMaster_SingleReadWrite failed\n");
                 break;
             }
 
@@ -224,6 +229,8 @@ int main(int argc, char *argv[])
                 printf("fwrite failed\n");
                 break;
             }
+
+            break;
         }
     }
 
