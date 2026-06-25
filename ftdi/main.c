@@ -135,36 +135,43 @@ int main(void)
                 return err;
             }
 
-            uint8_t recvData[64000];
-            uint16_t sizeTransferred;
-
-            ftStatus = FT4222_SPIMaster_SingleRead(ftHandle, &recvData[0], 64000, &sizeTransferred, true);
-
-            if (ftStatus != FT_OK)
+            for (int j = 0; j < 100; j++)
             {
 
-                if (devInfo != NULL)
+                uint8_t recvData[64000];
+                uint16_t sizeTransferred;
+
+                ftStatus = FT4222_SPIMaster_SingleRead(ftHandle, &recvData[0], 64000, &sizeTransferred, true);
+
+                if (ftStatus != FT_OK)
                 {
-                    free(devInfo);
-                    devInfo = NULL;
+
+                    if (devInfo != NULL)
+                    {
+                        free(devInfo);
+                        devInfo = NULL;
+                    }
+
+                    if (ftHandle != NULL)
+                    {
+                        FT4222_UnInitialize(ftHandle);
+                    }
+
+                    return -5;
                 }
 
-                if (ftHandle != NULL)
+                for (int i = j * 64000; i < (j + 1) * 64000; i++)
                 {
-                    FT4222_UnInitialize(ftHandle);
-                }
 
-                return -5;
-            }
+                    if (recvData[i] != 255)
+                    {
+                        printf(" %d ", recvData[i]);
+                    }
 
-            for (int i = 0; i < 64000; i++)
-            {
-
-                printf(" %d ", recvData[i]);
-
-                if (i % 8 == 0)
-                {
-                    printf("\n");
+                    if (i % 8 == 0)
+                    {
+                        printf("\n");
+                    }
                 }
             }
 
