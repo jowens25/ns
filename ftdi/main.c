@@ -83,7 +83,7 @@ int configureDevice(int devLocId, FT_HANDLE *ftHandle)
 
     FT_STATUS ftStatus = FT_OpenEx((PVOID)(uintptr_t)devLocId,
                                    FT_OPEN_BY_LOCATION,
-                                   ftHandle);
+                                   *ftHandle);
     if (ftStatus != FT_OK)
     {
         printf("FT_OpenEx failed (error %d)\n",
@@ -91,8 +91,7 @@ int configureDevice(int devLocId, FT_HANDLE *ftHandle)
         return -1;
     }
 
-    FT4222_STATUS ft4222Status = FT4222_GetVersion(ftHandle,
-                                                   &ft4222Version);
+    FT4222_STATUS ft4222Status = FT4222_GetVersion(*ftHandle, &ft4222Version);
     if (FT4222_OK != ft4222Status)
     {
         printf("FT4222_GetVersion failed (error %d)\n",
