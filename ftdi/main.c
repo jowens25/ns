@@ -27,7 +27,7 @@ int configureSpi(DWORD locationId, FT_HANDLE *ftHandle)
         return -1;
     }
 
-    ft4222Status = FT4222_GetVersion(ftHandle,
+    ft4222Status = FT4222_GetVersion(&ftHandle,
                                      &ft4222Version);
     if (FT4222_OK != ft4222Status)
     {
