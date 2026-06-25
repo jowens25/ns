@@ -83,7 +83,7 @@ int configureDevice(int devLocId, FT_HANDLE *ftHandle)
 
     FT_STATUS ftStatus = FT_OpenEx((PVOID)(uintptr_t)devLocId,
                                    FT_OPEN_BY_LOCATION,
-                                   *ftHandle);
+                                   ftHandle);
     if (ftStatus != FT_OK)
     {
         printf("FT_OpenEx failed (error %d)\n",

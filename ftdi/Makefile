@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 
 CC      = gcc
-CFLAGS  = -Wall -g
+CFLAGS  = -Wall -Werror -g
 CPPFLAGS=
 LDFLAGS = -Wl,-rpath,/usr/local/lib
 LDLIBS  = -L/usr/local/lib -lft4222
