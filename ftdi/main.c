@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
     }
 
     uint8_t chunk[4096];
-    uint16_t sizeTransferred;
+    uint16_t sizeTransferred = 1;
 
     FT4222_STATUS ftStatus;
 
@@ -200,6 +200,8 @@ int main(int argc, char *argv[])
 
     if (read == 1)
     {
+
+        printf("reading from flash...\n");
 
         while (sizeTransferred != 0)
         {
@@ -211,6 +213,8 @@ int main(int argc, char *argv[])
                 printf("FT4222_SPIMaster_SingleRead failed\n");
                 break;
             }
+
+            printf("transferred: %d\n", sizeTransferred);
 
             m = fwrite(chunk, sizeof(chunk[0]), sizeTransferred, f);
 
@@ -225,6 +229,8 @@ int main(int argc, char *argv[])
 
     if (write == 1)
     {
+
+        printf("writing to flash...\n");
 
         while (n != 0)
         {
