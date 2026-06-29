@@ -4,7 +4,7 @@ CC      = gcc
 CFLAGS  = -Wall -g
 CPPFLAGS=
 LDFLAGS = -Wl,-rpath,/usr/local/lib
-LDLIBS  = -L/usr/local/lib -lft4222
+LDLIBS  = -L/usr/local/lib -lft4222 -lgpiod
 
 SOURCES = $(wildcard *.c)
 OBJECTS = $(SOURCES:.c=.o)
