@@ -11,6 +11,8 @@
 
 #define SLAVE_SELECT(x) (1 << (x))
 
+int error_code = 0;
+
 int getDeviceLocationId()
 {
     FT_DEVICE_LIST_INFO_NODE *devInfo = NULL;
@@ -533,18 +535,57 @@ int main(int argc, char *argv[])
     if (!chip)
     {
         perror("gpiod_chip_open failed");
-        return 1;
+        error_code = -1;
+        goto cleanup;
     }
 
     struct gpiod_line_settings *settings = gpiod_line_settings_new();
-    gpiod_line_settings_set_direction(settings, GPIOD_LINE_DIRECTION_OUTPUT);
-    gpiod_line_settings_set_output_value(settings, GPIOD_LINE_VALUE_INACTIVE);
+    if (!settings)
+    {
+        perror("settings new error");
+        error_code = -2;
+        goto cleanup;
+    }
+
+    if (gpiod_line_settings_set_direction(settings, GPIOD_LINE_DIRECTION_OUTPUT) < 0)
+    {
+        perror("set direction error");
+        error_code = -3;
+        goto cleanup;
+    }
+
+    if (gpiod_line_settings_set_output_value(settings, GPIOD_LINE_VALUE_INACTIVE) < 0)
+    {
+        perror("set output value error");
+        error_code = -4;
+        goto cleanup;
+    }
 
     struct gpiod_line_config *line_config = gpiod_line_config_new();
-    gpiod_line_config_add_line_settings(line_config, &line_offset, 1, settings);
+    if (!line_config)
+    {
+        perror("line config new error");
+        error_code = -5;
+        goto cleanup;
+    }
+
+    if (gpiod_line_config_add_line_settings(line_config, &line_offset, 1, settings) < 0)
+    {
+        perror("add line settings");
+        error_code = -6;
+        goto cleanup;
+    };
 
     struct gpiod_request_config *request_config = gpiod_request_config_new();
-    gpiod_request_config_set_consumer(request_config, "gpio-example");
+
+    if (!request_config)
+    {
+        perror("new request config");
+        error_code = -7;
+        goto cleanup;
+    }
+
+    gpiod_request_config_set_consumer(request_config, "ns-programmer");
 
     struct gpiod_line_request *request =
         gpiod_chip_request_lines(chip, request_config, line_config);
@@ -552,21 +593,26 @@ int main(int argc, char *argv[])
     if (!request)
     {
         perror("gpiod_chip_request_lines failed");
-        gpiod_line_config_free(line_config);
-        gpiod_line_settings_free(settings);
-        gpiod_request_config_free(request_config);
-        gpiod_chip_close(chip);
-        return 1;
+        error_code = -8;
+        goto cleanup;
     }
 
-    gpiod_line_request_set_value(request, 14, GPIOD_LINE_VALUE_ACTIVE);
+    // gpiod_line_request_set_value(request, line_offset, GPIOD_LINE_VALUE_ACTIVE);
 
+    int val = gpiod_line_request_get_value(request, line_offset);
+
+    printf("GPIO 14 is %d\n", val);
+
+    usleep(1000000);
+
+    /*
     if (argc < 3)
     {
 
         fprintf(stderr, "usage: %s <operation> <file>\n", argv[0]);
-        return -1;
+        goto cleanup;
     }
+
 
     FILE *f;
 
@@ -601,7 +647,7 @@ int main(int argc, char *argv[])
     else
     {
         printf("operation not supported\n");
-        return -2;
+        goto cleanup;
     }
 
     if (write == 1 || read == 1)
@@ -610,7 +656,7 @@ int main(int argc, char *argv[])
         if (!f)
         {
             printf("failed to open file\n");
-            return -2;
+            goto cleanup;
         }
     }
 
@@ -620,7 +666,7 @@ int main(int argc, char *argv[])
     {
         perror("getDeviceLocationId failed");
         printf("err: %d", deviceLocationId);
-        return -3;
+        goto cleanup;
     }
 
     FT_HANDLE ftHandle = (FT_HANDLE)NULL;
@@ -633,7 +679,7 @@ int main(int argc, char *argv[])
         printf("err: %d", err);
 
         FT4222_UnInitialize(ftHandle);
-        return -4;
+        goto cleanup;
     }
 
     if (id == 1)
@@ -719,17 +765,36 @@ int main(int argc, char *argv[])
         spiBulkErase(ftHandle);
     }
 
-    // fclose(f);
-    FT4222_UnInitialize(ftHandle);
-    FT_Close(ftHandle);
+    */
 
     gpiod_line_request_set_value(request, line_offset, GPIOD_LINE_VALUE_INACTIVE);
+
+    val = gpiod_line_request_get_value(request, line_offset);
+
+    printf("GPIO 14 is %d\n", val);
+
+    usleep(1000000);
+    goto cleanup;
+
+cleanup:
+
+    // if (f)
+    //{
+    //     fclose(f);
+    // }
+    //
+    // if (ftHandle)
+    //{
+    //    FT4222_UnInitialize(ftHandle);
+    //    FT_Close(ftHandle);
+    //}
 
     gpiod_line_request_release(request);
     gpiod_line_config_free(line_config);
     gpiod_line_settings_free(settings);
     gpiod_request_config_free(request_config);
     gpiod_chip_close(chip);
+    printf("clean up finished\n");
 
-    return 0;
+    return error_code;
 }

@@ -22,5 +22,6 @@ sudo apt install ns-serial-mux
 sudo apt install ns-agent
 sudo apt install ns-admin
 
-sudo reboot now
-ns account add admin admin -a
+sudo ns reset
+#sudo reboot now
+#ns account add admin admin -a

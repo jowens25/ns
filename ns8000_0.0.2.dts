@@ -1,5 +1,5 @@
 /dts-v1/;
-//ns8000_062326_0.0.1
+//ns8000_062326_0.0.3
 / {
 	interrupt-parent = <0x01>;
 	#address-cells = <0x02>;
