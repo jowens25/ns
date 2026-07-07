@@ -456,8 +456,8 @@ async def read_socket():
     writer = None
     try:
         log.info("opening serial.sock")
-        # reader, writer = await asyncio.open_unix_connection("/var/lib/ns/serial.sock")
-        reader, writer = await asyncio.open_connection(host="10.1.10.201", port="8080")
+        reader, writer = await asyncio.open_unix_connection("/var/lib/ns/serial.sock")
+        #reader, writer = await asyncio.open_connection(host="10.1.10.201", port="8080")
         while True:
             data = await reader.readline()
             if not data:
