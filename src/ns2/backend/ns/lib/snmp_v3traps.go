@@ -56,14 +56,14 @@ func _readV3TrapsFromFile() ([]v3Trap, error) {
 
 		if strings.HasPrefix(line, "trapsess -v 3") {
 			fields := strings.Fields(line)
-			if len(fields) == 12 {
+			if len(fields) == 14 {
 				var trap v3Trap
 				trap.Version = fields[2]
 				trap.EngineId = fields[4]
-				trap.Username = fields[6]
+				trap.Username = fields[8]
 				//trap.Permissions = fields[8]
-				trap.AuthType = fields[8]
-				trap.PrivType = fields[10]
+				trap.AuthType = fields[10]
+				trap.PrivType = fields[12]
 
 				trap.Protocol = strings.Split(fields[len(fields)-1], ":")[0]
 				trap.Host = strings.Split(fields[len(fields)-1], ":")[1]
@@ -99,7 +99,7 @@ func _writeV3TrapToFile(trap v3Trap) error {
 		lineCount++
 	}
 
-	newTrapLine := fmt.Sprintf("trapsess -v 3 -e %s -u %s -a %s -x %s %s:%s:%s", trap.EngineId, trap.Username, trap.AuthType, trap.PrivType, trap.Protocol, trap.Host, trap.Port)
+	newTrapLine := fmt.Sprintf("trapsess -v 3 -e %s -l authPriv -u %s -a %s -x %s %s:%s:%s", trap.EngineId, trap.Username, trap.AuthType, trap.PrivType, trap.Protocol, trap.Host, trap.Port)
 	if trapIndex < 0 {
 		lines = append(lines, []string{"#-------------------------------------------------------------------------------"}...)
 		lines = append(lines, []string{"#trapsess [SNMPCMD_ARGS] host"}...)

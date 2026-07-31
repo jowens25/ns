@@ -1,0 +1,15 @@
+07 14 2026
+
+July 14th 2026
+
+Sent 1 unit to nantucket with:
+
+base variscite image (on onedrive)
+ns8000_0.0.2.dtb
+ns-admin 2.0.37
+ns-agent 2.0.11
+ns-serial-mux 2.0.18
+
+walked through setup.sh
+
+linux functions appear to be up and running
