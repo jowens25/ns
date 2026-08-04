@@ -14,17 +14,16 @@ import (
 var resetCmd = &cobra.Command{
 	Use:   "reset",
 	Short: "factory reset system configuration",
-	RunE: func(cmd *cobra.Command, args []string) error {
+	Run: func(cmd *cobra.Command, args []string) {
 		cmd.SilenceUsage = true
 		_, err := lib.CallReturnBody("com.novus.ns", "/com/novus/ns", "com.novus.ns.pam.ResetDefaultConfig", []any{})
 
 		if err != nil {
-			return err
+			fmt.Println(err.Error())
+		} else {
+			fmt.Println("System configuration reset")
 		}
 
-		fmt.Println("System configuration reset")
-
-		return nil
 	},
 }
 

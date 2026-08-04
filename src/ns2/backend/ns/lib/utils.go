@@ -129,6 +129,20 @@ func FactoryReset() error {
 				"connection": {
 					"id": dbus.MakeVariant(interfaceString),
 				},
+				"ipv4": {
+					"method": dbus.MakeVariant("manual"),
+					"address-data": dbus.MakeVariant([]map[string]dbus.Variant{
+						{
+							"address": dbus.MakeVariant("192.168.7.224"),
+							"prefix":  dbus.MakeVariant(uint32(24)),
+						},
+					}),
+					"gateway": dbus.MakeVariant("192.168.7.254"),
+					"dns-data": dbus.MakeVariant([]string{
+						"8.8.8.8",
+						"8.8.4.4",
+					}),
+				},
 			}
 
 			rsp, err = CallReturnBody(

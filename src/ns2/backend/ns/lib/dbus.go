@@ -49,7 +49,11 @@ func CallReturnBody(destination string, path dbus.ObjectPath, method string, arg
 
 	call := obj.Call(method, 0, args...)
 
-	return call.Body, nil
+	if call.Err != nil {
+		return nil, call.Err
+	} else {
+		return call.Body, nil
+	}
 
 }
 func MakeDbusCall(conn *dbus.Conn, call DbusCall) (any, any, error) {

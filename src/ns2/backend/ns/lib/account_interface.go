@@ -183,7 +183,7 @@ func (a *AccountInterface) SetupDefaultUser(sender dbus.Sender, message dbus.Mes
 		log.Println(err.Error())
 	}
 
-	return fmt.Sprintf("reset complete"), nil
+	return "reset complete", nil
 
 }
 
